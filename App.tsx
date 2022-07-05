@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, Text, View } from 'react-native';
 
 export default function App() {
   return (
@@ -21,7 +21,7 @@ export default function App() {
           fontSize: 16,
           fontWeight: 'bold',
           marginTop: 20,
-          // fontFamily: 'ArialMT',
+          color: '#262626',
         }}
       >
         This is テキスト
@@ -47,9 +47,3 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

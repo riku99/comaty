@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "comaty",
+    "slug": "comaty",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "comaty"
+}

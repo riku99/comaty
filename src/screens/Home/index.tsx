@@ -1,8 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 
-export const HomeScreen = () => {
+type Props = RootNavigationScreenProp<'BottomTab'>;
+
+export const HomeScreen = ({ navigation }: Props) => {
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
+
   return (
     <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
       <Text

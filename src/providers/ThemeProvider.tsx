@@ -22,6 +22,16 @@ const theme: CreateThemeOptions = createTheme({
     },
     activeOpacity: 1,
   },
+  Input: {
+    containerStyle: {
+      paddingHorizontal: 0,
+    },
+  },
+  lightColors: {
+    primary: '#526eff',
+    black: '#262626',
+    secondary: '#0f1d61',
+  },
 });
 
 export const ThemeProvider = ({ children }: Props) => {

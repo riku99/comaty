@@ -4,6 +4,7 @@ import {
   Theme,
 } from '@react-navigation/native';
 import React from 'react';
+import { theme } from 'src/styles';
 
 type Props = {
   children: JSX.Element;
@@ -14,6 +15,8 @@ const navigationTheme: Theme = {
   colors: {
     ...DefaultTheme.colors,
     background: '#fff',
+    primary: theme.black,
+    text: theme.black,
   },
 };
 

@@ -10,6 +10,7 @@ install! 'cocoapods',
   :deterministic_uuids => false
 
 target 'comaty' do
+  use_frameworks!
   use_expo_modules!
   config = use_native_modules!
 

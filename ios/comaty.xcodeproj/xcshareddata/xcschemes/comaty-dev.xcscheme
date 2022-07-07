@@ -24,7 +24,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "327257432876CDA40054B36B"
-               BuildableName = "comaty copy.app"
+               BuildableName = "comaty-dev.app"
                BlueprintName = "comaty-dev"
                ReferencedContainer = "container:comaty.xcodeproj">
             </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "327257432876CDA40054B36B"
-            BuildableName = "comaty copy.app"
+            BuildableName = "comaty-dev.app"
             BlueprintName = "comaty-dev"
             ReferencedContainer = "container:comaty.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "327257432876CDA40054B36B"
-            BuildableName = "comaty copy.app"
+            BuildableName = "comaty-dev.app"
             BlueprintName = "comaty-dev"
             ReferencedContainer = "container:comaty.xcodeproj">
          </BuildableReference>

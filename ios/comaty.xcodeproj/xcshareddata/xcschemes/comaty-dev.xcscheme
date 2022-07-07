@@ -10,7 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.prod&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
+               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;cp &quot;${PROJECT_DIR}/../.env.dev&quot; &quot;${PROJECT_DIR}/../.env&quot;&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>
@@ -23,9 +23,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "comaty.app"
-               BlueprintName = "comaty"
+               BlueprintIdentifier = "327257432876CDA40054B36B"
+               BuildableName = "comaty copy.app"
+               BlueprintName = "comaty-dev"
                ReferencedContainer = "container:comaty.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -63,9 +63,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "comaty.app"
-            BlueprintName = "comaty"
+            BlueprintIdentifier = "327257432876CDA40054B36B"
+            BuildableName = "comaty copy.app"
+            BlueprintName = "comaty-dev"
             ReferencedContainer = "container:comaty.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -76,16 +76,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "comaty.app"
-            BlueprintName = "comaty"
+            BlueprintIdentifier = "327257432876CDA40054B36B"
+            BuildableName = "comaty copy.app"
+            BlueprintName = "comaty-dev"
             ReferencedContainer = "container:comaty.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

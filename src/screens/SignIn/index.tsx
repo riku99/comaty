@@ -1,5 +1,6 @@
+import { Button } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 type Props = RootNavigationScreenProp<'SignIn'>;
 
@@ -10,5 +11,18 @@ export const SignInScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  return <View></View>;
+  return (
+    <View style={styles.container}>
+      <SafeAreaView>
+        <Button title="メールアドレスでログイン" />
+      </SafeAreaView>
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 14,
+  },
+});

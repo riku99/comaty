@@ -2,21 +2,23 @@ import { Button } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 
-type Props = RootNavigationScreenProp<'SignIn'>;
+type Props = RootNavigationScreenProp<'SignUp'>;
 
-export const SignInScreen = ({ navigation }: Props) => {
+export const SignUpScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
     });
   }, [navigation]);
 
-  const onEmailLoginPress = () => {};
+  const onEmailLoginPress = () => {
+    navigation.navigate('EmailSignUp');
+  };
 
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Button title="メールアドレスでログイン" onPress={onEmailLoginPress} />
+        <Button title="メールアドレスで登録" onPress={onEmailLoginPress} />
       </SafeAreaView>
     </View>
   );

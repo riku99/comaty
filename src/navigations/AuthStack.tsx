@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { EmailLoginScreen } from 'src/screens/EmaiLogin';
-import { SignInScreen } from 'src/screens/SignIn';
+import { EmailSignUpScreen } from 'src/screens/EmailSignUp';
+import { SignUpScreen } from 'src/screens/SignUp';
 
 export type AuthStackParamList = {
-  SignIn: undefined;
-  EmailLogin: undefined;
+  SignUp: undefined;
+  EmailSignUp: undefined;
 };
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();
@@ -13,8 +13,8 @@ const Stack = createNativeStackNavigator<AuthStackParamList>();
 export const AuthStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="SignIn" component={SignInScreen} />
-      <Stack.Screen name="EmailLogin" component={EmailLoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="EmailSignUp" component={EmailSignUpScreen} />
     </Stack.Navigator>
   );
 };

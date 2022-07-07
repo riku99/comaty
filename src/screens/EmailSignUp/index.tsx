@@ -1,7 +1,6 @@
-import { Input } from '@rneui/base';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { theme } from 'src/styles';
+import { EmailForm } from 'src/components/EmailForm';
 
 type Props = RootNavigationScreenProp<'EmailSignUp'>;
 
@@ -12,28 +11,9 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  const [emailFormFocused, setEmailFormFocused] = useState(false);
-
   return (
     <View style={styles.container}>
-      <Input
-        label="メールアドレス"
-        selectionColor={theme.primary}
-        inputContainerStyle={{
-          borderColor: emailFormFocused ? theme.primary : theme.formBorderGray,
-        }}
-        onFocus={() => {
-          setEmailFormFocused(true);
-        }}
-        onBlur={() => {
-          setEmailFormFocused(false);
-        }}
-      />
-      <Input
-        label="パスワード"
-        containerStyle={{ marginTop: 20 }}
-        placeholder="8文字以上"
-      />
+      <EmailForm />
     </View>
   );
 };

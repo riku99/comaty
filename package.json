@@ -6,7 +6,8 @@
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "fmt": "prettier --write src/**/*.{ts,tsx}"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
@@ -32,9 +33,12 @@
     "@graphql-codegen/typescript": "^2.6.0",
     "@graphql-codegen/typescript-operations": "^2.4.3",
     "@graphql-codegen/typescript-react-apollo": "^3.2.17",
+    "@react-native-community/eslint-config": "^3.0.3",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.67.6",
     "babel-plugin-module-resolver": "^4.1.0",
+    "eslint": "^8.19.0",
+    "prettier": "^2.7.1",
     "typescript": "~4.3.5"
   },
   "resolutions": {

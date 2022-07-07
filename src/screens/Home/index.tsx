@@ -46,7 +46,7 @@ export const HomeScreen = ({ navigation }: Props) => {
       <View
         style={{
           width: '100%',
-          height: 60,
+          height: 54,
           backgroundColor: '#526eff',
           borderRadius: 6,
           position: 'absolute',

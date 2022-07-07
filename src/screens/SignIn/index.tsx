@@ -11,10 +11,12 @@ export const SignInScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  const onEmailLoginPress = () => {};
+
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Button title="メールアドレスでログイン" />
+        <Button title="メールアドレスでログイン" onPress={onEmailLoginPress} />
       </SafeAreaView>
     </View>
   );
@@ -24,5 +26,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 14,
+    justifyContent: 'center',
   },
 });

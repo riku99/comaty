@@ -1,9 +1,21 @@
-import { Input } from '@rneui/base';
+import { Input } from '@rneui/themed';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { theme } from 'src/styles';
 
-export const EmailForm = () => {
+type Props = {
+  email: string;
+  setEmail: (email: string) => void;
+  password: string;
+  setPassword: (password: string) => void;
+};
+
+export const EmailForm = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+}: Props) => {
   const [emailFormFocused, setEmailFormFocused] = useState(false);
   const [passwordFormFocused, setPasswordFormFocused] = useState(false);
 
@@ -21,6 +33,8 @@ export const EmailForm = () => {
         onBlur={() => {
           setEmailFormFocused(false);
         }}
+        value={email}
+        onChangeText={setEmail}
       />
       <Input
         label="パスワード"
@@ -37,6 +51,8 @@ export const EmailForm = () => {
         onBlur={() => {
           setPasswordFormFocused(false);
         }}
+        value={password}
+        onChangeText={setPassword}
       />
     </>
   );

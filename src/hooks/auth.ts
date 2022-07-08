@@ -9,7 +9,6 @@ export const useSignUpWithEmail = () => {
         const { user: firebaseUser } =
           await auth().createUserWithEmailAndPassword(email, password);
         const idToken = await firebaseUser.getIdToken();
-        console.log('idToken is ' + idToken);
       } catch (error) {
         console.log(error);
         if (error.code === 'auth/email-already-in-use') {

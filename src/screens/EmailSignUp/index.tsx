@@ -21,10 +21,10 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
   const { signUpWithEmail } = useSignUpWithEmail();
 
   const onSignUpPress = async () => {
-    await signUpWithEmail({
-      email,
-      password,
-    });
+    // await signUpWithEmail({
+    //   email,
+    //   password,
+    // });
   };
 
   return (
@@ -37,7 +37,7 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
       />
 
       <BottomAnimatedButton
-        title="登録"
+        title="次へ"
         onPress={onSignUpPress}
         disabled={disabeld}
       />

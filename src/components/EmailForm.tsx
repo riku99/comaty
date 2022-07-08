@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Input } from '@rneui/themed';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -18,6 +19,7 @@ export const EmailForm = ({
 }: Props) => {
   const [emailFormFocused, setEmailFormFocused] = useState(false);
   const [passwordFormFocused, setPasswordFormFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
@@ -35,6 +37,8 @@ export const EmailForm = ({
         }}
         value={email}
         onChangeText={setEmail}
+        style={styles.inputText}
+        keyboardType="email-address"
       />
       <Input
         label="パスワード"
@@ -53,6 +57,29 @@ export const EmailForm = ({
         }}
         value={password}
         onChangeText={setPassword}
+        secureTextEntry={!showPassword}
+        style={styles.inputText}
+        rightIcon={
+          showPassword ? (
+            <Ionicons
+              name="eye-sharp"
+              size={20}
+              color="black"
+              onPress={() => {
+                setShowPassword(false);
+              }}
+            />
+          ) : (
+            <Ionicons
+              name="eye-off-sharp"
+              size={20}
+              color="black"
+              onPress={() => {
+                setShowPassword(true);
+              }}
+            />
+          )
+        }
       />
     </>
   );
@@ -61,5 +88,8 @@ export const EmailForm = ({
 const styles = StyleSheet.create({
   passwordContainer: {
     marginTop: 20,
+  },
+  inputText: {
+    fontWeight: 'bold',
   },
 });

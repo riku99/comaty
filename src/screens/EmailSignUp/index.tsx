@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
 import { EmailForm } from 'src/components/EmailForm';
+import { useSignUpWithEmail } from 'src/hooks/auth';
 
 type Props = RootNavigationScreenProp<'EmailSignUp'>;
 
@@ -17,6 +18,15 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
 
   const disabeld = !email || !password || password.length < 8;
 
+  const { signUpWithEmail } = useSignUpWithEmail();
+
+  const onSignUpPress = async () => {
+    await signUpWithEmail({
+      email,
+      password,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <EmailForm
@@ -28,10 +38,7 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
 
       <BottomAnimatedButton
         title="登録"
-        onPress={() => {
-          console.log(email);
-          console.log(password);
-        }}
+        onPress={onSignUpPress}
         disabled={disabeld}
       />
     </View>

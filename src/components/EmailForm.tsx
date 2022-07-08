@@ -64,7 +64,7 @@ export const EmailForm = ({
             <Ionicons
               name="eye-sharp"
               size={20}
-              color="black"
+              color="gray"
               onPress={() => {
                 setShowPassword(false);
               }}
@@ -73,7 +73,7 @@ export const EmailForm = ({
             <Ionicons
               name="eye-off-sharp"
               size={20}
-              color="black"
+              color="gray"
               onPress={() => {
                 setShowPassword(true);
               }}

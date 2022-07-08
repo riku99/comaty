@@ -21,10 +21,14 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
   const { signUpWithEmail } = useSignUpWithEmail();
 
   const onSignUpPress = async () => {
-    await signUpWithEmail({
+    const userId = await signUpWithEmail({
       email,
       password,
     });
+
+    if (userId) {
+      navigation.navigate('SexSelection');
+    }
   };
 
   return (

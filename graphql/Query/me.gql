@@ -9,3 +9,9 @@ query getMe {
     birthDay
   }
 }
+
+query getInitialStatusCompletion {
+  me {
+    initialStatusCompletion
+  }
+}

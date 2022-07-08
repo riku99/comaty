@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { AuthStack } from './AuthStack';
@@ -16,11 +17,27 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const RootStack = () => {
   const { loggedIn } = useLoggedIn();
 
+  const {
+    data: initialStatusCompletionData,
+  } = useGetInitialStatusCompletionQuery({
+    fetchPolicy: 'cache-only',
+  });
+
+  const initialStatusCompletion = !!initialStatusCompletionData?.me
+    ?.initialStatusCompletion;
+
   return (
     <Stack.Navigator>
       {loggedIn ? (
         <>
-          <Stack.Screen name="SexSelection" component={SexSelectionScreen} />
+          {!initialStatusCompletion && (
+            <>
+              <Stack.Screen
+                name="SexSelection"
+                component={SexSelectionScreen}
+              />
+            </>
+          )}
           <Stack.Screen
             name="BottomTab"
             component={BottomTab}

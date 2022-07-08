@@ -26,9 +26,12 @@ export type CreateUserInput = {
 
 export type Me = UserEntity & {
   __typename?: 'Me';
+  birthDay?: Maybe<Scalars['Int']>;
+  birthMonth?: Maybe<Scalars['Int']>;
+  birthYear?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
-  nickname: Scalars['String'];
+  nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
 };
 
@@ -44,6 +47,7 @@ export type MutationCreateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  me?: Maybe<Me>;
   user: User;
 };
 
@@ -61,13 +65,13 @@ export enum Sex {
 export type User = UserEntity & {
   __typename?: 'User';
   id: Scalars['ID'];
-  nickname: Scalars['String'];
+  nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
 };
 
 export type UserEntity = {
   id: Scalars['ID'];
-  nickname: Scalars['String'];
+  nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
 };
 
@@ -80,7 +84,12 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname: string, sex?: Sex | null, initialStatusCompletion: boolean } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean } };
+
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } | null };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -126,6 +135,46 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const GetMeDocument = gql`
+    query getMe {
+  me {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
+  }
+}
+    `;
+
+/**
+ * __useGetMeQuery__
+ *
+ * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeQuery(baseOptions?: Apollo.QueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+      }
+export function useGetMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
+export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>;
+export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>;
+export type GetMeQueryResult = Apollo.QueryResult<GetMeQuery, GetMeQueryVariables>;
 export const GetUserDocument = gql`
     query GetUser($id: ID!) {
   user(id: $id) {

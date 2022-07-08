@@ -3,6 +3,7 @@ import {
   CreateThemeOptions,
   ThemeProvider as ThemeProviderBase,
 } from '@rneui/themed';
+import { theme as themeColor } from 'src/styles';
 
 type Props = {
   children: JSX.Element;
@@ -25,6 +26,13 @@ const theme: CreateThemeOptions = createTheme({
   Input: {
     containerStyle: {
       paddingHorizontal: 0,
+    },
+  },
+  Text: {
+    h2Style: {
+      fontWeight: 'bold',
+      color: themeColor.secondary,
+      fontSize: 26,
     },
   },
   lightColors: {

@@ -23,7 +23,9 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
 
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
 
-  const buttonBottom = useSharedValue(safeAreaBottom);
+  const initialButtonButtom = Math.max(safeAreaBottom, BUTTON_BOTTOM);
+
+  const buttonBottom = useSharedValue(initialButtonButtom);
   const buttonContainerStyle = useAnimatedStyle(() => {
     return {
       bottom: buttonBottom.value,

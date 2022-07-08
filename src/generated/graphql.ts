@@ -27,6 +27,7 @@ export type CreateUserInput = {
 export type Me = UserEntity & {
   __typename?: 'Me';
   id: Scalars['ID'];
+  initialStatusCompletion: Scalars['Boolean'];
   nickname: Scalars['String'];
   sex?: Maybe<Sex>;
 };
@@ -53,7 +54,8 @@ export type QueryUserArgs = {
 
 export enum Sex {
   Female = 'FEMALE',
-  Male = 'MALE'
+  Male = 'MALE',
+  NotSelected = 'NOT_SELECTED'
 }
 
 export type User = UserEntity & {
@@ -78,7 +80,7 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname: string, sex?: Sex | null, initialStatusCompletion: boolean } };
 
 export type GetUserQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -92,6 +94,9 @@ export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {
     id
+    nickname
+    sex
+    initialStatusCompletion
   }
 }
     `;

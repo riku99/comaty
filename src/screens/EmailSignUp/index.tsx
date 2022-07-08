@@ -25,16 +25,12 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
   const onSignUpPress = async () => {
     setLoadingVisible(true);
 
-    const userId = await signUpWithEmail({
+    await signUpWithEmail({
       email,
       password,
     });
 
     setLoadingVisible(false);
-
-    if (userId) {
-      navigation.navigate('SexSelection');
-    }
   };
 
   return (

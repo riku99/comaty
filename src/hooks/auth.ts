@@ -1,11 +1,27 @@
+import { useReactiveVar } from '@apollo/client';
 import auth from '@react-native-firebase/auth';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import { CreateUserError, useCreateUserMutation } from 'src/generated/graphql';
+import { loggedInVar } from 'src/stores/loggedIn';
 import { getGraphQLError } from 'src/utils';
+
+export const useLoggedIn = () => {
+  const loggedIn = useReactiveVar(loggedInVar);
+
+  const setLoggedIn = useCallback((value: boolean) => {
+    loggedInVar(value);
+  }, []);
+
+  return {
+    loggedIn,
+    setLoggedIn,
+  };
+};
 
 export const useSignUpWithEmail = () => {
   const [createUserMutation] = useCreateUserMutation();
+  const { setLoggedIn } = useLoggedIn();
 
   const signUpWithEmail = useCallback(
     async ({ email, password }: { email: string; password: string }) => {
@@ -29,6 +45,9 @@ export const useSignUpWithEmail = () => {
                 Alert.alert('既にユーザーが存在しています');
               }
             }
+          },
+          onCompleted: () => {
+            setLoggedIn(true);
           },
         });
 

@@ -1,16 +1,8 @@
 export const theme = {
-  primary: '#526eff',
+  primary: '#9089fa',
   black: '#262626',
   secondary: '#0f1d61',
   formBorderGray: '#b3b3b3',
   textGray: '#575757',
   boarderGray: '#dbdbdb',
 };
-
-// export const styles = {
-//   headerTitleFont: 'Chalkboard SE',
-//   headerTitleSize: 32,
-//   buttonHeight: 60,
-//   buttonTitleSize: 18,
-//   buttonBorderRadius: 6,
-// };

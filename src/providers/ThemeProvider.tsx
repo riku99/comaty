@@ -12,7 +12,7 @@ type Props = {
 const theme: CreateThemeOptions = createTheme({
   Button: {
     buttonStyle: {
-      backgroundColor: '#526eff',
+      backgroundColor: themeColor.primary,
       height: 54,
       borderRadius: 6,
     },
@@ -37,11 +37,6 @@ const theme: CreateThemeOptions = createTheme({
       color: themeColor.secondary,
       fontSize: 26,
     },
-  },
-  lightColors: {
-    primary: '#526eff',
-    black: '#262626',
-    secondary: '#0f1d61',
   },
 });
 

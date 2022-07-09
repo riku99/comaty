@@ -1,4 +1,5 @@
 import { useReactiveVar } from '@apollo/client';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
@@ -80,5 +81,35 @@ export const useSignUpWithEmail = () => {
 
   return {
     signUpWithEmail,
+  };
+};
+
+export const useSignUpWithApple = () => {
+  const signUpWithApple = useCallback(async () => {
+    try {
+      const appleAuthResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL],
+      });
+
+      if (!appleAuthResponse.identityToken) {
+        Alert.alert('無効なアカウントです');
+        return;
+      }
+
+      const { identityToken, nonce } = appleAuthResponse;
+      const appleCredential = auth.AppleAuthProvider.credential(
+        identityToken,
+        nonce
+      );
+      const appleData = await auth().signInWithCredential(appleCredential);
+      const idToken = await appleData.user.getIdToken();
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
+  return {
+    signUpWithApple,
   };
 };

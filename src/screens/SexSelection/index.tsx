@@ -14,7 +14,9 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '',
+      headerBackVisible: false,
       headerShadowVisible: false,
+      gestureEnabled: false,
     });
   }, [navigation]);
 

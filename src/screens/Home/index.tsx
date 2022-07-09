@@ -1,6 +1,7 @@
+import auth from '@react-native-firebase/auth';
 import { StatusBar } from 'expo-status-bar';
 import React, { useLayoutEffect } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { Pressable, SafeAreaView, Text } from 'react-native';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
@@ -13,28 +14,10 @@ export const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>
-      <Text
-        style={{
-          fontWeight: 'bold',
-          fontSize: 32,
-          marginTop: 4,
-          fontFamily: 'Chalkboard SE',
-          color: '#0f1d61',
+      <Pressable
+        onPress={async () => {
+          await auth().signOut();
         }}
-      >
-        Home
-      </Text>
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: 'bold',
-          marginTop: 20,
-          color: '#262626',
-        }}
-      >
-        This is テキスト
-      </Text>
-      <View
         style={{
           width: '100%',
           height: 54,
@@ -48,9 +31,9 @@ export const HomeScreen = ({ navigation }: Props) => {
         }}
       >
         <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 18 }}>
-          送信
+          サインアウト
         </Text>
-      </View>
+      </Pressable>
       <StatusBar style="auto" />
     </SafeAreaView>
   );

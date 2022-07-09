@@ -28,7 +28,7 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
           一度登録した性別は変更できません。
         </Text>
 
-        <SexItem />
+        <SexItem title="男性" isSelected={false} />
       </View>
 
       <BottomAnimatedButton title="次へ" />

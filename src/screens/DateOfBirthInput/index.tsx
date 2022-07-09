@@ -21,10 +21,6 @@ export const DateOfBirthInputScreen = ({ navigation }: Props) => {
 
   const notCompleted = !birthDay || !birthMonth || !birthYear;
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
@@ -63,9 +59,11 @@ export const DateOfBirthInputScreen = ({ navigation }: Props) => {
             </Pressable>
           ) : (
             <Pressable onPress={onSelectionPress}>
-              <Text
-                style={styles.dateText}
-              >{`${birthYear} / ${birthMonth} / ${birthDay}`}</Text>
+              <Text style={styles.dateText}>{`${birthYear} / ${birthMonth
+                .toString()
+                .padStart(2, '0')} / ${birthDay
+                .toString()
+                .padStart(2, '0')}`}</Text>
             </Pressable>
           )}
         </View>

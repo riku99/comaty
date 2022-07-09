@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
+import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
@@ -10,6 +11,7 @@ export type RootStackParamList = {
   BottomTab: undefined;
   Auth: undefined;
   SexSelection: undefined;
+  DateOfBirthInput: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +44,10 @@ export const RootStack = () => {
             name="BottomTab"
             component={BottomTab}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="DateOfBirthInput"
+            component={DateOfBirthInputScreen}
           />
         </>
       ) : (

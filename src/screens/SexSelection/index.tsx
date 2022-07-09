@@ -20,6 +20,10 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
 
   const { setSex, sex } = useSex();
 
+  const onNextPress = () => {
+    navigation.navigate('DateOfBirthInput');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
@@ -52,7 +56,7 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
         </YStack>
       </View>
 
-      <BottomAnimatedButton title="次へ" />
+      <BottomAnimatedButton title="次へ" onPress={onNextPress} />
     </View>
   );
 };

@@ -29,6 +29,9 @@ const theme: CreateThemeOptions = createTheme({
     },
   },
   Text: {
+    style: {
+      color: themeColor.black,
+    },
     h2Style: {
       fontWeight: 'bold',
       color: themeColor.secondary,

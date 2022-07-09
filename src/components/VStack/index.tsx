@@ -6,7 +6,7 @@ type Props = {
   children: JSX.Element | JSX.Element[];
 } & ComponentProps<typeof View>;
 
-export const YStack = ({ children, space = 0, ...props }: Props) => {
+export const VStack = ({ children, space = 0, ...props }: Props) => {
   return (
     <View {...props}>
       {Array.isArray(children)

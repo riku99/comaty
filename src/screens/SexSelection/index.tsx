@@ -2,7 +2,7 @@ import { Text } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
-import { YStack } from 'src/components/YStack';
+import { VStack } from 'src/components/VStack';
 import { Sex } from 'src/generated/graphql';
 import { useSex } from 'src/stores/initialStatus';
 import { theme } from 'src/styles';
@@ -27,17 +27,12 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
-        <Text h2>性別</Text>
-        <Text
-          style={{
-            marginTop: 18,
-            color: theme.textGray,
-          }}
-        >
-          一度登録した性別は変更できません。
+        <Text h2 style={styles.title}>
+          性別
         </Text>
+        <Text style={styles.desc}>一度登録した性別は変更できません。</Text>
 
-        <YStack style={styles.items} space={16}>
+        <VStack style={styles.items} space={16}>
           <SexItem
             title="男性"
             isSelected={sex === Sex.Male}
@@ -53,7 +48,7 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
             isSelected={sex === Sex.NotSelected}
             onPress={() => setSex(Sex.NotSelected)}
           />
-        </YStack>
+        </VStack>
       </View>
 
       <BottomAnimatedButton title="次へ" onPress={onNextPress} />
@@ -71,5 +66,12 @@ const styles = StyleSheet.create({
   },
   items: {
     marginTop: 20,
+  },
+  title: {
+    marginTop: 14,
+  },
+  desc: {
+    marginTop: 18,
+    color: theme.textGray,
   },
 });

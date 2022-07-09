@@ -2,6 +2,7 @@ import { Text } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
+import { YStack } from 'src/components/YStack';
 import { theme } from 'src/styles';
 import { SexItem } from './SexItem';
 
@@ -28,7 +29,11 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
           一度登録した性別は変更できません。
         </Text>
 
-        <SexItem title="男性" isSelected={false} />
+        <YStack style={styles.items} space={16}>
+          <SexItem title="男性" isSelected={true} />
+          <SexItem title="女性" isSelected={false} />
+          <SexItem title="無回答" isSelected={false} />
+        </YStack>
       </View>
 
       <BottomAnimatedButton title="次へ" />
@@ -43,5 +48,8 @@ const styles = StyleSheet.create({
   },
   contents: {
     paddingHorizontal: 14,
+  },
+  items: {
+    marginTop: 20,
   },
 });

@@ -17,8 +17,8 @@
 		3272574E2876CDA40054B36B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		3272574F2876CDA40054B36B /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		327257592876D0C70054B36B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 327257582876D0B80054B36B /* GoogleService-Info.plist */; };
-		3272575E287966BA0054B36B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3272575C287966B70054B36B /* GoogleService-Info.plist */; };
 		3272575F2879770E0054B36B /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF11013A26730E7F66BD1A6 /* ExpoModulesProvider.swift */; };
+		3272576428797D740054B36B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3272576228797D710054B36B /* GoogleService-Info.plist */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
@@ -38,7 +38,8 @@
 		327257552876CDA40054B36B /* comaty-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "comaty-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		327257562876CDA40054B36B /* comaty copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "comaty copy-Info.plist"; path = "/Users/riku/Myapp/comaty/ios/comaty copy-Info.plist"; sourceTree = "<absolute>"; };
 		327257582876D0B80054B36B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		3272575C287966B70054B36B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3272576128797B710054B36B /* comaty.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = comaty.entitlements; path = comaty/comaty.entitlements; sourceTree = "<group>"; };
+		3272576228797D710054B36B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../AppResouces/Comaty/Dev/GoogleService-info/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44098415E6EFAFA7E9119AB9 /* Pods-comaty.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-comaty.release.xcconfig"; path = "Target Support Files/Pods-comaty/Pods-comaty.release.xcconfig"; sourceTree = "<group>"; };
 		453F39683C56DEB1E9FA5D8F /* Pods-comaty-dev.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-comaty-dev.release.xcconfig"; path = "Target Support Files/Pods-comaty-dev/Pods-comaty-dev.release.xcconfig"; sourceTree = "<group>"; };
 		560A59CF342DAC74864D4A77 /* Pods-comaty-dev.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-comaty-dev.debug.xcconfig"; path = "Target Support Files/Pods-comaty-dev/Pods-comaty-dev.debug.xcconfig"; sourceTree = "<group>"; };
@@ -73,6 +74,7 @@
 		13B07FAE1A68108700A75B9A /* comaty */ = {
 			isa = PBXGroup;
 			children = (
+				3272576128797B710054B36B /* comaty.entitlements */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -115,7 +117,7 @@
 		3272575B287966A90054B36B /* Dev */ = {
 			isa = PBXGroup;
 			children = (
-				3272575C287966B70054B36B /* GoogleService-Info.plist */,
+				3272576228797D710054B36B /* GoogleService-Info.plist */,
 			);
 			path = Dev;
 			sourceTree = "<group>";
@@ -300,7 +302,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3272574D2876CDA40054B36B /* Expo.plist in Resources */,
-				3272575E287966BA0054B36B /* GoogleService-Info.plist in Resources */,
+				3272576428797D740054B36B /* GoogleService-Info.plist in Resources */,
 				3272574E2876CDA40054B36B /* Images.xcassets in Resources */,
 				3272574F2876CDA40054B36B /* SplashScreen.storyboard in Resources */,
 			);
@@ -713,6 +715,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = comaty/comaty.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WY62VS9YM9;
 				ENABLE_BITCODE = NO;
@@ -743,6 +746,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = comaty/comaty.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WY62VS9YM9;
 				INFOPLIST_FILE = comaty/Info.plist;
@@ -767,6 +771,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "comaty-dev.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WY62VS9YM9;
 				ENABLE_BITCODE = NO;
@@ -783,7 +788,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-development";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -797,6 +802,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "comaty-dev.entitlements";
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = WY62VS9YM9;
 				INFOPLIST_FILE = "comaty copy-Info.plist";
@@ -808,7 +814,7 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-dev";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-development";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

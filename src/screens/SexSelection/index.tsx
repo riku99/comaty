@@ -3,6 +3,8 @@ import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
 import { YStack } from 'src/components/YStack';
+import { Sex } from 'src/generated/graphql';
+import { useSex } from 'src/stores/initialStatus';
 import { theme } from 'src/styles';
 import { SexItem } from './SexItem';
 
@@ -15,6 +17,8 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
       headerShadowVisible: false,
     });
   }, [navigation]);
+
+  const { setSex, sex } = useSex();
 
   return (
     <View style={styles.container}>
@@ -30,9 +34,21 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
         </Text>
 
         <YStack style={styles.items} space={16}>
-          <SexItem title="男性" isSelected={true} />
-          <SexItem title="女性" isSelected={false} />
-          <SexItem title="無回答" isSelected={false} />
+          <SexItem
+            title="男性"
+            isSelected={sex === Sex.Male}
+            onPress={() => setSex(Sex.Male)}
+          />
+          <SexItem
+            title="女性"
+            isSelected={sex === Sex.Female}
+            onPress={() => setSex(Sex.Female)}
+          />
+          <SexItem
+            title="無回答"
+            isSelected={sex === Sex.NotSelected}
+            onPress={() => setSex(Sex.NotSelected)}
+          />
         </YStack>
       </View>
 

@@ -38,11 +38,17 @@ export type Me = UserEntity & {
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: Me;
+  updateInitialStatus: Me;
 };
 
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+export type MutationUpdateInitialStatusArgs = {
+  input: UpdateInitialStatusInput;
 };
 
 export type Query = {
@@ -61,6 +67,14 @@ export enum Sex {
   Male = 'MALE',
   NotSelected = 'NOT_SELECTED'
 }
+
+export type UpdateInitialStatusInput = {
+  birthDay: Scalars['Int'];
+  birthMonth: Scalars['Int'];
+  birthYear: Scalars['Int'];
+  nickname: Scalars['String'];
+  sex: Sex;
+};
 
 export type User = UserEntity & {
   __typename?: 'User';

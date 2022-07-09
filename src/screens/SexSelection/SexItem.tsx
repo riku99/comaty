@@ -6,12 +6,14 @@ import { theme } from 'src/styles';
 type Props = {
   title: string;
   isSelected: boolean;
+  onPress: () => void;
 };
 
-export const SexItem = ({ title, isSelected }: Props) => {
+export const SexItem = ({ title, isSelected, onPress }: Props) => {
   return (
     <Pressable
       style={isSelected ? styles.selectedItem : styles.notSelectedItem}
+      onPress={onPress}
     >
       <Text style={isSelected ? styles.selectedTitle : styles.notSelectedTitle}>
         {title}

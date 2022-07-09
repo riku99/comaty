@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
 import { VStack } from 'src/components/VStack';
 import { Sex } from 'src/generated/graphql';
-import { useSex } from 'src/stores/initialStatus';
+import { useSex } from 'src/hooks/initialStatus';
 import { theme } from 'src/styles';
 import { SexItem } from './SexItem';
 

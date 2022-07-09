@@ -45,7 +45,7 @@ export const RootStack = () => {
           <Stack.Screen
             name="BottomTab"
             component={BottomTab}
-            options={{ headerShown: false }}
+            options={{ headerShown: false, gestureEnabled: false }}
           />
           <Stack.Screen
             name="DateOfBirthInput"

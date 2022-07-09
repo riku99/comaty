@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
-import { useGetUserQuery } from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
@@ -11,14 +10,6 @@ export const HomeScreen = ({ navigation }: Props) => {
       headerShown: false,
     });
   }, [navigation]);
-
-  const { data } = useGetUserQuery({
-    variables: {
-      id: 'ij',
-    },
-  });
-
-  console.log(data);
 
   return (
     <SafeAreaView style={{ flex: 1, marginHorizontal: 16 }}>

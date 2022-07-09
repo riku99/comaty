@@ -1,0 +1,11 @@
+mutation UpdateInitialStatus($input: UpdateInitialStatusInput!) {
+  updateInitialStatus(input: $input) {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
+  }
+}

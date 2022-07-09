@@ -38,6 +38,10 @@ export const DateOfBirthInputScreen = ({ navigation }: Props) => {
     setDatePickerVisibility(true);
   };
 
+  const onNextPress = () => {
+    navigation.navigate('NicknameInput');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contents}>
@@ -79,7 +83,11 @@ export const DateOfBirthInputScreen = ({ navigation }: Props) => {
         confirmTextIOS="完了"
       />
 
-      <BottomAnimatedButton title="次へ" disabled={notCompleted} />
+      <BottomAnimatedButton
+        title="次へ"
+        disabled={notCompleted}
+        onPress={onNextPress}
+      />
     </View>
   );
 };

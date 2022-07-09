@@ -6,6 +6,20 @@ const sexVar = makeVar<Sex>(Sex.Male);
 const birthYearVar = makeVar<number | null>(null);
 const birthMonthVar = makeVar<number | null>(null);
 const birthDayVar = makeVar<number | null>(null);
+const nicknameVar = makeVar('');
+
+export const useNickname = () => {
+  const nickname = useReactiveVar(nicknameVar);
+
+  const setNickname = useCallback((value: string) => {
+    nicknameVar(value);
+  }, []);
+
+  return {
+    nickname,
+    setNickname,
+  };
+};
 
 export const useSex = () => {
   const sex = useReactiveVar(sexVar);

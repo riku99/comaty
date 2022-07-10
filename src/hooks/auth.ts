@@ -12,6 +12,11 @@ import {
 import { loggedInVar } from 'src/stores/loggedIn';
 import { getGraphQLError } from 'src/utils';
 
+// GoogleSignin.configure({
+//   webClientId:
+//     '840866011719-0d7c1motvlamiga6ulffbvc3hfivgv9i.apps.googleusercontent.com',
+// });
+
 export const useLoggedIn = () => {
   const loggedIn = useReactiveVar(loggedInVar);
 
@@ -151,5 +156,23 @@ export const useSignUpWithApple = () => {
 
   return {
     signUpWithApple,
+  };
+};
+
+export const useSignUpWithGoogle = () => {
+  const [meQuery] = useGetMeLazyQuery();
+  const [createUser] = useCreateUserMutation();
+  const { setLoggedIn } = useLoggedIn();
+  const [getInitialData] = useGetInitialDataLazyQuery();
+
+  const signUpWithGoogle = useCallback(async () => {}, [
+    createUser,
+    getInitialData,
+    meQuery,
+    setLoggedIn,
+  ]);
+
+  return {
+    signUpWithGoogle,
   };
 };

@@ -1,4 +1,4 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
 import React from 'react';
@@ -30,6 +30,14 @@ export const SignUpButtonGroup = () => {
         title="メールアドレスで登録"
         onPress={onEmailLoginPress}
         buttonStyle={styles.emailButton}
+        icon={
+          <MaterialIcons
+            name="email"
+            color="white"
+            size={ICON_SIZE}
+            style={styles.buttonIcon}
+          />
+        }
       />
       <Button
         title="Appleで登録・ログイン"
@@ -38,7 +46,7 @@ export const SignUpButtonGroup = () => {
           <AntDesign
             name="apple1"
             color="white"
-            size={22}
+            size={ICON_SIZE}
             style={styles.buttonIcon}
           />
         }
@@ -48,11 +56,19 @@ export const SignUpButtonGroup = () => {
         title="Googleで登録・ログイン"
         buttonStyle={styles.googleButton}
         titleStyle={styles.googleButtonTitle}
-        icon={<GoogleIcon width={22} height={22} style={styles.buttonIcon} />}
+        icon={
+          <GoogleIcon
+            width={ICON_SIZE}
+            height={ICON_SIZE}
+            style={styles.buttonIcon}
+          />
+        }
       />
     </VStack>
   );
 };
+
+const ICON_SIZE = 22;
 
 const styles = StyleSheet.create({
   buttonIcon: {

@@ -14,7 +14,7 @@ type Props = {
 };
 
 const link = createHttpLink({
-  uri: 'http://localhost.3:4000/graphql',
+  uri: 'http://localhost:4000/graphql',
 });
 
 const authLink = setContext(async (_, { headers }) => {

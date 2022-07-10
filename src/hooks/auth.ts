@@ -1,8 +1,10 @@
 import { useReactiveVar } from '@apollo/client';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
+import Config from 'react-native-config';
 import {
   CreateUserError,
   useCreateUserMutation,
@@ -12,10 +14,9 @@ import {
 import { loggedInVar } from 'src/stores/loggedIn';
 import { getGraphQLError } from 'src/utils';
 
-// GoogleSignin.configure({
-//   webClientId:
-//     '840866011719-0d7c1motvlamiga6ulffbvc3hfivgv9i.apps.googleusercontent.com',
-// });
+GoogleSignin.configure({
+  webClientId: Config.GOOGLE_WEB_CLIENT_ID,
+});
 
 export const useLoggedIn = () => {
   const loggedIn = useReactiveVar(loggedInVar);
@@ -165,12 +166,47 @@ export const useSignUpWithGoogle = () => {
   const { setLoggedIn } = useLoggedIn();
   const [getInitialData] = useGetInitialDataLazyQuery();
 
-  const signUpWithGoogle = useCallback(async () => {}, [
-    createUser,
-    getInitialData,
-    meQuery,
-    setLoggedIn,
-  ]);
+  const signUpWithGoogle = useCallback(async () => {
+    try {
+      const { idToken: googleIdToken } = await GoogleSignin.signIn();
+      const googleCredential =
+        auth.GoogleAuthProvider.credential(googleIdToken);
+      const googleResult = await auth().signInWithCredential(googleCredential);
+
+      const userIdToken = await googleResult.user.getIdToken();
+
+      const { data: meData } = await meQuery({
+        fetchPolicy: 'no-cache',
+      });
+
+      if (!meData?.me) {
+        try {
+          await createUser({
+            variables: {
+              input: {
+                idToken: userIdToken,
+                email: googleResult.user.email,
+              },
+            },
+            onCompleted: () => {
+              setLoggedIn(true);
+            },
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        await getInitialData({
+          fetchPolicy: 'network-only',
+          onCompleted: () => {
+            setLoggedIn(true);
+          },
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, [createUser, getInitialData, meQuery, setLoggedIn]);
 
   return {
     signUpWithGoogle,

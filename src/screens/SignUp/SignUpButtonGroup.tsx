@@ -5,13 +5,14 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import GoogleIcon from 'src/assets/svg/google.svg';
 import { VStack } from 'src/components/VStack';
-import { useSignUpWithApple } from 'src/hooks/auth';
+import { useSignUpWithApple, useSignUpWithGoogle } from 'src/hooks/auth';
 import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 import { theme } from 'src/styles';
 
 export const SignUpButtonGroup = () => {
   const { setLoadingVisible } = useLoadingVisible();
   const { signUpWithApple } = useSignUpWithApple();
+  const { signUpWithGoogle } = useSignUpWithGoogle();
   const navigation = useNavigation<RootNavigationProp<'SignUp'>>();
 
   const onEmailLoginPress = () => {
@@ -21,6 +22,12 @@ export const SignUpButtonGroup = () => {
   const onApplePress = async () => {
     setLoadingVisible(true);
     await signUpWithApple();
+    setLoadingVisible(false);
+  };
+
+  const onGooglePress = async () => {
+    setLoadingVisible(true);
+    await signUpWithGoogle();
     setLoadingVisible(false);
   };
 
@@ -56,6 +63,7 @@ export const SignUpButtonGroup = () => {
         title="Googleで登録・ログイン"
         buttonStyle={styles.googleButton}
         titleStyle={styles.googleButtonTitle}
+        onPress={onGooglePress}
         icon={
           <GoogleIcon
             width={ICON_SIZE}

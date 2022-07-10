@@ -1,10 +1,6 @@
-import { AntDesign } from '@expo/vector-icons';
-import { Button } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { useSignUpWithApple } from 'src/hooks/auth';
-import { useLoadingVisible } from 'src/hooks/loadingOverlay';
-import { theme } from 'src/styles';
+import { SignUpButtonGroup } from './SignUpButtonGroup';
 
 type Props = RootNavigationScreenProp<'SignUp'>;
 
@@ -15,47 +11,10 @@ export const SignUpScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  const { setLoadingVisible } = useLoadingVisible();
-  const { signUpWithApple } = useSignUpWithApple();
-
-  const onEmailLoginPress = () => {
-    navigation.navigate('EmailSignUp');
-  };
-
-  const onApplePress = async () => {
-    setLoadingVisible(true);
-    await signUpWithApple();
-    setLoadingVisible(false);
-  };
-
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Button
-          title="メールアドレスで登録"
-          onPress={onEmailLoginPress}
-          buttonStyle={{
-            backgroundColor: theme.primary,
-          }}
-        />
-        <Button
-          title="Appleで登録・ログイン"
-          buttonStyle={{
-            backgroundColor: 'black',
-          }}
-          containerStyle={{
-            marginTop: 20,
-          }}
-          icon={
-            <AntDesign
-              name="apple1"
-              color="white"
-              size={22}
-              style={{ position: 'absolute', left: 20 }}
-            />
-          }
-          onPress={onApplePress}
-        />
+        <SignUpButtonGroup />
       </SafeAreaView>
     </View>
   );

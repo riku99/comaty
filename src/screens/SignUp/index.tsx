@@ -2,6 +2,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Button } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { useSignUpWithApple } from 'src/hooks/auth';
+import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'SignUp'>;
@@ -13,8 +15,17 @@ export const SignUpScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  const { setLoadingVisible } = useLoadingVisible();
+  const { signUpWithApple } = useSignUpWithApple();
+
   const onEmailLoginPress = () => {
     navigation.navigate('EmailSignUp');
+  };
+
+  const onApplePress = async () => {
+    setLoadingVisible(true);
+    await signUpWithApple();
+    setLoadingVisible(false);
   };
 
   return (
@@ -43,6 +54,7 @@ export const SignUpScreen = ({ navigation }: Props) => {
               style={{ position: 'absolute', left: 20 }}
             />
           }
+          onPress={onApplePress}
         />
       </SafeAreaView>
     </View>

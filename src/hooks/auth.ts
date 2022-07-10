@@ -3,7 +3,12 @@ import { appleAuth } from '@invertase/react-native-apple-authentication';
 import auth from '@react-native-firebase/auth';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
-import { CreateUserError, useCreateUserMutation } from 'src/generated/graphql';
+import {
+  CreateUserError,
+  useCreateUserMutation,
+  useGetInitialDataLazyQuery,
+  useGetMeLazyQuery,
+} from 'src/generated/graphql';
 import { loggedInVar } from 'src/stores/loggedIn';
 import { getGraphQLError } from 'src/utils';
 
@@ -76,7 +81,7 @@ export const useSignUpWithEmail = () => {
         );
       }
     },
-    []
+    [createUserMutation, setLoggedIn]
   );
 
   return {
@@ -85,6 +90,11 @@ export const useSignUpWithEmail = () => {
 };
 
 export const useSignUpWithApple = () => {
+  const [meQuery] = useGetMeLazyQuery();
+  const [createUser] = useCreateUserMutation();
+  const { setLoggedIn } = useLoggedIn();
+  const [getInitialData] = useGetInitialDataLazyQuery();
+
   const signUpWithApple = useCallback(async () => {
     try {
       const appleAuthResponse = await appleAuth.performRequest({
@@ -103,11 +113,41 @@ export const useSignUpWithApple = () => {
         nonce
       );
       const appleData = await auth().signInWithCredential(appleCredential);
+
       const idToken = await appleData.user.getIdToken();
+
+      const { data: meData } = await meQuery({
+        fetchPolicy: 'no-cache',
+      });
+
+      if (!meData?.me) {
+        try {
+          await createUser({
+            variables: {
+              input: {
+                idToken,
+                email: appleData.user.email,
+              },
+            },
+            onCompleted: () => {
+              setLoggedIn(true);
+            },
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        await getInitialData({
+          fetchPolicy: 'network-only',
+          onCompleted: () => {
+            setLoggedIn(true);
+          },
+        });
+      }
     } catch (e) {
       console.log(e);
     }
-  }, []);
+  }, [createUser, getInitialData, meQuery, setLoggedIn]);
 
   return {
     signUpWithApple,

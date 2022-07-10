@@ -1,0 +1,11 @@
+query GetInitialData {
+  me {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
+  }
+}

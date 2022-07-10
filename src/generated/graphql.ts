@@ -107,6 +107,11 @@ export type UpdateInitialStatusMutationVariables = Exact<{
 
 export type UpdateInitialStatusMutation = { __typename?: 'Mutation', updateInitialStatus: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } };
 
+export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } | null };
+
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -200,6 +205,46 @@ export function useUpdateInitialStatusMutation(baseOptions?: Apollo.MutationHook
 export type UpdateInitialStatusMutationHookResult = ReturnType<typeof useUpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationResult = Apollo.MutationResult<UpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationOptions = Apollo.BaseMutationOptions<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>;
+export const GetInitialDataDocument = gql`
+    query GetInitialData {
+  me {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
+  }
+}
+    `;
+
+/**
+ * __useGetInitialDataQuery__
+ *
+ * To run a query within a React component, call `useGetInitialDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetInitialDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetInitialDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetInitialDataQuery(baseOptions?: Apollo.QueryHookOptions<GetInitialDataQuery, GetInitialDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(GetInitialDataDocument, options);
+      }
+export function useGetInitialDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInitialDataQuery, GetInitialDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(GetInitialDataDocument, options);
+        }
+export type GetInitialDataQueryHookResult = ReturnType<typeof useGetInitialDataQuery>;
+export type GetInitialDataLazyQueryHookResult = ReturnType<typeof useGetInitialDataLazyQuery>;
+export type GetInitialDataQueryResult = Apollo.QueryResult<GetInitialDataQuery, GetInitialDataQueryVariables>;
 export const GetMeDocument = gql`
     query getMe {
   me {

@@ -5,12 +5,14 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useCallback } from 'react';
 import { Alert } from 'react-native';
 import Config from 'react-native-config';
+import { loginProviders } from 'src/constants';
 import {
   CreateUserError,
   useCreateUserMutation,
   useGetInitialDataLazyQuery,
   useGetMeLazyQuery,
 } from 'src/generated/graphql';
+import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { loggedInVar } from 'src/stores/loggedIn';
 import { getGraphQLError } from 'src/utils';
 
@@ -60,6 +62,7 @@ export const useSignUpWithEmail = () => {
           },
           onCompleted: () => {
             setLoggedIn(true);
+            storage.set(mmkvStorageKeys.loginProviders, loginProviders.email);
           },
         });
 
@@ -137,6 +140,7 @@ export const useSignUpWithApple = () => {
             },
             onCompleted: () => {
               setLoggedIn(true);
+              storage.set(mmkvStorageKeys.loginProviders, loginProviders.apple);
             },
           });
         } catch (e) {
@@ -147,6 +151,7 @@ export const useSignUpWithApple = () => {
           fetchPolicy: 'network-only',
           onCompleted: () => {
             setLoggedIn(true);
+            storage.set(mmkvStorageKeys.loginProviders, loginProviders.apple);
           },
         });
       }
@@ -190,6 +195,10 @@ export const useSignUpWithGoogle = () => {
             },
             onCompleted: () => {
               setLoggedIn(true);
+              storage.set(
+                mmkvStorageKeys.loginProviders,
+                loginProviders.google
+              );
             },
           });
         } catch (e) {
@@ -200,6 +209,7 @@ export const useSignUpWithGoogle = () => {
           fetchPolicy: 'network-only',
           onCompleted: () => {
             setLoggedIn(true);
+            storage.set(mmkvStorageKeys.loginProviders, loginProviders.google);
           },
         });
       }

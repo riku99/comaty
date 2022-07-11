@@ -3,8 +3,13 @@
     "name": "comaty",
     "slug": "comaty",
     "version": "1.0.0",
-    "assetBundlePatterns": ["**/*"],
-    "userInterfaceStyle": "automatic"
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "bundleIdentifier": "com.riku.comaty"
+    }
   },
   "name": "comaty"
 }

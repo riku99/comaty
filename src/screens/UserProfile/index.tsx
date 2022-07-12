@@ -2,6 +2,8 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { BottomButtonGroup } from './BottomButtonGroup';
 import { BottomSheetContent } from './BottomSheetContent';
 
 type Props = RootNavigationScreenProp<'UserProfile'>;
@@ -12,6 +14,8 @@ export const UserProfileScreen = ({ navigation }: Props) => {
       headerShown: false,
     });
   }, [navigation]);
+
+  const { bottom: safeAreaBottom } = useSafeAreaInsets();
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
@@ -41,15 +45,17 @@ export const UserProfileScreen = ({ navigation }: Props) => {
       >
         <BottomSheetContent />
       </BottomSheet>
-      {/* <View
-        style={{
-          backgroundColor: 'red',
-          width: '100%',
-          height: '100%',
-          borderRadius: 28,
-          transform: [{ translateY: -22 }],
-        }}
-      ></View> */}
+
+      <View
+        style={[
+          styles.buttonButtomGroupContainer,
+          {
+            bottom: safeAreaBottom + 4,
+          },
+        ]}
+      >
+        <BottomButtonGroup />
+      </View>
     </View>
   );
 };
@@ -61,5 +67,9 @@ const snapPoint1 = screenHeight - imageHeight + 16;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  buttonButtomGroupContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
   },
 });

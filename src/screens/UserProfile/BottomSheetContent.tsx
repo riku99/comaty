@@ -28,6 +28,14 @@ export const BottomSheetContent = React.memo(() => {
           );
         })}
       </View>
+
+      <View style={styles.bioContainer}>
+        <Text style={styles.bio}>
+          {
+            'はじめまして！\n98年生まれの24歳です！\n\n休学と留年したのでまだ大学生やってます笑エンジニアとしても働いてて、今はアプリ作ってます😉\n\nそれとComatyの製作者です！\nぜひ一緒に飲みましょ〜〜🍺'
+          }
+        </Text>
+      </View>
     </View>
   );
 });
@@ -63,5 +71,12 @@ const styles = StyleSheet.create({
     marginLeft: TAG_MARGIN_LEFT,
     marginTop: TAG_MARGIN_TOP,
     borderRadius: 12,
+  },
+  bioContainer: {
+    marginTop: 24,
+  },
+  bio: {
+    lineHeight: 18,
+    fontSize: 16,
   },
 });

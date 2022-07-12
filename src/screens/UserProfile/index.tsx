@@ -19,7 +19,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const snapPoints = useMemo(() => [snapPoint1, '84%'], []);
+  const snapPoints = useMemo(() => [snapPoint1, '90%'], []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
@@ -62,7 +62,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 const imageHeight = (screenWidth / 3) * 4; // 3:4
-const snapPoint1 = screenHeight - imageHeight + 16;
+const snapPoint1 = screenHeight - imageHeight + 26;
 
 const styles = StyleSheet.create({
   container: {

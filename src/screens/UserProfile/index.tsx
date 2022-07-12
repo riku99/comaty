@@ -1,6 +1,8 @@
-import React, { useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import BottomSheet from '@gorhom/bottom-sheet';
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { BottomSheetContent } from './BottomSheetContent';
 
 type Props = RootNavigationScreenProp<'UserProfile'>;
 
@@ -11,6 +13,14 @@ export const UserProfileScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const snapPoints = useMemo(() => [snapPoint1, '84%'], []);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log('handleSheetChanges', index);
+  }, []);
+
   return (
     <View style={styles.container}>
       <FastImage
@@ -19,11 +29,19 @@ export const UserProfileScreen = ({ navigation }: Props) => {
         }}
         style={{
           width: '100%',
-          aspectRatio: 3 / 4,
+          height: imageHeight,
         }}
       />
 
-      <View
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetContent />
+      </BottomSheet>
+      {/* <View
         style={{
           backgroundColor: 'red',
           width: '100%',
@@ -31,10 +49,14 @@ export const UserProfileScreen = ({ navigation }: Props) => {
           borderRadius: 28,
           transform: [{ translateY: -22 }],
         }}
-      ></View>
+      ></View> */}
     </View>
   );
 };
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+const imageHeight = (screenWidth / 3) * 4; // 3:4
+const snapPoint1 = screenHeight - imageHeight + 16;
 
 const styles = StyleSheet.create({
   container: {

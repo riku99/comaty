@@ -1,5 +1,6 @@
 type AllStackParamList = import('../navigations/RootStack').RootStackParamList &
-  import('../navigations/AuthStack').AuthStackParamList;
+  import('../navigations/AuthStack').AuthStackParamList &
+  import('../navigations/MyPageStack').MyPageStackParamList;
 
 type RootNavigationScreenProp<
   T extends keyof AllStackParamList

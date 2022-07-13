@@ -9,28 +9,10 @@ export const Stories = React.memo(() => {
       <View>
         <LinearGradient
           colors={['#9089fa', '#b289fa', '#e389fa']}
-          style={{
-            width: 69,
-            height: 69,
-            borderRadius: 100,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={style.gradientContainer}
         >
-          <View
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 100,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}
-          >
-            <FastImage
-              source={{ uri: item.uri }}
-              style={{ width: 60, height: 60, borderRadius: 100 }}
-            />
+          <View style={style.blankContainer}>
+            <FastImage source={{ uri: item.uri }} style={style.userImage} />
           </View>
         </LinearGradient>
       </View>
@@ -65,6 +47,26 @@ export const Stories = React.memo(() => {
 const style = StyleSheet.create({
   storiesContent: {
     paddingHorizontal: 16,
+  },
+  gradientContainer: {
+    width: 69,
+    height: 69,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  blankContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  userImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 100,
   },
 });
 

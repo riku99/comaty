@@ -38,17 +38,22 @@ export const RootStack = () => {
     <Stack.Navigator>
       {loggedIn ? (
         <>
+          <Stack.Screen
+            name="BottomTab"
+            component={BottomTab}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
           {!initialStatusCompletion && (
             <Stack.Screen
               name="SignUpCompletion"
               component={SignUpCompletionScreen}
             />
           )}
-          <Stack.Screen
+          {/* <Stack.Screen
             name="BottomTab"
             component={BottomTab}
             options={{ headerShown: false, gestureEnabled: false }}
-          />
+          /> */}
           <Stack.Screen
             name="DateOfBirthInput"
             component={DateOfBirthInputScreen}
@@ -58,11 +63,18 @@ export const RootStack = () => {
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
         </>
       ) : (
-        <Stack.Screen
-          name="Auth"
-          component={AuthStack}
-          options={{ headerShown: false }}
-        />
+        <>
+          <Stack.Screen
+            name="BottomTab"
+            component={BottomTab}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+          <Stack.Screen
+            name="Auth"
+            component={AuthStack}
+            options={{ headerShown: false }}
+          />
+        </>
       )}
     </Stack.Navigator>
   );

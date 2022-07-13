@@ -15,6 +15,10 @@ export const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <Stories />
+
+      <View style={styles.nearbyUserContents}>
+        <View></View>
+      </View>
     </View>
   );
 };
@@ -22,5 +26,8 @@ export const HomeScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  nearbyUserContents: {
+    paddingHorizontal: 16,
   },
 });

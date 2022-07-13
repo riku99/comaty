@@ -7,6 +7,7 @@ import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { UserProfileScreen } from 'src/screens/UserProfile';
+import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
 
 export type RootStackParamList = {
@@ -37,7 +38,6 @@ export const RootStack = () => {
     <Stack.Navigator>
       {loggedIn ? (
         <>
-          <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           {!initialStatusCompletion && (
             <Stack.Screen
               name="SignUpCompletion"
@@ -55,14 +55,14 @@ export const RootStack = () => {
           />
           <Stack.Screen name="NicknameInput" component={NicknameInputScreen} />
           <Stack.Screen name="SexSelection" component={SexSelectionScreen} />
+          <Stack.Screen name="UserProfile" component={UserProfileScreen} />
         </>
       ) : (
-        <Stack.Screen name="UserProfile" component={UserProfileScreen} />
-        // <Stack.Screen
-        //   name="Auth"
-        //   component={AuthStack}
-        //   options={{ headerShown: false }}
-        // />
+        <Stack.Screen
+          name="Auth"
+          component={AuthStack}
+          options={{ headerShown: false }}
+        />
       )}
     </Stack.Navigator>
   );

@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: 'bold',
-    fontSize: 26,
+    fontSize: 28,
   },
   age: {
     color: theme.black,
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
   },
   tagsContainer: {
     flexDirection: 'row',

@@ -1,3 +1,4 @@
+import * as Haptics from 'expo-haptics';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -15,6 +16,12 @@ export const ProfileImages = React.memo(() => {
   const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
 
   const onLeftPress = () => {
+    if (displayedImageIndex === 0) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+
     setDisplayedImageIndex((currentIndex) => {
       if (currentIndex === 0) {
         return currentIndex;
@@ -25,6 +32,12 @@ export const ProfileImages = React.memo(() => {
   };
 
   const onRightPress = () => {
+    if (displayedImageIndex === images.length - 1) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+
     setDisplayedImageIndex((currentIndex) => {
       if (currentIndex === images.length - 1) {
         return currentIndex;

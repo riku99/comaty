@@ -68,6 +68,25 @@ export const ProfileImages = React.memo(() => {
         <Pressable style={styles.pressable} onPress={onLeftPress} />
         <Pressable style={styles.pressable} onPress={onRightPress} />
       </View>
+
+      <View style={styles.dotsContainer}>
+        {images.map((_, index) => {
+          return (
+            <View
+              style={[
+                styles.dot,
+                {
+                  marginLeft: index === 0 ? undefined : 6,
+                  backgroundColor:
+                    index === displayedImageIndex ? '#fff' : '#949494',
+                  opacity: index === displayedImageIndex ? 1 : 0.8,
+                },
+              ]}
+              key={index}
+            />
+          );
+        })}
+      </View>
     </Animatable.View>
   );
 });
@@ -85,5 +104,16 @@ const styles = StyleSheet.create({
   },
   pressable: {
     flex: 1,
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 40,
+    alignSelf: 'center',
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 10,
   },
 });

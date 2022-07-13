@@ -1,3 +1,4 @@
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Text } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -14,29 +15,31 @@ const tags = [
 
 export const BottomSheetContent = React.memo(() => {
   return (
-    <View style={styles.contentContainer}>
-      <Text style={styles.name}>
-        Winter <Text style={styles.age}>24</Text>
-      </Text>
-
-      <View style={styles.tagsContainer}>
-        {tags.map((tag, index) => {
-          return (
-            <View style={[styles.tag]} key={index}>
-              <Text style={styles.tagText}>{tag}</Text>
-            </View>
-          );
-        })}
-      </View>
-
-      <View style={styles.bioContainer}>
-        <Text style={styles.bio}>
-          {
-            'はじめまして！\n98年生まれの24歳です！\n\n休学と留年したのでまだ大学生やってます笑\nエンジニアとしても働いてて、今はアプリ作ってます😉\n\nそれとComatyの製作者です！\nぜひ一緒に飲みましょ〜〜🍺'
-          }
+    <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+      <View>
+        <Text style={styles.name}>
+          Winter <Text style={styles.age}>24</Text>
         </Text>
+
+        <View style={styles.tagsContainer}>
+          {tags.map((tag, index) => {
+            return (
+              <View style={[styles.tag]} key={index}>
+                <Text style={styles.tagText}>{tag}</Text>
+              </View>
+            );
+          })}
+        </View>
+
+        <View style={styles.bioContainer}>
+          <Text style={styles.bio}>
+            {
+              'はじめまして！\n98年生まれの24歳です！\n\n休学と留年したのでまだ大学生やってます笑\nエンジニアとしても働いてて、今はアプリ作ってます😉\n\nそれとComatyの製作者です！\nぜひ一緒に飲みましょ〜〜🍺'
+            }
+          </Text>
+        </View>
       </View>
-    </View>
+    </BottomSheetScrollView>
   );
 });
 
@@ -45,8 +48,8 @@ const TAG_MARGIN_TOP = 6;
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 140,
   },
   name: {
     fontWeight: 'bold',

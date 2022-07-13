@@ -1,5 +1,5 @@
 import * as Haptics from 'expo-haptics';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Constants from './constants';
@@ -14,6 +14,7 @@ const images = [
 
 export const ProfileImages = React.memo(() => {
   const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
+  const cacheImage = useRef(1);
 
   const onLeftPress = () => {
     if (displayedImageIndex === 0) {
@@ -46,6 +47,11 @@ export const ProfileImages = React.memo(() => {
       }
     });
   };
+
+  useEffect(function cacheImage() {
+    const cacheData = images.map((i) => ({ uri: i }));
+    FastImage.preload(cacheData);
+  }, []);
 
   return (
     <View>

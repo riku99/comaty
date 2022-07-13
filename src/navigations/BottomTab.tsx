@@ -24,6 +24,9 @@ export const BottomTab = React.memo(() => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarActiveTintColor: theme.primary,
+        tabBarStyle: {
+          borderTopWidth: 0,
+        },
       }}
     >
       <Tab.Screen
@@ -77,4 +80,4 @@ export const BottomTab = React.memo(() => {
   );
 });
 
-const ICON_SIZE = 24;
+const ICON_SIZE = 22;

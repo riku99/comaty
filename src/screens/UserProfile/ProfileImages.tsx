@@ -1,6 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import * as Animatable from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
 import Constants from './constants';
 
@@ -14,7 +15,7 @@ const images = [
 
 export const ProfileImages = React.memo(() => {
   const [displayedImageIndex, setDisplayedImageIndex] = useState(0);
-  const cacheImage = useRef(1);
+  const animatedViewRef = useRef<Animatable.View>(null);
 
   const onLeftPress = () => {
     if (displayedImageIndex === 0) {
@@ -25,6 +26,7 @@ export const ProfileImages = React.memo(() => {
 
     setDisplayedImageIndex((currentIndex) => {
       if (currentIndex === 0) {
+        animatedViewRef.current?.swing(600);
         return currentIndex;
       } else {
         return currentIndex - 1;
@@ -41,6 +43,7 @@ export const ProfileImages = React.memo(() => {
 
     setDisplayedImageIndex((currentIndex) => {
       if (currentIndex === images.length - 1) {
+        animatedViewRef.current?.swing(600);
         return currentIndex;
       } else {
         return currentIndex + 1;
@@ -54,7 +57,7 @@ export const ProfileImages = React.memo(() => {
   }, []);
 
   return (
-    <View>
+    <Animatable.View ref={animatedViewRef as any}>
       <FastImage
         source={{
           uri: images[displayedImageIndex],
@@ -65,7 +68,7 @@ export const ProfileImages = React.memo(() => {
         <Pressable style={styles.pressable} onPress={onLeftPress} />
         <Pressable style={styles.pressable} onPress={onRightPress} />
       </View>
-    </View>
+    </Animatable.View>
   );
 });
 

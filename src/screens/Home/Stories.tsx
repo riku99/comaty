@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -6,10 +7,32 @@ export const Stories = React.memo(() => {
   const renderItem = useCallback(({ item }: { item: { uri: string } }) => {
     return (
       <View>
-        <FastImage
-          source={{ uri: item.uri }}
-          style={{ width: 60, height: 60, borderRadius: 100 }}
-        />
+        <LinearGradient
+          colors={['#9089fa', '#b289fa', '#e389fa']}
+          style={{
+            width: 69,
+            height: 69,
+            borderRadius: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}
+          >
+            <FastImage
+              source={{ uri: item.uri }}
+              style={{ width: 60, height: 60, borderRadius: 100 }}
+            />
+          </View>
+        </LinearGradient>
       </View>
     );
   }, []);
@@ -18,7 +41,7 @@ export const Stories = React.memo(() => {
     return (
       <View
         style={{
-          width: 8,
+          width: 10,
         }}
       />
     );

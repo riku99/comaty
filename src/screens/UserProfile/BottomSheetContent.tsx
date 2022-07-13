@@ -23,7 +23,7 @@ export const BottomSheetContent = React.memo(() => {
         {tags.map((tag, index) => {
           return (
             <View style={[styles.tag]} key={index}>
-              <Text>{tag}</Text>
+              <Text style={styles.tagText}>{tag}</Text>
             </View>
           );
         })}
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
     marginLeft: TAG_MARGIN_LEFT,
     marginTop: TAG_MARGIN_TOP,
     borderRadius: 12,
+  },
+  tagText: {
+    fontWeight: 'bold',
   },
   bioContainer: {
     marginTop: 24,

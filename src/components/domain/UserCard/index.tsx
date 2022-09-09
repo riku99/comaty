@@ -1,3 +1,4 @@
+import {} from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -7,12 +8,19 @@ const image =
 
 type Props = {
   containerStyle?: ViewStyle;
-  onPress?: () => void;
+  onPress?: (id: number) => void;
 };
 
 export const UserCard = ({ containerStyle, onPress }: Props) => {
   return (
-    <Pressable style={[styles.body, containerStyle]} onPress={onPress}>
+    <Pressable
+      style={[styles.body, containerStyle]}
+      onPress={() => {
+        if (onPress) {
+          onPress(1);
+        }
+      }}
+    >
       <FastImage source={{ uri: image }} style={styles.image} />
       <Text style={styles.name}>ジゼル</Text>
       <Text style={styles.singleWord}>渋谷のカフェおすすめ教えて！💜</Text>

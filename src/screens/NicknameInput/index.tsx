@@ -1,7 +1,7 @@
 import { Input, Text } from '@rneui/themed';
 import React, { useLayoutEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
-import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 import { useUpdateInitialStatusMutation } from 'src/generated/graphql';
 import { useDateOfBirth, useNickname, useSex } from 'src/hooks/initialStatus';
 import { useLoadingVisible } from 'src/hooks/loadingOverlay';

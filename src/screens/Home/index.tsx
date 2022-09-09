@@ -1,7 +1,7 @@
 import { Text } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { UserCardList } from 'src/components/UserCardList';
+import { UserCardList } from 'src/components/domain/UserCardList';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
@@ -15,7 +15,6 @@ export const HomeScreen = ({ navigation }: Props) => {
   }, [navigation]);
 
   const onUserCardPress = (id: number) => {
-    console.log(id);
     navigation.navigate('UserProfile');
   };
 

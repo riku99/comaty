@@ -1,8 +1,8 @@
 import { Text } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
-import { VStack } from 'src/components/VStack';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
+import { VStack } from 'src/components/ui/VStack';
 import { Sex } from 'src/generated/graphql';
 import { useSex } from 'src/hooks/initialStatus';
 import { theme } from 'src/styles';

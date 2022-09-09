@@ -4,7 +4,7 @@ import { Button } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import GoogleIcon from 'src/assets/svg/google.svg';
-import { VStack } from 'src/components/VStack';
+import { VStack } from 'src/components/ui/VStack';
 import { useSignUpWithApple, useSignUpWithGoogle } from 'src/hooks/auth';
 import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 import { theme } from 'src/styles';

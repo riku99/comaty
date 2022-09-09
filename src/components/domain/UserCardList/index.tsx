@@ -10,12 +10,6 @@ type Props = {
 export const UserCardList = ({ onCardPress }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: any; index: number }) => {
-      const onPress = () => {
-        if (onCardPress) {
-          onCardPress(index);
-        }
-      };
-
       return (
         <MotiView
           from={{ opacity: 0 }}
@@ -30,7 +24,11 @@ export const UserCardList = ({ onCardPress }: Props) => {
             containerStyle={{
               marginTop: index % 2 !== 0 ? 45 : 0,
             }}
-            onPress={onPress}
+            onPress={(id: number) => {
+              if (onCardPress) {
+                onCardPress(id);
+              }
+            }}
           />
         </MotiView>
       );

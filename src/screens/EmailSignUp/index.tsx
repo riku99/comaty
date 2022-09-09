@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
-import { EmailForm } from 'src/components/EmailForm';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
+import { EmailForm } from 'src/components/ui/EmailForm';
 import { useSignUpWithEmail } from 'src/hooks/auth';
 import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 

@@ -3,7 +3,7 @@ import LottieView from 'lottie-react-native';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Done from 'src/assets/lottie/done.json';
-import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 
 type Props = RootNavigationScreenProp<'SignUpCompletion'>;
 

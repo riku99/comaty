@@ -69,6 +69,7 @@ export const RootStack = () => {
             component={AuthStack}
             options={{ headerShown: false }}
           />
+          <Stack.Screen name="UserProfile" component={UserProfileScreen} />
         </>
       )}
     </Stack.Navigator>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LoadingOverlay } from 'src/components/LoadingOverlay';
+import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import { useGetInitialDataQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { useLoadingVisible } from 'src/hooks/loadingOverlay';

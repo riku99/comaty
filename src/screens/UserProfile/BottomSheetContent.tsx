@@ -2,7 +2,7 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Text } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Tag } from 'src/components/Tag';
+import { Tag } from 'src/components/ui/Tag';
 import { theme } from 'src/styles';
 
 const tags = [
@@ -19,7 +19,7 @@ export const BottomSheetContent = React.memo(() => {
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
       <View>
         <Text style={styles.name}>
-          Winter <Text style={styles.age}>24</Text>
+          ジゼル <Text style={styles.age}>24</Text>
         </Text>
 
         <View style={styles.tagsContainer}>

@@ -2,7 +2,7 @@ import { Text } from '@rneui/themed';
 import React, { useLayoutEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { BottomAnimatedButton } from 'src/components/BottomAnimatedButton';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 import { useDateOfBirth } from 'src/hooks/initialStatus';
 import { theme } from 'src/styles';
 

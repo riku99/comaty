@@ -11,12 +11,12 @@ import { UserCard } from '../UserCard';
 
 type Props = {
   onCardPress?: (id: number) => void;
-  fragment: UserCardListFragment;
+  userListData: UserCardListFragment;
 };
 
 type Item = UserCardListFragment['edges'][number];
 
-export const UserCardList = ({ onCardPress, fragment }: Props) => {
+export const UserCardList = ({ onCardPress, userListData }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: Item; index: number }) => {
       return (
@@ -38,7 +38,10 @@ export const UserCardList = ({ onCardPress, fragment }: Props) => {
                 onCardPress(id);
               }
             }}
-            fragment={filter<UserCardFragment>(UserCardFragmentDoc, item.node)}
+            userCardData={filter<UserCardFragment>(
+              UserCardFragmentDoc,
+              item.node
+            )}
           />
         </MotiView>
       );
@@ -48,7 +51,7 @@ export const UserCardList = ({ onCardPress, fragment }: Props) => {
 
   return (
     <FlatList
-      data={fragment.edges}
+      data={userListData.edges}
       renderItem={renderUser}
       keyExtractor={(_, index) => index.toString()}
       showsVerticalScrollIndicator={false}

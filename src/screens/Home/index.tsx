@@ -2,6 +2,7 @@ import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { UserCardList } from 'src/components/domain/user/UserCardList';
+import { Loading } from 'src/components/ui/Loading';
 import {
   useNearbyUsersQuery,
   UserCardListFragment,
@@ -30,14 +31,14 @@ export const HomeScreen = ({ navigation }: Props) => {
   };
 
   if (!data) {
-    return null;
+    return <Loading />;
   }
 
   return (
     <View style={styles.container}>
       <UserCardList
         onCardPress={onUserCardPress}
-        fragment={filter<UserCardListFragment>(
+        userListData={filter<UserCardListFragment>(
           UserCardListFragmentDoc,
           data.nearbyUsers
         )}

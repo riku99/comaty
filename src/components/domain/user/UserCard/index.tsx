@@ -9,11 +9,11 @@ const noImage =
 type Props = {
   containerStyle?: ViewStyle;
   onPress?: (id: number) => void;
-  fragment: UserCardFragment;
+  userCardData: UserCardFragment;
 };
 
-export const UserCard = ({ containerStyle, onPress, fragment }: Props) => {
-  const { nickname, profileImages, statusMessage } = fragment;
+export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
+  const { nickname, profileImages, statusMessage } = userCardData;
   return (
     <Pressable
       style={[styles.body, containerStyle]}

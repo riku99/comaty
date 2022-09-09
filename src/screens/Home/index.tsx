@@ -23,8 +23,9 @@ export const HomeScreen = ({ navigation }: Props) => {
           animate={{ opacity: 1 }}
           transition={{
             type: 'timing',
-            duration: 4000,
+            duration: 1500,
           }}
+          delay={index * 150}
         >
           <UserCard
             containerStyle={{

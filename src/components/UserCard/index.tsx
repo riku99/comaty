@@ -7,11 +7,12 @@ const image =
 
 type Props = {
   containerStyle?: ViewStyle;
+  onPress?: () => void;
 };
 
-export const UserCard = ({ containerStyle }: Props) => {
+export const UserCard = ({ containerStyle, onPress }: Props) => {
   return (
-    <Pressable style={[styles.body, containerStyle]}>
+    <Pressable style={[styles.body, containerStyle]} onPress={onPress}>
       <FastImage source={{ uri: image }} style={styles.image} />
       <Text style={styles.name}>ジゼル</Text>
       <Text style={styles.singleWord}>渋谷のカフェおすすめ教えて！💜</Text>

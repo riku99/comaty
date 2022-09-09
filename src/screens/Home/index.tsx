@@ -14,9 +14,14 @@ export const HomeScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  const onUserCardPress = (id: number) => {
+    console.log(id);
+    navigation.navigate('UserProfile');
+  };
+
   return (
     <View style={styles.container}>
-      <UserCardList />
+      <UserCardList onCardPress={onUserCardPress} />
     </View>
   );
 };

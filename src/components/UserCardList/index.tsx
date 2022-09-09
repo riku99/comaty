@@ -3,9 +3,19 @@ import { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UserCard } from '../UserCard';
 
-export const UserCardList = () => {
+type Props = {
+  onCardPress?: (id: number) => void;
+};
+
+export const UserCardList = ({ onCardPress }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: any; index: number }) => {
+      const onPress = () => {
+        if (onCardPress) {
+          onCardPress(index);
+        }
+      };
+
       return (
         <MotiView
           from={{ opacity: 0 }}
@@ -20,6 +30,7 @@ export const UserCardList = () => {
             containerStyle={{
               marginTop: index % 2 !== 0 ? 45 : 0,
             }}
+            onPress={onPress}
           />
         </MotiView>
       );

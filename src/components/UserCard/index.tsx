@@ -1,5 +1,5 @@
 import { Text } from '@rneui/themed';
-import { Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 const image =
@@ -19,9 +19,11 @@ export const UserCard = ({ containerStyle }: Props) => {
   );
 };
 
+const { width: screenWidth } = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
   body: {
-    width: '42%',
+    width: screenWidth * 0.36,
     height: 180,
     alignItems: 'center',
   },

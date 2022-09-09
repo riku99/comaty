@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Config from 'react-native-config';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-reanimated';
 import { ApolloProvider } from 'src/providers/ApolloProvider';
 import { NavigationProvider } from 'src/providers/NavigationProvider';
 import { ThemeProvider } from 'src/providers/ThemeProvider';

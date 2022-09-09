@@ -1,4 +1,5 @@
 import { Text } from '@rneui/themed';
+import { MotiView } from 'moti';
 import React, { useCallback, useLayoutEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { UserCard } from 'src/components/UserCard';
@@ -17,11 +18,20 @@ export const HomeScreen = ({ navigation }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: any; index: number }) => {
       return (
-        <UserCard
-          containerStyle={{
-            marginTop: index % 2 !== 0 ? 45 : 0,
+        <MotiView
+          from={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            type: 'timing',
+            duration: 4000,
           }}
-        />
+        >
+          <UserCard
+            containerStyle={{
+              marginTop: index % 2 !== 0 ? 45 : 0,
+            }}
+          />
+        </MotiView>
       );
     },
     []

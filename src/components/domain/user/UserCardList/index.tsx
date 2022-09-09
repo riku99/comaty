@@ -1,15 +1,24 @@
+import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
+import {
+  UserCardListFragment,
+  User_UserCardFragment,
+  User_UserCardFragmentDoc,
+} from 'src/generated/graphql';
 import { UserCard } from '../UserCard';
 
 type Props = {
   onCardPress?: (id: number) => void;
+  fragment: UserCardListFragment;
 };
 
-export const UserCardList = ({ onCardPress }: Props) => {
+type Item = UserCardListFragment['edges'][number];
+
+export const UserCardList = ({ onCardPress, fragment }: Props) => {
   const renderUser = useCallback(
-    ({ item, index }: { item: any; index: number }) => {
+    ({ item, index }: { item: Item; index: number }) => {
       return (
         <MotiView
           from={{ opacity: 0 }}
@@ -29,6 +38,10 @@ export const UserCardList = ({ onCardPress }: Props) => {
                 onCardPress(id);
               }
             }}
+            fragment={filter<User_UserCardFragment>(
+              User_UserCardFragmentDoc,
+              item.node
+            )}
           />
         </MotiView>
       );
@@ -38,7 +51,7 @@ export const UserCardList = ({ onCardPress }: Props) => {
 
   return (
     <FlatList
-      data={u}
+      data={fragment.edges}
       renderItem={renderUser}
       keyExtractor={(_, index) => index.toString()}
       showsVerticalScrollIndicator={false}
@@ -52,8 +65,6 @@ export const UserCardList = ({ onCardPress }: Props) => {
     />
   );
 };
-
-const u = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const styles = StyleSheet.create({
   contentContainer: {

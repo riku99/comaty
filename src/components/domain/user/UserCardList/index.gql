@@ -1,0 +1,17 @@
+fragment UserCardList on UserConnection {
+  edges {
+    node {
+      id
+      ...User_UserCard
+    }
+  }
+}
+
+fragment UserT on UserConnection {
+  edges {
+    node {
+      id
+      sex
+    }
+  }
+}

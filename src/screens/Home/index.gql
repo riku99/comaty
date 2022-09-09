@@ -1,0 +1,8 @@
+query NearbyUsers {
+  nearbyUsers {
+    ...UserCardList
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}

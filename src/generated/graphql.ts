@@ -33,12 +33,14 @@ export type Me = UserEntity & {
   initialStatusCompletion: Scalars['Boolean'];
   nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
+  statusMessage?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createUser: Me;
   updateInitialStatus: Me;
+  updateUserProfile: Me;
 };
 
 
@@ -51,10 +53,30 @@ export type MutationUpdateInitialStatusArgs = {
   input: UpdateInitialStatusInput;
 };
 
+
+export type MutationUpdateUserProfileArgs = {
+  input?: InputMaybe<UpdateUserProfileInput>;
+};
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']>;
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor?: Maybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Me>;
+  nearbyUsers: UserConnection;
   user: User;
+};
+
+
+export type QueryNearbyUsersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -76,22 +98,50 @@ export type UpdateInitialStatusInput = {
   sex: Sex;
 };
 
+export type UpdateUserProfileInput = {
+  bio?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['Int']>;
+};
+
 export type User = UserEntity & {
   __typename?: 'User';
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
+  profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
+  statusMessage?: Maybe<Scalars['String']>;
+};
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  edges: Array<Maybe<UserEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type UserEdge = {
+  __typename?: 'UserEdge';
+  cursor: Scalars['String'];
+  node: User;
 };
 
 export type UserEntity = {
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
+  statusMessage?: Maybe<Scalars['String']>;
 };
 
 export enum UserGetError {
   NotFound = 'NOT_FOUND'
 }
+
+export type UserProfileImage = {
+  __typename?: 'UserProfileImage';
+  height?: Maybe<Scalars['Int']>;
+  id: Scalars['ID'];
+  url: Scalars['String'];
+  width?: Maybe<Scalars['Int']>;
+};
 
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
@@ -122,14 +172,58 @@ export type GetInitialStatusCompletionQueryVariables = Exact<{ [key: string]: ne
 
 export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __typename?: 'Me', initialStatusCompletion: boolean } | null };
 
-export type GetUserQueryVariables = Exact<{
-  id: Scalars['ID'];
-}>;
+export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
+
+export type User_UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+
+export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
+
+export type UserTFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, sex?: Sex | null } } | null> };
+
+export type NearbyUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string } };
+export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, sex?: Sex | null, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
-
+export const PageInfoFragmentDoc = gql`
+    fragment PageInfo on PageInfo {
+  hasNextPage
+  hasPreviousPage
+  startCursor
+  endCursor
+}
+    `;
+export const User_UserCardFragmentDoc = gql`
+    fragment User_UserCard on User {
+  id
+  nickname
+  statusMessage
+  profileImages {
+    id
+    url
+  }
+}
+    `;
+export const UserCardListFragmentDoc = gql`
+    fragment UserCardList on UserConnection {
+  edges {
+    node {
+      id
+      ...User_UserCard
+    }
+  }
+}
+    ${User_UserCardFragmentDoc}`;
+export const UserTFragmentDoc = gql`
+    fragment UserT on UserConnection {
+  edges {
+    node {
+      id
+      sex
+    }
+  }
+}
+    `;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -319,38 +413,43 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
-export const GetUserDocument = gql`
-    query GetUser($id: ID!) {
-  user(id: $id) {
-    id
+export const NearbyUsersDocument = gql`
+    query NearbyUsers {
+  nearbyUsers {
+    ...UserCardList
+    ...UserT
+    pageInfo {
+      ...PageInfo
+    }
   }
 }
-    `;
+    ${UserCardListFragmentDoc}
+${UserTFragmentDoc}
+${PageInfoFragmentDoc}`;
 
 /**
- * __useGetUserQuery__
+ * __useNearbyUsersQuery__
  *
- * To run a query within a React component, call `useGetUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useNearbyUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNearbyUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUserQuery({
+ * const { data, loading, error } = useNearbyUsersQuery({
  *   variables: {
- *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetUserQuery(baseOptions: Apollo.QueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useNearbyUsersQuery(baseOptions?: Apollo.QueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+        return Apollo.useQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
       }
-export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserQuery, GetUserQueryVariables>) {
+export function useNearbyUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUserDocument, options);
+          return Apollo.useLazyQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
         }
-export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
-export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
-export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export type NearbyUsersQueryHookResult = ReturnType<typeof useNearbyUsersQuery>;
+export type NearbyUsersLazyQueryHookResult = ReturnType<typeof useNearbyUsersLazyQuery>;
+export type NearbyUsersQueryResult = Apollo.QueryResult<NearbyUsersQuery, NearbyUsersQueryVariables>;

@@ -1,0 +1,9 @@
+fragment User_UserCard on User {
+  id
+  nickname
+  statusMessage
+  profileImages {
+    id
+    url
+  }
+}

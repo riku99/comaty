@@ -1,16 +1,19 @@
 import { Text } from '@rneui/themed';
 import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { User_UserCardFragment } from 'src/generated/graphql';
 
-const image =
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/298361927_152418067398881_2160437032496243760_n.jpg?stp=dst-jpg_e35&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=105&_nc_ohc=oAYpeFN2dP4AX9kpoYp&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkwMjkxMzI5MzYyOTEwNzkzMg%3D%3D.2-ccb7-5&oh=00_AT8QrBjqzfj398zdc0w311nrI6CMwSnNZdH-5ql5WZMUVA&oe=632150EC&_nc_sid=30a2ef';
+const noImage =
+  'https://scontent.cdninstagram.com/v/t51.2885-19/58409598_320814331934288_8362243699735789568_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=108&_nc_ohc=6UWm0lwa5VwAX8W14vv&edm=APs17CUBAAAA&ccb=7-5&oh=00_AT8V1iPeXwe8Zfyw-TsS9jqI61mztseg3Quv9bDFpgWsHA&oe=632273AE&_nc_sid=978cb9';
 
 type Props = {
   containerStyle?: ViewStyle;
   onPress?: (id: number) => void;
+  fragment: User_UserCardFragment;
 };
 
-export const UserCard = ({ containerStyle, onPress }: Props) => {
+export const UserCard = ({ containerStyle, onPress, fragment }: Props) => {
+  const { nickname, profileImages, statusMessage } = fragment;
   return (
     <Pressable
       style={[styles.body, containerStyle]}
@@ -20,9 +23,12 @@ export const UserCard = ({ containerStyle, onPress }: Props) => {
         }
       }}
     >
-      <FastImage source={{ uri: image }} style={styles.image} />
-      <Text style={styles.name}>ジゼル</Text>
-      <Text style={styles.singleWord}>渋谷のカフェおすすめ教えて！💜</Text>
+      <FastImage
+        source={{ uri: profileImages[0]?.url ?? noImage }}
+        style={styles.image}
+      />
+      <Text style={styles.name}>{nickname}</Text>
+      <Text style={styles.singleWord}>{statusMessage}</Text>
     </Pressable>
   );
 };

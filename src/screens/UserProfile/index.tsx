@@ -1,9 +1,8 @@
-import { AntDesign } from '@expo/vector-icons';
 import BottomSheet from '@gorhom/bottom-sheet';
 import React, { useLayoutEffect, useMemo, useRef } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { theme } from 'src/styles';
+import { BackButton } from 'src/components/ui/BackButton';
 import { BottomButtonGroup } from './BottomButtonGroup';
 import { BottomSheetContent } from './BottomSheetContent';
 import Constants from './constants';
@@ -26,9 +25,7 @@ export const UserProfileScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ProfileImages />
 
-      <Pressable style={styles.backButtonContainer}>
-        <AntDesign name="arrowleft" size={22} color={theme.secondary} />
-      </Pressable>
+      <BackButton containerStyle={styles.backButtonContainer} />
 
       <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
         <BottomSheetContent />
@@ -57,14 +54,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   backButtonContainer: {
-    backgroundColor: '#f1eaf2',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     position: 'absolute',
     top: 40,
     left: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

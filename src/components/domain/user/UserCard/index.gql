@@ -1,4 +1,4 @@
-fragment User_UserCard on User {
+fragment UserCard on User {
   id
   nickname
   statusMessage

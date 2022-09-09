@@ -3,9 +3,9 @@ import { MotiView } from 'moti';
 import { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import {
+  UserCardFragment,
+  UserCardFragmentDoc,
   UserCardListFragment,
-  User_UserCardFragment,
-  User_UserCardFragmentDoc,
 } from 'src/generated/graphql';
 import { UserCard } from '../UserCard';
 
@@ -38,10 +38,7 @@ export const UserCardList = ({ onCardPress, fragment }: Props) => {
                 onCardPress(id);
               }
             }}
-            fragment={filter<User_UserCardFragment>(
-              User_UserCardFragmentDoc,
-              item.node
-            )}
+            fragment={filter<UserCardFragment>(UserCardFragmentDoc, item.node)}
           />
         </MotiView>
       );

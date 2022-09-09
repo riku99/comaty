@@ -11,7 +11,7 @@ import {
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const { data, error } = useNearbyUsersQuery();
+  const { data } = useNearbyUsersQuery();
 
   useLayoutEffect(() => {
     navigation.setOptions({

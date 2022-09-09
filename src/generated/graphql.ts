@@ -174,16 +174,14 @@ export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __t
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
-export type User_UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
-
-export type UserTFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, sex?: Sex | null } } | null> };
 
 export type NearbyUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, sex?: Sex | null, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
+export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
@@ -193,8 +191,8 @@ export const PageInfoFragmentDoc = gql`
   endCursor
 }
     `;
-export const User_UserCardFragmentDoc = gql`
-    fragment User_UserCard on User {
+export const UserCardFragmentDoc = gql`
+    fragment UserCard on User {
   id
   nickname
   statusMessage
@@ -209,21 +207,11 @@ export const UserCardListFragmentDoc = gql`
   edges {
     node {
       id
-      ...User_UserCard
+      ...UserCard
     }
   }
 }
-    ${User_UserCardFragmentDoc}`;
-export const UserTFragmentDoc = gql`
-    fragment UserT on UserConnection {
-  edges {
-    node {
-      id
-      sex
-    }
-  }
-}
-    `;
+    ${UserCardFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -417,14 +405,12 @@ export const NearbyUsersDocument = gql`
     query NearbyUsers {
   nearbyUsers {
     ...UserCardList
-    ...UserT
     pageInfo {
       ...PageInfo
     }
   }
 }
     ${UserCardListFragmentDoc}
-${UserTFragmentDoc}
 ${PageInfoFragmentDoc}`;
 
 /**

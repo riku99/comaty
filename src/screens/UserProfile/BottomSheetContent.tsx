@@ -2,15 +2,16 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Text } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Tag } from 'src/components/Tag';
 import { theme } from 'src/styles';
 
 const tags = [
-  '#3人でいます✌️',
-  '#184㌢',
-  '#ビール好き🍺',
-  '#奢ります🆗',
-  '#よく喋る😏',
-  '#新宿Love💜',
+  '3人でいます✌️',
+  '184㌢',
+  'ビール好き🍺',
+  '奢ります🆗',
+  'よく喋る😏',
+  '新宿Love💜',
 ];
 
 export const BottomSheetContent = React.memo(() => {
@@ -25,7 +26,7 @@ export const BottomSheetContent = React.memo(() => {
           {tags.map((tag, index) => {
             return (
               <View style={[styles.tag]} key={index}>
-                <Text style={styles.tagText}>{tag}</Text>
+                <Tag text={tag} />
               </View>
             );
           })}
@@ -67,13 +68,8 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -TAG_MARGIN_LEFT }],
   },
   tag: {
-    borderWidth: 0.5,
-    borderColor: theme.boarderGray,
-    paddingVertical: 4,
-    paddingHorizontal: 6,
     marginLeft: TAG_MARGIN_LEFT,
     marginTop: TAG_MARGIN_TOP,
-    borderRadius: 12,
   },
   tagText: {
     fontWeight: 'bold',

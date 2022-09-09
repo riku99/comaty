@@ -25,14 +25,13 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const RootStack = () => {
   const { loggedIn } = useLoggedIn();
 
-  const {
-    data: initialStatusCompletionData,
-  } = useGetInitialStatusCompletionQuery({
-    fetchPolicy: 'cache-only',
-  });
+  const { data: initialStatusCompletionData } =
+    useGetInitialStatusCompletionQuery({
+      fetchPolicy: 'cache-only',
+    });
 
-  const initialStatusCompletion = !!initialStatusCompletionData?.me
-    ?.initialStatusCompletion;
+  const initialStatusCompletion =
+    !!initialStatusCompletionData?.me?.initialStatusCompletion;
 
   return (
     <Stack.Navigator>
@@ -43,17 +42,13 @@ export const RootStack = () => {
             component={BottomTab}
             options={{ headerShown: false, gestureEnabled: false }}
           />
+          {/* <Stack.Screen name="UserProfile" component={UserProfileScreen} /> */}
           {!initialStatusCompletion && (
             <Stack.Screen
               name="SignUpCompletion"
               component={SignUpCompletionScreen}
             />
           )}
-          {/* <Stack.Screen
-            name="BottomTab"
-            component={BottomTab}
-            options={{ headerShown: false, gestureEnabled: false }}
-          /> */}
           <Stack.Screen
             name="DateOfBirthInput"
             component={DateOfBirthInputScreen}

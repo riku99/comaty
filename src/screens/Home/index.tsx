@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { UserCardList } from 'src/components/domain/UserCardList';
+import { UserCardList } from 'src/components/domain/user/UserCardList';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 

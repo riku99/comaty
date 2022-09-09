@@ -1,4 +1,3 @@
-import {} from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
 import FastImage from 'react-native-fast-image';

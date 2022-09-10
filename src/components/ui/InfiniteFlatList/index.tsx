@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 type Props<T> = {
-  infiniteLoad: () => Promise<void>;
+  infiniteLoad?: () => Promise<void>;
 } & FlatListProps<T>;
 
 export const InfiniteFlatList = <T extends {}>({
@@ -20,6 +20,10 @@ export const InfiniteFlatList = <T extends {}>({
     useState(false);
 
   const onEndReached = async () => {
+    if (!infiniteLoad) {
+      return;
+    }
+
     if (infiniteLoadIsReady.current) {
       try {
         infiniteLoadIsReady.current = false;
@@ -35,6 +39,10 @@ export const InfiniteFlatList = <T extends {}>({
   };
 
   const onMomentumScrollBegin = () => {
+    if (!infiniteLoad) {
+      return;
+    }
+
     infiniteLoadIsReady.current = true;
   };
 

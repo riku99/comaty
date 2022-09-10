@@ -13,7 +13,7 @@ import { UserCard } from '../UserCard';
 type Props = {
   onCardPress?: (id: number) => void;
   userListData: UserCardListFragment;
-  onEndReached?: () => Promise<void>;
+  infiniteLoad?: () => Promise<void>;
   takeItemCount: number;
 };
 
@@ -22,7 +22,7 @@ type Item = UserCardListFragment['edges'][number];
 export const UserCardList = ({
   onCardPress,
   userListData,
-  onEndReached,
+  infiniteLoad,
   takeItemCount,
 }: Props) => {
   const renderUser = useCallback(
@@ -34,7 +34,7 @@ export const UserCardList = ({
           transition={{
             opacity: {
               type: 'timing',
-              duration: 1500,
+              duration: 1200,
             },
             scale: {
               type: 'timing',
@@ -75,7 +75,7 @@ export const UserCardList = ({
       }}
       contentContainerStyle={styles.contentContainer}
       ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
-      infiniteLoad={onEndReached}
+      infiniteLoad={infiniteLoad}
     />
   );
 };

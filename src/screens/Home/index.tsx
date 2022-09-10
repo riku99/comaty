@@ -39,8 +39,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     return <Loading />;
   }
 
-  const onUserCardListEndReached = async () => {
-    console.log('Run');
+  const infiniteLoad = async () => {
     const { pageInfo } = data.nearbyUsers;
 
     if (pageInfo.hasNextPage) {
@@ -62,7 +61,7 @@ export const HomeScreen = ({ navigation }: Props) => {
           UserCardListFragmentDoc,
           data.nearbyUsers
         )}
-        onEndReached={onUserCardListEndReached}
+        infiniteLoad={infiniteLoad}
         takeItemCount={TAKE_USER_COUNT}
       />
     </View>

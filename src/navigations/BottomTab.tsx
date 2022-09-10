@@ -27,6 +27,12 @@ export const BottomTab = React.memo(() => {
         tabBarStyle: {
           borderTopWidth: 0,
         },
+        headerShadowVisible: false,
+        headerTitleAlign: 'left',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontSize: 22,
+        },
       }}
     >
       <Tab.Screen

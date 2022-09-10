@@ -22,12 +22,6 @@ export const NearbyUsersScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'この辺にいるユーザー👀',
-      headerShadowVisible: false,
-      headerTitleAlign: 'left',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-        fontSize: 22,
-      },
     });
   }, [navigation]);
 

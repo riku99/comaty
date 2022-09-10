@@ -2,15 +2,9 @@ import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -22,7 +16,7 @@ export type Scalars = {
 };
 
 export enum CreateUserError {
-  AlreadyUserExisting = 'ALREADY_USER_EXISTING',
+  AlreadyUserExisting = 'ALREADY_USER_EXISTING'
 }
 
 export type CreateUserInput = {
@@ -49,13 +43,16 @@ export type Mutation = {
   updateUserProfile: Me;
 };
 
+
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
 
+
 export type MutationUpdateInitialStatusArgs = {
   input: UpdateInitialStatusInput;
 };
+
 
 export type MutationUpdateUserProfileArgs = {
   input?: InputMaybe<UpdateUserProfileInput>;
@@ -76,10 +73,12 @@ export type Query = {
   user: User;
 };
 
+
 export type QueryNearbyUsersArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
 };
+
 
 export type QueryUserArgs = {
   id: Scalars['ID'];
@@ -88,7 +87,7 @@ export type QueryUserArgs = {
 export enum Sex {
   Female = 'FEMALE',
   Male = 'MALE',
-  NotSelected = 'NOT_SELECTED',
+  NotSelected = 'NOT_SELECTED'
 }
 
 export type UpdateInitialStatusInput = {
@@ -133,7 +132,7 @@ export type UserEntity = {
 };
 
 export enum UserGetError {
-  NotFound = 'NOT_FOUND',
+  NotFound = 'NOT_FOUND'
 }
 
 export type UserProfileImage = {
@@ -148,191 +147,92 @@ export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
 
-export type CreateUserMutation = {
-  __typename?: 'Mutation';
-  createUser: {
-    __typename?: 'Me';
-    id: string;
-    nickname?: string | null;
-    sex?: Sex | null;
-    initialStatusCompletion: boolean;
-  };
-};
+
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean } };
 
 export type UpdateInitialStatusMutationVariables = Exact<{
   input: UpdateInitialStatusInput;
 }>;
 
-export type UpdateInitialStatusMutation = {
-  __typename?: 'Mutation';
-  updateInitialStatus: {
-    __typename?: 'Me';
-    id: string;
-    nickname?: string | null;
-    sex?: Sex | null;
-    initialStatusCompletion: boolean;
-    birthYear?: number | null;
-    birthMonth?: number | null;
-    birthDay?: number | null;
-  };
-};
 
-export type GetInitialDataQueryVariables = Exact<{ [key: string]: never }>;
+export type UpdateInitialStatusMutation = { __typename?: 'Mutation', updateInitialStatus: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } };
 
-export type GetInitialDataQuery = {
-  __typename?: 'Query';
-  me?: {
-    __typename?: 'Me';
-    id: string;
-    nickname?: string | null;
-    sex?: Sex | null;
-    initialStatusCompletion: boolean;
-    birthYear?: number | null;
-    birthMonth?: number | null;
-    birthDay?: number | null;
-  } | null;
-};
+export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetMeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetMeQuery = {
-  __typename?: 'Query';
-  me?: {
-    __typename?: 'Me';
-    id: string;
-    nickname?: string | null;
-    sex?: Sex | null;
-    initialStatusCompletion: boolean;
-    birthYear?: number | null;
-    birthMonth?: number | null;
-    birthDay?: number | null;
-  } | null;
-};
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } | null };
 
-export type GetInitialStatusCompletionQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetInitialStatusCompletionQuery = {
-  __typename?: 'Query';
-  me?: { __typename?: 'Me'; initialStatusCompletion: boolean } | null;
-};
 
-export type PageInfoFragment = {
-  __typename?: 'PageInfo';
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  startCursor?: string | null;
-  endCursor?: string | null;
-};
+export type GetMeQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } | null };
 
-export type UserCardFragment = {
-  __typename?: 'User';
-  id: string;
-  nickname?: string | null;
-  statusMessage?: string | null;
-  profileImages: Array<{
-    __typename?: 'UserProfileImage';
-    id: string;
-    url: string;
-  } | null>;
-};
+export type GetInitialStatusCompletionQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type UserCardListFragment = {
-  __typename?: 'UserConnection';
-  edges: Array<{
-    __typename?: 'UserEdge';
-    node: {
-      __typename?: 'User';
-      id: string;
-      nickname?: string | null;
-      statusMessage?: string | null;
-      profileImages: Array<{
-        __typename?: 'UserProfileImage';
-        id: string;
-        url: string;
-      } | null>;
-    };
-  } | null>;
-};
+
+export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __typename?: 'Me', initialStatusCompletion: boolean } | null };
+
+export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
+
+export type ProfileImageFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+
+export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+
+export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
 export type NearbyUsersQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
 }>;
 
-export type NearbyUsersQuery = {
-  __typename?: 'Query';
-  nearbyUsers: {
-    __typename?: 'UserConnection';
-    pageInfo: {
-      __typename?: 'PageInfo';
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-      startCursor?: string | null;
-      endCursor?: string | null;
-    };
-    edges: Array<{
-      __typename?: 'UserEdge';
-      node: {
-        __typename?: 'User';
-        id: string;
-        nickname?: string | null;
-        statusMessage?: string | null;
-        profileImages: Array<{
-          __typename?: 'UserProfileImage';
-          id: string;
-          url: string;
-        } | null>;
-      };
-    } | null>;
-  };
-};
+
+export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
 export const PageInfoFragmentDoc = gql`
-  fragment PageInfo on PageInfo {
-    hasNextPage
-    hasPreviousPage
-    startCursor
-    endCursor
+    fragment PageInfo on PageInfo {
+  hasNextPage
+  hasPreviousPage
+  startCursor
+  endCursor
+}
+    `;
+export const ProfileImageFragmentDoc = gql`
+    fragment ProfileImage on User {
+  profileImages {
+    id
+    url
   }
-`;
+}
+    `;
 export const UserCardFragmentDoc = gql`
-  fragment UserCard on User {
+    fragment UserCard on User {
+  id
+  nickname
+  statusMessage
+  ...ProfileImage
+}
+    ${ProfileImageFragmentDoc}`;
+export const UserCardListFragmentDoc = gql`
+    fragment UserCardList on UserConnection {
+  edges {
+    node {
+      id
+      ...UserCard
+    }
+  }
+}
+    ${UserCardFragmentDoc}`;
+export const CreateUserDocument = gql`
+    mutation createUser($input: CreateUserInput!) {
+  createUser(input: $input) {
     id
     nickname
-    statusMessage
-    profileImages {
-      id
-      url
-    }
+    sex
+    initialStatusCompletion
   }
-`;
-export const UserCardListFragmentDoc = gql`
-  fragment UserCardList on UserConnection {
-    edges {
-      node {
-        id
-        ...UserCard
-      }
-    }
-  }
-  ${UserCardFragmentDoc}
-`;
-export const CreateUserDocument = gql`
-  mutation createUser($input: CreateUserInput!) {
-    createUser(input: $input) {
-      id
-      nickname
-      sex
-      initialStatusCompletion
-    }
-  }
-`;
-export type CreateUserMutationFn = Apollo.MutationFunction<
-  CreateUserMutation,
-  CreateUserMutationVariables
->;
+}
+    `;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
 /**
  * __useCreateUserMutation__
@@ -351,44 +251,27 @@ export type CreateUserMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateUserMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    CreateUserMutation,
-    CreateUserMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(
-    CreateUserDocument,
-    options
-  );
-}
-export type CreateUserMutationHookResult = ReturnType<
-  typeof useCreateUserMutation
->;
-export type CreateUserMutationResult =
-  Apollo.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
-  CreateUserMutation,
-  CreateUserMutationVariables
->;
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const UpdateInitialStatusDocument = gql`
-  mutation UpdateInitialStatus($input: UpdateInitialStatusInput!) {
-    updateInitialStatus(input: $input) {
-      id
-      nickname
-      sex
-      initialStatusCompletion
-      birthYear
-      birthMonth
-      birthDay
-    }
+    mutation UpdateInitialStatus($input: UpdateInitialStatusInput!) {
+  updateInitialStatus(input: $input) {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
   }
-`;
-export type UpdateInitialStatusMutationFn = Apollo.MutationFunction<
-  UpdateInitialStatusMutation,
-  UpdateInitialStatusMutationVariables
->;
+}
+    `;
+export type UpdateInitialStatusMutationFn = Apollo.MutationFunction<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>;
 
 /**
  * __useUpdateInitialStatusMutation__
@@ -407,40 +290,26 @@ export type UpdateInitialStatusMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useUpdateInitialStatusMutation(
-  baseOptions?: Apollo.MutationHookOptions<
-    UpdateInitialStatusMutation,
-    UpdateInitialStatusMutationVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useMutation<
-    UpdateInitialStatusMutation,
-    UpdateInitialStatusMutationVariables
-  >(UpdateInitialStatusDocument, options);
-}
-export type UpdateInitialStatusMutationHookResult = ReturnType<
-  typeof useUpdateInitialStatusMutation
->;
-export type UpdateInitialStatusMutationResult =
-  Apollo.MutationResult<UpdateInitialStatusMutation>;
-export type UpdateInitialStatusMutationOptions = Apollo.BaseMutationOptions<
-  UpdateInitialStatusMutation,
-  UpdateInitialStatusMutationVariables
->;
+export function useUpdateInitialStatusMutation(baseOptions?: Apollo.MutationHookOptions<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>(UpdateInitialStatusDocument, options);
+      }
+export type UpdateInitialStatusMutationHookResult = ReturnType<typeof useUpdateInitialStatusMutation>;
+export type UpdateInitialStatusMutationResult = Apollo.MutationResult<UpdateInitialStatusMutation>;
+export type UpdateInitialStatusMutationOptions = Apollo.BaseMutationOptions<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>;
 export const GetInitialDataDocument = gql`
-  query GetInitialData {
-    me {
-      id
-      nickname
-      sex
-      initialStatusCompletion
-      birthYear
-      birthMonth
-      birthDay
-    }
+    query GetInitialData {
+  me {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
   }
-`;
+}
+    `;
 
 /**
  * __useGetInitialDataQuery__
@@ -457,53 +326,30 @@ export const GetInitialDataDocument = gql`
  *   },
  * });
  */
-export function useGetInitialDataQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetInitialDataQuery,
-    GetInitialDataQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(
-    GetInitialDataDocument,
-    options
-  );
-}
-export function useGetInitialDataLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetInitialDataQuery,
-    GetInitialDataQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(
-    GetInitialDataDocument,
-    options
-  );
-}
-export type GetInitialDataQueryHookResult = ReturnType<
-  typeof useGetInitialDataQuery
->;
-export type GetInitialDataLazyQueryHookResult = ReturnType<
-  typeof useGetInitialDataLazyQuery
->;
-export type GetInitialDataQueryResult = Apollo.QueryResult<
-  GetInitialDataQuery,
-  GetInitialDataQueryVariables
->;
+export function useGetInitialDataQuery(baseOptions?: Apollo.QueryHookOptions<GetInitialDataQuery, GetInitialDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(GetInitialDataDocument, options);
+      }
+export function useGetInitialDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInitialDataQuery, GetInitialDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInitialDataQuery, GetInitialDataQueryVariables>(GetInitialDataDocument, options);
+        }
+export type GetInitialDataQueryHookResult = ReturnType<typeof useGetInitialDataQuery>;
+export type GetInitialDataLazyQueryHookResult = ReturnType<typeof useGetInitialDataLazyQuery>;
+export type GetInitialDataQueryResult = Apollo.QueryResult<GetInitialDataQuery, GetInitialDataQueryVariables>;
 export const GetMeDocument = gql`
-  query getMe {
-    me {
-      id
-      nickname
-      sex
-      initialStatusCompletion
-      birthYear
-      birthMonth
-      birthDay
-    }
+    query getMe {
+  me {
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    birthYear
+    birthMonth
+    birthDay
   }
-`;
+}
+    `;
 
 /**
  * __useGetMeQuery__
@@ -520,37 +366,24 @@ export const GetMeDocument = gql`
  *   },
  * });
  */
-export function useGetMeQuery(
-  baseOptions?: Apollo.QueryHookOptions<GetMeQuery, GetMeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<GetMeQuery, GetMeQueryVariables>(
-    GetMeDocument,
-    options
-  );
-}
-export function useGetMeLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<GetMeQuery, GetMeQueryVariables>
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<GetMeQuery, GetMeQueryVariables>(
-    GetMeDocument,
-    options
-  );
-}
+export function useGetMeQuery(baseOptions?: Apollo.QueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+      }
+export function useGetMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
 export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>;
 export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>;
-export type GetMeQueryResult = Apollo.QueryResult<
-  GetMeQuery,
-  GetMeQueryVariables
->;
+export type GetMeQueryResult = Apollo.QueryResult<GetMeQuery, GetMeQueryVariables>;
 export const GetInitialStatusCompletionDocument = gql`
-  query getInitialStatusCompletion {
-    me {
-      initialStatusCompletion
-    }
+    query getInitialStatusCompletion {
+  me {
+    initialStatusCompletion
   }
-`;
+}
+    `;
 
 /**
  * __useGetInitialStatusCompletionQuery__
@@ -567,52 +400,28 @@ export const GetInitialStatusCompletionDocument = gql`
  *   },
  * });
  */
-export function useGetInitialStatusCompletionQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    GetInitialStatusCompletionQuery,
-    GetInitialStatusCompletionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<
-    GetInitialStatusCompletionQuery,
-    GetInitialStatusCompletionQueryVariables
-  >(GetInitialStatusCompletionDocument, options);
-}
-export function useGetInitialStatusCompletionLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    GetInitialStatusCompletionQuery,
-    GetInitialStatusCompletionQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<
-    GetInitialStatusCompletionQuery,
-    GetInitialStatusCompletionQueryVariables
-  >(GetInitialStatusCompletionDocument, options);
-}
-export type GetInitialStatusCompletionQueryHookResult = ReturnType<
-  typeof useGetInitialStatusCompletionQuery
->;
-export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<
-  typeof useGetInitialStatusCompletionLazyQuery
->;
-export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<
-  GetInitialStatusCompletionQuery,
-  GetInitialStatusCompletionQueryVariables
->;
-export const NearbyUsersDocument = gql`
-  query NearbyUsers($after: String, $first: Int) {
-    nearbyUsers(after: $after, first: $first) {
-      ...UserCardList
-      pageInfo {
-        ...PageInfo
+export function useGetInitialStatusCompletionQuery(baseOptions?: Apollo.QueryHookOptions<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>(GetInitialStatusCompletionDocument, options);
       }
+export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>(GetInitialStatusCompletionDocument, options);
+        }
+export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
+export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
+export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const NearbyUsersDocument = gql`
+    query NearbyUsers($after: String, $first: Int) {
+  nearbyUsers(after: $after, first: $first) {
+    ...UserCardList
+    pageInfo {
+      ...PageInfo
     }
   }
-  ${UserCardListFragmentDoc}
-  ${PageInfoFragmentDoc}
-`;
+}
+    ${UserCardListFragmentDoc}
+${PageInfoFragmentDoc}`;
 
 /**
  * __useNearbyUsersQuery__
@@ -631,35 +440,14 @@ export const NearbyUsersDocument = gql`
  *   },
  * });
  */
-export function useNearbyUsersQuery(
-  baseOptions?: Apollo.QueryHookOptions<
-    NearbyUsersQuery,
-    NearbyUsersQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(
-    NearbyUsersDocument,
-    options
-  );
-}
-export function useNearbyUsersLazyQuery(
-  baseOptions?: Apollo.LazyQueryHookOptions<
-    NearbyUsersQuery,
-    NearbyUsersQueryVariables
-  >
-) {
-  const options = { ...defaultOptions, ...baseOptions };
-  return Apollo.useLazyQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(
-    NearbyUsersDocument,
-    options
-  );
-}
+export function useNearbyUsersQuery(baseOptions?: Apollo.QueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
+      }
+export function useNearbyUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
+        }
 export type NearbyUsersQueryHookResult = ReturnType<typeof useNearbyUsersQuery>;
-export type NearbyUsersLazyQueryHookResult = ReturnType<
-  typeof useNearbyUsersLazyQuery
->;
-export type NearbyUsersQueryResult = Apollo.QueryResult<
-  NearbyUsersQuery,
-  NearbyUsersQueryVariables
->;
+export type NearbyUsersLazyQueryHookResult = ReturnType<typeof useNearbyUsersLazyQuery>;
+export type NearbyUsersQueryResult = Apollo.QueryResult<NearbyUsersQuery, NearbyUsersQueryVariables>;

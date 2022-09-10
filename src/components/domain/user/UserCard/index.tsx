@@ -1,10 +1,12 @@
 import { Text } from '@rneui/themed';
+import { filter } from 'graphql-anywhere';
 import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { UserCardFragment } from 'src/generated/graphql';
-
-const noImage =
-  'https://scontent.cdninstagram.com/v/t51.2885-19/58409598_320814331934288_8362243699735789568_n.jpg?stp=dst-jpg_s150x150&_nc_ht=scontent.cdninstagram.com&_nc_cat=108&_nc_ohc=6UWm0lwa5VwAX8W14vv&edm=APs17CUBAAAA&ccb=7-5&oh=00_AT8V1iPeXwe8Zfyw-TsS9jqI61mztseg3Quv9bDFpgWsHA&oe=632273AE&_nc_sid=978cb9';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import {
+  ProfileImageFragment,
+  ProfileImageFragmentDoc,
+  UserCardFragment,
+} from 'src/generated/graphql';
 
 type Props = {
   containerStyle?: ViewStyle;
@@ -23,8 +25,11 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
         }
       }}
     >
-      <FastImage
-        source={{ uri: profileImages[0]?.url ?? noImage }}
+      <ProfileImage
+        imageData={filter<ProfileImageFragment>(
+          ProfileImageFragmentDoc,
+          userCardData
+        )}
         style={styles.image}
       />
       <Text style={styles.name}>{nickname}</Text>

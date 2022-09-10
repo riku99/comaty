@@ -407,7 +407,7 @@ PODS:
     - React-Core
   - RNDateTimePicker (6.1.2):
     - React-Core
-  - RNFastImage (8.5.11):
+  - RNFastImage (8.6.1):
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
@@ -736,7 +736,7 @@ SPEC CHECKSUMS:
   ReactCommon: 095366164a276d91ea704ce53cb03825c487a3f2
   RNAppleAuthentication: dab41edef916715148ce94a7dd04041a01590ddc
   RNDateTimePicker: 6f1f0b4cf7c71b6e2aea7a3aa62969111084bbd1
-  RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
+  RNFastImage: 3207b9eb17c2425d574ca40db35185db6e324f4e
   RNFBApp: ac7643ca8c013ac175da0f2d2776d9a5f4eae00d
   RNFBAuth: 771989f00674cfda96395cc8a1e65aa4e40eb1b2
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50

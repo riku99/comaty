@@ -1,9 +1,17 @@
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Post } from 'src/components/domain/post/Post';
-import { Stories } from './Stories';
+import { StyleSheet } from 'react-native';
+import { Activity } from './Activity';
+import { Help } from './Help';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
+
+type TopTabParamList = {
+  Activity: undefined;
+  Help: undefined;
+};
+
+const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const HomeScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
@@ -13,21 +21,17 @@ export const HomeScreen = ({ navigation }: Props) => {
   }, [navigation]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.storiesContainer}>
-        <Stories />
-      </View>
-
-      <Post />
-    </View>
+    <>
+      <TopTab.Navigator>
+        <TopTab.Screen name="Activity" component={Activity} />
+        <TopTab.Screen name="Help" component={Help} />
+      </TopTab.Navigator>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  storiesContainer: {
-    marginTop: 12,
   },
 });

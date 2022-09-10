@@ -12,11 +12,16 @@ import { UserCard } from '../UserCard';
 type Props = {
   onCardPress?: (id: number) => void;
   userListData: UserCardListFragment;
+  onEndReached?: () => {};
 };
 
 type Item = UserCardListFragment['edges'][number];
 
-export const UserCardList = ({ onCardPress, userListData }: Props) => {
+export const UserCardList = ({
+  onCardPress,
+  userListData,
+  onEndReached,
+}: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: Item; index: number }) => {
       return (
@@ -62,6 +67,8 @@ export const UserCardList = ({ onCardPress, userListData }: Props) => {
       contentContainerStyle={styles.contentContainer}
       ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
       ListFooterComponent={() => <View style={{ height: 26 }} />}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={0.7}
     />
   );
 };

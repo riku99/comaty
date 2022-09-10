@@ -12,7 +12,7 @@ import {
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const { data } = useNearbyUsersQuery();
+  const { data, fetchMore } = useNearbyUsersQuery();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -34,6 +34,17 @@ export const HomeScreen = ({ navigation }: Props) => {
     return <Loading />;
   }
 
+  const onUserCardListEndReached = async () => {
+    const { pageInfo } = data.nearbyUsers;
+
+    if (pageInfo.hasNextPage) {
+      const { endCursor } = pageInfo;
+      await fetchMore({
+        variables: {},
+      });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <UserCardList
@@ -42,6 +53,7 @@ export const HomeScreen = ({ navigation }: Props) => {
           UserCardListFragmentDoc,
           data.nearbyUsers
         )}
+        onEndReached={onUserCardListEndReached}
       />
     </View>
   );

@@ -37,18 +37,17 @@ export const RootStack = () => {
     <Stack.Navigator>
       {loggedIn ? (
         <>
-          <Stack.Screen
-            name="BottomTab"
-            component={BottomTab}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
-          {/* <Stack.Screen name="UserProfile" component={UserProfileScreen} /> */}
           {!initialStatusCompletion && (
             <Stack.Screen
               name="SignUpCompletion"
               component={SignUpCompletionScreen}
             />
           )}
+          <Stack.Screen
+            name="BottomTab"
+            component={BottomTab}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
           <Stack.Screen
             name="DateOfBirthInput"
             component={DateOfBirthInputScreen}
@@ -59,11 +58,6 @@ export const RootStack = () => {
         </>
       ) : (
         <>
-          <Stack.Screen
-            name="BottomTab"
-            component={BottomTab}
-            options={{ headerShown: false, gestureEnabled: false }}
-          />
           <Stack.Screen
             name="Auth"
             component={AuthStack}

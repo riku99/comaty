@@ -178,7 +178,10 @@ export type UserCardFragment = { __typename?: 'User', id: string, nickname?: str
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
-export type NearbyUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type NearbyUsersQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+}>;
 
 
 export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
@@ -402,8 +405,8 @@ export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGet
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
 export const NearbyUsersDocument = gql`
-    query NearbyUsers {
-  nearbyUsers {
+    query NearbyUsers($after: String, $first: Int) {
+  nearbyUsers(after: $after, first: $first) {
     ...UserCardList
     pageInfo {
       ...PageInfo
@@ -425,6 +428,8 @@ ${PageInfoFragmentDoc}`;
  * @example
  * const { data, loading, error } = useNearbyUsersQuery({
  *   variables: {
+ *      after: // value for 'after'
+ *      first: // value for 'first'
  *   },
  * });
  */

@@ -8230,6 +8230,13 @@ react-native-modal-datetime-picker@^13.1.2:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-quick-base64@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-quick-base64/-/react-native-quick-base64-2.0.5.tgz#461a0748f65bf83befa1c4159749d781440796c0"
+  integrity sha512-waRcIlchdLCSzpWYqRNIN5NyE5PxKyedMQ/sTgA/fcEkBzwp3EOwjhsfVuJuBtc1bHL2Mg34pxDVBxyLU3Mu2Q==
+  dependencies:
+    base64-js "^1.5.1"
+
 react-native-ratings@^8.1.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-8.1.0.tgz#3fa9ad29128dc3a88e59518ba151e61c59dd0647"

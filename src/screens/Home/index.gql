@@ -1,5 +1,5 @@
-query NearbyUsers {
-  nearbyUsers {
+query NearbyUsers($after: String, $first: Int) {
+  nearbyUsers(after: $after, first: $first) {
     ...UserCardList
     pageInfo {
       ...PageInfo

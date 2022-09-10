@@ -29,11 +29,17 @@ export const UserCardList = ({
     ({ item, index }: { item: Item; index: number }) => {
       return (
         <MotiView
-          from={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          from={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{
-            type: 'timing',
-            duration: 1500,
+            opacity: {
+              type: 'timing',
+              duration: 1500,
+            },
+            scale: {
+              type: 'timing',
+              duration: 500,
+            },
           }}
           delay={(index % takeItemCount) * CARD_DELAY}
         >
@@ -74,7 +80,7 @@ export const UserCardList = ({
   );
 };
 
-const CARD_DELAY = 150;
+const CARD_DELAY = 170;
 
 const styles = StyleSheet.create({
   contentContainer: {

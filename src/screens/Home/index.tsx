@@ -1,6 +1,7 @@
 import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { btoa } from 'react-native-quick-base64';
 import { UserCardList } from 'src/components/domain/user/UserCardList';
 import { Loading } from 'src/components/ui/Loading';
 import {
@@ -12,7 +13,11 @@ import {
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const { data, fetchMore } = useNearbyUsersQuery();
+  const { data, fetchMore } = useNearbyUsersQuery({
+    variables: {
+      first: TAKE_USER_COUNT,
+    },
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -35,12 +40,16 @@ export const HomeScreen = ({ navigation }: Props) => {
   }
 
   const onUserCardListEndReached = async () => {
+    console.log('Run');
     const { pageInfo } = data.nearbyUsers;
 
     if (pageInfo.hasNextPage) {
       const { endCursor } = pageInfo;
       await fetchMore({
-        variables: {},
+        variables: {
+          after: endCursor ? btoa(endCursor) : undefined,
+          first: TAKE_USER_COUNT,
+        },
       });
     }
   };
@@ -54,10 +63,13 @@ export const HomeScreen = ({ navigation }: Props) => {
           data.nearbyUsers
         )}
         onEndReached={onUserCardListEndReached}
+        takeItemCount={TAKE_USER_COUNT}
       />
     </View>
   );
 };
+
+const TAKE_USER_COUNT = 20;
 
 const styles = StyleSheet.create({
   container: {

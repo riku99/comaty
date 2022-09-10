@@ -6,6 +6,7 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+import { relayStylePagination } from '@apollo/client/utilities';
 import auth from '@react-native-firebase/auth';
 import React from 'react';
 
@@ -39,7 +40,15 @@ const authLink = setContext(async (_, { headers }) => {
 export const ApolloProvider = ({ children }: Props) => {
   const client = new ApolloClient({
     link: from([authLink, link]),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Query: {
+          fields: {
+            nearbyUsers: relayStylePagination(),
+          },
+        },
+      },
+    }),
   });
 
   return <ApolloProviderBase client={client}>{children}</ApolloProviderBase>;

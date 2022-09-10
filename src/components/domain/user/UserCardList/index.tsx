@@ -1,7 +1,8 @@
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import { useCallback } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
   UserCardFragment,
   UserCardFragmentDoc,
@@ -12,7 +13,8 @@ import { UserCard } from '../UserCard';
 type Props = {
   onCardPress?: (id: number) => void;
   userListData: UserCardListFragment;
-  onEndReached?: () => {};
+  onEndReached?: () => Promise<void>;
+  takeItemCount: number;
 };
 
 type Item = UserCardListFragment['edges'][number];
@@ -21,6 +23,7 @@ export const UserCardList = ({
   onCardPress,
   userListData,
   onEndReached,
+  takeItemCount,
 }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: Item; index: number }) => {
@@ -32,7 +35,7 @@ export const UserCardList = ({
             type: 'timing',
             duration: 1500,
           }}
-          delay={index * 150}
+          delay={(index % takeItemCount) * CARD_DELAY}
         >
           <UserCard
             containerStyle={{
@@ -51,11 +54,11 @@ export const UserCardList = ({
         </MotiView>
       );
     },
-    [onCardPress]
+    [onCardPress, takeItemCount]
   );
 
   return (
-    <FlatList
+    <InfiniteFlatList<Item>
       data={userListData.edges}
       renderItem={renderUser}
       keyExtractor={(_, index) => index.toString()}
@@ -66,16 +69,17 @@ export const UserCardList = ({
       }}
       contentContainerStyle={styles.contentContainer}
       ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
-      ListFooterComponent={() => <View style={{ height: 26 }} />}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.7}
+      infiniteLoad={onEndReached}
     />
   );
 };
+
+const CARD_DELAY = 150;
 
 const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: '8%',
     paddingTop: 20,
+    paddingBottom: 26,
   },
 });

@@ -14,7 +14,7 @@ export const Root = () => {
     if (initialData?.me) {
       setLoggedIn(true);
     }
-  }, [initialData]);
+  }, [initialData, setLoggedIn]);
 
   return (
     <>

@@ -51,7 +51,7 @@ export const UserCardList = ({
         </MotiView>
       );
     },
-    []
+    [onCardPress]
   );
 
   return (

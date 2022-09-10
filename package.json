@@ -8,7 +8,8 @@
     "web": "expo start --web",
     "fmt": "prettier --write src/**/*.{ts,tsx}",
     "generate": "graphql-codegen",
-    "ios:dev": "npx react-native run-ios --scheme comaty-dev"
+    "ios:dev": "npx react-native run-ios --scheme comaty-dev",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
@@ -63,7 +64,7 @@
     "eslint": "^8.19.0",
     "prettier": "^2.7.1",
     "react-native-svg-transformer": "^1.0.0",
-    "typescript": "~4.3.5"
+    "typescript": "4.8.3"
   },
   "resolutions": {
     "@types/react": "17.0.43"

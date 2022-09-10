@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   rightContent: {
     marginLeft: 10,
-    marginTop: 4,
+    marginTop: 2,
     flexShrink: 1,
   },
   name: {

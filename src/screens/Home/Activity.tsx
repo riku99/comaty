@@ -10,7 +10,7 @@ export const Activity = () => {
         data={arr}
         renderItem={() => <Post />}
         keyExtractor={(_, index) => index.toString()}
-        contentContainerStyle={{}}
+        contentContainerStyle={{ paddingTop: 16 }}
         ListHeaderComponent={() => <Stories />}
         ListHeaderComponentStyle={{ paddingBottom: 20 }}
         ItemSeparatorComponent={() => <View style={{ height: 28 }} />}

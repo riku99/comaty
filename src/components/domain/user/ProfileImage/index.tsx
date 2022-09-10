@@ -3,15 +3,14 @@ import { ProfileImageFragment } from 'src/generated/graphql';
 const Youchien = require('src/assets/image/youchien_boy.png');
 
 type Props = Omit<FastImageProps, 'source'> & {
-  imageData: ProfileImageFragment;
+  imageData: ProfileImageFragment | null;
 };
 
 export const ProfileImage = ({ imageData, ...props }: Props) => {
-  const hasImage = !!imageData.profileImages.length;
   return (
     <FastImage
-      source={hasImage ? { uri: imageData.profileImages[0].url } : Youchien}
-      resizeMode={hasImage ? undefined : 'contain'}
+      source={imageData ? { uri: imageData.url } : Youchien}
+      resizeMode={imageData ? undefined : 'contain'}
       {...props}
     />
   );

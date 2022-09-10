@@ -26,10 +26,14 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
       }}
     >
       <ProfileImage
-        imageData={filter<ProfileImageFragment>(
-          ProfileImageFragmentDoc,
-          userCardData
-        )}
+        imageData={
+          userCardData.profileImages.length
+            ? filter<ProfileImageFragment>(
+                ProfileImageFragmentDoc,
+                userCardData.profileImages[0]
+              )
+            : null
+        }
         style={styles.image}
       />
       <Text style={styles.name}>{nickname}</Text>

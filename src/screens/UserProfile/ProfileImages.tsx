@@ -1,9 +1,15 @@
 import * as Haptics from 'expo-haptics';
+import { filter } from 'graphql-anywhere';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
-import { ProfileImagesInUserProfileFragment } from 'src/generated/graphql';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import {
+  ProfileImageFragment,
+  ProfileImageFragmentDoc,
+  ProfileImagesInUserProfileFragment,
+} from 'src/generated/graphql';
 import Constants from './constants';
 
 type Props = {
@@ -56,10 +62,16 @@ export const ProfileImages = React.memo(({ imageData }: Props) => {
 
   return (
     <Animatable.View ref={animatedViewRef as any}>
-      <FastImage
-        source={{
-          uri: images[displayedImageIndex].url,
-        }}
+      <ProfileImage
+        imageData={filter<ProfileImageFragment>(
+          ProfileImageFragmentDoc,
+          imageData.profileImages.length
+            ? filter(
+                ProfileImageFragmentDoc,
+                imageData.profileImages[displayedImageIndex]
+              )
+            : null
+        )}
         style={styles.image}
       />
       <View style={styles.pressableContainer}>

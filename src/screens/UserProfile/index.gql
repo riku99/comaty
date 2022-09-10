@@ -1,7 +1,6 @@
 fragment ProfileImagesInUserProfile on User {
   profileImages {
-    id
-    url
+    ...ProfileImage
   }
 }
 

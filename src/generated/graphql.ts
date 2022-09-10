@@ -177,7 +177,7 @@ export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __t
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
-export type ProfileImageFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
 export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -209,11 +209,9 @@ export const PageInfoFragmentDoc = gql`
 }
     `;
 export const ProfileImageFragmentDoc = gql`
-    fragment ProfileImage on User {
-  profileImages {
-    id
-    url
-  }
+    fragment ProfileImage on UserProfileImage {
+  id
+  url
 }
     `;
 export const UserCardFragmentDoc = gql`
@@ -221,7 +219,9 @@ export const UserCardFragmentDoc = gql`
   id
   nickname
   statusMessage
-  ...ProfileImage
+  profileImages {
+    ...ProfileImage
+  }
 }
     ${ProfileImageFragmentDoc}`;
 export const UserCardListFragmentDoc = gql`
@@ -237,11 +237,10 @@ export const UserCardListFragmentDoc = gql`
 export const ProfileImagesInUserProfileFragmentDoc = gql`
     fragment ProfileImagesInUserProfile on User {
   profileImages {
-    id
-    url
+    ...ProfileImage
   }
 }
-    `;
+    ${ProfileImageFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {

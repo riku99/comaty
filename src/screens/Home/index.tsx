@@ -13,6 +13,7 @@ import {
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 export const HomeScreen = ({ navigation }: Props) => {
+  // スクリーン変更する際にクエリ名も変更する
   const { data, fetchMore } = useNearbyUsersQuery({
     variables: {
       first: TAKE_USER_COUNT,

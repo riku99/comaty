@@ -1,6 +1,4 @@
-fragment ProfileImage on User {
-  profileImages {
-    id
-    url
-  }
+fragment ProfileImage on UserProfileImage {
+  id
+  url
 }

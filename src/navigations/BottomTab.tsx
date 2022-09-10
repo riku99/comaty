@@ -4,13 +4,13 @@ import React from 'react';
 import { ChatList } from 'src/screens/ChatList';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
 import { HomeScreen } from 'src/screens/Home';
-import { NotoficationScreen } from 'src/screens/Notification';
+import { NearbyUsersScreen } from 'src/screens/NearbyUsers';
 import { theme } from 'src/styles';
 import { MyPageStack } from './MyPageStack';
 
 export type TabParamList = {
   Home: undefined;
-  Notification: undefined;
+  NearbyUsers: undefined;
   CreateStory: undefined;
   ChatList: undefined;
   MyPage: undefined;
@@ -39,11 +39,11 @@ export const BottomTab = React.memo(() => {
         }}
       />
       <Tab.Screen
-        name="Notification"
-        component={NotoficationScreen}
+        name="NearbyUsers"
+        component={NearbyUsersScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <AntDesign name="bells" size={ICON_SIZE} color={color} />
+            <AntDesign name="user" size={ICON_SIZE} color={color} />
           ),
         }}
       />

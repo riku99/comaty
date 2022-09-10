@@ -184,13 +184,13 @@ export type UserCardFragment = { __typename?: 'User', id: string, nickname?: str
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
-export type NearbyUsersQueryVariables = Exact<{
+export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
+export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -441,8 +441,8 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
-export const NearbyUsersDocument = gql`
-    query NearbyUsers($after: String, $first: Int) {
+export const NearbyUsersScreenDataDocument = gql`
+    query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {
     ...UserCardList
     pageInfo {
@@ -454,33 +454,33 @@ export const NearbyUsersDocument = gql`
 ${PageInfoFragmentDoc}`;
 
 /**
- * __useNearbyUsersQuery__
+ * __useNearbyUsersScreenDataQuery__
  *
- * To run a query within a React component, call `useNearbyUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useNearbyUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useNearbyUsersScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNearbyUsersScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useNearbyUsersQuery({
+ * const { data, loading, error } = useNearbyUsersScreenDataQuery({
  *   variables: {
  *      after: // value for 'after'
  *      first: // value for 'first'
  *   },
  * });
  */
-export function useNearbyUsersQuery(baseOptions?: Apollo.QueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
+export function useNearbyUsersScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
+        return Apollo.useQuery<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>(NearbyUsersScreenDataDocument, options);
       }
-export function useNearbyUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NearbyUsersQuery, NearbyUsersQueryVariables>) {
+export function useNearbyUsersScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NearbyUsersQuery, NearbyUsersQueryVariables>(NearbyUsersDocument, options);
+          return Apollo.useLazyQuery<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>(NearbyUsersScreenDataDocument, options);
         }
-export type NearbyUsersQueryHookResult = ReturnType<typeof useNearbyUsersQuery>;
-export type NearbyUsersLazyQueryHookResult = ReturnType<typeof useNearbyUsersLazyQuery>;
-export type NearbyUsersQueryResult = Apollo.QueryResult<NearbyUsersQuery, NearbyUsersQueryVariables>;
+export type NearbyUsersScreenDataQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataQuery>;
+export type NearbyUsersScreenDataLazyQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataLazyQuery>;
+export type NearbyUsersScreenDataQueryResult = Apollo.QueryResult<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>;
 export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {

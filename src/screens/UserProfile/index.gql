@@ -4,11 +4,17 @@ fragment ProfileImagesInUserProfile on User {
   }
 }
 
+fragment BottomSheetContentInUserProfile on User {
+  id
+  nickname
+  bio
+  age
+}
+
 query UserProfileScreenData($id: ID!) {
   user(id: $id) {
     id
-    nickname
-    bio
+    ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
   }
 }

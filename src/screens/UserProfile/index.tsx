@@ -4,7 +4,10 @@ import React, { useLayoutEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from 'src/components/ui/BackButton';
+import { Loading } from 'src/components/ui/Loading';
 import {
+  BottomSheetContentInUserProfileFragment,
+  BottomSheetContentInUserProfileFragmentDoc,
   ProfileImagesInUserProfileFragment,
   ProfileImagesInUserProfileFragmentDoc,
   useUserProfileScreenDataQuery,
@@ -35,7 +38,7 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
   const snapPoints = useMemo(() => [Constants.snapPoint1, '90%'], []);
 
   if (!data) {
-    return null;
+    return <Loading />;
   }
 
   return (
@@ -50,7 +53,12 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
       <BackButton containerStyle={styles.backButtonContainer} />
 
       <BottomSheet ref={bottomSheetRef} index={0} snapPoints={snapPoints}>
-        <BottomSheetContent />
+        <BottomSheetContent
+          data={filter<BottomSheetContentInUserProfileFragment>(
+            BottomSheetContentInUserProfileFragmentDoc,
+            data.user
+          )}
+        />
       </BottomSheet>
 
       <View

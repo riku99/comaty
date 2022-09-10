@@ -22,7 +22,7 @@ export const HomeScreen = ({ navigation }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '近くにいるユーザー',
+      title: 'この辺にいるユーザー👀',
       headerShadowVisible: false,
       headerTitleAlign: 'left',
       headerTitleStyle: {

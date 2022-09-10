@@ -106,6 +106,7 @@ export type UpdateUserProfileInput = {
 
 export type User = UserEntity & {
   __typename?: 'User';
+  age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
@@ -193,12 +194,14 @@ export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
+export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null };
+
 export type UserProfileScreenDataQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } };
 
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
@@ -241,6 +244,14 @@ export const ProfileImagesInUserProfileFragmentDoc = gql`
   }
 }
     ${ProfileImageFragmentDoc}`;
+export const BottomSheetContentInUserProfileFragmentDoc = gql`
+    fragment BottomSheetContentInUserProfile on User {
+  id
+  nickname
+  bio
+  age
+}
+    `;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -474,12 +485,12 @@ export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {
     id
-    nickname
-    bio
+    ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
   }
 }
-    ${ProfileImagesInUserProfileFragmentDoc}`;
+    ${BottomSheetContentInUserProfileFragmentDoc}
+${ProfileImagesInUserProfileFragmentDoc}`;
 
 /**
  * __useUserProfileScreenDataQuery__

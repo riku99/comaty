@@ -3,6 +3,7 @@ import { Text } from '@rneui/themed';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Tag } from 'src/components/ui/Tag';
+import { BottomSheetContentInUserProfileFragment } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
 const tags = [
@@ -14,12 +15,17 @@ const tags = [
   '新宿Love💜',
 ];
 
-export const BottomSheetContent = React.memo(() => {
+type Props = {
+  data: BottomSheetContentInUserProfileFragment;
+};
+
+export const BottomSheetContent = React.memo(({ data }: Props) => {
+  const { nickname, bio, age } = data;
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
       <View>
         <Text style={styles.name}>
-          ジゼル <Text style={styles.age}>24</Text>
+          {nickname} <Text style={styles.age}>{age}</Text>
         </Text>
 
         <View style={styles.tagsContainer}>
@@ -33,11 +39,7 @@ export const BottomSheetContent = React.memo(() => {
         </View>
 
         <View style={styles.bioContainer}>
-          <Text style={styles.bio}>
-            {
-              'はじめまして！\n98年生まれの24歳です！\n\n休学と留年したのでまだ大学生やってます笑\nエンジニアとしても働いてて、今はアプリ作ってます😉\n\nそれとComatyの製作者です！\nぜひ一緒に飲みましょ〜〜🍺'
-            }
-          </Text>
+          <Text style={styles.bio}>{bio}</Text>
         </View>
       </View>
     </BottomSheetScrollView>

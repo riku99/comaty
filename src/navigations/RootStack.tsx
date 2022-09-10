@@ -17,7 +17,9 @@ export type RootStackParamList = {
   DateOfBirthInput: undefined;
   NicknameInput: undefined;
   SignUpCompletion: undefined;
-  UserProfile: undefined;
+  UserProfile: {
+    id: string;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

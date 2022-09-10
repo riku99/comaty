@@ -1,0 +1,15 @@
+fragment ProfileImagesInUserProfile on User {
+  profileImages {
+    id
+    url
+  }
+}
+
+query UserProfileScreenData($id: ID!) {
+  user(id: $id) {
+    id
+    nickname
+    bio
+    ...ProfileImagesInUserProfile
+  }
+}

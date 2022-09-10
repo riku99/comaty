@@ -26,6 +26,7 @@ export type CreateUserInput = {
 
 export type Me = UserEntity & {
   __typename?: 'Me';
+  bio?: Maybe<Scalars['String']>;
   birthDay?: Maybe<Scalars['Int']>;
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
@@ -105,6 +106,7 @@ export type UpdateUserProfileInput = {
 
 export type User = UserEntity & {
   __typename?: 'User';
+  bio?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
@@ -125,6 +127,7 @@ export type UserEdge = {
 };
 
 export type UserEntity = {
+  bio?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   sex?: Maybe<Sex>;
@@ -188,6 +191,15 @@ export type NearbyUsersQueryVariables = Exact<{
 
 export type NearbyUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
+export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+
+export type UserProfileScreenDataQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } };
+
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   hasNextPage
@@ -222,6 +234,14 @@ export const UserCardListFragmentDoc = gql`
   }
 }
     ${UserCardFragmentDoc}`;
+export const ProfileImagesInUserProfileFragmentDoc = gql`
+    fragment ProfileImagesInUserProfile on User {
+  profileImages {
+    id
+    url
+  }
+}
+    `;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -451,3 +471,41 @@ export function useNearbyUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type NearbyUsersQueryHookResult = ReturnType<typeof useNearbyUsersQuery>;
 export type NearbyUsersLazyQueryHookResult = ReturnType<typeof useNearbyUsersLazyQuery>;
 export type NearbyUsersQueryResult = Apollo.QueryResult<NearbyUsersQuery, NearbyUsersQueryVariables>;
+export const UserProfileScreenDataDocument = gql`
+    query UserProfileScreenData($id: ID!) {
+  user(id: $id) {
+    id
+    nickname
+    bio
+    ...ProfileImagesInUserProfile
+  }
+}
+    ${ProfileImagesInUserProfileFragmentDoc}`;
+
+/**
+ * __useUserProfileScreenDataQuery__
+ *
+ * To run a query within a React component, call `useUserProfileScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfileScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfileScreenDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserProfileScreenDataQuery(baseOptions: Apollo.QueryHookOptions<UserProfileScreenDataQuery, UserProfileScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfileScreenDataQuery, UserProfileScreenDataQueryVariables>(UserProfileScreenDataDocument, options);
+      }
+export function useUserProfileScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfileScreenDataQuery, UserProfileScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfileScreenDataQuery, UserProfileScreenDataQueryVariables>(UserProfileScreenDataDocument, options);
+        }
+export type UserProfileScreenDataQueryHookResult = ReturnType<typeof useUserProfileScreenDataQuery>;
+export type UserProfileScreenDataLazyQueryHookResult = ReturnType<typeof useUserProfileScreenDataLazyQuery>;
+export type UserProfileScreenDataQueryResult = Apollo.QueryResult<UserProfileScreenDataQuery, UserProfileScreenDataQueryVariables>;

@@ -31,8 +31,8 @@ export const HomeScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  const onUserCardPress = (id: number) => {
-    navigation.navigate('UserProfile');
+  const onUserCardPress = (id: string) => {
+    navigation.navigate('UserProfile', { id });
   };
 
   if (!data) {

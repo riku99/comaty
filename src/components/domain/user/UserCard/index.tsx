@@ -10,18 +10,18 @@ import {
 
 type Props = {
   containerStyle?: ViewStyle;
-  onPress?: (id: number) => void;
+  onPress?: (id: string) => void;
   userCardData: UserCardFragment;
 };
 
 export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
-  const { nickname, profileImages, statusMessage } = userCardData;
+  const { nickname, statusMessage, id } = userCardData;
   return (
     <Pressable
       style={[styles.body, containerStyle]}
       onPress={() => {
         if (onPress) {
-          onPress(1);
+          onPress(id);
         }
       }}
     >

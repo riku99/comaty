@@ -11,7 +11,7 @@ import {
 import { UserCard } from '../UserCard';
 
 type Props = {
-  onCardPress?: (id: number) => void;
+  onCardPress?: (id: string) => void;
   userListData: UserCardListFragment;
   infiniteLoad?: () => Promise<void>;
   takeItemCount: number;
@@ -47,7 +47,7 @@ export const UserCardList = ({
             containerStyle={{
               marginTop: index % 2 !== 0 ? 45 : 0,
             }}
-            onPress={(id: number) => {
+            onPress={(id: string) => {
               if (onCardPress) {
                 onCardPress(id);
               }

@@ -7,6 +7,7 @@ import LottieView from 'lottie-react-native';
 import { useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { HStack } from 'src/components/ui/HStack';
 import {
   PostCardFragment,
   ProfileImageFragment,
@@ -51,7 +52,7 @@ export const PostCard = ({ postData }: Props) => {
           </View>
           <Text style={styles.text}>{text}</Text>
 
-          <View style={styles.actions}>
+          <HStack style={styles.actions} space={44}>
             <Pressable>
               <Entypo
                 name="reply"
@@ -67,11 +68,11 @@ export const PostCard = ({ postData }: Props) => {
                   width: 34,
                 }}
                 resizeMode="cover"
-                loop
+                loop={false}
                 autoPlay
               />
             </Pressable>
-          </View>
+          </HStack>
         </View>
       </View>
     </View>

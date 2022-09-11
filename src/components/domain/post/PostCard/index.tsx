@@ -1,7 +1,12 @@
 import { Text } from '@rneui/themed';
+import { filter } from 'graphql-anywhere';
 import { StyleSheet, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import { PostCardFragment } from 'src/generated/graphql';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import {
+  PostCardFragment,
+  ProfileImageFragment,
+  ProfileImageFragmentDoc,
+} from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
 type Props = {
@@ -12,8 +17,11 @@ export const PostCard = ({ postData }: Props) => {
   const { text, user } = postData;
   return (
     <View style={styles.body}>
-      <FastImage
-        source={{ uri: user.firstProfileImage.url }}
+      <ProfileImage
+        imageData={filter<ProfileImageFragment>(
+          ProfileImageFragmentDoc,
+          user.firstProfileImage
+        )}
         style={styles.profileImage}
       />
 

@@ -1,5 +1,23 @@
-query ActivityScreenData($first: Int, $after: String) {
-  posts(first: $first, after: $after) {
+query ActivityScreenData($postsFirst: Int, $postsAfter: String) {
+  posts(first: $postsFirst, after: $postsAfter) {
+    edges {
+      node {
+        id
+        ...PostCard
+      }
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}
+
+query ActivityPosts($postsFirst: Int, $postsAfter: String) {
+  ...ActivityPosts
+}
+
+fragment ActivityPosts on Query {
+  posts(first: $postsFirst, after: $postsAfter) {
     edges {
       node {
         id

@@ -45,6 +45,7 @@ export const ApolloProvider = ({ children }: Props) => {
         Query: {
           fields: {
             nearbyUsers: relayStylePagination(),
+            posts: relayStylePagination(),
           },
         },
       },

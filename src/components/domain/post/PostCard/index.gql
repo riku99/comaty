@@ -5,8 +5,7 @@ fragment PostCard on Post {
     id
     nickname
     firstProfileImage {
-      id
-      url
+      ...ProfileImage
     }
   }
 }

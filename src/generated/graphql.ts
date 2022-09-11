@@ -206,7 +206,7 @@ export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __t
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
-export type PostFragment = { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null };
+export type PostCardFragment = { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null };
 
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
@@ -249,8 +249,8 @@ export const PageInfoFragmentDoc = gql`
   endCursor
 }
     `;
-export const PostFragmentDoc = gql`
-    fragment Post on Post {
+export const PostCardFragmentDoc = gql`
+    fragment PostCard on Post {
   id
   text
   user {
@@ -499,7 +499,7 @@ export const ActivityScreenDataDocument = gql`
     edges {
       node {
         id
-        ...Post
+        ...PostCard
       }
     }
     pageInfo {
@@ -507,7 +507,7 @@ export const ActivityScreenDataDocument = gql`
     }
   }
 }
-    ${PostFragmentDoc}
+    ${PostCardFragmentDoc}
 ${PageInfoFragmentDoc}`;
 
 /**

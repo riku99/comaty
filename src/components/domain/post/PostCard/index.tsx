@@ -1,13 +1,13 @@
 import { Text } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { PostFragment } from 'src/generated/graphql';
+import { PostCardFragment } from 'src/generated/graphql';
 
 type Props = {
-  postData: PostFragment;
+  postData: PostCardFragment;
 };
 
-export const Post = ({ postData }: Props) => {
+export const PostCard = ({ postData }: Props) => {
   const { text, user } = postData;
   return (
     <View style={styles.body}>
@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
     flexDirection: 'row',
+    paddingVertical: 20,
   },
   profileImage: {
     width: IMAGE_SIZE,

@@ -1,4 +1,4 @@
-fragment Post on Post {
+fragment PostCard on Post {
   id
   text
   user {

@@ -3,7 +3,7 @@ query ActivityScreenData($first: Int, $after: String) {
     edges {
       node {
         id
-        ...Post
+        ...PostCard
       }
     }
     pageInfo {

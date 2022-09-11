@@ -1,0 +1,13 @@
+query ActivityScreenData($first: Int, $after: String) {
+  posts(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        ...Post
+      }
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}

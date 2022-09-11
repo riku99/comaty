@@ -1,0 +1,12 @@
+fragment Post on Post {
+  id
+  text
+  user {
+    id
+    nickname
+    firstProfileImage {
+      id
+      url
+    }
+  }
+}

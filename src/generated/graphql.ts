@@ -67,15 +67,42 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
+export type Post = {
+  __typename?: 'Post';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  text: Scalars['String'];
+  user?: Maybe<User>;
+};
+
+export type PostConnection = {
+  __typename?: 'PostConnection';
+  edges: Array<Maybe<PostEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type PostEdge = {
+  __typename?: 'PostEdge';
+  cursor: Scalars['String'];
+  node: Post;
+};
+
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Me>;
   nearbyUsers: UserConnection;
+  posts: PostConnection;
   user: User;
 };
 
 
 export type QueryNearbyUsersArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPostsArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
 };
@@ -108,6 +135,7 @@ export type User = UserEntity & {
   __typename?: 'User';
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
+  firstProfileImage?: Maybe<UserProfileImage>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
@@ -178,11 +206,21 @@ export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __t
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
+export type PostFragment = { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null };
+
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
 export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
+
+export type ActivityScreenDataQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -209,6 +247,20 @@ export const PageInfoFragmentDoc = gql`
   hasPreviousPage
   startCursor
   endCursor
+}
+    `;
+export const PostFragmentDoc = gql`
+    fragment Post on Post {
+  id
+  text
+  user {
+    id
+    nickname
+    firstProfileImage {
+      id
+      url
+    }
+  }
 }
     `;
 export const ProfileImageFragmentDoc = gql`
@@ -441,6 +493,51 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const ActivityScreenDataDocument = gql`
+    query ActivityScreenData($first: Int, $after: String) {
+  posts(first: $first, after: $after) {
+    edges {
+      node {
+        id
+        ...Post
+      }
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}
+    ${PostFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useActivityScreenDataQuery__
+ *
+ * To run a query within a React component, call `useActivityScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivityScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivityScreenDataQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useActivityScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>(ActivityScreenDataDocument, options);
+      }
+export function useActivityScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>(ActivityScreenDataDocument, options);
+        }
+export type ActivityScreenDataQueryHookResult = ReturnType<typeof useActivityScreenDataQuery>;
+export type ActivityScreenDataLazyQueryHookResult = ReturnType<typeof useActivityScreenDataLazyQuery>;
+export type ActivityScreenDataQueryResult = Apollo.QueryResult<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>;
 export const NearbyUsersScreenDataDocument = gql`
     query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {

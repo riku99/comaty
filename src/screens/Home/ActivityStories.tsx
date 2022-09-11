@@ -20,33 +20,39 @@ type Item = ActivityStoriesFragment['stories']['edges'][number];
 
 export const Stories = React.memo(
   ({ storiesData, infiniteLoadStories }: Props) => {
-    const renderItem = useCallback(({ item }: { item: Item }) => {
-      return (
-        <MotiView
-          from={{ opacity: 0.3 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 700,
-            type: 'timing',
-          }}
-        >
-          <LinearGradient
-            colors={['#9089fa', '#b289fa', '#e389fa']}
-            style={style.gradientContainer}
+    const renderItem = useCallback(
+      ({ item, index }: { item: Item; index: number }) => {
+        return (
+          <MotiView
+            from={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              scale: {
+                type: 'timing',
+                duration: 600,
+              },
+            }}
+            delay={(index % 15) * 150}
           >
-            <View style={style.blankContainer}>
-              <ProfileImage
-                imageData={filter<ProfileImageFragment>(
-                  ProfileImageFragmentDoc,
-                  item.node.user.firstProfileImage
-                )}
-                style={style.userImage}
-              />
-            </View>
-          </LinearGradient>
-        </MotiView>
-      );
-    }, []);
+            <LinearGradient
+              colors={['#9089fa', '#b289fa', '#e389fa']}
+              style={style.gradientContainer}
+            >
+              <View style={style.blankContainer}>
+                <ProfileImage
+                  imageData={filter<ProfileImageFragment>(
+                    ProfileImageFragmentDoc,
+                    item.node.user.firstProfileImage
+                  )}
+                  style={style.userImage}
+                />
+              </View>
+            </LinearGradient>
+          </MotiView>
+        );
+      },
+      []
+    );
 
     const renderItemSeparator = useCallback(() => {
       return (

@@ -1,6 +1,7 @@
 fragment PostCard on Post {
   id
   text
+  createdAt
   user {
     id
     nickname

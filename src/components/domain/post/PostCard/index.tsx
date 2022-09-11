@@ -2,6 +2,7 @@ import { Text } from '@rneui/themed';
 import { StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { PostCardFragment } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 
 type Props = {
   postData: PostCardFragment;
@@ -24,13 +25,15 @@ export const PostCard = ({ postData }: Props) => {
   );
 };
 
-const IMAGE_SIZE = 50;
+const IMAGE_SIZE = 48;
 
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
     flexDirection: 'row',
     paddingVertical: 20,
+    borderBottomColor: theme.boarderGray,
+    borderBottomWidth: 0.5,
   },
   profileImage: {
     width: IMAGE_SIZE,

@@ -1,7 +1,9 @@
 import { filter } from 'graphql-anywhere';
+import { MotiView } from 'moti';
 import { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
+import { Loading } from 'src/components/ui/Loading';
 import {
   ActivityScreenDataQuery,
   PostCardFragment,
@@ -18,14 +20,23 @@ export const Activity = () => {
 
   const renderPostItem = useCallback(({ item }: { item: PostItem }) => {
     return (
-      <PostCard
-        postData={filter<PostCardFragment>(PostCardFragmentDoc, item.node)}
-      />
+      <MotiView
+        from={{ opacity: 0.5 }}
+        animate={{ opacity: 1 }}
+        transition={{
+          duration: 1000,
+          type: 'timing',
+        }}
+      >
+        <PostCard
+          postData={filter<PostCardFragment>(PostCardFragmentDoc, item.node)}
+        />
+      </MotiView>
     );
   }, []);
 
   if (!data) {
-    return null;
+    return <Loading />;
   }
 
   return (
@@ -36,8 +47,6 @@ export const Activity = () => {
         keyExtractor={(item) => item.node.id.toString()}
         contentContainerStyle={{ paddingTop: 16 }}
         ListHeaderComponent={() => <Stories />}
-        ListHeaderComponentStyle={{ paddingBottom: 20 }}
-        // ItemSeparatorComponent={() => <View style={{ height: 28 }} />}
       />
     </View>
   );

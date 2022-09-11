@@ -1,10 +1,22 @@
 import { LinearGradient } from 'expo-linear-gradient';
+import { filter } from 'graphql-anywhere';
 import React, { useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import {
+  ActivityStoriesFragment,
+  ProfileImageFragment,
+  ProfileImageFragmentDoc,
+} from 'src/generated/graphql';
 
-export const Stories = React.memo(() => {
-  const renderItem = useCallback(({ item }: { item: { uri: string } }) => {
+type Props = {
+  storiesData: ActivityStoriesFragment;
+};
+
+type Item = ActivityStoriesFragment['stories']['edges'][number];
+
+export const Stories = React.memo(({ storiesData }: Props) => {
+  const renderItem = useCallback(({ item }: { item: Item }) => {
     return (
       <View>
         <LinearGradient
@@ -12,7 +24,13 @@ export const Stories = React.memo(() => {
           style={style.gradientContainer}
         >
           <View style={style.blankContainer}>
-            <FastImage source={{ uri: item.uri }} style={style.userImage} />
+            <ProfileImage
+              imageData={filter<ProfileImageFragment>(
+                ProfileImageFragmentDoc,
+                item.node.user.firstProfileImage
+              )}
+              style={style.userImage}
+            />
           </View>
         </LinearGradient>
       </View>
@@ -33,7 +51,7 @@ export const Stories = React.memo(() => {
     <View>
       <FlatList
         renderItem={renderItem}
-        data={images}
+        data={storiesData.stories.edges}
         keyExtractor={(d, i) => i.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -69,10 +87,3 @@ const style = StyleSheet.create({
     borderRadius: 100,
   },
 });
-
-const images = [];
-for (let i = 0; i < 20; i++) {
-  images.push({
-    uri: 'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/305687728_760502371906368_1682952372619693792_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=5nBFTYHL398AX8ylFqE&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNDA3ODA3MTM3ODU0NzA5Mg%3D%3D.2-ccb7-5&oh=00_AT-Y5-0ptQM45lXm0H-4-_sFQBTNugrQ7sP7w45dBSLvQA&oe=63237D30&_nc_sid=30a2ef',
-  });
-}

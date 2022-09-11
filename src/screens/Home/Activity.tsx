@@ -9,11 +9,13 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   ActivityPostsDocument,
   ActivityScreenDataQuery,
+  ActivityStoriesFragment,
+  ActivityStoriesFragmentDoc,
   PostCardFragment,
   PostCardFragmentDoc,
   useActivityScreenDataQuery,
 } from 'src/generated/graphql';
-import { Stories } from './Stories';
+import { Stories } from './ActivityStories';
 
 type PostItem = ActivityScreenDataQuery['posts']['edges'][number];
 
@@ -69,7 +71,14 @@ export const Activity = () => {
         renderItem={renderPostItem}
         keyExtractor={(item) => item.node.id.toString()}
         contentContainerStyle={{ paddingTop: 16 }}
-        ListHeaderComponent={() => <Stories />}
+        ListHeaderComponent={() => (
+          <Stories
+            storiesData={filter<ActivityStoriesFragment>(
+              ActivityStoriesFragmentDoc,
+              data
+            )}
+          />
+        )}
         infiniteLoad={infiniteLoadPost}
       />
     </View>

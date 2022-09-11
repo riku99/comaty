@@ -35,11 +35,11 @@ fragment ActivityStories on Query {
     edges {
       node {
         id
+        contentUrl
         user {
           id
           firstProfileImage {
-            id
-            url
+            ...ProfileImage
           }
         }
       }

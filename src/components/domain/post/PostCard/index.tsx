@@ -1,3 +1,4 @@
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -24,34 +25,51 @@ export const PostCard = ({ postData }: Props) => {
 
   return (
     <View style={styles.body}>
-      <ProfileImage
-        imageData={filter<ProfileImageFragment>(
-          ProfileImageFragmentDoc,
-          user.firstProfileImage
-        )}
-        style={styles.profileImage}
-      />
+      <View style={styles.mainContents}>
+        <ProfileImage
+          imageData={filter<ProfileImageFragment>(
+            ProfileImageFragmentDoc,
+            user.firstProfileImage
+          )}
+          style={styles.profileImage}
+        />
 
-      <View style={styles.rightContent}>
-        <View style={styles.nameAndDiff}>
-          <Text style={styles.name}>{user.nickname}</Text>
-          <Text style={styles.diff}>{diff}</Text>
+        <View style={styles.rightContent}>
+          <View style={styles.nameAndDiff}>
+            <Text style={styles.name}>{user.nickname}</Text>
+            <Text style={styles.diff}>{diff}</Text>
+          </View>
+          <Text style={styles.text}>{text}</Text>
+
+          <View style={styles.actions}>
+            <Entypo name="reply" size={ACTION_ICON_SIZE} color="#c7c7c7" />
+            <AntDesign
+              name="heart"
+              size={ACTION_ICON_SIZE - 5}
+              color="#c7c7c7"
+              style={{
+                marginLeft: 64,
+              }}
+            />
+          </View>
         </View>
-        <Text style={styles.text}>{text}</Text>
       </View>
     </View>
   );
 };
 
 const IMAGE_SIZE = 48;
+const ACTION_ICON_SIZE = 20;
 
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
-    flexDirection: 'row',
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderBottomColor: theme.boarderGray,
     borderBottomWidth: 0.5,
+  },
+  mainContents: {
+    flexDirection: 'row',
   },
   profileImage: {
     width: IMAGE_SIZE,
@@ -83,5 +101,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '500',
+  },
+  actions: {
+    marginTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

@@ -1,4 +1,22 @@
-query ActivityScreenData($postsFirst: Int, $postsAfter: String) {
+query ActivityScreenData(
+  $postsFirst: Int
+  $postsAfter: String
+  $storiesFirst: Int
+  $storiesAfter: String
+) {
+  ...ActivityPosts
+  ...ActivityStories
+}
+
+query ActivityPosts($postsFirst: Int, $postsAfter: String) {
+  ...ActivityPosts
+}
+
+query ActivityStories($storiesFirst: Int, $storiesAfter: String) {
+  ...ActivityStories
+}
+
+fragment ActivityPosts on Query {
   posts(first: $postsFirst, after: $postsAfter) {
     edges {
       node {
@@ -12,16 +30,18 @@ query ActivityScreenData($postsFirst: Int, $postsAfter: String) {
   }
 }
 
-query ActivityPosts($postsFirst: Int, $postsAfter: String) {
-  ...ActivityPosts
-}
-
-fragment ActivityPosts on Query {
-  posts(first: $postsFirst, after: $postsAfter) {
+fragment ActivityStories on Query {
+  stories(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {
         id
-        ...PostCard
+        user {
+          id
+          firstProfileImage {
+            id
+            url
+          }
+        }
       }
     }
     pageInfo {

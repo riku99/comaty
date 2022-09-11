@@ -92,6 +92,7 @@ export type Query = {
   me?: Maybe<Me>;
   nearbyUsers: UserConnection;
   posts: PostConnection;
+  stories: StoryConnection;
   user: User;
 };
 
@@ -108,6 +109,12 @@ export type QueryPostsArgs = {
 };
 
 
+export type QueryStoriesArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID'];
 };
@@ -117,6 +124,25 @@ export enum Sex {
   Male = 'MALE',
   NotSelected = 'NOT_SELECTED'
 }
+
+export type Story = {
+  __typename?: 'Story';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  user?: Maybe<User>;
+};
+
+export type StoryConnection = {
+  __typename?: 'StoryConnection';
+  edges: Array<Maybe<StoryEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type StoryEdge = {
+  __typename?: 'StoryEdge';
+  cursor: Scalars['String'];
+  node: Story;
+};
 
 export type UpdateInitialStatusInput = {
   birthDay: Scalars['Int'];
@@ -217,10 +243,12 @@ export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array
 export type ActivityScreenDataQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
   postsAfter?: InputMaybe<Scalars['String']>;
+  storiesFirst?: InputMaybe<Scalars['Int']>;
+  storiesAfter?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityPostsQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
@@ -230,7 +258,17 @@ export type ActivityPostsQueryVariables = Exact<{
 
 export type ActivityPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
+export type ActivityStoriesQueryVariables = Exact<{
+  storiesFirst?: InputMaybe<Scalars['Int']>;
+  storiesAfter?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type ActivityStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
 export type ActivityPostsFragment = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type ActivityStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -314,6 +352,27 @@ export const ActivityPostsFragmentDoc = gql`
 }
     ${PostCardFragmentDoc}
 ${PageInfoFragmentDoc}`;
+export const ActivityStoriesFragmentDoc = gql`
+    fragment ActivityStories on Query {
+  stories(first: $storiesFirst, after: $storiesAfter) {
+    edges {
+      node {
+        id
+        user {
+          id
+          firstProfileImage {
+            id
+            url
+          }
+        }
+      }
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}
+    ${PageInfoFragmentDoc}`;
 export const ProfileImagesInUserProfileFragmentDoc = gql`
     fragment ProfileImagesInUserProfile on User {
   profileImages {
@@ -519,21 +578,12 @@ export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGet
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
 export const ActivityScreenDataDocument = gql`
-    query ActivityScreenData($postsFirst: Int, $postsAfter: String) {
-  posts(first: $postsFirst, after: $postsAfter) {
-    edges {
-      node {
-        id
-        ...PostCard
-      }
-    }
-    pageInfo {
-      ...PageInfo
-    }
-  }
+    query ActivityScreenData($postsFirst: Int, $postsAfter: String, $storiesFirst: Int, $storiesAfter: String) {
+  ...ActivityPosts
+  ...ActivityStories
 }
-    ${PostCardFragmentDoc}
-${PageInfoFragmentDoc}`;
+    ${ActivityPostsFragmentDoc}
+${ActivityStoriesFragmentDoc}`;
 
 /**
  * __useActivityScreenDataQuery__
@@ -549,6 +599,8 @@ ${PageInfoFragmentDoc}`;
  *   variables: {
  *      postsFirst: // value for 'postsFirst'
  *      postsAfter: // value for 'postsAfter'
+ *      storiesFirst: // value for 'storiesFirst'
+ *      storiesAfter: // value for 'storiesAfter'
  *   },
  * });
  */
@@ -597,6 +649,40 @@ export function useActivityPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type ActivityPostsQueryHookResult = ReturnType<typeof useActivityPostsQuery>;
 export type ActivityPostsLazyQueryHookResult = ReturnType<typeof useActivityPostsLazyQuery>;
 export type ActivityPostsQueryResult = Apollo.QueryResult<ActivityPostsQuery, ActivityPostsQueryVariables>;
+export const ActivityStoriesDocument = gql`
+    query ActivityStories($storiesFirst: Int, $storiesAfter: String) {
+  ...ActivityStories
+}
+    ${ActivityStoriesFragmentDoc}`;
+
+/**
+ * __useActivityStoriesQuery__
+ *
+ * To run a query within a React component, call `useActivityStoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useActivityStoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useActivityStoriesQuery({
+ *   variables: {
+ *      storiesFirst: // value for 'storiesFirst'
+ *      storiesAfter: // value for 'storiesAfter'
+ *   },
+ * });
+ */
+export function useActivityStoriesQuery(baseOptions?: Apollo.QueryHookOptions<ActivityStoriesQuery, ActivityStoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ActivityStoriesQuery, ActivityStoriesQueryVariables>(ActivityStoriesDocument, options);
+      }
+export function useActivityStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityStoriesQuery, ActivityStoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ActivityStoriesQuery, ActivityStoriesQueryVariables>(ActivityStoriesDocument, options);
+        }
+export type ActivityStoriesQueryHookResult = ReturnType<typeof useActivityStoriesQuery>;
+export type ActivityStoriesLazyQueryHookResult = ReturnType<typeof useActivityStoriesLazyQuery>;
+export type ActivityStoriesQueryResult = Apollo.QueryResult<ActivityStoriesQuery, ActivityStoriesQueryVariables>;
 export const NearbyUsersScreenDataDocument = gql`
     query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {

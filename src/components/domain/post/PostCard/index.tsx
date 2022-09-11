@@ -1,9 +1,11 @@
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { filter } from 'graphql-anywhere';
-import { StyleSheet, View } from 'react-native';
+import LottieView from 'lottie-react-native';
+import { useRef, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import {
   PostCardFragment,
@@ -11,6 +13,8 @@ import {
   ProfileImageFragmentDoc,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+
+const Like = require('../../../../assets/lottie/like.json');
 
 type Props = {
   postData: PostCardFragment;
@@ -22,6 +26,12 @@ export const PostCard = ({ postData }: Props) => {
     locale: ja,
     addSuffix: true,
   });
+  const [isLiked, setIsLiked] = useState(false);
+  const likeRef = useRef<LottieView>(null);
+
+  const onLikePress = () => {
+    setIsLiked((c) => !c);
+  };
 
   return (
     <View style={styles.body}>
@@ -42,15 +52,25 @@ export const PostCard = ({ postData }: Props) => {
           <Text style={styles.text}>{text}</Text>
 
           <View style={styles.actions}>
-            <Entypo name="reply" size={ACTION_ICON_SIZE} color="#c7c7c7" />
-            <AntDesign
-              name="heart"
-              size={ACTION_ICON_SIZE - 5}
-              color="#c7c7c7"
-              style={{
-                marginLeft: 64,
-              }}
-            />
+            <Pressable>
+              <Entypo
+                name="reply"
+                size={ACTION_ICON_SIZE}
+                color={ACTION_ICON_COLOR}
+              />
+            </Pressable>
+
+            <Pressable onPress={onLikePress}>
+              <LottieView
+                source={Like}
+                style={{
+                  width: 34,
+                }}
+                resizeMode="cover"
+                loop
+                autoPlay
+              />
+            </Pressable>
           </View>
         </View>
       </View>
@@ -60,6 +80,9 @@ export const PostCard = ({ postData }: Props) => {
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;
+const ACTION_ICON_COLOR = '#c7c7c7';
+
+const dimensions = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   body: {

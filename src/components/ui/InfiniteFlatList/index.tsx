@@ -52,16 +52,24 @@ export const InfiniteFlatList = <T extends {}>({
       onMomentumScrollBegin={onMomentumScrollBegin}
       ListFooterComponent={
         showInfiniteLoadingIndicator
-          ? () => <ActivityIndicator style={styles.bottomIndicator} />
+          ? () => <ActivityIndicator />
           : ListFooterComponent
       }
+      ListFooterComponentStyle={[
+        styles.footer,
+        {
+          marginTop: restProps.horizontal ? 0 : 10,
+          marginLeft: restProps.horizontal ? 10 : 0,
+        },
+      ]}
       {...restProps}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  bottomIndicator: {
-    marginTop: 10,
+  footer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

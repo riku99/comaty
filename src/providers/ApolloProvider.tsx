@@ -46,6 +46,7 @@ export const ApolloProvider = ({ children }: Props) => {
           fields: {
             nearbyUsers: relayStylePagination(),
             posts: relayStylePagination(),
+            stories: relayStylePagination(),
           },
         },
       },

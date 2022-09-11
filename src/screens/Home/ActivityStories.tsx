@@ -1,8 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { filter } from 'graphql-anywhere';
+import { MotiView } from 'moti';
 import React, { useCallback } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
   ActivityStoriesFragment,
   ProfileImageFragment,
@@ -11,56 +13,69 @@ import {
 
 type Props = {
   storiesData: ActivityStoriesFragment;
+  infiniteLoadStories: () => Promise<void>;
 };
 
 type Item = ActivityStoriesFragment['stories']['edges'][number];
 
-export const Stories = React.memo(({ storiesData }: Props) => {
-  const renderItem = useCallback(({ item }: { item: Item }) => {
-    return (
-      <View>
-        <LinearGradient
-          colors={['#9089fa', '#b289fa', '#e389fa']}
-          style={style.gradientContainer}
+export const Stories = React.memo(
+  ({ storiesData, infiniteLoadStories }: Props) => {
+    const renderItem = useCallback(({ item }: { item: Item }) => {
+      return (
+        <MotiView
+          from={{ opacity: 0.3 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            duration: 700,
+            type: 'timing',
+          }}
         >
-          <View style={style.blankContainer}>
-            <ProfileImage
-              imageData={filter<ProfileImageFragment>(
-                ProfileImageFragmentDoc,
-                item.node.user.firstProfileImage
-              )}
-              style={style.userImage}
-            />
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  }, []);
+          <LinearGradient
+            colors={['#9089fa', '#b289fa', '#e389fa']}
+            style={style.gradientContainer}
+          >
+            <View style={style.blankContainer}>
+              <ProfileImage
+                imageData={filter<ProfileImageFragment>(
+                  ProfileImageFragmentDoc,
+                  item.node.user.firstProfileImage
+                )}
+                style={style.userImage}
+              />
+            </View>
+          </LinearGradient>
+        </MotiView>
+      );
+    }, []);
 
-  const renderItemSeparator = useCallback(() => {
+    const renderItemSeparator = useCallback(() => {
+      return (
+        <View
+          style={{
+            width: 10,
+          }}
+        />
+      );
+    }, []);
+
+    if (!storiesData) {
+      return;
+    }
+
     return (
-      <View
-        style={{
-          width: 10,
-        }}
-      />
-    );
-  }, []);
-
-  return (
-    <View>
-      <FlatList
+      <InfiniteFlatList
         renderItem={renderItem}
         data={storiesData.stories.edges}
-        keyExtractor={(d, i) => i.toString()}
+        keyExtractor={(item) => item.node.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={renderItemSeparator}
         contentContainerStyle={style.storiesContent}
+        infiniteLoad={infiniteLoadStories}
       />
-    </View>
-  );
-});
+    );
+  }
+);
 
 const style = StyleSheet.create({
   storiesContent: {

@@ -9,6 +9,7 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   ActivityPostsDocument,
   ActivityScreenDataQuery,
+  ActivityStoriesDocument,
   ActivityStoriesFragment,
   ActivityStoriesFragmentDoc,
   PostCardFragment,
@@ -20,6 +21,7 @@ import { Stories } from './ActivityStories';
 type PostItem = ActivityScreenDataQuery['posts']['edges'][number];
 
 const TAKE_POST_COUNT = 20;
+const TAKE_STORY_COUNT = 15;
 
 export const Activity = () => {
   const { data, fetchMore } = useActivityScreenDataQuery({
@@ -44,6 +46,21 @@ export const Activity = () => {
       </MotiView>
     );
   }, []);
+
+  const infiniteLoadStories = async () => {
+    const { pageInfo } = data.stories;
+
+    if (pageInfo.hasNextPage) {
+      const { endCursor } = pageInfo;
+      await fetchMore({
+        variables: {
+          storiesAfter: endCursor ? btoa(endCursor) : undefined,
+          storiesFirst: TAKE_STORY_COUNT,
+        },
+        query: ActivityStoriesDocument,
+      });
+    }
+  };
 
   if (!data) {
     return <Loading />;
@@ -71,14 +88,15 @@ export const Activity = () => {
         renderItem={renderPostItem}
         keyExtractor={(item) => item.node.id.toString()}
         contentContainerStyle={{ paddingTop: 16 }}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={
           <Stories
             storiesData={filter<ActivityStoriesFragment>(
               ActivityStoriesFragmentDoc,
               data
             )}
+            infiniteLoadStories={infiniteLoadStories}
           />
-        )}
+        }
         infiniteLoad={infiniteLoadPost}
       />
     </View>

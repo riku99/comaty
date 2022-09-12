@@ -5,7 +5,7 @@ import { ja } from 'date-fns/locale';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useRef, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
@@ -29,9 +29,16 @@ export const PostCard = ({ postData }: Props) => {
   });
   const [isLiked, setIsLiked] = useState(false);
   const likeRef = useRef<LottieView>(null);
+  const isFirstRender = useRef(true);
 
   const onLikePress = () => {
-    setIsLiked((c) => !c);
+    if (isLiked) {
+      likeRef.current?.play(0, 0);
+      setIsLiked(false);
+    } else {
+      likeRef.current?.play(20, 144);
+      setIsLiked(true);
+    }
   };
 
   return (
@@ -63,13 +70,14 @@ export const PostCard = ({ postData }: Props) => {
 
             <Pressable onPress={onLikePress}>
               <LottieView
+                ref={likeRef}
                 source={Like}
                 style={{
                   width: 34,
                 }}
                 resizeMode="cover"
                 loop={false}
-                autoPlay
+                speed={1.4}
               />
             </Pressable>
           </HStack>
@@ -83,12 +91,11 @@ const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;
 const ACTION_ICON_COLOR = '#c7c7c7';
 
-const dimensions = Dimensions.get('screen');
-
 const styles = StyleSheet.create({
   body: {
     paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 14,
     borderBottomColor: theme.boarderGray,
     borderBottomWidth: 0.5,
   },

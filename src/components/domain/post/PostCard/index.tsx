@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
@@ -12,6 +12,7 @@ import {
   PostCardFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
+  useLikePostMutation,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
@@ -22,22 +23,45 @@ type Props = {
 };
 
 export const PostCard = ({ postData }: Props) => {
-  const { text, user, createdAt } = postData;
+  const { text, user, createdAt, liked, id } = postData;
   const diff = formatDistanceToNow(new Date(Number(createdAt)), {
     locale: ja,
     addSuffix: true,
   });
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(liked);
   const likeRef = useRef<LottieView>(null);
   const isFirstRender = useRef(true);
+  const [likePostMutation] = useLikePostMutation();
 
-  const onLikePress = () => {
-    if (isLiked) {
-      likeRef.current?.play(0, 0);
-      setIsLiked(false);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      if (isLiked) {
+        likeRef.current?.play(144, 144);
+      }
     } else {
-      likeRef.current?.play(20, 144);
-      setIsLiked(true);
+      if (isLiked) {
+        likeRef.current?.play(20, 144);
+      } else {
+        likeRef.current?.play(0, 0);
+      }
+    }
+  }, [isLiked]);
+
+  const onLikePress = async () => {
+    try {
+      if (isLiked) {
+        setIsLiked(false);
+      } else {
+        setIsLiked(true);
+        await likePostMutation({
+          variables: {
+            id,
+          },
+        });
+      }
+    } catch {
+      setIsLiked((c) => !c);
     }
   };
 

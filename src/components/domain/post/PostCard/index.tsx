@@ -12,7 +12,7 @@ import {
   PostCardFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
-  useLikePostMutation,
+  useLikePostMutation
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
@@ -83,6 +83,8 @@ export const PostCard = ({ postData }: Props) => {
           </View>
           <Text style={styles.text}>{text}</Text>
 
+          
+
           <HStack style={styles.actions} space={44}>
             <Pressable>
               <Entypo
@@ -110,6 +112,8 @@ export const PostCard = ({ postData }: Props) => {
     </View>
   );
 };
+
+const reactions = ['like', 'yusyo', 'sorena', 'pien'];
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;

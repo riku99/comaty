@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import { useCallback } from 'react';
@@ -31,6 +32,8 @@ export const Activity = () => {
       postsFirst: TAKE_POST_COUNT,
     },
   });
+
+  const navigation = useNavigation<RootNavigationProp<'BottomTab'>>();
 
   const renderPostItem = useCallback(({ item }: { item: PostItem }) => {
     return (
@@ -102,7 +105,12 @@ export const Activity = () => {
         infiniteLoad={infiniteLoadPost}
       />
 
-      <Pressable style={styles.createButton}>
+      <Pressable
+        style={styles.createButton}
+        onPress={() => {
+          navigation.navigate('PostCreation');
+        }}
+      >
         <Ionicons
           name="create-outline"
           size={30}

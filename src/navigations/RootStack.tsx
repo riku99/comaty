@@ -4,6 +4,7 @@ import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
+import { PostReply } from 'src/screens/PostReply';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { UserProfileScreen } from 'src/screens/UserProfile';
@@ -20,6 +21,7 @@ export type RootStackParamList = {
   UserProfile: {
     id: string;
   };
+  PostReply: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -57,6 +59,13 @@ export const RootStack = () => {
           <Stack.Screen name="NicknameInput" component={NicknameInputScreen} />
           <Stack.Screen name="SexSelection" component={SexSelectionScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          <Stack.Screen
+            name="PostReply"
+            component={PostReply}
+            options={{
+              presentation: 'fullScreenModal',
+            }}
+          />
         </>
       ) : (
         <>

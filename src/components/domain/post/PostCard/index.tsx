@@ -1,4 +1,5 @@
 import { Entypo } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
@@ -35,6 +36,7 @@ export const PostCard = ({ postData }: Props) => {
   const isFirstRender = useRef(true);
   const [likePostMutation] = useLikePostMutation();
   const [unlikePostMutation] = useUnlikePostMutation();
+  const navigation = useNavigation<RootNavigationProp<any>>();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -74,6 +76,11 @@ export const PostCard = ({ postData }: Props) => {
     }
   };
 
+  const onReplyPress = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    navigation.navigate('PostReply');
+  };
+
   return (
     <View style={styles.body}>
       <View style={styles.mainContents}>
@@ -93,7 +100,7 @@ export const PostCard = ({ postData }: Props) => {
           <Text style={styles.text}>{text}</Text>
 
           <HStack style={styles.actions} space={44}>
-            <Pressable>
+            <Pressable onPress={onReplyPress}>
               <Entypo
                 name="reply"
                 size={ACTION_ICON_SIZE}
@@ -119,8 +126,6 @@ export const PostCard = ({ postData }: Props) => {
     </View>
   );
 };
-
-const reactions = ['like', 'yusyo', 'sorena', 'pien'];
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;

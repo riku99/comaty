@@ -12,7 +12,8 @@ import {
   PostCardFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
-  useLikePostMutation
+  useLikePostMutation,
+  useUnlikePostMutation,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
@@ -32,6 +33,7 @@ export const PostCard = ({ postData }: Props) => {
   const likeRef = useRef<LottieView>(null);
   const isFirstRender = useRef(true);
   const [likePostMutation] = useLikePostMutation();
+  const [unlikePostMutation] = useUnlikePostMutation();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -52,6 +54,11 @@ export const PostCard = ({ postData }: Props) => {
     try {
       if (isLiked) {
         setIsLiked(false);
+        await unlikePostMutation({
+          variables: {
+            id,
+          },
+        });
       } else {
         setIsLiked(true);
         await likePostMutation({
@@ -82,8 +89,6 @@ export const PostCard = ({ postData }: Props) => {
             <Text style={styles.diff}>{diff}</Text>
           </View>
           <Text style={styles.text}>{text}</Text>
-
-          
 
           <HStack style={styles.actions} space={44}>
             <Pressable>

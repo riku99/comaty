@@ -41,6 +41,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createUser: Me;
   likePost: Post;
+  unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
   updateUserProfile: Me;
 };
@@ -52,6 +53,11 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationLikePostArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationUnlikePostArgs = {
   id: Scalars['Int'];
 };
 
@@ -222,6 +228,13 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean } };
+
+export type UnlikePostMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type UnlikePostMutation = { __typename?: 'Mutation', unlikePost?: { __typename?: 'Post', id: number, liked?: boolean | null } | null };
 
 export type UpdateInitialStatusMutationVariables = Exact<{
   input: UpdateInitialStatusInput;
@@ -476,6 +489,40 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const UnlikePostDocument = gql`
+    mutation UnlikePost($id: Int!) {
+  unlikePost(id: $id) {
+    id
+    liked
+  }
+}
+    `;
+export type UnlikePostMutationFn = Apollo.MutationFunction<UnlikePostMutation, UnlikePostMutationVariables>;
+
+/**
+ * __useUnlikePostMutation__
+ *
+ * To run a mutation, you first call `useUnlikePostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnlikePostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unlikePostMutation, { data, loading, error }] = useUnlikePostMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnlikePostMutation(baseOptions?: Apollo.MutationHookOptions<UnlikePostMutation, UnlikePostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnlikePostMutation, UnlikePostMutationVariables>(UnlikePostDocument, options);
+      }
+export type UnlikePostMutationHookResult = ReturnType<typeof useUnlikePostMutation>;
+export type UnlikePostMutationResult = Apollo.MutationResult<UnlikePostMutation>;
+export type UnlikePostMutationOptions = Apollo.BaseMutationOptions<UnlikePostMutation, UnlikePostMutationVariables>;
 export const UpdateInitialStatusDocument = gql`
     mutation UpdateInitialStatus($input: UpdateInitialStatusInput!) {
   updateInitialStatus(input: $input) {

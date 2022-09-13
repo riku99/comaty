@@ -2,6 +2,7 @@ import { Entypo } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { formatDistanceToNow } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
@@ -51,6 +52,7 @@ export const PostCard = ({ postData }: Props) => {
   }, [isLiked]);
 
   const onLikePress = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     try {
       if (isLiked) {
         setIsLiked(false);

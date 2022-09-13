@@ -1,7 +1,8 @@
+import { Ionicons } from '@expo/vector-icons';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
@@ -16,6 +17,7 @@ import {
   PostCardFragmentDoc,
   useActivityScreenDataQuery,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 import { Stories } from './ActivityStories';
 
 type PostItem = ActivityScreenDataQuery['posts']['edges'][number];
@@ -99,12 +101,37 @@ export const Activity = () => {
         }
         infiniteLoad={infiniteLoadPost}
       />
+
+      <Pressable style={styles.createButton}>
+        <Ionicons
+          name="create-outline"
+          size={30}
+          color="#fff"
+          style={styles.createButtonIcon}
+        />
+      </Pressable>
     </View>
   );
 };
 
+const CREATE_BUTTON_SIZE = 62;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  createButton: {
+    position: 'absolute',
+    bottom: 30,
+    right: 20,
+    backgroundColor: theme.primary,
+    height: CREATE_BUTTON_SIZE,
+    width: CREATE_BUTTON_SIZE,
+    borderRadius: CREATE_BUTTON_SIZE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  createButtonIcon: {
+    marginLeft: 4,
   },
 });

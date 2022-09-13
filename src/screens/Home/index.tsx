@@ -1,3 +1,4 @@
+import { useHeaderHeight } from '@react-navigation/elements';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
@@ -20,6 +21,9 @@ export const HomeScreen = ({ navigation }: Props) => {
       title: 'ホーム🦄',
     });
   }, [navigation]);
+
+  const a = useHeaderHeight();
+  console.log(a);
 
   return (
     <>

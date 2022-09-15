@@ -5,3 +5,5 @@ export const loginProviders = {
 };
 
 export const ERROR_TOAST_DURATION = 2500;
+
+export const POST_MAX_TEXT_COUNT = 300;

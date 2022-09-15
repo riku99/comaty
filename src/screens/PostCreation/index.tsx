@@ -1,31 +1,15 @@
-import { Input, Text } from '@rneui/themed';
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Dimensions,
-  InputAccessoryView,
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Text } from '@rneui/themed';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { PostInput } from 'src/components/ui/PostInput';
 import { useCreatePostMutation } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { MAX_TEXT_COUNT } from './constants';
-import { KeyboardAccessory } from './KeyboradAccessory';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
-  const inputRef = useRef<typeof Input>(null);
-  const textInputId = 'textInput';
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [text, setText] = useState('');
   const [createPostMutation] = useCreatePostMutation();
 
@@ -73,46 +57,12 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     });
   }, [navigation, onPostPress, text]);
 
-  useEffect(() => {
-    const subscription = Keyboard.addListener('keyboardWillShow', (e) => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    // @ts-ignore
-    inputRef.current?.focus();
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Input
-        // @ts-ignore
-        ref={inputRef}
-        placeholder="気軽に投稿、共有しよう👀"
-        multiline
-        inputAccessoryViewID={textInputId}
-        onChangeText={setText}
-        inputContainerStyle={{
-          borderBottomWidth: 0,
-        }}
-        containerStyle={{
-          height: screenHeight - keyboardHeight - 110,
-        }}
-      />
-
-      <InputAccessoryView nativeID={textInputId}>
-        <KeyboardAccessory text={text} />
-      </InputAccessoryView>
+      <PostInput text={text} setText={setText} />
     </View>
   );
 };
-
-const { height: screenHeight } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {

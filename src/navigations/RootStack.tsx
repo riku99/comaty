@@ -4,7 +4,7 @@ import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
-import { PostCreation } from 'src/screens/PostCreation';
+import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostReply } from 'src/screens/PostReply';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
@@ -67,7 +67,7 @@ export const RootStack = () => {
               presentation: 'fullScreenModal',
             }}
           >
-            <Stack.Screen name="PostCreation" component={PostCreation} />
+            <Stack.Screen name="PostCreation" component={PostCreationScreen} />
             <Stack.Screen name="PostReply" component={PostReply} />
           </Stack.Group>
         </>

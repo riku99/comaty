@@ -6,4 +6,11 @@ export const theme = {
   textGray: '#575757',
   boarderGray: '#dbdbdb',
   alertRed: '#f73e3e',
+  creationBule: '#29b0ff',
+  gray: {
+    disable: '#b3b3b3',
+    formBorder: '#b3b3b3',
+    boarder: '#dbdbdb',
+    text: '#575757',
+  },
 };

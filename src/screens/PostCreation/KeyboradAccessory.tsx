@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textCount: {
-    fontWeight: '500',
+    fontWeight: 'bold',
     fontSize: 14,
   },
 });

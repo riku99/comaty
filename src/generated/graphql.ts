@@ -28,6 +28,10 @@ export type CreateUserInput = {
   idToken: Scalars['String'];
 };
 
+export enum ForbiddenError {
+  AuthFailure = 'AUTH_FAILURE'
+}
+
 export type Me = UserEntity & {
   __typename?: 'Me';
   bio?: Maybe<Scalars['String']>;

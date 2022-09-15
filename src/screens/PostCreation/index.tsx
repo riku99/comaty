@@ -1,10 +1,9 @@
-import { Text } from '@rneui/themed';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
 import { useCreatePostMutation } from 'src/generated/graphql';
-import { theme } from 'src/styles';
 import { MAX_TEXT_COUNT } from './constants';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
@@ -38,21 +37,11 @@ export const PostCreationScreen = ({ navigation }: Props) => {
       title: '投稿',
       headerLeft: () => <CloseButton />,
       headerRight: () => (
-        <Pressable onPress={onPostPress}>
-          <Text
-            style={[
-              styles.postText,
-              {
-                color:
-                  text.length === 0 || text.length > MAX_TEXT_COUNT
-                    ? theme.gray.disable
-                    : theme.creationBule,
-              },
-            ]}
-          >
-            投稿
-          </Text>
-        </Pressable>
+        <HeaderRightCreationButton
+          title="投稿"
+          disable={text.length === 0 || text.length > MAX_TEXT_COUNT}
+          onPress={onPostPress}
+        />
       ),
     });
   }, [navigation, onPostPress, text]);

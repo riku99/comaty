@@ -1,13 +1,22 @@
 import { Input } from '@rneui/themed';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Dimensions, Keyboard, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  InputAccessoryView,
+  Keyboard,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { KeyboardAccessory } from './KeyboradAccessory';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreation = ({ navigation }: Props) => {
   const inputRef = useRef<typeof Input>(null);
+  const textInputId = 'textInput';
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [text, setText] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -18,7 +27,6 @@ export const PostCreation = ({ navigation }: Props) => {
 
   useEffect(() => {
     const subscription = Keyboard.addListener('keyboardWillShow', (e) => {
-      console.log(e.endCoordinates.height);
       setKeyboardHeight(e.endCoordinates.height);
     });
 
@@ -39,6 +47,8 @@ export const PostCreation = ({ navigation }: Props) => {
         ref={inputRef}
         placeholder="気軽に投稿、共有しよう"
         multiline
+        inputAccessoryViewID={textInputId}
+        onChangeText={setText}
         inputContainerStyle={{
           borderBottomWidth: 0,
         }}
@@ -46,6 +56,10 @@ export const PostCreation = ({ navigation }: Props) => {
           height: screenHeight - keyboardHeight - 110,
         }}
       />
+
+      <InputAccessoryView nativeID={textInputId}>
+        <KeyboardAccessory text={text} />
+      </InputAccessoryView>
     </View>
   );
 };

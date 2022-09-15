@@ -5,4 +5,5 @@ export const theme = {
   formBorderGray: '#b3b3b3',
   textGray: '#575757',
   boarderGray: '#dbdbdb',
+  alertRed: '#f73e3e',
 };

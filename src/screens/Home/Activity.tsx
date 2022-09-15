@@ -2,8 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
-import { useCallback } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
@@ -27,13 +27,24 @@ const TAKE_POST_COUNT = 20;
 const TAKE_STORY_COUNT = 15;
 
 export const Activity = () => {
-  const { data, fetchMore } = useActivityScreenDataQuery({
+  const { data, fetchMore, refetch } = useActivityScreenDataQuery({
     variables: {
       postsFirst: TAKE_POST_COUNT,
     },
   });
-
   const navigation = useNavigation<RootNavigationProp<'BottomTab'>>();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const renderPostItem = useCallback(({ item }: { item: PostItem }) => {
     return (
@@ -103,6 +114,9 @@ export const Activity = () => {
           />
         }
         infiniteLoad={infiniteLoadPost}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
 
       <Pressable

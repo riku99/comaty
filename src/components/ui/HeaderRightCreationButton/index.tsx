@@ -3,14 +3,14 @@ import { theme } from 'src/styles';
 
 type Props = {
   onPress: () => void;
-  disable: boolean;
+  disable?: boolean;
   title: string;
 };
 
 export const HeaderRightCreationButton = ({
   onPress,
-  disable,
   title,
+  disable = false,
 }: Props) => {
   return (
     <Pressable onPress={onPress}>

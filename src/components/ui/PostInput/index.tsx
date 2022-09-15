@@ -6,9 +6,10 @@ import { KeyboardAccessory } from './KeyboradAccessory';
 type Props = {
   text: string;
   setText: (t: string) => void;
+  placeholder: string
 };
 
-export const PostInput = ({ text, setText }: Props) => {
+export const PostInput = ({ text, setText, placeholder }: Props) => {
   const inputRef = useRef<typeof Input>(null);
   const textInputId = 'textInput';
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -33,7 +34,7 @@ export const PostInput = ({ text, setText }: Props) => {
       <Input
         // @ts-ignore
         ref={inputRef}
-        placeholder="気軽に投稿、共有しよう👀"
+        placeholder={placeholder}
         multiline
         inputAccessoryViewID={textInputId}
         onChangeText={setText}

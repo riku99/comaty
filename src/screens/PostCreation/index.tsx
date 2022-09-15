@@ -38,7 +38,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
       headerLeft: () => <CloseButton />,
       headerRight: () => (
         <HeaderRightCreationButton
-          title="投稿"
+          title="投稿する"
           disable={text.length === 0 || text.length > MAX_TEXT_COUNT}
           onPress={onPostPress}
         />
@@ -48,7 +48,11 @@ export const PostCreationScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <PostInput text={text} setText={setText} />
+      <PostInput
+        text={text}
+        setText={setText}
+        placeholder={'気軽に投稿、共有しましょう！'}
+      />
     </View>
   );
 };

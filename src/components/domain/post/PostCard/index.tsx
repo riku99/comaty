@@ -37,6 +37,7 @@ export const PostCard = ({ postData }: Props) => {
   const [likePostMutation] = useLikePostMutation();
   const [unlikePostMutation] = useUnlikePostMutation();
   const navigation = useNavigation<RootNavigationProp<any>>();
+  const [likeCount, setLikeCount] = useState(postData.likeCount);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -58,6 +59,7 @@ export const PostCard = ({ postData }: Props) => {
     try {
       if (isLiked) {
         setIsLiked(false);
+        setLikeCount((c) => c - 1);
         await unlikePostMutation({
           variables: {
             id,
@@ -65,6 +67,7 @@ export const PostCard = ({ postData }: Props) => {
         });
       } else {
         setIsLiked(true);
+        setLikeCount((c) => c + 1);
         await likePostMutation({
           variables: {
             id,
@@ -108,7 +111,7 @@ export const PostCard = ({ postData }: Props) => {
               />
             </Pressable>
 
-            <Pressable onPress={onLikePress}>
+            <Pressable onPress={onLikePress} style={styles.like}>
               <LottieView
                 ref={likeRef}
                 source={Like}
@@ -119,6 +122,14 @@ export const PostCard = ({ postData }: Props) => {
                 loop={false}
                 speed={1.4}
               />
+              <Text
+                style={[
+                  styles.likeCount,
+                  { color: liked ? '#F24949' : ACTION_ICON_COLOR },
+                ]}
+              >
+                {likeCount !== 0 && likeCount}
+              </Text>
             </Pressable>
           </HStack>
         </View>
@@ -177,5 +188,13 @@ const styles = StyleSheet.create({
     marginTop: 14,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  like: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  likeCount: {
+    transform: [{ translateX: -4 }],
+    fontWeight: 'bold',
   },
 });

@@ -2,5 +2,6 @@ mutation LikePost($id: Int!) {
   likePost(id: $id) {
     id
     liked
+    likeCount
   }
 }

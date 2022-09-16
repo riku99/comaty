@@ -1,4 +1,5 @@
 import { Entypo } from '@expo/vector-icons';
+import { MenuAction, MenuView } from '@react-native-menu/menu';
 import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { formatDistanceToNow } from 'date-fns';
@@ -101,7 +102,7 @@ export const PostCard = ({
   };
 
   return (
-    <Pressable style={styles.body} onPress={onBodyPress}>
+    <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>
       <View style={styles.mainContents}>
         <ProfileImage
           imageData={filter<ProfileImageFragment>(
@@ -118,41 +119,65 @@ export const PostCard = ({
           </View>
           <Text style={styles.text}>{text}</Text>
 
-          <HStack style={styles.actions} space={44}>
-            <Pressable onPress={onReplyPress}>
-              <Entypo
-                name="reply"
-                size={ACTION_ICON_SIZE}
-                color={ACTION_ICON_COLOR}
-              />
-            </Pressable>
+          <View style={styles.actions}>
+            <HStack style={styles.actionsLeft} space={44}>
+              <Pressable onPress={onReplyPress} hitSlop={10}>
+                <Entypo
+                  name="reply"
+                  size={ACTION_ICON_SIZE}
+                  color={ACTION_ICON_COLOR}
+                />
+              </Pressable>
 
-            <Pressable onPress={onLikePress} style={styles.like}>
-              <LottieView
-                ref={likeRef}
-                source={Like}
-                style={{
-                  width: 34,
-                }}
-                resizeMode="cover"
-                loop={false}
-                speed={1.4}
-              />
-              <Text
-                style={[
-                  styles.likeCount,
-                  { color: liked ? '#F24949' : ACTION_ICON_COLOR },
-                ]}
-              >
-                {likeCount !== 0 && likeCount}
-              </Text>
-            </Pressable>
-          </HStack>
+              <Pressable onPress={onLikePress} style={styles.like}>
+                <LottieView
+                  ref={likeRef}
+                  source={Like}
+                  style={{
+                    width: 34,
+                  }}
+                  resizeMode="cover"
+                  loop={false}
+                  speed={1.4}
+                />
+                <Text
+                  style={[
+                    styles.likeCount,
+                    { color: liked ? '#F24949' : ACTION_ICON_COLOR },
+                  ]}
+                >
+                  {likeCount !== 0 && likeCount}
+                </Text>
+              </Pressable>
+            </HStack>
+
+            <MenuView actions={dotsMenuActions}>
+              <Pressable style={styles.dotsAction}>
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={ACTION_ICON_SIZE}
+                  color={ACTION_ICON_COLOR}
+                />
+              </Pressable>
+            </MenuView>
+          </View>
         </View>
       </View>
     </Pressable>
   );
 };
+
+const dotsMenuActions: MenuAction[] = [
+  {
+    id: 'delete',
+    title: '削除',
+    attributes: {
+      destructive: true,
+    },
+    image: 'trash',
+    imageColor: 'red',
+  },
+];
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;
@@ -202,9 +227,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   actions: {
-    marginTop: 14,
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 14,
+    justifyContent: 'space-between',
+  },
+  actionsLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dotsAction: {
+    marginRight: 4,
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   like: {
     flexDirection: 'row',

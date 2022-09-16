@@ -8,13 +8,17 @@ import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
+  ActivityPostsDocument,
+  ActivityPostsQuery,
   PostCardFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
+  useDeletePostMutation,
   useLikePostMutation,
   useMyIdQuery,
   useUnlikePostMutation,
@@ -42,6 +46,7 @@ export const PostCard = ({
   const isFirstRender = useRef(true);
   const [likePostMutation] = useLikePostMutation();
   const [unlikePostMutation] = useUnlikePostMutation();
+  const [deletePostMutation] = useDeletePostMutation();
   const navigation = useNavigation<RootNavigationProp<any>>();
   const [likeCount, setLikeCount] = useState(postData.likeCount);
   const { data: idData } = useMyIdQuery({
@@ -53,6 +58,7 @@ export const PostCard = ({
       title: '報告',
     },
   ]);
+  const toast = useToast();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -130,7 +136,55 @@ export const PostCard = ({
     });
   };
 
-  const onDotsMenuActionPress = async (id: string) => {};
+  const onDotsMenuActionPress = async (menuId: string) => {
+    switch (menuId) {
+      case deleteMenuId:
+        Alert.alert('削除しますか？', '', [
+          {
+            text: 'キャンセル',
+            style: 'cancel',
+          },
+          {
+            text: '削除',
+            style: 'destructive',
+            onPress: async () => {
+              try {
+                await deletePostMutation({
+                  variables: {
+                    id,
+                  },
+                  update: (cache, { data: responseData }) => {
+                    const queryData = cache.readQuery<ActivityPostsQuery>({
+                      query: ActivityPostsDocument,
+                    });
+
+                    if (queryData && responseData?.deletePost.id) {
+                      const newEdges = queryData.posts.edges.filter(
+                        (edge) => edge.node.id !== responseData.deletePost.id
+                      );
+                      cache.writeQuery({
+                        query: ActivityPostsDocument,
+                        data: {
+                          posts: {
+                            ...queryData.posts,
+                            edges: newEdges,
+                          },
+                        },
+                      });
+                    }
+                  },
+                });
+
+                toast.show('削除しました', { type: 'success' });
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+        ]);
+        break;
+    }
+  };
 
   return (
     <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>

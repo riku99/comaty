@@ -1,5 +1,5 @@
-import { useCallback, useLayoutEffect } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { Loading } from 'src/components/ui/Loading';
 import {
@@ -14,12 +14,24 @@ type Item = PostDetailScreenDataQuery['post']['replys'][number];
 
 export const PostDetailScreen = ({ navigation, route }: Props) => {
   const { id } = route.params;
-  const { data } = usePostDetailScreenDataQuery({
+  const { data, refetch } = usePostDetailScreenDataQuery({
     variables: {
       id,
     },
     fetchPolicy: 'cache-and-network',
   });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,6 +55,9 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
         ListHeaderComponent={<PostCard postData={data.post} />}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponentStyle={styles.header}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

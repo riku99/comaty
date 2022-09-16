@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
+import { POST_MAX_TEXT_COUNT } from 'src/constants';
 import { useCreatePostMutation } from 'src/generated/graphql';
-import { MAX_TEXT_COUNT } from './constants';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
@@ -39,7 +39,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
       headerRight: () => (
         <HeaderRightCreationButton
           title="投稿する"
-          disable={text.length === 0 || text.length > MAX_TEXT_COUNT}
+          disable={text.length === 0 || text.length > POST_MAX_TEXT_COUNT}
           onPress={onPostPress}
         />
       ),

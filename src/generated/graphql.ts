@@ -104,6 +104,7 @@ export type Post = {
   id: Scalars['Int'];
   likeCount?: Maybe<Scalars['Int']>;
   liked?: Maybe<Scalars['Boolean']>;
+  replyToPost?: Maybe<Post>;
   replys?: Maybe<Array<Maybe<Post>>>;
   text: Scalars['String'];
   user?: Maybe<User>;
@@ -345,7 +346,7 @@ export type PostDetailScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
+export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -903,8 +904,14 @@ export type NearbyUsersScreenDataQueryResult = Apollo.QueryResult<NearbyUsersScr
 export const PostDetailScreenDataDocument = gql`
     query PostDetailScreenData($id: Int!) {
   post(id: $id) {
+    replyToPost {
+      ...PostCard
+    }
     ...PostCard
     replys {
+      replyToPost {
+        ...PostCard
+      }
       ...PostCard
     }
   }

@@ -1,12 +1,18 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { Text } from '@rneui/themed';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { Loading } from 'src/components/ui/Loading';
 import {
   PostDetailScreenDataQuery,
   usePostDetailScreenDataQuery,
 } from 'src/generated/graphql';
-import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'PostDetail'>;
 
@@ -21,6 +27,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     fetchPolicy: 'cache-and-network',
   });
   const [refreshing, setRefreshing] = useState(false);
+  const listRef = useRef<FlatList>(null);
 
   const onRefresh = async () => {
     try {
@@ -47,12 +54,32 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     return <Loading />;
   }
 
+  const { replyToPost } = data.post;
+
   return (
     <View style={styles.container}>
       <FlatList
+        ref={listRef}
         data={data.post.replys}
         renderItem={renderPosts}
-        ListHeaderComponent={<PostCard postData={data.post} />}
+        ListHeaderComponent={
+          <View>
+            {replyToPost && (
+              <Pressable
+                style={styles.replyToMessage}
+                onPress={() => {
+                  navigation.push('PostDetail', {
+                    id: replyToPost.id,
+                  });
+                }}
+              >
+                <View style={styles.quoteLine} />
+                <Text style={styles.quoteText}>{replyToPost.text}</Text>
+              </Pressable>
+            )}
+            <PostCard postData={data.post} disableDetailNavigation />
+          </View>
+        }
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponentStyle={styles.header}
         refreshControl={
@@ -66,9 +93,24 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.gray.background,
   },
   header: {
     paddingBottom: 30,
+  },
+  replyToMessage: {
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quoteLine: {
+    width: 6,
+    backgroundColor: '#cccccc',
+    height: '100%',
+    borderRadius: 4,
+  },
+  quoteText: {
+    marginLeft: 6,
+    fontWeight: 'bold',
   },
 });

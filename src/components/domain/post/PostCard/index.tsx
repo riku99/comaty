@@ -23,9 +23,13 @@ const Like = require('../../../../assets/lottie/like.json');
 
 type Props = {
   postData: PostCardFragment;
+  disableDetailNavigation?: boolean;
 };
 
-export const PostCard = ({ postData }: Props) => {
+export const PostCard = ({
+  postData,
+  disableDetailNavigation = false,
+}: Props) => {
   const { text, user, createdAt, liked, id } = postData;
   const diff = formatDistanceToNow(new Date(Number(createdAt)), {
     locale: ja,
@@ -87,6 +91,10 @@ export const PostCard = ({ postData }: Props) => {
   };
 
   const onBodyPress = () => {
+    if (disableDetailNavigation) {
+      return;
+    }
+
     navigation.push('PostDetail', {
       id,
     });

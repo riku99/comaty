@@ -22,7 +22,9 @@ export type RootStackParamList = {
   UserProfile: {
     id: string;
   };
-  PostReply: undefined;
+  PostReply: {
+    postId: number;
+  };
   PostCreation: undefined;
 };
 

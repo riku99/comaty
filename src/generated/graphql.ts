@@ -19,6 +19,11 @@ export type CreatePostInput = {
   text: Scalars['String'];
 };
 
+export type CreatePostReplyInput = {
+  postId: Scalars['Int'];
+  text: Scalars['String'];
+};
+
 export enum CreateUserError {
   AlreadyUserExisting = 'ALREADY_USER_EXISTING'
 }
@@ -48,6 +53,7 @@ export type Me = UserEntity & {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
+  createPostReply: PostReply;
   createUser: Me;
   likePost: Post;
   unlikePost?: Maybe<Post>;
@@ -58,6 +64,11 @@ export type Mutation = {
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
+};
+
+
+export type MutationCreatePostReplyArgs = {
+  input: CreatePostReplyInput;
 };
 
 
@@ -93,7 +104,7 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
-export type Post = {
+export type Post = PostEntity & {
   __typename?: 'Post';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
@@ -113,6 +124,26 @@ export type PostEdge = {
   __typename?: 'PostEdge';
   cursor: Scalars['String'];
   node: Post;
+};
+
+export type PostEntity = {
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  likeCount?: Maybe<Scalars['Int']>;
+  liked?: Maybe<Scalars['Boolean']>;
+  text: Scalars['String'];
+  user?: Maybe<User>;
+};
+
+export type PostReply = PostEntity & {
+  __typename?: 'PostReply';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  likeCount?: Maybe<Scalars['Int']>;
+  liked?: Maybe<Scalars['Boolean']>;
+  post?: Maybe<Post>;
+  text: Scalars['String'];
+  user?: Maybe<User>;
 };
 
 export type Query = {
@@ -236,6 +267,13 @@ export type CreatePostMutationVariables = Exact<{
 
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string } };
+
+export type CreatePostReplyMutationVariables = Exact<{
+  input: CreatePostReplyInput;
+}>;
+
+
+export type CreatePostReplyMutation = { __typename?: 'Mutation', createPostReply: { __typename?: 'PostReply', id: number, text: string, post?: { __typename?: 'Post', id: number } | null, user?: { __typename?: 'User', id: string } | null } };
 
 export type LikePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -476,6 +514,46 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
+export const CreatePostReplyDocument = gql`
+    mutation CreatePostReply($input: CreatePostReplyInput!) {
+  createPostReply(input: $input) {
+    id
+    text
+    post {
+      id
+    }
+    user {
+      id
+    }
+  }
+}
+    `;
+export type CreatePostReplyMutationFn = Apollo.MutationFunction<CreatePostReplyMutation, CreatePostReplyMutationVariables>;
+
+/**
+ * __useCreatePostReplyMutation__
+ *
+ * To run a mutation, you first call `useCreatePostReplyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePostReplyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPostReplyMutation, { data, loading, error }] = useCreatePostReplyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePostReplyMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostReplyMutation, CreatePostReplyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePostReplyMutation, CreatePostReplyMutationVariables>(CreatePostReplyDocument, options);
+      }
+export type CreatePostReplyMutationHookResult = ReturnType<typeof useCreatePostReplyMutation>;
+export type CreatePostReplyMutationResult = Apollo.MutationResult<CreatePostReplyMutation>;
+export type CreatePostReplyMutationOptions = Apollo.BaseMutationOptions<CreatePostReplyMutation, CreatePostReplyMutationVariables>;
 export const LikePostDocument = gql`
     mutation LikePost($id: Int!) {
   likePost(id: $id) {

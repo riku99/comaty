@@ -1,15 +1,36 @@
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
+import { useCreatePostReplyMutation } from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'PostReply'>;
 
-export const PostReply = ({ navigation }: Props) => {
+export const PostReply = ({ navigation, route }: Props) => {
+  const { postId } = route.params;
   const [text, setText] = useState('');
+  const [createPostReplyMutation] = useCreatePostReplyMutation();
 
-  const onReplyPress = async () => {};
+  const onReplyPress = useCallback(async () => {
+    if (!text) {
+      return;
+    }
+
+    try {
+      await createPostReplyMutation({
+        variables: {
+          input: {
+            text,
+            postId,
+          },
+        },
+      });
+    } catch (e) {
+    } finally {
+      navigation.goBack();
+    }
+  }, [navigation, text, postId]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,7 +40,7 @@ export const PostReply = ({ navigation }: Props) => {
         <HeaderRightCreationButton title="返信する" onPress={onReplyPress} />
       ),
     });
-  }, [navigation]);
+  }, [navigation, onReplyPress]);
 
   return (
     <View style={styles.container}>

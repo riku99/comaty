@@ -81,7 +81,9 @@ export const PostCard = ({ postData }: Props) => {
 
   const onReplyPress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    navigation.navigate('PostReply');
+    navigation.navigate('PostReply', {
+      postId: id,
+    });
   };
 
   return (

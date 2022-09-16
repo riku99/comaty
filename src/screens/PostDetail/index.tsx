@@ -13,6 +13,7 @@ import {
   PostDetailScreenDataQuery,
   usePostDetailScreenDataQuery,
 } from 'src/generated/graphql';
+import { useDeletePost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'PostDetail'>;
 
@@ -28,6 +29,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
   });
   const [refreshing, setRefreshing] = useState(false);
   const listRef = useRef<FlatList>(null);
+  const { deletePost } = useDeletePost();
 
   const onRefresh = async () => {
     try {
@@ -46,15 +48,27 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  const renderPosts = useCallback(({ item }: { item: Item }) => {
-    return <PostCard postData={item} />;
-  }, []);
+  const renderPosts = useCallback(
+    ({ item }: { item: Item }) => {
+      const onDeletePost = async () => {
+        await deletePost(item.id, item.replyToPost?.id);
+      };
+
+      return <PostCard postData={item} onDelete={onDeletePost} />;
+    },
+    [deletePost, navigation]
+  );
 
   if (!data) {
     return <Loading />;
   }
 
   const { replyToPost } = data.post;
+
+  const deleteHeaderPost = async () => {
+    await deletePost(data.post.id, replyToPost?.id);
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -77,7 +91,11 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
                 <Text style={styles.quoteText}>{replyToPost.text}</Text>
               </Pressable>
             )}
-            <PostCard postData={data.post} disableDetailNavigation />
+            <PostCard
+              postData={data.post}
+              disableDetailNavigation
+              onDelete={deleteHeaderPost}
+            />
           </View>
         }
         keyExtractor={(item) => item.id.toString()}

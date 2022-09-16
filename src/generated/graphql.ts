@@ -261,7 +261,7 @@ export type DeletePostMutationVariables = Exact<{
 }>;
 
 
-export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
+export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number, replyToPost?: { __typename?: 'Post', id: number } | null } | null };
 
 export type LikePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -523,6 +523,9 @@ export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
   deletePost(id: $id) {
     id
+    replyToPost {
+      id
+    }
   }
 }
     `;

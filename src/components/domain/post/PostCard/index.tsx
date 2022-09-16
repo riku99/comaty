@@ -9,16 +9,12 @@ import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
-import { useToast } from 'react-native-toast-notifications';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
-  ActivityPostsDocument,
-  ActivityPostsQuery,
   PostCardFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
-  useDeletePostMutation,
   useLikePostMutation,
   useMyIdQuery,
   useUnlikePostMutation,
@@ -30,10 +26,12 @@ const Like = require('../../../../assets/lottie/like.json');
 type Props = {
   postData: PostCardFragment;
   disableDetailNavigation?: boolean;
+  onDelete: () => Promise<void>;
 };
 
 export const PostCard = ({
   postData,
+  onDelete,
   disableDetailNavigation = false,
 }: Props) => {
   const { text, user, createdAt, liked, id } = postData;
@@ -46,7 +44,6 @@ export const PostCard = ({
   const isFirstRender = useRef(true);
   const [likePostMutation] = useLikePostMutation();
   const [unlikePostMutation] = useUnlikePostMutation();
-  const [deletePostMutation] = useDeletePostMutation();
   const navigation = useNavigation<RootNavigationProp<any>>();
   const [likeCount, setLikeCount] = useState(postData.likeCount);
   const { data: idData } = useMyIdQuery({
@@ -58,7 +55,6 @@ export const PostCard = ({
       title: '報告',
     },
   ]);
-  const toast = useToast();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -149,33 +145,7 @@ export const PostCard = ({
             style: 'destructive',
             onPress: async () => {
               try {
-                await deletePostMutation({
-                  variables: {
-                    id,
-                  },
-                  update: (cache, { data: responseData }) => {
-                    const queryData = cache.readQuery<ActivityPostsQuery>({
-                      query: ActivityPostsDocument,
-                    });
-
-                    if (queryData && responseData?.deletePost.id) {
-                      const newEdges = queryData.posts.edges.filter(
-                        (edge) => edge.node.id !== responseData.deletePost.id
-                      );
-                      cache.writeQuery({
-                        query: ActivityPostsDocument,
-                        data: {
-                          posts: {
-                            ...queryData.posts,
-                            edges: newEdges,
-                          },
-                        },
-                      });
-                    }
-                  },
-                });
-
-                toast.show('削除しました', { type: 'success' });
+                await onDelete();
               } catch (e) {
                 console.log(e);
               }

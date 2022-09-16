@@ -18,6 +18,7 @@ import {
   PostCardFragmentDoc,
   useActivityScreenDataQuery,
 } from 'src/generated/graphql';
+import { useDeletePost } from 'src/hooks/post';
 import { theme } from 'src/styles';
 import { Stories } from './ActivityStories';
 
@@ -34,6 +35,7 @@ export const Activity = () => {
   });
   const navigation = useNavigation<RootNavigationProp<'BottomTab'>>();
   const [refreshing, setRefreshing] = useState(false);
+  const { deletePost } = useDeletePost();
 
   const onRefresh = async () => {
     try {
@@ -47,6 +49,10 @@ export const Activity = () => {
   };
 
   const renderPostItem = useCallback(({ item }: { item: PostItem }) => {
+    const onPostDelete = async () => {
+      await deletePost(item.node.id);
+    };
+
     return (
       <MotiView
         from={{ opacity: 0.3 }}
@@ -58,6 +64,7 @@ export const Activity = () => {
       >
         <PostCard
           postData={filter<PostCardFragment>(PostCardFragmentDoc, item.node)}
+          onDelete={onPostDelete}
         />
       </MotiView>
     );

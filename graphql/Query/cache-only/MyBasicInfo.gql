@@ -1,0 +1,12 @@
+query MyBasicInfo {
+  me {
+    id
+    nickname
+    sex
+    birthYear
+    birthMonth
+    birthDay
+    statusMessage
+    bio
+  }
+}

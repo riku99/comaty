@@ -16,6 +16,7 @@ import {
   ProfileImageFragment,
   ProfileImageFragmentDoc,
   useLikePostMutation,
+  useMyIdQuery,
   useUnlikePostMutation,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
@@ -43,6 +44,15 @@ export const PostCard = ({
   const [unlikePostMutation] = useUnlikePostMutation();
   const navigation = useNavigation<RootNavigationProp<any>>();
   const [likeCount, setLikeCount] = useState(postData.likeCount);
+  const { data: idData } = useMyIdQuery({
+    fetchPolicy: 'cache-only',
+  });
+  const [dotsMenuActions, setDotsMenuActions] = useState<MenuAction[]>([
+    {
+      id: reportMenuId,
+      title: '報告',
+    },
+  ]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -58,6 +68,25 @@ export const PostCard = ({
       }
     }
   }, [isLiked]);
+
+  useEffect(() => {
+    if (idData.me.id === user.id) {
+      setDotsMenuActions((c) => {
+        return [
+          ...c,
+          {
+            id: deleteMenuId,
+            title: '削除',
+            attributes: {
+              destructive: true,
+            },
+            image: 'trash',
+            imageColor: 'red',
+          },
+        ];
+      });
+    }
+  }, [idData]);
 
   const onLikePress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -100,6 +129,8 @@ export const PostCard = ({
       id,
     });
   };
+
+  const onDotsMenuActionPress = async (id: string) => {};
 
   return (
     <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>
@@ -151,7 +182,12 @@ export const PostCard = ({
               </Pressable>
             </HStack>
 
-            <MenuView actions={dotsMenuActions}>
+            <MenuView
+              actions={dotsMenuActions}
+              onPressAction={(e) => {
+                onDotsMenuActionPress(e.nativeEvent.event);
+              }}
+            >
               <Pressable style={styles.dotsAction}>
                 <Entypo
                   name="dots-three-horizontal"
@@ -167,17 +203,8 @@ export const PostCard = ({
   );
 };
 
-const dotsMenuActions: MenuAction[] = [
-  {
-    id: 'delete',
-    title: '削除',
-    attributes: {
-      destructive: true,
-    },
-    image: 'trash',
-    imageColor: 'red',
-  },
-];
+const deleteMenuId = 'delete';
+const reportMenuId = 'report';
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;

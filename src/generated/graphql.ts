@@ -278,6 +278,16 @@ export type UpdateInitialStatusMutationVariables = Exact<{
 
 export type UpdateInitialStatusMutation = { __typename?: 'Mutation', updateInitialStatus: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } };
 
+export type MyBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyBasicInfoQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, statusMessage?: string | null, bio?: string | null } | null };
+
+export type MyIdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string } | null };
+
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -641,6 +651,81 @@ export function useUpdateInitialStatusMutation(baseOptions?: Apollo.MutationHook
 export type UpdateInitialStatusMutationHookResult = ReturnType<typeof useUpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationResult = Apollo.MutationResult<UpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationOptions = Apollo.BaseMutationOptions<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>;
+export const MyBasicInfoDocument = gql`
+    query MyBasicInfo {
+  me {
+    id
+    nickname
+    sex
+    birthYear
+    birthMonth
+    birthDay
+    statusMessage
+    bio
+  }
+}
+    `;
+
+/**
+ * __useMyBasicInfoQuery__
+ *
+ * To run a query within a React component, call `useMyBasicInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyBasicInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyBasicInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyBasicInfoQuery(baseOptions?: Apollo.QueryHookOptions<MyBasicInfoQuery, MyBasicInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyBasicInfoQuery, MyBasicInfoQueryVariables>(MyBasicInfoDocument, options);
+      }
+export function useMyBasicInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyBasicInfoQuery, MyBasicInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyBasicInfoQuery, MyBasicInfoQueryVariables>(MyBasicInfoDocument, options);
+        }
+export type MyBasicInfoQueryHookResult = ReturnType<typeof useMyBasicInfoQuery>;
+export type MyBasicInfoLazyQueryHookResult = ReturnType<typeof useMyBasicInfoLazyQuery>;
+export type MyBasicInfoQueryResult = Apollo.QueryResult<MyBasicInfoQuery, MyBasicInfoQueryVariables>;
+export const MyIdDocument = gql`
+    query MyId {
+  me {
+    id
+  }
+}
+    `;
+
+/**
+ * __useMyIdQuery__
+ *
+ * To run a query within a React component, call `useMyIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyIdQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyIdQuery(baseOptions?: Apollo.QueryHookOptions<MyIdQuery, MyIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyIdQuery, MyIdQueryVariables>(MyIdDocument, options);
+      }
+export function useMyIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyIdQuery, MyIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyIdQuery, MyIdQueryVariables>(MyIdDocument, options);
+        }
+export type MyIdQueryHookResult = ReturnType<typeof useMyIdQuery>;
+export type MyIdLazyQueryHookResult = ReturnType<typeof useMyIdLazyQuery>;
+export type MyIdQueryResult = Apollo.QueryResult<MyIdQuery, MyIdQueryVariables>;
 export const GetInitialDataDocument = gql`
     query GetInitialData {
   me {

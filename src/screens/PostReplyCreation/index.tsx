@@ -3,7 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
-import { useCreatePostMutation } from 'src/generated/graphql';
+import {
+  PostDetailScreenDataDocument,
+  useCreatePostMutation,
+} from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'PostReply'>;
 
@@ -25,6 +28,14 @@ export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
             replyTo: postId,
           },
         },
+        refetchQueries: [
+          {
+            query: PostDetailScreenDataDocument,
+            variables: {
+              id: postId,
+            },
+          },
+        ],
       });
     } catch (e) {
     } finally {

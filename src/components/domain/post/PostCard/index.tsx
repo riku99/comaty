@@ -87,7 +87,7 @@ export const PostCard = ({ postData }: Props) => {
   };
 
   const onBodyPress = () => {
-    navigation.navigate('PostDetail', {
+    navigation.push('PostDetail', {
       id,
     });
   };
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     paddingBottom: 14,
     borderBottomColor: theme.boarderGray,
     borderBottomWidth: 0.5,
+    backgroundColor: '#fff',
   },
   mainContents: {
     flexDirection: 'row',

@@ -6,6 +6,7 @@ import {
   PostDetailScreenDataQuery,
   usePostDetailScreenDataQuery,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'PostDetail'>;
 
@@ -41,6 +42,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
         renderItem={renderPosts}
         ListHeaderComponent={<PostCard postData={data.post} />}
         keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponentStyle={styles.header}
       />
     </View>
   );
@@ -49,5 +51,9 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: theme.gray.background,
+  },
+  header: {
+    paddingBottom: 30,
   },
 });

@@ -12,5 +12,6 @@ export const theme = {
     formBorder: '#b3b3b3',
     boarder: '#dbdbdb',
     text: '#575757',
+    background: '#fafafa',
   },
 };

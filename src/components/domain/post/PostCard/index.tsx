@@ -86,8 +86,14 @@ export const PostCard = ({ postData }: Props) => {
     });
   };
 
+  const onBodyPress = () => {
+    navigation.navigate('PostDetail', {
+      id,
+    });
+  };
+
   return (
-    <View style={styles.body}>
+    <Pressable style={styles.body} onPress={onBodyPress}>
       <View style={styles.mainContents}>
         <ProfileImage
           imageData={filter<ProfileImageFragment>(
@@ -136,7 +142,7 @@ export const PostCard = ({ postData }: Props) => {
           </HStack>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

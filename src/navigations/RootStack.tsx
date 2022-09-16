@@ -5,7 +5,8 @@ import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { PostCreationScreen } from 'src/screens/PostCreation';
-import { PostReply } from 'src/screens/PostReply';
+import { PostDetailScreen } from 'src/screens/PostDetail';
+import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { UserProfileScreen } from 'src/screens/UserProfile';
@@ -26,6 +27,9 @@ export type RootStackParamList = {
     postId: number;
   };
   PostCreation: undefined;
+  PostDetail: {
+    id: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,7 +46,11 @@ export const RootStack = () => {
     !!initialStatusCompletionData?.me?.initialStatusCompletion;
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+      }}
+    >
       {loggedIn ? (
         <>
           {!initialStatusCompletion && (
@@ -63,6 +71,7 @@ export const RootStack = () => {
           <Stack.Screen name="NicknameInput" component={NicknameInputScreen} />
           <Stack.Screen name="SexSelection" component={SexSelectionScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+          <Stack.Screen name="PostDetail" component={PostDetailScreen} />
 
           <Stack.Group
             screenOptions={{
@@ -70,7 +79,10 @@ export const RootStack = () => {
             }}
           >
             <Stack.Screen name="PostCreation" component={PostCreationScreen} />
-            <Stack.Screen name="PostReply" component={PostReply} />
+            <Stack.Screen
+              name="PostReply"
+              component={PostReplyCreationScreen}
+            />
           </Stack.Group>
         </>
       ) : (

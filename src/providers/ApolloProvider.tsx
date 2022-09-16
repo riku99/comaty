@@ -13,7 +13,7 @@ import React, { useRef } from 'react';
 import { Alert } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { ERROR_TOAST_DURATION } from 'src/constants';
-import { ForbiddenError } from 'src/generated/graphql';
+import { ForbiddenError, Post } from 'src/generated/graphql';
 
 type Props = {
   children: JSX.Element;
@@ -88,6 +88,16 @@ export const ApolloProvider = ({ children }: Props) => {
             nearbyUsers: relayStylePagination(),
             posts: relayStylePagination(),
             stories: relayStylePagination(),
+            post: {
+              read: (_: Post, { args, toReference }) => {
+                if (args) {
+                  return toReference({
+                    __typename: 'Post',
+                    id: args.id as number,
+                  });
+                }
+              },
+            },
           },
         },
       },

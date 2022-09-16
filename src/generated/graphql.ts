@@ -16,11 +16,7 @@ export type Scalars = {
 };
 
 export type CreatePostInput = {
-  text: Scalars['String'];
-};
-
-export type CreatePostReplyInput = {
-  postId: Scalars['Int'];
+  replyTo?: InputMaybe<Scalars['Int']>;
   text: Scalars['String'];
 };
 
@@ -35,6 +31,10 @@ export type CreateUserInput = {
 
 export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
+}
+
+export enum GetPostError {
+  NotFound = 'NOT_FOUND'
 }
 
 export type Me = UserEntity & {
@@ -53,7 +53,6 @@ export type Me = UserEntity & {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
-  createPostReply: PostReply;
   createUser: Me;
   likePost: Post;
   unlikePost?: Maybe<Post>;
@@ -64,11 +63,6 @@ export type Mutation = {
 
 export type MutationCreatePostArgs = {
   input: CreatePostInput;
-};
-
-
-export type MutationCreatePostReplyArgs = {
-  input: CreatePostReplyInput;
 };
 
 
@@ -104,12 +98,13 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
-export type Post = PostEntity & {
+export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
   likeCount?: Maybe<Scalars['Int']>;
   liked?: Maybe<Scalars['Boolean']>;
+  replys?: Maybe<Array<Maybe<Post>>>;
   text: Scalars['String'];
   user?: Maybe<User>;
 };
@@ -126,30 +121,11 @@ export type PostEdge = {
   node: Post;
 };
 
-export type PostEntity = {
-  createdAt: Scalars['String'];
-  id: Scalars['Int'];
-  likeCount?: Maybe<Scalars['Int']>;
-  liked?: Maybe<Scalars['Boolean']>;
-  text: Scalars['String'];
-  user?: Maybe<User>;
-};
-
-export type PostReply = PostEntity & {
-  __typename?: 'PostReply';
-  createdAt: Scalars['String'];
-  id: Scalars['Int'];
-  likeCount?: Maybe<Scalars['Int']>;
-  liked?: Maybe<Scalars['Boolean']>;
-  post?: Maybe<Post>;
-  text: Scalars['String'];
-  user?: Maybe<User>;
-};
-
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Me>;
   nearbyUsers: UserConnection;
+  post: Post;
   posts: PostConnection;
   stories: StoryConnection;
   user: User;
@@ -159,6 +135,11 @@ export type Query = {
 export type QueryNearbyUsersArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPostArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -268,13 +249,6 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string } };
 
-export type CreatePostReplyMutationVariables = Exact<{
-  input: CreatePostReplyInput;
-}>;
-
-
-export type CreatePostReplyMutation = { __typename?: 'Mutation', createPostReply: { __typename?: 'PostReply', id: number, text: string, post?: { __typename?: 'Post', id: number } | null, user?: { __typename?: 'User', id: string } | null } };
-
 export type LikePostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -365,6 +339,13 @@ export type NearbyUsersScreenDataQueryVariables = Exact<{
 
 
 export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
+
+export type PostDetailScreenDataQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -514,46 +495,6 @@ export function useCreatePostMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreatePostMutationHookResult = ReturnType<typeof useCreatePostMutation>;
 export type CreatePostMutationResult = Apollo.MutationResult<CreatePostMutation>;
 export type CreatePostMutationOptions = Apollo.BaseMutationOptions<CreatePostMutation, CreatePostMutationVariables>;
-export const CreatePostReplyDocument = gql`
-    mutation CreatePostReply($input: CreatePostReplyInput!) {
-  createPostReply(input: $input) {
-    id
-    text
-    post {
-      id
-    }
-    user {
-      id
-    }
-  }
-}
-    `;
-export type CreatePostReplyMutationFn = Apollo.MutationFunction<CreatePostReplyMutation, CreatePostReplyMutationVariables>;
-
-/**
- * __useCreatePostReplyMutation__
- *
- * To run a mutation, you first call `useCreatePostReplyMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePostReplyMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createPostReplyMutation, { data, loading, error }] = useCreatePostReplyMutation({
- *   variables: {
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useCreatePostReplyMutation(baseOptions?: Apollo.MutationHookOptions<CreatePostReplyMutation, CreatePostReplyMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePostReplyMutation, CreatePostReplyMutationVariables>(CreatePostReplyDocument, options);
-      }
-export type CreatePostReplyMutationHookResult = ReturnType<typeof useCreatePostReplyMutation>;
-export type CreatePostReplyMutationResult = Apollo.MutationResult<CreatePostReplyMutation>;
-export type CreatePostReplyMutationOptions = Apollo.BaseMutationOptions<CreatePostReplyMutation, CreatePostReplyMutationVariables>;
 export const LikePostDocument = gql`
     mutation LikePost($id: Int!) {
   likePost(id: $id) {
@@ -959,6 +900,44 @@ export function useNearbyUsersScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type NearbyUsersScreenDataQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataQuery>;
 export type NearbyUsersScreenDataLazyQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataLazyQuery>;
 export type NearbyUsersScreenDataQueryResult = Apollo.QueryResult<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>;
+export const PostDetailScreenDataDocument = gql`
+    query PostDetailScreenData($id: Int!) {
+  post(id: $id) {
+    ...PostCard
+    replys {
+      ...PostCard
+    }
+  }
+}
+    ${PostCardFragmentDoc}`;
+
+/**
+ * __usePostDetailScreenDataQuery__
+ *
+ * To run a query within a React component, call `usePostDetailScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostDetailScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostDetailScreenDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function usePostDetailScreenDataQuery(baseOptions: Apollo.QueryHookOptions<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>(PostDetailScreenDataDocument, options);
+      }
+export function usePostDetailScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>(PostDetailScreenDataDocument, options);
+        }
+export type PostDetailScreenDataQueryHookResult = ReturnType<typeof usePostDetailScreenDataQuery>;
+export type PostDetailScreenDataLazyQueryHookResult = ReturnType<typeof usePostDetailScreenDataLazyQuery>;
+export type PostDetailScreenDataQueryResult = Apollo.QueryResult<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>;
 export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {

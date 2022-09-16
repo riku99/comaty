@@ -3,14 +3,14 @@ import { StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
-import { useCreatePostReplyMutation } from 'src/generated/graphql';
+import { useCreatePostMutation } from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'PostReply'>;
 
-export const PostReply = ({ navigation, route }: Props) => {
+export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
   const { postId } = route.params;
   const [text, setText] = useState('');
-  const [createPostReplyMutation] = useCreatePostReplyMutation();
+  const [createPostMutation] = useCreatePostMutation();
 
   const onReplyPress = useCallback(async () => {
     if (!text) {
@@ -18,11 +18,11 @@ export const PostReply = ({ navigation, route }: Props) => {
     }
 
     try {
-      await createPostReplyMutation({
+      await createPostMutation({
         variables: {
           input: {
             text,
-            postId,
+            replyTo: postId,
           },
         },
       });

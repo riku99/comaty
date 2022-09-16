@@ -1,0 +1,8 @@
+query PostDetailScreenData($id: Int!) {
+  post(id: $id) {
+    ...PostCard
+    replys {
+      ...PostCard
+    }
+  }
+}

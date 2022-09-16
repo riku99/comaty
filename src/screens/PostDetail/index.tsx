@@ -17,6 +17,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   useLayoutEffect(() => {
@@ -33,7 +34,6 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     return <Loading />;
   }
 
-  console.log(data.post.replys);
   return (
     <View style={styles.container}>
       <FlatList

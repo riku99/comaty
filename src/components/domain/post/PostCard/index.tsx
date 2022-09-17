@@ -55,6 +55,7 @@ export const PostCard = ({
       title: '報告',
     },
   ]);
+  const likePressed = useRef(false);
 
   useEffect(() => {
     setIsLiked(liked);
@@ -72,7 +73,12 @@ export const PostCard = ({
       }
     } else {
       if (isLiked) {
-        likeRef.current?.play(20, 144);
+        if (likePressed.current) {
+          likePressed.current = false;
+          likeRef.current?.play(20, 144);
+        } else {
+          likeRef.current?.play(144, 144);
+        }
       } else {
         likeRef.current?.play(0, 0);
       }
@@ -110,6 +116,7 @@ export const PostCard = ({
           },
         });
       } else {
+        likePressed.current = true;
         setIsLiked(true);
         setLikeCount((c) => c + 1);
         await likePostMutation({

@@ -82,9 +82,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
               <Pressable
                 style={styles.replyToMessage}
                 onPress={() => {
-                  navigation.push('PostDetail', {
-                    id: replyToPost.id,
-                  });
+                  navigation.goBack();
                 }}
               >
                 <View style={styles.quoteLine} />

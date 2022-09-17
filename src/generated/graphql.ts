@@ -254,14 +254,14 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
-export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number, replyToPost?: { __typename?: 'Post', id: number } | null } | null };
+export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
 
 export type LikePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -489,10 +489,10 @@ export const CreatePostDocument = gql`
     mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     id
-    text
+    ...PostCard
   }
 }
-    `;
+    ${PostCardFragmentDoc}`;
 export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
 /**
@@ -523,9 +523,6 @@ export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
   deletePost(id: $id) {
     id
-    replyToPost {
-      id
-    }
   }
 }
     `;

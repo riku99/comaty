@@ -1,16 +1,22 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
 import { POST_MAX_TEXT_COUNT } from 'src/constants';
-import { useCreatePostMutation } from 'src/generated/graphql';
+import {
+  ActivityPostsDocument,
+  ActivityPostsQuery,
+  useCreatePostMutation,
+} from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
   const [createPostMutation] = useCreatePostMutation();
+  const toast = useToast();
 
   const onPostPress = useCallback(async () => {
     if (!text) {
@@ -23,6 +29,35 @@ export const PostCreationScreen = ({ navigation }: Props) => {
           input: {
             text,
           },
+        },
+        update: (cache, { data: responseData }) => {
+          if (!responseData) {
+            return;
+          }
+
+          const cachedActivityPostsQuery = cache.readQuery<ActivityPostsQuery>({
+            query: ActivityPostsDocument,
+          });
+
+          if (cachedActivityPostsQuery) {
+            const newEdge = {
+              node: responseData.createPost,
+              cursor: '',
+            };
+            const newEdges = [newEdge, ...cachedActivityPostsQuery.posts.edges];
+            cache.writeQuery({
+              query: ActivityPostsDocument,
+              data: {
+                posts: {
+                  ...cachedActivityPostsQuery.posts,
+                  edges: newEdges,
+                },
+              },
+            });
+          }
+        },
+        onCompleted: () => {
+          toast.show('投稿しました', { type: 'success' });
         },
       });
     } catch (e) {

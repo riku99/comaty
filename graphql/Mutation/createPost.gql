@@ -1,6 +1,6 @@
 mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {
     id
-    text
+    ...PostCard
   }
 }

@@ -1,5 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
@@ -14,6 +15,7 @@ export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
   const { postId } = route.params;
   const [text, setText] = useState('');
   const [createPostMutation] = useCreatePostMutation();
+  const toast = useToast();
 
   const onReplyPress = useCallback(async () => {
     if (!text) {
@@ -36,6 +38,9 @@ export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
             },
           },
         ],
+        onCompleted: () => {
+          toast.show('返信しました', { type: 'success' });
+        },
       });
     } catch (e) {
     } finally {

@@ -88,7 +88,7 @@ export const PostCard = ({
         ];
       });
     }
-  }, [idData]);
+  }, [idData, user.id]);
 
   const onLikePress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);

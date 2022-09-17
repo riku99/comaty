@@ -56,7 +56,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
 
       return <PostCard postData={item} onDelete={onDeletePost} />;
     },
-    [deletePost, navigation]
+    [deletePost]
   );
 
   if (!data) {

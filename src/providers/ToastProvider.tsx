@@ -1,6 +1,5 @@
 import { Dimensions } from 'react-native';
 import { ToastProvider as TProvider } from 'react-native-toast-notifications';
-import { theme } from 'src/styles';
 
 type Props = {
   children: JSX.Element;
@@ -13,7 +12,7 @@ export const ToastProvider = ({ children }: Props) => {
       offset={TOAST_OFFSET}
       style={{ width: TOAST_WIDTH }}
       duration={1500}
-      successColor={theme.primary}
+      successColor={'#00c851'}
     >
       {children}
     </TProvider>

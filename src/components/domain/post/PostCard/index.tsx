@@ -57,6 +57,14 @@ export const PostCard = ({
   ]);
 
   useEffect(() => {
+    setIsLiked(liked);
+  }, [liked]);
+
+  useEffect(() => {
+    setLikeCount(postData.likeCount);
+  }, [postData.likeCount]);
+
+  useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       if (isLiked) {

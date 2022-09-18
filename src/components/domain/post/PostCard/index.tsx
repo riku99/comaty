@@ -171,16 +171,24 @@ export const PostCard = ({
     }
   };
 
+  const onProfileImagePress = () => {
+    navigation.navigate('UserProfile', {
+      id: user.id,
+    });
+  };
+
   return (
     <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>
       <View style={styles.mainContents}>
-        <ProfileImage
-          imageData={filter<ProfileImageFragment>(
-            ProfileImageFragmentDoc,
-            user.firstProfileImage
-          )}
-          style={styles.profileImage}
-        />
+        <Pressable onPress={onProfileImagePress}>
+          <ProfileImage
+            imageData={filter<ProfileImageFragment>(
+              ProfileImageFragmentDoc,
+              user.firstProfileImage
+            )}
+            style={styles.profileImage}
+          />
+        </Pressable>
 
         <View style={styles.rightContent}>
           <View style={styles.nameAndDiff}>

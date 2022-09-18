@@ -49,6 +49,9 @@ export const RootStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerBackTitleVisible: false,
+        headerStyle: {
+          backgroundColor: '#fff',
+        },
       }}
     >
       {loggedIn ? (

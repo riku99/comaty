@@ -1,5 +1,6 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { Image } from 'react-native-image-crop-picker';
 import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
@@ -15,6 +16,7 @@ type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
+  const [images, setImages] = useState<{ url: string; mime: string }[]>([]);
   const [createPostMutation] = useCreatePostMutation();
   const toast = useToast();
 
@@ -70,6 +72,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '投稿',
+      headerShadowVisible: false,
       headerLeft: () => <CloseButton />,
       headerRight: () => (
         <HeaderRightCreationButton
@@ -81,12 +84,29 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     });
   }, [navigation, onPostPress, text]);
 
+  const onSelectedImages = (selectedImages: Image[]) => {
+    const imagesStateData = selectedImages.map((img) => {
+      return {
+        url: img.sourceURL,
+        mime: img.mime,
+      };
+    });
+
+    setImages(imagesStateData);
+  };
+
+  useEffect(() => {
+    console.log(images);
+  }, [images]);
+
   return (
     <View style={styles.container}>
       <PostInput
         text={text}
         setText={setText}
         placeholder={'気軽に投稿、共有しましょう！'}
+        onSelectedImages={onSelectedImages}
+        selectedImages={images.map((img) => ({ uri: img.url }))}
       />
     </View>
   );

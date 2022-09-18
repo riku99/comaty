@@ -1,15 +1,24 @@
 import { Input } from '@rneui/themed';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, InputAccessoryView, Keyboard } from 'react-native';
+import ImagePicker, { Image } from 'react-native-image-crop-picker';
 import { KeyboardAccessory } from './KeyboradAccessory';
 
 type Props = {
   text: string;
   setText: (t: string) => void;
-  placeholder: string
+  placeholder: string;
+  onSelectedImages?: (images: Image[]) => void;
+  selectedImages: { uri: string }[];
 };
 
-export const PostInput = ({ text, setText, placeholder }: Props) => {
+export const PostInput = ({
+  text,
+  setText,
+  placeholder,
+  onSelectedImages,
+  selectedImages,
+}: Props) => {
   const inputRef = useRef<typeof Input>(null);
   const textInputId = 'textInput';
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -29,6 +38,24 @@ export const PostInput = ({ text, setText, placeholder }: Props) => {
     inputRef.current?.focus();
   }, []);
 
+  const onCamerarollImagePress = async () => {
+    try {
+      const selectedCamerarollImages = await ImagePicker.openPicker({
+        multiple: true,
+        mediaType: 'photo',
+        maxFiles: 4,
+      });
+      if (onSelectedImages) {
+        onSelectedImages(selectedCamerarollImages);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      // @ts-ignore
+      inputRef.current?.focus();
+    }
+  };
+
   return (
     <>
       <Input
@@ -47,7 +74,11 @@ export const PostInput = ({ text, setText, placeholder }: Props) => {
       />
 
       <InputAccessoryView nativeID={textInputId}>
-        <KeyboardAccessory text={text} />
+        <KeyboardAccessory
+          text={text}
+          onCamerarollImagePress={onCamerarollImagePress}
+          seletedImages={selectedImages}
+        />
       </InputAccessoryView>
     </>
   );

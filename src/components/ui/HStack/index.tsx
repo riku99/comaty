@@ -9,7 +9,10 @@ type Props = {
 export const HStack = ({ children, space = 0, ...props }: Props) => {
   const { style, ...withoutStyleProps } = props;
   return (
-    <View style={[{ flexDirection: 'row' }, style]} {...withoutStyleProps}>
+    <View
+      style={[{ flexDirection: 'row', alignItems: 'center' }, style]}
+      {...withoutStyleProps}
+    >
       {Array.isArray(children)
         ? children.map((c, index) => (
             <View

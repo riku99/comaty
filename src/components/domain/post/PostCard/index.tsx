@@ -34,7 +34,7 @@ export const PostCard = ({
   onDelete,
   disableDetailNavigation = false,
 }: Props) => {
-  const { text, user, createdAt, liked, id } = postData;
+  const { text, user, createdAt, liked, id, replys } = postData;
   const diff = formatDistanceToNow(new Date(Number(createdAt)), {
     locale: ja,
     addSuffix: true,
@@ -191,12 +191,19 @@ export const PostCard = ({
 
           <View style={styles.actions}>
             <HStack style={styles.actionsLeft} space={44}>
-              <Pressable onPress={onReplyPress} hitSlop={10}>
+              <Pressable
+                onPress={onReplyPress}
+                hitSlop={10}
+                style={styles.reply}
+              >
                 <Entypo
                   name="reply"
                   size={ACTION_ICON_SIZE}
                   color={ACTION_ICON_COLOR}
                 />
+                <Text style={styles.replyCount}>
+                  {!!replys.length && replys.length}
+                </Text>
               </Pressable>
 
               <Pressable onPress={onLikePress} style={styles.like}>
@@ -316,5 +323,15 @@ const styles = StyleSheet.create({
   likeCount: {
     transform: [{ translateX: -4 }],
     fontWeight: 'bold',
+  },
+  reply: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  replyCount: {
+    transform: [{ translateX: 4 }],
+    marginTop: 2,
+    fontWeight: 'bold',
+    color: ACTION_ICON_COLOR,
   },
 });

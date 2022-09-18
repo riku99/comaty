@@ -110,6 +110,7 @@ export type Post = {
   id: Scalars['Int'];
   likeCount?: Maybe<Scalars['Int']>;
   liked?: Maybe<Scalars['Boolean']>;
+  replyCount?: Maybe<Scalars['Int']>;
   replyToPost?: Maybe<Post>;
   replys?: Maybe<Array<Maybe<Post>>>;
   text: Scalars['String'];
@@ -254,7 +255,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -318,7 +319,7 @@ export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __t
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
-export type PostCardFragment = { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null };
+export type PostCardFragment = { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null };
 
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
@@ -334,7 +335,7 @@ export type ActivityScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityPostsQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
@@ -342,7 +343,7 @@ export type ActivityPostsQueryVariables = Exact<{
 }>;
 
 
-export type ActivityPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type ActivityPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityStoriesQueryVariables = Exact<{
   storiesFirst?: InputMaybe<Scalars['Int']>;
@@ -352,7 +353,7 @@ export type ActivityStoriesQueryVariables = Exact<{
 
 export type ActivityStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityPostsFragment = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type ActivityPostsFragment = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
@@ -369,7 +370,7 @@ export type PostDetailScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
+export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } };
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -421,6 +422,9 @@ export const PostCardFragmentDoc = gql`
     firstProfileImage {
       ...ProfileImage
     }
+  }
+  replys {
+    id
   }
 }
     ${ProfileImageFragmentDoc}`;

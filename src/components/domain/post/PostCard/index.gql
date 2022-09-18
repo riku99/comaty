@@ -11,4 +11,7 @@ fragment PostCard on Post {
       ...ProfileImage
     }
   }
+  replys {
+    id
+  }
 }

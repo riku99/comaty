@@ -62,7 +62,7 @@ export const KeyboardAccessory = ({
         )}
 
         <HStack space={14} style={styles.selectedImageContainer}>
-          {seletedImages.reverse().map((img) => (
+          {seletedImages.map((img) => (
             <View key={img.uri}>
               <Image source={{ uri: img.uri }} style={styles.selectedImage} />
               <Pressable

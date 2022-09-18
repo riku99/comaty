@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Image } from 'react-native-image-crop-picker';
+import { ImagePickerResponse } from 'react-native-image-picker';
 import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
@@ -16,7 +16,7 @@ type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
-  const [images, setImages] = useState<{ url: string; mime: string }[]>([]);
+  const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
   const [createPostMutation] = useCreatePostMutation();
   const toast = useToast();
 
@@ -84,19 +84,15 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     });
   }, [navigation, onPostPress, text]);
 
-  const onSelectedImages = (selectedImages: Image[]) => {
-    const imagesStateData = selectedImages.map((img) => {
-      return {
-        url: img.sourceURL,
-        mime: img.mime,
-      };
+  const onSelectedImages = (response: ImagePickerResponse) => {
+    const d = response.assets?.map((asset) => {
+      return { uri: asset.uri, mime: asset.type };
     });
-
-    setImages(imagesStateData);
+    setImages(d);
   };
 
   const onSelectedImageDeletePress = (uri: string) => {
-    setImages((c) => c.filter((img) => img.url !== uri));
+    setImages((c) => c.filter((img) => img.uri !== uri));
   };
 
   return (
@@ -106,7 +102,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
         setText={setText}
         placeholder={'気軽に投稿、共有しましょう！'}
         onSelectedImages={onSelectedImages}
-        selectedImages={images.map((img) => ({ uri: img.url }))}
+        selectedImages={images.map((img) => ({ uri: img.uri }))}
         onSelectedImageDeletePress={onSelectedImageDeletePress}
       />
     </View>

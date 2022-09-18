@@ -1,14 +1,17 @@
 import { Input } from '@rneui/themed';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, InputAccessoryView, Keyboard } from 'react-native';
-import ImagePicker, { Image } from 'react-native-image-crop-picker';
+import {
+  ImagePickerResponse,
+  launchImageLibrary,
+} from 'react-native-image-picker';
 import { KeyboardAccessory } from './KeyboradAccessory';
 
 type Props = {
   text: string;
   setText: (t: string) => void;
   placeholder: string;
-  onSelectedImages?: (images: Image[]) => void;
+  onSelectedImages?: (response: ImagePickerResponse) => void;
   selectedImages: { uri: string }[];
   onSelectedImageDeletePress: (url: string) => void;
 };
@@ -42,13 +45,13 @@ export const PostInput = ({
 
   const onCamerarollImagePress = async () => {
     try {
-      const selectedCamerarollImages = await ImagePicker.openPicker({
-        multiple: true,
+      const result = await launchImageLibrary({
+        selectionLimit: 4,
         mediaType: 'photo',
-        maxFiles: 4,
       });
+
       if (onSelectedImages) {
-        onSelectedImages(selectedCamerarollImages);
+        onSelectedImages(result);
       }
     } catch (e) {
       console.log(e);

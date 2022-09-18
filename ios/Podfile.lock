@@ -17,6 +17,9 @@ PODS:
     - ExpoModulesCore
   - EXFont (10.1.0):
     - ExpoModulesCore
+  - EXImageLoader (3.2.0):
+    - ExpoModulesCore
+    - React-Core
   - Expo (45.0.6):
     - ExpoModulesCore
   - ExpoAdapterGoogleSignIn (8.0.0):
@@ -24,6 +27,8 @@ PODS:
     - GoogleSignIn
     - React-Core
   - ExpoHaptics (11.2.0):
+    - ExpoModulesCore
+  - ExpoImagePicker (13.1.1):
     - ExpoModulesCore
   - ExpoKeepAwake (10.1.1):
     - ExpoModulesCore
@@ -329,6 +334,8 @@ PODS:
     - react-native-config/App (= 1.4.6)
   - react-native-config/App (1.4.6):
     - React-Core
+  - react-native-image-picker (4.10.0):
+    - React-Core
   - react-native-menu (0.5.2):
     - React
   - react-native-mmkv (2.4.3):
@@ -487,9 +494,11 @@ DEPENDENCIES:
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/ios`)"
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
+  - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
@@ -516,6 +525,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - "react-native-cameraroll (from `../node_modules/@react-native-camera-roll/camera-roll`)"
   - react-native-config (from `../node_modules/react-native-config`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -584,12 +594,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
+  EXImageLoader:
+    :path: "../node_modules/expo-image-loader/ios"
   Expo:
     :path: "../node_modules/expo/ios"
   ExpoAdapterGoogleSignIn:
     :path: "../node_modules/@react-native-google-signin/google-signin/ios"
   ExpoHaptics:
     :path: "../node_modules/expo-haptics/ios"
+  ExpoImagePicker:
+    :path: "../node_modules/expo-image-picker/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
@@ -638,6 +652,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-camera-roll/camera-roll"
   react-native-config:
     :path: "../node_modules/react-native-config"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-menu:
     :path: "../node_modules/@react-native-menu/menu"
   react-native-mmkv:
@@ -706,9 +722,11 @@ SPEC CHECKSUMS:
   EXErrorRecovery: 3ce46e5d42e53c0371ff048a7f0cbc959968ef4a
   EXFileSystem: 2aa2d9289f84bca9532b9ccbd81504fa31eb1ded
   EXFont: 04235cc22e6fef86028feb67db452978dc6f240f
+  EXImageLoader: b88e053d760f85a82405b1db2de4abf11978fc9f
   Expo: 3df4af520db4f37f9821ba732ce9ac0dc67bb7b8
   ExpoAdapterGoogleSignIn: a3ff2197e97501d6b12d7c459f060ff8a6dc8317
   ExpoHaptics: ad58ec96a25e57579c14a47c7d71f0de0de8656a
+  ExpoImagePicker: d9d6b4f29db437fc7796f13cee5f133f5b4b5f7c
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
   ExpoLinearGradient: 0debcf7d6cd7fea3050c218544f0db2de9a64f42
   ExpoModulesCore: e4278a668e8c13c0269ed8b8a4200989deea2973
@@ -749,6 +767,7 @@ SPEC CHECKSUMS:
   React-logger: a0833912d93b36b791b7a521672d8ee89107aff1
   react-native-cameraroll: 4d0cb1c3413d4b7b85beb68a8c14325d887b404c
   react-native-config: 7cd105e71d903104e8919261480858940a6b9c0e
+  react-native-image-picker: 4bc9ed38c8be255b515d8c88babbaf74973f91a8
   react-native-menu: 52089949cbe30b035c51e54f92a7d99136c2fed4
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-pager-view: e76d64a5114a152e942caa09136e4e250709378c

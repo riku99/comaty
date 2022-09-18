@@ -10,6 +10,7 @@ type Props = {
   placeholder: string;
   onSelectedImages?: (images: Image[]) => void;
   selectedImages: { uri: string }[];
+  onSelectedImageDeletePress: (url: string) => void;
 };
 
 export const PostInput = ({
@@ -18,6 +19,7 @@ export const PostInput = ({
   placeholder,
   onSelectedImages,
   selectedImages,
+  onSelectedImageDeletePress,
 }: Props) => {
   const inputRef = useRef<typeof Input>(null);
   const textInputId = 'textInput';
@@ -78,6 +80,7 @@ export const PostInput = ({
           text={text}
           onCamerarollImagePress={onCamerarollImagePress}
           seletedImages={selectedImages}
+          onSelectedImageDeletePress={onSelectedImageDeletePress}
         />
       </InputAccessoryView>
     </>

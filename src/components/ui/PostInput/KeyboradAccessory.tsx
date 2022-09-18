@@ -1,4 +1,4 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import React, { useEffect, useState } from 'react';
 import {
@@ -17,12 +17,14 @@ type Props = {
   text: string;
   onCamerarollImagePress: () => Promise<void>;
   seletedImages: { uri: string }[];
+  onSelectedImageDeletePress: (url: string) => void;
 };
 
 export const KeyboardAccessory = ({
   text,
   onCamerarollImagePress,
   seletedImages,
+  onSelectedImageDeletePress,
 }: Props) => {
   const [firstPhotoUri, setFirstPhotoUri] = useState<string | null>(null);
 
@@ -59,10 +61,18 @@ export const KeyboardAccessory = ({
           </Pressable>
         )}
 
-        <HStack space={12} style={styles.selectedImageContainer}>
-          {seletedImages.map((img, index) => (
-            <View key={index}>
+        <HStack space={14} style={styles.selectedImageContainer}>
+          {seletedImages.reverse().map((img) => (
+            <View key={img.uri}>
               <Image source={{ uri: img.uri }} style={styles.selectedImage} />
+              <Pressable
+                style={styles.deleteButton}
+                onPress={() => {
+                  onSelectedImageDeletePress(img.uri);
+                }}
+              >
+                <AntDesign name="close" size={18} color="white" />
+              </Pressable>
             </View>
           ))}
         </HStack>
@@ -112,5 +122,15 @@ const styles = StyleSheet.create({
     height: IMAGE_SIZE,
     borderRadius: 8,
     backgroundColor: 'gray',
+  },
+  deleteButton: {
+    position: 'absolute',
+    backgroundColor: '#3d3d3d',
+    top: -10,
+    right: -10,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 3,
   },
 });

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Image } from 'react-native-image-crop-picker';
 import { useToast } from 'react-native-toast-notifications';
@@ -95,9 +95,9 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     setImages(imagesStateData);
   };
 
-  useEffect(() => {
-    console.log(images);
-  }, [images]);
+  const onSelectedImageDeletePress = (uri: string) => {
+    setImages((c) => c.filter((img) => img.url !== uri));
+  };
 
   return (
     <View style={styles.container}>
@@ -107,6 +107,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
         placeholder={'気軽に投稿、共有しましょう！'}
         onSelectedImages={onSelectedImages}
         selectedImages={images.map((img) => ({ uri: img.url }))}
+        onSelectedImageDeletePress={onSelectedImageDeletePress}
       />
     </View>
   );

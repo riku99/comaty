@@ -8,7 +8,9 @@ import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Image, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import FullImageView from 'react-native-image-viewing';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
@@ -56,6 +58,10 @@ export const PostCard = ({
     },
   ]);
   const likePressed = useRef(false);
+  const [fullImageViewingIndex, setFullImageViewingIndex] = useState<
+    number | null
+  >(null);
+  const fullImageViewingData = images?.map((img) => ({ uri: img.url }));
 
   useEffect(() => {
     setIsLiked(liked);
@@ -198,17 +204,20 @@ export const PostCard = ({
           <Text style={styles.text}>{text}</Text>
 
           <View style={styles.images}>
-            {_images.map((uri, index) => {
+            {images.map((image, index) => {
               return (
-                <View
+                <Pressable
                   key={index}
                   style={[
                     styles.imageContainer,
                     { marginTop: index > 1 ? 3 : 0 },
                   ]}
+                  onPress={() => {
+                    setFullImageViewingIndex(index);
+                  }}
                 >
-                  <Image
-                    source={{ uri }}
+                  <FastImage
+                    source={{ uri: image.url }}
                     style={[
                       styles.image,
                       {
@@ -223,7 +232,7 @@ export const PostCard = ({
                       },
                     ]}
                   />
-                </View>
+                </Pressable>
               );
             })}
           </View>
@@ -284,16 +293,18 @@ export const PostCard = ({
           </View>
         </View>
       </View>
+
+      <FullImageView
+        visible={fullImageViewingIndex !== null}
+        images={fullImageViewingData}
+        imageIndex={fullImageViewingIndex}
+        onRequestClose={() => {
+          setFullImageViewingIndex(null);
+        }}
+      />
     </Pressable>
   );
 };
-
-const _images = [
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/304927517_608787140642426_6009967415154864891_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=102&_nc_ohc=SaVaCZNmFt4AX9pIDvm&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkxOTU3OTY1MTI1NTE3Mzc2OA%3D%3D.2-ccb7-5&oh=00_AT__0Xr4tlFmi9IAb0Q-WUAM36IXI9pWbLIb9QOvK7--Ag&oe=632E4493&_nc_sid=30a2ef',
-];
 
 const deleteMenuId = 'delete';
 const reportMenuId = 'report';

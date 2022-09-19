@@ -8,7 +8,7 @@ import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Image, Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
@@ -34,7 +34,7 @@ export const PostCard = ({
   onDelete,
   disableDetailNavigation = false,
 }: Props) => {
-  const { text, user, createdAt, liked, id, replys } = postData;
+  const { text, user, createdAt, liked, id, replys, images } = postData;
   const diff = formatDistanceToNow(new Date(Number(createdAt)), {
     locale: ja,
     addSuffix: true,
@@ -197,6 +197,37 @@ export const PostCard = ({
           </View>
           <Text style={styles.text}>{text}</Text>
 
+          <View style={styles.images}>
+            {_images.map((uri, index) => {
+              return (
+                <View
+                  key={index}
+                  style={[
+                    styles.imageContainer,
+                    { marginTop: index > 1 ? 3 : 0 },
+                  ]}
+                >
+                  <Image
+                    source={{ uri }}
+                    style={[
+                      styles.image,
+                      {
+                        borderTopLeftRadius:
+                          index === 0 ? IMAGE_BORDER_RADIUS : 0,
+                        borderTopRightRadius:
+                          index === 1 ? IMAGE_BORDER_RADIUS : 0,
+                        borderBottomLeftRadius:
+                          index === 2 ? IMAGE_BORDER_RADIUS : 0,
+                        borderBottomRightRadius:
+                          index === 3 ? IMAGE_BORDER_RADIUS : 0,
+                      },
+                    ]}
+                  />
+                </View>
+              );
+            })}
+          </View>
+
           <View style={styles.actions}>
             <HStack style={styles.actionsLeft} space={44}>
               <Pressable
@@ -257,12 +288,20 @@ export const PostCard = ({
   );
 };
 
+const _images = [
+  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
+  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
+  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/306653271_163588822930529_583515079970813894_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=1&_nc_ohc=ocn8xO-_9BEAX_MGFsU&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkyNzAyMDI1MTYzMzk1MjM5OA%3D%3D.2-ccb7-5&oh=00_AT_niGbYX1Q5AmIjELn9X9P_bvBGBak03-Ap6IqlEKbNfA&oe=632F7249&_nc_sid=30a2ef',
+  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/304927517_608787140642426_6009967415154864891_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=102&_nc_ohc=SaVaCZNmFt4AX9pIDvm&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkxOTU3OTY1MTI1NTE3Mzc2OA%3D%3D.2-ccb7-5&oh=00_AT__0Xr4tlFmi9IAb0Q-WUAM36IXI9pWbLIb9QOvK7--Ag&oe=632E4493&_nc_sid=30a2ef',
+];
+
 const deleteMenuId = 'delete';
 const reportMenuId = 'report';
 
 const IMAGE_SIZE = 48;
 const ACTION_ICON_SIZE = 20;
 const ACTION_ICON_COLOR = '#c7c7c7';
+const IMAGE_BORDER_RADIUS = 16;
 
 const styles = StyleSheet.create({
   body: {
@@ -341,5 +380,20 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontWeight: 'bold',
     color: ACTION_ICON_COLOR,
+  },
+  images: {
+    width: '100%',
+    marginTop: 14,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  imageContainer: {
+    width: '49.5%',
+    height: 90,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
 });

@@ -85,6 +85,9 @@ export const PostCreationScreen = ({ navigation }: Props) => {
   }, [navigation, onPostPress, text]);
 
   const onSelectedImages = (response: ImagePickerResponse) => {
+    if (response.didCancel || response.errorCode) {
+      return;
+    }
     const d = response.assets?.map((asset) => {
       return { uri: asset.uri, mime: asset.type };
     });

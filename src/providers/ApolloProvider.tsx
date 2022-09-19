@@ -1,7 +1,6 @@
 import {
   ApolloClient,
   ApolloProvider as ApolloProviderBase,
-  createHttpLink,
   from,
   InMemoryCache,
 } from '@apollo/client';
@@ -9,6 +8,7 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { relayStylePagination } from '@apollo/client/utilities';
 import auth from '@react-native-firebase/auth';
+import { createUploadLink } from 'apollo-upload-client';
 import React, { useRef } from 'react';
 import { Alert } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
@@ -19,9 +19,13 @@ type Props = {
   children: JSX.Element;
 };
 
-const link = createHttpLink({
+const uploadLink = createUploadLink({
   uri: 'http://localhost:4000/graphql',
 });
+
+// const link = createHttpLink({
+//   uri: 'http://localhost:4000/graphql',
+// });
 
 const authLink = setContext(async (_, { headers }) => {
   const currentUser = auth().currentUser;
@@ -80,7 +84,7 @@ export const ApolloProvider = ({ children }: Props) => {
   });
 
   const client = new ApolloClient({
-    link: from([errorLink, authLink, link]),
+    link: from([errorLink, authLink, uploadLink]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {

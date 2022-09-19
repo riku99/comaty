@@ -13,9 +13,11 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  Upload: any;
 };
 
 export type CreatePostInput = {
+  images?: InputMaybe<Array<Scalars['Upload']>>;
   replyTo?: InputMaybe<Scalars['Int']>;
   text: Scalars['String'];
 };
@@ -36,6 +38,13 @@ export enum ForbiddenError {
 export enum GetPostError {
   NotFound = 'NOT_FOUND'
 }
+
+export type Image = {
+  __typename?: 'Image';
+  height?: Maybe<Scalars['Int']>;
+  url: Scalars['String'];
+  width?: Maybe<Scalars['Int']>;
+};
 
 export type Me = UserEntity & {
   __typename?: 'Me';
@@ -59,6 +68,7 @@ export type Mutation = {
   unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
   updateUserProfile: Me;
+  uploadPostImages: UploadPostImagesResponse;
 };
 
 
@@ -96,6 +106,11 @@ export type MutationUpdateUserProfileArgs = {
   input?: InputMaybe<UpdateUserProfileInput>;
 };
 
+
+export type MutationUploadPostImagesArgs = {
+  files: Array<Scalars['Upload']>;
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -108,9 +123,9 @@ export type Post = {
   __typename?: 'Post';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
+  images?: Maybe<Array<Maybe<Image>>>;
   likeCount?: Maybe<Scalars['Int']>;
   liked?: Maybe<Scalars['Boolean']>;
-  replyCount?: Maybe<Scalars['Int']>;
   replyToPost?: Maybe<Post>;
   replys?: Maybe<Array<Maybe<Post>>>;
   text: Scalars['String'];
@@ -204,6 +219,11 @@ export type UpdateInitialStatusInput = {
 export type UpdateUserProfileInput = {
   bio?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
+};
+
+export type UploadPostImagesResponse = {
+  __typename?: 'UploadPostImagesResponse';
+  images: Array<Image>;
 };
 
 export type User = UserEntity & {

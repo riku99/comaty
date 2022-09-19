@@ -1,3 +1,4 @@
+import { ReactNativeFile } from 'apollo-upload-client';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ImagePickerResponse } from 'react-native-image-picker';
@@ -11,6 +12,8 @@ import {
   ActivityPostsQuery,
   useCreatePostMutation,
 } from 'src/generated/graphql';
+import { convertHeicToJpeg } from 'src/helpers/convertHeicToJpeg';
+import { getExtention } from 'src/utils';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
@@ -26,10 +29,42 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     }
 
     try {
+      let files: ReactNativeFile[];
+      if (images.length) {
+        const promises: Promise<ReactNativeFile>[] = [];
+
+        images.forEach((image) => {
+          promises.push(
+            (async () => {
+              let uri = image.uri;
+              let type = image.mime;
+
+              const ext = getExtention(image.uri);
+
+              if (ext === 'HEIC') {
+                const { path: jpegPath, type: jpegType } =
+                  await convertHeicToJpeg(image.uri);
+
+                uri = jpegPath;
+                type = jpegType;
+              }
+
+              return new ReactNativeFile({
+                uri,
+                type,
+                name: `image-${Date.now()}`,
+              });
+            })()
+          );
+        });
+
+        files = await Promise.all(promises);
+      }
       await createPostMutation({
         variables: {
           input: {
             text,
+            images: files,
           },
         },
         update: (cache, { data: responseData }) => {

@@ -1,5 +1,6 @@
 import {
   ApolloClient,
+  ApolloLink,
   ApolloProvider as ApolloProviderBase,
   from,
   InMemoryCache,
@@ -23,9 +24,17 @@ const uploadLink = createUploadLink({
   uri: 'http://localhost:4000/graphql',
 });
 
-// const link = createHttpLink({
-//   uri: 'http://localhost:4000/graphql',
-// });
+const customLink = new ApolloLink((operation, forward) => {
+  operation.setContext({
+    ...operation.getContext(),
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    headers: {
+      ...operation.getContext().headers,
+      'x-apollo-operation-name': operation.operationName,
+    },
+  });
+  return forward(operation);
+});
 
 const authLink = setContext(async (_, { headers }) => {
   const currentUser = auth().currentUser;
@@ -84,7 +93,7 @@ export const ApolloProvider = ({ children }: Props) => {
   });
 
   const client = new ApolloClient({
-    link: from([errorLink, authLink, uploadLink]),
+    link: from([errorLink, customLink, authLink, uploadLink]),
     cache: new InMemoryCache({
       typePolicies: {
         Query: {

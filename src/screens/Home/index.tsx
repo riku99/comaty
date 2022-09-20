@@ -17,7 +17,7 @@ const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 export const HomeScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'ホーム',
+      title: 'ホーム🦄',
     });
   }, [navigation]);
 

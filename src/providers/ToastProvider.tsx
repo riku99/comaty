@@ -11,7 +11,7 @@ export const ToastProvider = ({ children }: Props) => {
       placement="bottom"
       offset={TOAST_OFFSET}
       style={{ width: TOAST_WIDTH }}
-      duration={1500}
+      duration={2000}
       successColor={'#00c851'}
     >
       {children}

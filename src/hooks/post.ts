@@ -4,10 +4,25 @@ import { useToast } from 'react-native-toast-notifications';
 import {
   ActivityPostsDocument,
   ActivityPostsQuery,
+  CreatePostInput,
   PostDetailScreenDataDocument,
+  useCreatePostMutation,
   useDeletePostMutation,
 } from 'src/generated/graphql';
-import { creatingPostVar } from 'src/stores/post';
+import { creatingPostReplyVar, creatingPostVar } from 'src/stores/post';
+
+export const useCreatingPostReply = () => {
+  const creatingPostReply = useReactiveVar(creatingPostReplyVar);
+
+  const setCreatingPostReply = useCallback((value: boolean) => {
+    creatingPostReplyVar(value);
+  }, []);
+
+  return {
+    creatingPostReply,
+    setCreatingPostReply,
+  };
+};
 
 export const useCreatingPost = () => {
   const creatingPost = useReactiveVar(creatingPostVar);
@@ -19,6 +34,66 @@ export const useCreatingPost = () => {
   return {
     creatingPost,
     setCreatingPost,
+  };
+};
+
+export const useCreatePost = () => {
+  const [createPostMutation] = useCreatePostMutation();
+
+  const createPost = useCallback(
+    async ({
+      input,
+      onCompleted,
+    }: {
+      input: CreatePostInput;
+      onCompleted?: () => void;
+    }) => {
+      try {
+        await createPostMutation({
+          variables: {
+            input,
+          },
+          update: (cache, { data: responseData }) => {
+            if (!responseData) {
+              return;
+            }
+
+            const cachedActivityPostsQuery =
+              cache.readQuery<ActivityPostsQuery>({
+                query: ActivityPostsDocument,
+              });
+
+            if (cachedActivityPostsQuery) {
+              const newEdge = {
+                node: responseData.createPost,
+                cursor: '',
+              };
+              const newEdges = [
+                newEdge,
+                ...cachedActivityPostsQuery.posts.edges,
+              ];
+              cache.writeQuery({
+                query: ActivityPostsDocument,
+                data: {
+                  posts: {
+                    ...cachedActivityPostsQuery.posts,
+                    edges: newEdges,
+                  },
+                },
+              });
+            }
+          },
+          onCompleted,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    []
+  );
+
+  return {
+    createPost,
   };
 };
 

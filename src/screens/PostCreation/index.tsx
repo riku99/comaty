@@ -1,4 +1,3 @@
-import { ReactNativeFile } from 'apollo-upload-client';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ImagePickerResponse } from 'react-native-image-picker';
@@ -7,23 +6,17 @@ import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostInput } from 'src/components/ui/PostInput';
 import { POST_MAX_TEXT_COUNT } from 'src/constants';
-import {
-  ActivityPostsDocument,
-  ActivityPostsQuery,
-  useCreatePostMutation
-} from 'src/generated/graphql';
-import { convertHeicToJpeg } from 'src/helpers/convertHeicToJpeg';
-import { useCreatingPost } from "src/hooks/post";
-import { getExtention } from 'src/utils';
+import { processImagesForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
+import { useCreatePost, useCreatingPost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
   const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
-  const [createPostMutation] = useCreatePostMutation();
   const toast = useToast();
-  const {setCreatingPost} = useCreatingPost()
+  const { setCreatingPost } = useCreatingPost();
+  const { createPost } = useCreatePost();
 
   const onPostPress = useCallback(async () => {
     if (!text) {
@@ -31,71 +24,13 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     }
 
     navigation.goBack();
-    setCreatingPost(true)
+    setCreatingPost(true);
     try {
-      let files: ReactNativeFile[];
-      if (images.length) {
-        const promises: Promise<ReactNativeFile>[] = [];
-
-        images.forEach((image) => {
-          promises.push(
-            (async () => {
-              let uri = image.uri;
-              let type = image.mime;
-
-              const ext = getExtention(image.uri);
-
-              if (ext === 'HEIC') {
-                const { path: jpegPath, type: jpegType } =
-                  await convertHeicToJpeg(image.uri);
-
-                uri = jpegPath;
-                type = jpegType;
-              }
-
-              return new ReactNativeFile({
-                uri,
-                type,
-                name: `image-${Date.now()}`,
-              });
-            })()
-          );
-        });
-
-        files = await Promise.all(promises);
-      }
-      await createPostMutation({
-        variables: {
-          input: {
-            text,
-            images: files,
-          },
-        },
-        update: (cache, { data: responseData }) => {
-          if (!responseData) {
-            return;
-          }
-
-          const cachedActivityPostsQuery = cache.readQuery<ActivityPostsQuery>({
-            query: ActivityPostsDocument,
-          });
-
-          if (cachedActivityPostsQuery) {
-            const newEdge = {
-              node: responseData.createPost,
-              cursor: '',
-            };
-            const newEdges = [newEdge, ...cachedActivityPostsQuery.posts.edges];
-            cache.writeQuery({
-              query: ActivityPostsDocument,
-              data: {
-                posts: {
-                  ...cachedActivityPostsQuery.posts,
-                  edges: newEdges,
-                },
-              },
-            });
-          }
+      const files = await processImagesForMultipartRequest(images);
+      await createPost({
+        input: {
+          text,
+          images: files,
         },
         onCompleted: () => {
           toast.show('投稿しました', { type: 'success' });
@@ -104,9 +39,9 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     } catch (e) {
       console.log(e);
     } finally {
-      setCreatingPost(false)
+      setCreatingPost(false);
     }
-  }, [createPostMutation, text, navigation]);
+  }, [createPost, text, navigation, images]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

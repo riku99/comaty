@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { useCreatingPost } from 'src/hooks/post';
+import { useCreatingPost, useCreatingPostReply } from 'src/hooks/post';
 
 type Props = {
   containerStyle?: ViewStyle;
@@ -13,15 +13,18 @@ type Props = {
 
 export const CreatingPost = () => {
   const { creatingPost } = useCreatingPost();
+  const { creatingPostReply } = useCreatingPostReply();
 
   return (
     <>
-      {creatingPost && (
+      {(creatingPost || creatingPostReply) && (
         <>
           <View style={styles.body}>
             <View style={styles.top}>
               <ActivityIndicator />
-              <Text style={styles.creatingText}>投稿中...</Text>
+              <Text style={styles.creatingText}>
+                {creatingPost ? '投稿中...' : '返信中...'}
+              </Text>
             </View>
             <View style={styles.bar}>
               <View style={styles.barOverlay} />

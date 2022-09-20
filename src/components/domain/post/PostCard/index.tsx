@@ -231,7 +231,7 @@ export const PostCard = ({
   return (
     <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>
       <View style={styles.mainContents}>
-        <Pressable onPress={onProfileImagePress}>
+        <Pressable onPress={onProfileImagePress} style={{ height: IMAGE_SIZE }}>
           <ProfileImage
             imageData={filter<ProfileImageFragment>(
               ProfileImageFragmentDoc,

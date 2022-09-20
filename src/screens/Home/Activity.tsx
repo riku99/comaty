@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   createButton: {
     position: 'absolute',
-    bottom: 25,
+    bottom: 20,
     right: 20,
     backgroundColor: theme.primary,
     height: CREATE_BUTTON_SIZE,

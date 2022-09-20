@@ -270,7 +270,7 @@ export const PostCard = ({
             })}
           </View>
 
-          <View style={styles.actions}>
+          <View style={[styles.actions, { marginTop: images.length ? 14 : 0 }]}>
             <HStack style={styles.actionsLeft} space={44}>
               <Pressable
                 onPress={onReplyPress}
@@ -393,7 +393,6 @@ const styles = StyleSheet.create({
   actions: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 14,
     justifyContent: 'space-between',
   },
   actionsLeft: {

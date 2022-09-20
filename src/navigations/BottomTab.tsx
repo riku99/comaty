@@ -23,7 +23,7 @@ export const BottomTab = React.memo(() => {
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarActiveTintColor: theme.primary,
+        tabBarActiveTintColor: theme.black,
         tabBarStyle: {
           borderTopWidth: 0,
         },

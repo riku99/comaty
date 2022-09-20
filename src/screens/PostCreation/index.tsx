@@ -10,9 +10,10 @@ import { POST_MAX_TEXT_COUNT } from 'src/constants';
 import {
   ActivityPostsDocument,
   ActivityPostsQuery,
-  useCreatePostMutation,
+  useCreatePostMutation
 } from 'src/generated/graphql';
 import { convertHeicToJpeg } from 'src/helpers/convertHeicToJpeg';
+import { useCreatingPost } from "src/hooks/post";
 import { getExtention } from 'src/utils';
 
 type Props = RootNavigationScreenProp<'PostCreation'>;
@@ -22,12 +23,15 @@ export const PostCreationScreen = ({ navigation }: Props) => {
   const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
   const [createPostMutation] = useCreatePostMutation();
   const toast = useToast();
+  const {setCreatingPost} = useCreatingPost()
 
   const onPostPress = useCallback(async () => {
     if (!text) {
       return;
     }
 
+    navigation.goBack();
+    setCreatingPost(true)
     try {
       let files: ReactNativeFile[];
       if (images.length) {
@@ -100,7 +104,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
     } catch (e) {
       console.log(e);
     } finally {
-      navigation.goBack();
+      setCreatingPost(false)
     }
   }, [createPostMutation, text, navigation]);
 

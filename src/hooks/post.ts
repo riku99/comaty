@@ -1,3 +1,5 @@
+import { useReactiveVar } from '@apollo/client';
+import { useCallback } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import {
   ActivityPostsDocument,
@@ -5,6 +7,20 @@ import {
   PostDetailScreenDataDocument,
   useDeletePostMutation,
 } from 'src/generated/graphql';
+import { creatingPostVar } from 'src/stores/post';
+
+export const useCreatingPost = () => {
+  const creatingPost = useReactiveVar(creatingPostVar);
+
+  const setCreatingPost = useCallback((value: boolean) => {
+    creatingPostVar(value);
+  }, []);
+
+  return {
+    creatingPost,
+    setCreatingPost,
+  };
+};
 
 export const useDeletePost = () => {
   const [deletePostMutation] = useDeletePostMutation();

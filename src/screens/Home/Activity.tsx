@@ -21,6 +21,7 @@ import {
 import { useDeletePost } from 'src/hooks/post';
 import { theme } from 'src/styles';
 import { Stories } from './ActivityStories';
+import { CreatingPost } from './CreatingPost';
 
 type PostItem = ActivityScreenDataQuery['posts']['edges'][number];
 
@@ -112,13 +113,17 @@ export const Activity = () => {
         keyExtractor={(item) => item.node.id.toString()}
         contentContainerStyle={{ paddingTop: 16 }}
         ListHeaderComponent={
-          <Stories
-            storiesData={filter<ActivityStoriesFragment>(
-              ActivityStoriesFragmentDoc,
-              data
-            )}
-            infiniteLoadStories={infiniteLoadStories}
-          />
+          <View>
+            <Stories
+              storiesData={filter<ActivityStoriesFragment>(
+                ActivityStoriesFragmentDoc,
+                data
+              )}
+              infiniteLoadStories={infiniteLoadStories}
+            />
+
+            <CreatingPost />
+          </View>
         }
         infiniteLoad={infiniteLoadPost}
         refreshControl={

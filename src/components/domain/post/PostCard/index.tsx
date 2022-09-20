@@ -8,8 +8,8 @@ import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import LottieView from 'lottie-react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import { Alert, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
+import FastImage, { FastImageProps } from 'react-native-fast-image';
 import FullImageView from 'react-native-image-viewing';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
@@ -62,6 +62,51 @@ export const PostCard = ({
     number | null
   >(null);
   const fullImageViewingData = images?.map((img) => ({ uri: img.url }));
+
+  const getImageStyle = (
+    index: number
+  ): {
+    imageStyle: FastImageProps['style'];
+    imageContainerStyle: ViewStyle;
+  } => {
+    if (images.length === 1) {
+      return {
+        imageStyle: {
+          borderRadius: IMAGE_BORDER_RADIUS,
+        },
+        imageContainerStyle: {
+          width: '100%',
+          height: 180,
+        },
+      };
+    } else if (images.length === 2) {
+      return {
+        imageStyle: {
+          borderTopLeftRadius: index === 0 ? IMAGE_BORDER_RADIUS : 0,
+          borderTopRightRadius: index === 1 ? IMAGE_BORDER_RADIUS : 0,
+          borderBottomLeftRadius: index === 0 ? IMAGE_BORDER_RADIUS : 0,
+          borderBottomRightRadius: index === 1 ? IMAGE_BORDER_RADIUS : 0,
+        },
+        imageContainerStyle: {
+          width: '49.5%',
+          height: 180,
+        },
+      };
+    } else {
+      return {
+        imageStyle: {
+          borderTopLeftRadius: index === 0 ? IMAGE_BORDER_RADIUS : 0,
+          borderTopRightRadius: index === 1 ? IMAGE_BORDER_RADIUS : 0,
+          borderBottomLeftRadius: index === 2 ? IMAGE_BORDER_RADIUS : 0,
+          borderBottomRightRadius: index === 3 ? IMAGE_BORDER_RADIUS : 0,
+        },
+        imageContainerStyle: {
+          width: '49.5%',
+          height: 90,
+        },
+      };
+    }
+  };
 
   useEffect(() => {
     setIsLiked(liked);
@@ -209,7 +254,7 @@ export const PostCard = ({
                 <Pressable
                   key={index}
                   style={[
-                    styles.imageContainer,
+                    getImageStyle(index).imageContainerStyle,
                     { marginTop: index > 1 ? 3 : 0 },
                   ]}
                   onPress={() => {
@@ -218,19 +263,7 @@ export const PostCard = ({
                 >
                   <FastImage
                     source={{ uri: image.url }}
-                    style={[
-                      styles.image,
-                      {
-                        borderTopLeftRadius:
-                          index === 0 ? IMAGE_BORDER_RADIUS : 0,
-                        borderTopRightRadius:
-                          index === 1 ? IMAGE_BORDER_RADIUS : 0,
-                        borderBottomLeftRadius:
-                          index === 2 ? IMAGE_BORDER_RADIUS : 0,
-                        borderBottomRightRadius:
-                          index === 3 ? IMAGE_BORDER_RADIUS : 0,
-                      },
-                    ]}
+                    style={[styles.image, getImageStyle(index).imageStyle]}
                   />
                 </Pressable>
               );
@@ -398,10 +431,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
-  imageContainer: {
-    width: '49.5%',
-    height: 90,
   },
   image: {
     width: '100%',

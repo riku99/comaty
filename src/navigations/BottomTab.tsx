@@ -1,6 +1,8 @@
 import { AntDesign } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
+import { Pressable } from 'react-native';
+import { ContentCreationButton } from 'src/components/ui/ContentCreationButton';
 import { ChatList } from 'src/screens/ChatList';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
 import { HomeScreen } from 'src/screens/Home';
@@ -57,9 +59,16 @@ export const BottomTab = React.memo(() => {
         name="CreateStory"
         component={CreateStoryScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="pluscircleo" size={ICON_SIZE} color={color} />
-          ),
+          tabBarButton: (props) => {
+            return (
+              <Pressable
+                style={[props.style, { justifyContent: 'center' }]}
+                onPress={() => {}}
+              >
+                <ContentCreationButton />
+              </Pressable>
+            );
+          },
         }}
       />
       <Tab.Screen

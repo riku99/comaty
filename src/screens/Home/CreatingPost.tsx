@@ -6,6 +6,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useCreatingPost, useCreatingPostReply } from 'src/hooks/post';
+import { theme } from 'src/styles';
 
 type Props = {
   containerStyle?: ViewStyle;
@@ -17,7 +18,7 @@ export const CreatingPost = () => {
 
   return (
     <>
-      {(creatingPost || creatingPostReply) && (
+      {(!creatingPost || creatingPostReply) && (
         <>
           <View style={styles.body}>
             <View style={styles.top}>
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   bar: {
-    backgroundColor: '#a1c0ff',
+    backgroundColor: '#cfccff',
     width: '100%',
     height: 2.5,
     marginTop: 8,
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   barOverlay: {
     position: 'absolute',
     height: 2.5,
-    backgroundColor: '#1f69ff',
+    backgroundColor: theme.primary,
     width: '92%',
   },
 });

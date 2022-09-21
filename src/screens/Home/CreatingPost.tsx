@@ -1,16 +1,6 @@
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useCreatingPost, useCreatingPostReply } from 'src/hooks/post';
 import { theme } from 'src/styles';
-
-type Props = {
-  containerStyle?: ViewStyle;
-};
 
 export const CreatingPost = () => {
   const { creatingPost } = useCreatingPost();
@@ -18,7 +8,7 @@ export const CreatingPost = () => {
 
   return (
     <>
-      {(!creatingPost || creatingPostReply) && (
+      {(creatingPost || creatingPostReply) && (
         <>
           <View style={styles.body}>
             <View style={styles.top}>

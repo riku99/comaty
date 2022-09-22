@@ -2,7 +2,9 @@ import { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ImagePickerResponse } from 'react-native-image-picker';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { PostAndQuestionInput } from 'src/components/ui/PostAndQuestionInput';
+import { QUESTION_MAX_TEXT_COUNT } from 'src/constants';
 
 type Props = RootNavigationScreenProp<'QuestionCreation'>;
 
@@ -12,10 +14,17 @@ export const QuestionCreationScreen = ({ navigation }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'そこ質の作成',
+      title: 'そこ質を作成',
       headerLeft: () => <CloseButton />,
+      headerRight: () => (
+        <HeaderRightCreationButton
+          title="次へ"
+          disable={text.length === 0 || text.length > QUESTION_MAX_TEXT_COUNT}
+          onPress={() => {}}
+        />
+      ),
     });
-  }, [navigation]);
+  }, [navigation, text]);
 
   const onSelectedImages = (response: ImagePickerResponse) => {
     if (response.didCancel || response.errorCode) {

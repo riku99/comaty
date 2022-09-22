@@ -53,7 +53,13 @@ export const ContentsCreationButtonGroup = () => {
         />
       </CreationButton>
 
-      <CreationButton label="ヘルプ" onPress={() => {}}>
+      <CreationButton
+        label="そこ質"
+        onPress={() => {
+          navigation.navigate('QuestionCreation');
+          setContentsCreationModalVisible(false);
+        }}
+      >
         <FontAwesome5
           name="hands-helping"
           size={ICON_SIZE - 4}

@@ -1,10 +1,10 @@
 import { StyleSheet, View } from 'react-native';
-import { HelpCard } from 'src/components/domain/help/HelpCard';
+import { QuestionCard } from 'src/components/domain/question/QuestionCard';
 
-export const Help = () => {
+export const Question = () => {
   return (
     <View style={styles.container}>
-      <HelpCard />
+      <QuestionCard />
     </View>
   );
 };

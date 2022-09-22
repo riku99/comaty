@@ -3,13 +3,13 @@ import { useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { theme } from 'src/styles';
 import { Activity } from './Activity';
-import { Help } from './Help';
+import { Question } from './Question';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 type TopTabParamList = {
   Activity: undefined;
-  Help: undefined;
+  Question: undefined;
 };
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
@@ -51,10 +51,10 @@ export const HomeScreen = ({ navigation }: Props) => {
           }}
         />
         <TopTab.Screen
-          name="Help"
-          component={Help}
+          name="Question"
+          component={Question}
           options={{
-            tabBarLabel: 'ヘルプ！',
+            tabBarLabel: 'そこ質',
           }}
         />
       </TopTab.Navigator>

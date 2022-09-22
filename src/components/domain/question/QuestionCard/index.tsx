@@ -7,7 +7,7 @@ const image =
 
 const images = [image, image, image, image];
 
-export const HelpCard = () => {
+export const QuestionCard = () => {
   const getImageStyle = (
     index: number
   ): {

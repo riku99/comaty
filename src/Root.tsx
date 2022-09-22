@@ -25,6 +25,12 @@ export const Root = () => {
     }
   }, [initialData, setLoggedIn]);
 
+  useEffect(() => {
+    if (!contentsCreationModalVisible) {
+      bottomSheetRef.current?.close();
+    }
+  }, [contentsCreationModalVisible]);
+
   return (
     <>
       <RootStack />
@@ -67,6 +73,6 @@ const styles = StyleSheet.create({
   },
   bottomSheetButtonGroups: {
     width: '80%',
-    marginTop: 40,
+    marginTop: '10%',
   },
 });

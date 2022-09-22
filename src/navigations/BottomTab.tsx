@@ -1,4 +1,8 @@
-import { AntDesign } from '@expo/vector-icons';
+import {
+  FontAwesome,
+  Ionicons,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -44,8 +48,12 @@ export const BottomTab = React.memo(() => {
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="home" size={ICON_SIZE} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons
+              name={focused ? 'home-minus' : 'home-minus-outline'}
+              size={ICON_SIZE + 2}
+              color={theme.black}
+            />
           ),
         }}
       />
@@ -53,8 +61,12 @@ export const BottomTab = React.memo(() => {
         name="NearbyUsers"
         component={NearbyUsersScreen}
         options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={ICON_SIZE} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={focused ? 'md-search' : 'md-search-outline'}
+              size={ICON_SIZE + 2}
+              color={theme.black}
+            />
           ),
         }}
       />
@@ -80,8 +92,14 @@ export const BottomTab = React.memo(() => {
         name="ChatList"
         component={ChatList}
         options={{
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="message1" size={ICON_SIZE} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name={
+                focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'
+              }
+              size={ICON_SIZE}
+              color={theme.black}
+            />
           ),
         }}
       />
@@ -91,8 +109,12 @@ export const BottomTab = React.memo(() => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={ICON_SIZE} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome
+              name={focused ? 'user' : 'user-o'}
+              size={ICON_SIZE - 1}
+              color={theme.black}
+            />
           ),
         }}
       />

@@ -3,33 +3,49 @@ import {
   Ionicons,
   MaterialCommunityIcons,
 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { Pressable, StyleSheet, View } from 'react-native';
+import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { theme } from 'src/styles';
 
 const CreationButton = ({
   label,
   children,
+  onPress,
 }: {
   label: string;
   children: JSX.Element;
+  onPress: () => void;
 }) => {
   return (
     <View style={styles.buttonContainer}>
-      <Pressable style={styles.button}>{children}</Pressable>
+      <Pressable style={styles.button} onPress={onPress}>
+        {children}
+      </Pressable>
       <Text style={styles.label}>{label}</Text>
     </View>
   );
 };
 
 export const ContentsCreationButtonGroup = () => {
+  const navigation = useNavigation<RootNavigationProp<any>>();
+  const { setContentsCreationModalVisible, contentsCreationModalVisible } =
+    useContentsCreationVisible();
+
   return (
     <View style={styles.body}>
-      <CreationButton label="投稿">
+      <CreationButton
+        label="投稿"
+        onPress={() => {
+          navigation.navigate('PostCreation');
+          setContentsCreationModalVisible(false);
+        }}
+      >
         <Ionicons name="create" size={ICON_SIZE} color={theme.secondary} />
       </CreationButton>
 
-      <CreationButton label="ストーリー">
+      <CreationButton label="ストーリー" onPress={() => {}}>
         <MaterialCommunityIcons
           name="star-shooting"
           size={ICON_SIZE}
@@ -37,7 +53,7 @@ export const ContentsCreationButtonGroup = () => {
         />
       </CreationButton>
 
-      <CreationButton label="ヘルプ">
+      <CreationButton label="ヘルプ" onPress={() => {}}>
         <FontAwesome5
           name="hands-helping"
           size={ICON_SIZE - 4}

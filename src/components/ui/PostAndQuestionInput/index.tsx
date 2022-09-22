@@ -16,7 +16,7 @@ type Props = {
   onSelectedImageDeletePress: (url: string) => void;
 };
 
-export const PostInput = ({
+export const PostAndQuestionInput = ({
   text,
   setText,
   placeholder,

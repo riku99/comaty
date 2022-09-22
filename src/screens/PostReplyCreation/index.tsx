@@ -4,7 +4,7 @@ import { ImagePickerResponse } from 'react-native-image-picker';
 import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
-import { PostInput } from 'src/components/ui/PostInput';
+import { PostAndQuestionInput } from 'src/components/ui/PostAndQuestionInput';
 import {
   PostDetailScreenDataDocument,
   useCreatePostMutation,
@@ -83,7 +83,7 @@ export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
 
   return (
     <View style={styles.container}>
-      <PostInput
+      <PostAndQuestionInput
         text={text}
         setText={setText}
         placeholder={'気軽に返信、質問しましょう！'}

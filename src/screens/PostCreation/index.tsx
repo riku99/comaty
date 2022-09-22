@@ -4,7 +4,7 @@ import { ImagePickerResponse } from 'react-native-image-picker';
 import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
-import { PostInput } from 'src/components/ui/PostInput';
+import { PostAndQuestionInput } from 'src/components/ui/PostAndQuestionInput';
 import { POST_MAX_TEXT_COUNT } from 'src/constants';
 import { processImagesForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { useCreatePost, useCreatingPost } from 'src/hooks/post';
@@ -74,7 +74,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <PostInput
+      <PostAndQuestionInput
         text={text}
         setText={setText}
         placeholder={'気軽に投稿、共有しましょう！'}

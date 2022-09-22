@@ -1,8 +1,4 @@
-import {
-  FontAwesome5,
-  Ionicons,
-  MaterialCommunityIcons,
-} from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -60,9 +56,9 @@ export const ContentsCreationButtonGroup = () => {
           setContentsCreationModalVisible(false);
         }}
       >
-        <FontAwesome5
-          name="hands-helping"
-          size={ICON_SIZE - 4}
+        <MaterialCommunityIcons
+          name="message-question"
+          size={ICON_SIZE}
           color={theme.secondary}
         />
       </CreationButton>

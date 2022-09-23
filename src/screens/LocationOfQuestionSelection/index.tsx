@@ -1,21 +1,14 @@
 import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
-import {
-  NativeModules,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
 import { ApproximateRange } from 'src/generated/graphql';
+import { searchForLocations } from 'src/nativeModules/localSearch';
 import { formatAddress } from 'src/utils';
 import { MapInputAndCandidate } from './MapInputAndCandidate';
-
-const { LocalSearchManager } = NativeModules;
 
 type Props = RootNavigationScreenProp<'LocationOfQuestionSelection'>;
 
@@ -68,8 +61,10 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
     }
 
     try {
-      const l = await LocalSearchManager.searchForLocations(text);
-      setCandidateLocations(l.slice(0, 5));
+      const results = await searchForLocations(text);
+      setCandidateLocations(
+        results.filter((l) => l.subtitle !== '近くを検索').slice(0, 5)
+      );
     } catch (e) {
       console.log(e);
     }

@@ -5,6 +5,7 @@ import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
+import { ApproximateRange } from 'src/generated/graphql';
 import { formatAddress } from 'src/utils';
 
 type Props = RootNavigationScreenProp<'LocationOfQuestionSelection'>;
@@ -15,6 +16,9 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
     longitude: number;
   }>();
   const [selectedLocationAddress, setSelectedLocationAddress] = useState('');
+  const [displayRange, setDisplayRange] = useState<ApproximateRange>(
+    ApproximateRange.Normal
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -57,12 +61,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
           <Text style={[styles.askTitle, { marginTop: 14 }]}>
             どの辺にいる人に質問する？
           </Text>
-          <Text
-            style={{
-              fontSize: 15,
-              marginTop: 8,
-            }}
-          >
+          <Text style={styles.selectedAddress}>
             {selectedLocationAddress
               ? selectedLocationAddress
               : 'マップから選択してください🙃'}
@@ -73,14 +72,35 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
           </Text>
 
           <VStack
-            space={18}
+            space={20}
             style={{
               marginTop: 12,
             }}
           >
-            <RadioButton size={22} isSelected={false} label="広め" />
-            <RadioButton size={22} isSelected={true} label="普通" />
-            <RadioButton size={22} isSelected={false} label="すぐ近く" />
+            <RadioButton
+              size={22}
+              isSelected={displayRange === ApproximateRange.Wide}
+              label="広め"
+              onPress={() => {
+                setDisplayRange(ApproximateRange.Wide);
+              }}
+            />
+            <RadioButton
+              size={22}
+              isSelected={displayRange === ApproximateRange.Normal}
+              label="普通"
+              onPress={() => {
+                setDisplayRange(ApproximateRange.Normal);
+              }}
+            />
+            <RadioButton
+              size={22}
+              isSelected={displayRange === ApproximateRange.Near}
+              label="すぐ近く"
+              onPress={() => {
+                setDisplayRange(ApproximateRange.Near);
+              }}
+            />
           </VStack>
         </View>
       </ScrollView>
@@ -102,5 +122,9 @@ const styles = StyleSheet.create({
   askTitle: {
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  selectedAddress: {
+    fontSize: 15,
+    marginTop: 8,
   },
 });

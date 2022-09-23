@@ -16,6 +16,12 @@ export type Scalars = {
   Upload: any;
 };
 
+export enum ApproximateRange {
+  Near = 'NEAR',
+  Normal = 'NORMAL',
+  Wide = 'WIDE'
+}
+
 export type CreatePostInput = {
   images?: InputMaybe<Array<Scalars['Upload']>>;
   replyTo?: InputMaybe<Scalars['Int']>;
@@ -23,8 +29,11 @@ export type CreatePostInput = {
 };
 
 export type CreateQuestionInput = {
+  displayRange: ApproximateRange;
   images?: InputMaybe<Array<Scalars['Upload']>>;
   isAnonymity: Scalars['Boolean'];
+  latitude: Scalars['Int'];
+  longitude: Scalars['Int'];
   text: Scalars['String'];
 };
 
@@ -191,9 +200,12 @@ export type QueryUserArgs = {
 export type Question = {
   __typename?: 'Question';
   createdAt: Scalars['String'];
+  displayRange: ApproximateRange;
   id: Scalars['Int'];
   images?: Maybe<Array<Maybe<QuestionImage>>>;
   isAnonymity: Scalars['Boolean'];
+  latitude: Scalars['Int'];
+  longitude: Scalars['Int'];
   text: Scalars['String'];
   user?: Maybe<User>;
 };

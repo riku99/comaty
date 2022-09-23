@@ -34,11 +34,13 @@ class LocalSearchManager: NSObject, MKLocalSearchCompleterDelegate {
   }
   
   func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-    let results = completer.results.compactMap{ (result) -> [String: String] in
-      return ["title": result.title, "subtitle": result.subtitle]
+    if !completer.results.isEmpty {
+      let results = completer.results.compactMap{ (result) -> [String: String] in
+        return ["title": result.title, "subtitle": result.subtitle]
+      }
+      self.searchForLocationsResolver?(results)
+    } else {
+      self.searchForLocationsRejecter?("notFound", "検索候補が見つかりませんでした。", nil)
     }
-    
-    print(results[0])
-    self.searchForLocationsResolver?(results)
   }
 }

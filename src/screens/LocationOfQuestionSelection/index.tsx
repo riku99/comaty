@@ -1,12 +1,10 @@
 import { Button, Text } from '@rneui/themed';
-import debounce from 'lodash.debounce';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import {
   NativeModules,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import Geocoder from 'react-native-geocoding';
@@ -15,6 +13,7 @@ import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
 import { ApproximateRange } from 'src/generated/graphql';
 import { formatAddress } from 'src/utils';
+import { MapInputAndCandidate } from './MapInputAndCandidate';
 
 const { LocalSearchManager } = NativeModules;
 
@@ -29,8 +28,13 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   const [displayRange, setDisplayRange] = useState<ApproximateRange>(
     ApproximateRange.Normal
   );
-  const mapInputRef = useRef<TextInput>(null);
   const [canAnnotatePin, setCanAnnotatePin] = useState(true);
+  const [candidateLocations, setCandidateLocations] = useState<
+    {
+      title: string;
+      subtitle: string;
+    }[]
+  >([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -59,24 +63,16 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
 
   const onChangeSearchText = async (text: string) => {
     if (!text) {
+      setCandidateLocations([]);
       return;
     }
 
     try {
       const l = await LocalSearchManager.searchForLocations(text);
-      console.log(l);
+      setCandidateLocations(l.slice(0, 6));
     } catch (e) {
       console.log(e);
     }
-
-    // try {
-    //   const resultJson = await Geocoder.from(text);
-    //   resultJson.results.forEach((result) => {
-    //     console.log(result);
-    //   });
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
 
   return (
@@ -108,26 +104,9 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
               alignSelf: 'center',
             }}
           >
-            <TextInput
-              ref={mapInputRef}
-              placeholder="マップで検索"
-              onChangeText={debounce((text) => {
-                onChangeSearchText(text);
-              }, 1000)}
-              style={{
-                backgroundColor: '#fff',
-                height: 44,
-                borderRadius: 22,
-                paddingHorizontal: 14,
-                fontSize: 16,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 3,
-                  height: 8,
-                },
-                shadowOpacity: 0.24,
-                shadowRadius: 22,
-              }}
+            <MapInputAndCandidate
+              locationTitles={candidateLocations.map((l) => l.title)}
+              onChangeText={onChangeSearchText}
               onFocus={() => {
                 setCanAnnotatePin(false);
               }}

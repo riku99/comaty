@@ -11,6 +11,10 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		28ED0186FB6310760BEDE97B /* Pods_comaty.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA8981786ACBA7767DEE150 /* Pods_comaty.framework */; };
+		324D319C28DD928800AF5D8B /* LocalSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324D319B28DD928800AF5D8B /* LocalSearchManager.swift */; };
+		324D319F28DD96DF00AF5D8B /* LocalSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 324D319E28DD96DF00AF5D8B /* LocalSearchManager.m */; };
+		324D31A028DD96DF00AF5D8B /* LocalSearchManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 324D319E28DD96DF00AF5D8B /* LocalSearchManager.m */; };
+		324D31A128DD96EF00AF5D8B /* LocalSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 324D319B28DD928800AF5D8B /* LocalSearchManager.swift */; };
 		327257472876CDA40054B36B /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		327257482876CDA40054B36B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3272574D2876CDA40054B36B /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
@@ -35,6 +39,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = comaty/main.m; sourceTree = "<group>"; };
 		25F44B760BFFB723017D3453 /* Pods_comaty_dev.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_comaty_dev.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BF11013A26730E7F66BD1A6 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-comaty-dev/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		324D319B28DD928800AF5D8B /* LocalSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalSearchManager.swift; sourceTree = "<group>"; };
+		324D319D28DD936B00AF5D8B /* comaty-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "comaty-Bridging-Header.h"; sourceTree = "<group>"; };
+		324D319E28DD96DF00AF5D8B /* LocalSearchManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LocalSearchManager.m; sourceTree = "<group>"; };
 		327257552876CDA40054B36B /* comaty-dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "comaty-dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		327257562876CDA40054B36B /* comaty copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "comaty copy-Info.plist"; path = "/Users/riku/Myapp/comaty/ios/comaty copy-Info.plist"; sourceTree = "<absolute>"; };
 		327257582876D0B80054B36B /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -83,6 +90,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
+				324D319E28DD96DF00AF5D8B /* LocalSearchManager.m */,
+				324D319B28DD928800AF5D8B /* LocalSearchManager.swift */,
+				324D319D28DD936B00AF5D8B /* comaty-Bridging-Header.h */,
 			);
 			name = comaty;
 			sourceTree = "<group>";
@@ -758,7 +768,9 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				324D319F28DD96DF00AF5D8B /* LocalSearchManager.m in Sources */,
 				93AC1D634B36AB7DF90698DF /* ExpoModulesProvider.swift in Sources */,
+				324D319C28DD928800AF5D8B /* LocalSearchManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +781,8 @@
 				327257472876CDA40054B36B /* AppDelegate.mm in Sources */,
 				327257482876CDA40054B36B /* main.m in Sources */,
 				3272575F2879770E0054B36B /* ExpoModulesProvider.swift in Sources */,
+				324D31A028DD96DF00AF5D8B /* LocalSearchManager.m in Sources */,
+				324D31A128DD96EF00AF5D8B /* LocalSearchManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -859,6 +873,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-development";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "comaty-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -885,6 +900,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.riku.comaty-development";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "comaty-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

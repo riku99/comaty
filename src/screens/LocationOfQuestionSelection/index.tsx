@@ -2,6 +2,7 @@ import { Button, Text } from '@rneui/themed';
 import debounce from 'lodash.debounce';
 import { useLayoutEffect, useRef, useState } from 'react';
 import {
+  NativeModules,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,6 +15,8 @@ import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
 import { ApproximateRange } from 'src/generated/graphql';
 import { formatAddress } from 'src/utils';
+
+const { LocalSearchManager } = NativeModules;
 
 type Props = RootNavigationScreenProp<'LocationOfQuestionSelection'>;
 
@@ -55,19 +58,25 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   };
 
   const onChangeSearchText = async (text: string) => {
-    console.log(text);
     if (!text) {
       return;
     }
 
     try {
-      const resultJson = await Geocoder.from(text);
-      resultJson.results.forEach((result) => {
-        console.log(result);
-      });
+      const l = await LocalSearchManager.searchForLocations(text);
+      console.log(l);
     } catch (e) {
       console.log(e);
     }
+
+    // try {
+    //   const resultJson = await Geocoder.from(text);
+    //   resultJson.results.forEach((result) => {
+    //     console.log(result);
+    //   });
+    // } catch (e) {
+    //   console.log(e);
+    // }
   };
 
   return (

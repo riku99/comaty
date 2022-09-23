@@ -31,6 +31,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
       subtitle: string;
     }[]
   >([]);
+  const [mapInputText, setMapInputText] = useState('');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,6 +66,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   };
 
   const onChangeSearchText = async (text: string) => {
+    setMapInputText(text);
     if (!text) {
       setCandidateLocations([]);
       return;
@@ -81,6 +83,8 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   };
 
   const onCandidateLocationPress = async (index: number) => {
+    setCandidateLocations([]);
+    setMapInputText('');
     const location = candidateLocations.find((_, i) => i === index);
     if (!location) {
       return;
@@ -123,6 +127,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
             }}
           >
             <MapInputAndCandidate
+              inputText={mapInputText}
               locationTitles={candidateLocations.map((l) => l.title)}
               onChangeText={onChangeSearchText}
               onFocus={() => {
@@ -134,6 +139,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
                 }, 600);
               }}
               onInputClosePress={() => {
+                setMapInputText('');
                 setCandidateLocations([]);
               }}
               onCandidateLocationPress={onCandidateLocationPress}
@@ -145,7 +151,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
               どの辺にいる人に質問する？
             </Text>
             <Text style={styles.selectedAddress}>
-              {selectedLocationAddress
+              {!!selectedLocationAddress
                 ? selectedLocationAddress
                 : 'マップから選択してください🙃'}
             </Text>

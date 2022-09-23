@@ -10,6 +10,7 @@ type Props = {
   locationTitles: string[];
   onInputClosePress: () => void;
   onCandidateLocationPress: (index: number) => void;
+  inputText: string;
 };
 
 export const MapInputAndCandidate = ({
@@ -19,6 +20,7 @@ export const MapInputAndCandidate = ({
   onChangeText,
   onInputClosePress,
   onCandidateLocationPress,
+  inputText,
 }: Props) => {
   const inputRef = useRef<TextInput>(null);
 
@@ -34,6 +36,7 @@ export const MapInputAndCandidate = ({
       >
         <TextInput
           ref={inputRef}
+          value={inputText}
           placeholder="マップで検索"
           onChangeText={onChangeText}
           style={[
@@ -46,12 +49,7 @@ export const MapInputAndCandidate = ({
           onBlur={onBlur}
         />
         {!!locationTitles.length && (
-          <Pressable
-            onPress={() => {
-              inputRef.current?.clear();
-              onInputClosePress();
-            }}
-          >
+          <Pressable onPress={onInputClosePress}>
             <AntDesign name="close" size={18} color="black" />
           </Pressable>
         )}

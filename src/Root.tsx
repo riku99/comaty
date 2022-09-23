@@ -2,6 +2,8 @@ import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native-animatable';
+import Config from 'react-native-config';
+import Geocoder from 'react-native-geocoding';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import { useGetInitialDataQuery } from 'src/generated/graphql';
@@ -30,6 +32,10 @@ export const Root = () => {
       bottomSheetRef.current?.close();
     }
   }, [contentsCreationModalVisible]);
+
+  useEffect(() => {
+    Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
+  }, []);
 
   return (
     <>

@@ -35,3 +35,11 @@ export const getExtention = (uri?: string) => {
 
   return ext;
 };
+
+export const formatAddress = (address: string) => {
+  // ^　= 行の先頭, \d = [0-9], + = 直前の一回以上の繰り返し
+  return address
+    .replace(/^日本、/, '')
+    .replace(/〒\d+-\d+/, '')
+    .trim();
+};

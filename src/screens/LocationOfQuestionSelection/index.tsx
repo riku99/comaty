@@ -1,6 +1,6 @@
 import { Button, Text } from '@rneui/themed';
 import debounce from 'lodash.debounce';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,6 +26,8 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   const [displayRange, setDisplayRange] = useState<ApproximateRange>(
     ApproximateRange.Normal
   );
+  const mapInputRef = useRef<TextInput>(null);
+  const [canAnnotatePin, setCanAnnotatePin] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -34,6 +36,10 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   }, [navigation]);
 
   const onMapPress = async ({ nativeEvent }: MapPressEvent) => {
+    if (!canAnnotatePin) {
+      return;
+    }
+
     setSelectedCoodinate(nativeEvent.coordinate);
     try {
       const resultJson = await Geocoder.from(
@@ -94,6 +100,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
             }}
           >
             <TextInput
+              ref={mapInputRef}
               placeholder="マップで検索"
               onChangeText={debounce((text) => {
                 onChangeSearchText(text);
@@ -111,6 +118,14 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
                 },
                 shadowOpacity: 0.24,
                 shadowRadius: 22,
+              }}
+              onFocus={() => {
+                setCanAnnotatePin(false);
+              }}
+              onBlur={() => {
+                setTimeout(() => {
+                  setCanAnnotatePin(true);
+                }, 600);
               }}
             />
           </View>

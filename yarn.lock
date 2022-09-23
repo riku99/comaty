@@ -2526,6 +2526,11 @@
   resolved "https://registry.yarnpkg.com/@types/extract-files/-/extract-files-8.1.1.tgz#11b67e795ad2c8b483431e8d4f190db2fd22944b"
   integrity sha512-dMJJqBqyhsfJKuK7p7HyyNmki7qj1AlwhUKWx6KrU7i1K2T2SPsUsSUTWFmr/sEM1q8rfR8j5IyUmYrDbrhfjQ==
 
+"@types/geojson@^7946.0.8":
+  version "7946.0.10"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.10.tgz#6dfbf5ea17142f7f9a043809f1cd4c448cb68249"
+  integrity sha512-Nmh0K3iWQJzniTuPRcJn5hxXkfB1T1pgB89SBig5PlJQU5yocazeu4jATJlaA0GYFKWMqDdvYemoSnF2pXgLVA==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"
@@ -8290,6 +8295,13 @@ react-native-indicators@^0.17.0:
   integrity sha512-s23em477GHGxWeGczWrixScAZD6tQU4mx1fttlrwhEGKOxhBgp55Kh3RoD9Wj4yna4e5W35xQNoPqoJAT6QW5A==
   dependencies:
     prop-types "^15.5.10"
+
+react-native-maps@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.3.1.tgz#9309348c3a8b0158bb9a96a7667a734296fce680"
+  integrity sha512-qvsDr1Nzp36FQ06cWkOGvJyu5/7Cz2NMKimOGGmgphvCWmh/k3JwUFkID44OS/l7qSBsCJsZsI6MpkRX87QBuQ==
+  dependencies:
+    "@types/geojson" "^7946.0.8"
 
 react-native-mmkv@^2.4.3:
   version "2.4.3"

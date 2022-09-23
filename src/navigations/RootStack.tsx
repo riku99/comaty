@@ -7,12 +7,12 @@ import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
 import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
-import { QuestionCreationScreen } from 'src/screens/QuestionCreation';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { UserProfileScreen } from 'src/screens/UserProfile';
 import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
+import { QuestionCreationStack } from './QuestionCreationStack';
 
 export type RootStackParamList = {
   BottomTab: undefined;
@@ -31,7 +31,7 @@ export type RootStackParamList = {
   PostDetail: {
     id: number;
   };
-  QuestionCreation: undefined;
+  QuestionCreationStack: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -89,8 +89,9 @@ export const RootStack = () => {
               component={PostReplyCreationScreen}
             />
             <Stack.Screen
-              name="QuestionCreation"
-              component={QuestionCreationScreen}
+              name="QuestionCreationStack"
+              component={QuestionCreationStack}
+              options={{ headerShown: false }}
             />
           </Stack.Group>
         </>

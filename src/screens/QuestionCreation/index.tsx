@@ -20,7 +20,9 @@ export const QuestionCreationScreen = ({ navigation }: Props) => {
         <HeaderRightCreationButton
           title="次へ"
           disable={text.length === 0 || text.length > QUESTION_MAX_TEXT_COUNT}
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('LocationOfQuestionSelection');
+          }}
         />
       ),
     });

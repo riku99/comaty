@@ -26,8 +26,7 @@ const CreationButton = ({
 
 export const ContentsCreationButtonGroup = () => {
   const navigation = useNavigation<RootNavigationProp<any>>();
-  const { setContentsCreationModalVisible, contentsCreationModalVisible } =
-    useContentsCreationVisible();
+  const { setContentsCreationModalVisible } = useContentsCreationVisible();
 
   return (
     <View style={styles.body}>
@@ -52,7 +51,7 @@ export const ContentsCreationButtonGroup = () => {
       <CreationButton
         label="そこ質"
         onPress={() => {
-          navigation.navigate('QuestionCreation');
+          navigation.navigate('QuestionCreationStack');
           setContentsCreationModalVisible(false);
         }}
       >

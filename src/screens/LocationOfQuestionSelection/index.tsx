@@ -1,8 +1,9 @@
 import { Button, Text } from '@rneui/themed';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
+import { CheckBox } from 'src/components/ui/CheckBox';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
 import { ApproximateRange } from 'src/generated/graphql';
@@ -16,6 +17,7 @@ import { MapInputAndCandidate } from './MapInputAndCandidate';
 type Props = RootNavigationScreenProp<'LocationOfQuestionSelection'>;
 
 export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
+  const mapRef = useRef<MapView>();
   const [selectedCoodinate, setSelectedCoodinate] = useState<{
     latitude: number;
     longitude: number;
@@ -32,6 +34,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
     }[]
   >([]);
   const [mapInputText, setMapInputText] = useState('');
+  const [isAnonymity, setIsAnonymity] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,6 +45,11 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   useEffect(() => {
     if (selectedCoodinate) {
       (async () => {
+        mapRef.current?.animateToRegion({
+          ...selectedCoodinate,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        });
         try {
           const resultJson = await Geocoder.from(
             selectedCoodinate.latitude,
@@ -106,6 +114,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <MapView
+            ref={mapRef}
             style={styles.map}
             initialRegion={{
               latitude: 35.691272864352946,
@@ -191,6 +200,16 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
                 }}
               />
             </VStack>
+
+            <View style={styles.anonymityContainer}>
+              <CheckBox
+                label="匿名で投稿"
+                isChecked={isAnonymity}
+                onPress={() => {
+                  setIsAnonymity(!isAnonymity);
+                }}
+              />
+            </View>
           </View>
         </ScrollView>
 
@@ -198,6 +217,9 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
           disabled={!selectedCoodinate}
           containerStyle={{
             paddingHorizontal: 16,
+          }}
+          buttonStyle={{
+            height: 48,
           }}
         >
           質問を作成する
@@ -215,7 +237,7 @@ const styles = StyleSheet.create({
     paddingBottom: 54,
   },
   map: {
-    height: 340,
+    height: 300,
     width: '100%',
   },
   withoutMapContents: {
@@ -228,5 +250,8 @@ const styles = StyleSheet.create({
   selectedAddress: {
     fontSize: 15,
     marginTop: 8,
+  },
+  anonymityContainer: {
+    marginTop: 34,
   },
 });

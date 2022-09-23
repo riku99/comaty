@@ -19,13 +19,18 @@ export const MapInputAndCandidate = ({
       <TextInput
         placeholder="マップで検索"
         onChangeText={onChangeText}
-        style={styles.input}
+        style={[
+          styles.input,
+          {
+            borderRadius: locationTitles.length ? 0 : 22,
+          },
+        ]}
         onFocus={onFocus}
         onBlur={onBlur}
       />
       {locationTitles.map((l, index) => {
         return (
-          <View key={index}>
+          <View key={index} style={styles.candidateLocationBox}>
             <Text>{l}</Text>
           </View>
         );
@@ -35,10 +40,12 @@ export const MapInputAndCandidate = ({
 };
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    paddingHorizontal: 14,
+  },
   input: {
     backgroundColor: '#fff',
     height: 44,
-    borderRadius: 22,
     paddingHorizontal: 14,
     fontSize: 16,
     shadowColor: '#000',
@@ -48,5 +55,11 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.24,
     shadowRadius: 22,
+  },
+  candidateLocationBox: {
+    height: 42,
+    backgroundColor: '#fff',
+    paddingHorizontal: 14,
+    justifyContent: 'center',
   },
 });

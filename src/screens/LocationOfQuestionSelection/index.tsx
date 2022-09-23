@@ -69,7 +69,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
 
     try {
       const l = await LocalSearchManager.searchForLocations(text);
-      setCandidateLocations(l.slice(0, 6));
+      setCandidateLocations(l.slice(0, 5));
     } catch (e) {
       console.log(e);
     }

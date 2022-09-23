@@ -10,4 +10,6 @@
 
 @interface RCT_EXTERN_MODULE(LocalSearchManager, NSObject)
 RCT_EXTERN_METHOD(searchForLocations: (NSString *)text resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(searchForCoodinate: (NSString *)query resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 @end

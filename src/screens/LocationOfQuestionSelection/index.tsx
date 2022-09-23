@@ -1,12 +1,15 @@
 import { Button, Text } from '@rneui/themed';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
 import { ApproximateRange } from 'src/generated/graphql';
-import { searchForLocations } from 'src/nativeModules/localSearch';
+import {
+  searchForCoodinate,
+  searchForLocations,
+} from 'src/nativeModules/localSearch';
 import { formatAddress } from 'src/utils';
 import { MapInputAndCandidate } from './MapInputAndCandidate';
 
@@ -35,23 +38,30 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    if (selectedCoodinate) {
+      (async () => {
+        try {
+          const resultJson = await Geocoder.from(
+            selectedCoodinate.latitude,
+            selectedCoodinate.longitude
+          );
+          setSelectedLocationAddress(
+            formatAddress(resultJson.results[0].formatted_address)
+          );
+        } catch (e) {
+          console.log(e);
+        }
+      })();
+    }
+  }, [selectedCoodinate]);
+
   const onMapPress = async ({ nativeEvent }: MapPressEvent) => {
     if (!canAnnotatePin) {
       return;
     }
 
     setSelectedCoodinate(nativeEvent.coordinate);
-    try {
-      const resultJson = await Geocoder.from(
-        nativeEvent.coordinate.latitude,
-        nativeEvent.coordinate.longitude
-      );
-      setSelectedLocationAddress(
-        formatAddress(resultJson.results[0].formatted_address)
-      );
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const onChangeSearchText = async (text: string) => {
@@ -65,6 +75,19 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
       setCandidateLocations(
         results.filter((l) => l.subtitle !== '近くを検索').slice(0, 5)
       );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onCandidateLocationPress = async (index: number) => {
+    const location = candidateLocations.find((_, i) => i === index);
+    if (!location) {
+      return;
+    }
+    try {
+      const coodinate = await searchForCoodinate(location.subtitle);
+      setSelectedCoodinate(coodinate);
     } catch (e) {
       console.log(e);
     }
@@ -110,6 +133,10 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
                   setCanAnnotatePin(true);
                 }, 600);
               }}
+              onInputClosePress={() => {
+                setCandidateLocations([]);
+              }}
+              onCandidateLocationPress={onCandidateLocationPress}
             />
           </View>
 
@@ -123,7 +150,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
                 : 'マップから選択してください🙃'}
             </Text>
 
-            <Text style={[styles.askTitle, { marginTop: 40 }]}>
+            <Text style={[styles.askTitle, { marginTop: 34 }]}>
               そこからどれくらいの範囲にいるユーザーに質問する？
             </Text>
 

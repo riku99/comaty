@@ -1,11 +1,15 @@
+import { AntDesign } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { useRef } from 'react';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 type Props = {
   onFocus: () => void;
   onBlur: () => void;
   onChangeText: (text: string) => void;
   locationTitles: string[];
+  onInputClosePress: () => void;
+  onCandidateLocationPress: (index: number) => void;
 };
 
 export const MapInputAndCandidate = ({
@@ -13,26 +17,56 @@ export const MapInputAndCandidate = ({
   onBlur,
   locationTitles,
   onChangeText,
+  onInputClosePress,
+  onCandidateLocationPress,
 }: Props) => {
+  const inputRef = useRef<TextInput>(null);
+
   return (
     <View>
-      <TextInput
-        placeholder="マップで検索"
-        onChangeText={onChangeText}
+      <View
         style={[
-          styles.input,
+          styles.inputContainer,
           {
             borderRadius: locationTitles.length ? 0 : 22,
           },
         ]}
-        onFocus={onFocus}
-        onBlur={onBlur}
-      />
+      >
+        <TextInput
+          ref={inputRef}
+          placeholder="マップで検索"
+          onChangeText={onChangeText}
+          style={[
+            styles.input,
+            {
+              borderRadius: locationTitles.length ? 0 : 22,
+            },
+          ]}
+          onFocus={onFocus}
+          onBlur={onBlur}
+        />
+        {!!locationTitles.length && (
+          <Pressable
+            onPress={() => {
+              inputRef.current?.clear();
+              onInputClosePress();
+            }}
+          >
+            <AntDesign name="close" size={18} color="black" />
+          </Pressable>
+        )}
+      </View>
       {locationTitles.map((l, index) => {
         return (
-          <View key={index} style={styles.candidateLocationBox}>
+          <Pressable
+            key={index}
+            style={styles.candidateLocationBox}
+            onPress={() => {
+              onCandidateLocationPress(index);
+            }}
+          >
             <Text>{l}</Text>
-          </View>
+          </Pressable>
         );
       })}
     </View>
@@ -41,9 +75,6 @@ export const MapInputAndCandidate = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    paddingHorizontal: 14,
-  },
-  input: {
     backgroundColor: '#fff',
     height: 44,
     paddingHorizontal: 14,
@@ -55,9 +86,15 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.24,
     shadowRadius: 22,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  input: {
+    width: '88%',
   },
   candidateLocationBox: {
-    height: 42,
+    height: 44,
     backgroundColor: '#fff',
     paddingHorizontal: 14,
     justifyContent: 'center',

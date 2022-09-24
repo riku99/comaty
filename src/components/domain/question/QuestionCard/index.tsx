@@ -92,7 +92,7 @@ export const QuestionCard = ({ questionData }: Props) => {
     <View style={styles.body}>
       <View style={styles.top}>
         <View style={styles.imageAndName}>
-          {!isAnonymity && (
+          {!isAnonymity ? (
             <>
               <ProfileImage
                 imageData={user.firstProfileImage}
@@ -104,6 +104,8 @@ export const QuestionCard = ({ questionData }: Props) => {
               />
               <Text style={styles.name}>{user.nickname}</Text>
             </>
+          ) : (
+            <Text style={styles.anonymity}>匿名投稿</Text>
           )}
         </View>
         <Text style={styles.diff}>{getTimeDiff(questionData.createdAt)}</Text>
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   images: {
-    width: '75%',
+    width: '100%',
     marginTop: 14,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -215,5 +217,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  anonymity: {
+    fontWeight: 'bold',
+    color: '#a3a3a3',
   },
 });

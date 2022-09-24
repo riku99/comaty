@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeScreen } from 'src/screens/Home';
 import { PostDetailScreen } from 'src/screens/PostDetail';
+import { QuestionAndReplysScreen } from 'src/screens/QuestionAndReplys';
 
 export type HomeStackParamList = {
   HomeMain: undefined;
@@ -21,6 +22,10 @@ export const HomeStack = () => {
     >
       <Stack.Screen name="HomeMain" component={HomeScreen} />
       <Stack.Screen name="PostDetail" component={PostDetailScreen} />
+      <Stack.Screen
+        name="QuestionAndReplys"
+        component={QuestionAndReplysScreen}
+      />
     </Stack.Navigator>
   );
 };

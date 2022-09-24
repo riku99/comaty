@@ -1,5 +1,6 @@
 import { Entypo } from '@expo/vector-icons';
 import { MenuAction, MenuView } from '@react-native-menu/menu';
+import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
@@ -23,6 +24,7 @@ export const QuestionCard = ({ questionData }: Props) => {
       title: '報告',
     },
   ]);
+  const navigation = useNavigation<RootNavigationProp<any>>();
 
   const getImageStyle = (
     index: number
@@ -88,8 +90,12 @@ export const QuestionCard = ({ questionData }: Props) => {
     }
   }, [idData, user.id]);
 
+  const onBodyPress = () => {
+    navigation.navigate('QuestionAndReplys');
+  };
+
   return (
-    <View style={styles.body}>
+    <Pressable style={styles.body} onPress={onBodyPress}>
       <View style={styles.top}>
         <View style={styles.imageAndName}>
           {!isAnonymity ? (
@@ -144,7 +150,7 @@ export const QuestionCard = ({ questionData }: Props) => {
           </Pressable>
         </MenuView>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

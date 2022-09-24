@@ -1,0 +1,13 @@
+query QuestionScreenData($first: Int, $after: String) {
+  questions(first: $first, after: $after) {
+    edges {
+      node {
+        ...QuestionCard
+      }
+      cursor
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}

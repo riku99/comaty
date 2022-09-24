@@ -1,0 +1,16 @@
+fragment QuestionCard on Question {
+  id
+  text
+  createdAt
+  isAnonymity
+  user {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+  images {
+    url
+  }
+}

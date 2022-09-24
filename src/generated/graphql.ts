@@ -165,6 +165,7 @@ export type Query = {
   nearbyUsers: UserConnection;
   post: Post;
   posts: PostConnection;
+  questions: QuestionConnection;
   stories: StoryConnection;
   user: User;
 };
@@ -182,6 +183,12 @@ export type QueryPostArgs = {
 
 
 export type QueryPostsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryQuestionsArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
 };
@@ -208,6 +215,18 @@ export type Question = {
   longitude: Scalars['Float'];
   text: Scalars['String'];
   user?: Maybe<User>;
+};
+
+export type QuestionConnection = {
+  __typename?: 'QuestionConnection';
+  edges: Array<Maybe<QuestionEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type QuestionEdge = {
+  __typename?: 'QuestionEdge';
+  cursor: Scalars['String'];
+  node: Question;
 };
 
 export type QuestionImage = {
@@ -379,11 +398,21 @@ export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, 
 
 export type PostCardFragment = { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null };
 
+export type QuestionCardFragment = { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null };
+
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
 export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
+
+export type QuestionScreenDataQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type QuestionScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityScreenDataQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
@@ -447,6 +476,24 @@ export const ProfileImageFragmentDoc = gql`
   url
 }
     `;
+export const QuestionCardFragmentDoc = gql`
+    fragment QuestionCard on Question {
+  id
+  text
+  createdAt
+  isAnonymity
+  user {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+  images {
+    url
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const UserCardFragmentDoc = gql`
     fragment UserCard on User {
   id
@@ -992,6 +1039,51 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const QuestionScreenDataDocument = gql`
+    query QuestionScreenData($first: Int, $after: String) {
+  questions(first: $first, after: $after) {
+    edges {
+      node {
+        ...QuestionCard
+      }
+      cursor
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}
+    ${QuestionCardFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useQuestionScreenDataQuery__
+ *
+ * To run a query within a React component, call `useQuestionScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionScreenDataQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useQuestionScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>(QuestionScreenDataDocument, options);
+      }
+export function useQuestionScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>(QuestionScreenDataDocument, options);
+        }
+export type QuestionScreenDataQueryHookResult = ReturnType<typeof useQuestionScreenDataQuery>;
+export type QuestionScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionScreenDataLazyQuery>;
+export type QuestionScreenDataQueryResult = Apollo.QueryResult<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>;
 export const ActivityScreenDataDocument = gql`
     query ActivityScreenData($postsFirst: Int, $postsAfter: String, $storiesFirst: Int, $storiesAfter: String) {
   ...ActivityPosts

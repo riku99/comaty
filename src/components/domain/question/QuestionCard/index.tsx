@@ -1,13 +1,16 @@
 import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { QuestionCardFragment } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { getTimeDiff } from 'src/utils';
 
-const image =
-  'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/302700128_776325980258650_5219257444505277210_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=wMXA13UYsY0AX9QY8os&tn=IvOg5e0MTmVxXJmw&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkxOTU3OTY1MTIxMzI0ODMyOQ%3D%3D.2-ccb7-5&oh=00_AT97coUfyK--g4dW99-KTi6UBcOhOmm7HWnCjIM30cPZ-Q&oe=632E9483&_nc_sid=30a2ef';
+type Props = {
+  questionData: QuestionCardFragment;
+};
 
-const images = [];
-
-export const QuestionCard = () => {
+export const QuestionCard = ({ questionData }: Props) => {
+  const { user, images } = questionData;
   const getImageStyle = (
     index: number
   ): {
@@ -57,21 +60,19 @@ export const QuestionCard = () => {
     <View style={styles.body}>
       <View style={styles.top}>
         <View style={styles.imageAndName}>
-          <FastImage
-            source={{ uri: image }}
+          <ProfileImage
+            imageData={user.firstProfileImage}
             style={{
               width: IMAGE_SIZE,
               height: IMAGE_SIZE,
               borderRadius: IMAGE_SIZE,
             }}
           />
-          <Text style={styles.name}>Riku</Text>
+          <Text style={styles.name}>{user.nickname}</Text>
         </View>
-        <Text style={styles.diff}>3分前</Text>
+        <Text style={styles.diff}>{getTimeDiff(questionData.createdAt)}</Text>
       </View>
-      <Text style={styles.text}>
-        すいません誰か渋谷駅の半蔵門線周辺でこの財布拾った方いませんか😭
-      </Text>
+      <Text style={styles.text}>{questionData.text}</Text>
 
       {!!images.length && (
         <View style={styles.images}>
@@ -85,7 +86,7 @@ export const QuestionCard = () => {
                 ]}
               >
                 <FastImage
-                  source={{ uri: img }}
+                  source={{ uri: img.url }}
                   style={[styles.image, getImageStyle(index).imageStyle]}
                 />
               </Pressable>

@@ -1,5 +1,7 @@
 import { ApolloError } from '@apollo/client';
 import { ErrorResponse } from '@apollo/client/link/error';
+import { formatDistanceToNow } from 'date-fns';
+import { ja } from 'date-fns/locale';
 
 export const getGraphQLError = (
   error: ErrorResponse | ApolloError,
@@ -42,4 +44,11 @@ export const formatAddress = (address: string) => {
     .replace(/^日本、/, '')
     .replace(/〒\d+-\d+/, '')
     .trim();
+};
+
+export const getTimeDiff = (date: string | number) => {
+  return formatDistanceToNow(new Date(Number(date)), {
+    locale: ja,
+    addSuffix: true,
+  });
 };

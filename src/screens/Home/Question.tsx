@@ -1,21 +1,41 @@
+import { filter } from 'graphql-anywhere';
 import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { QuestionCard } from 'src/components/domain/question/QuestionCard';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
-import { range } from 'src/utils';
+import { Loading } from 'src/components/ui/Loading';
+import {
+  QuestionCardFragment,
+  QuestionCardFragmentDoc,
+  QuestionScreenDataQuery,
+  useQuestionScreenDataQuery,
+} from 'src/generated/graphql';
 
-const arr = [...range(0, 20)];
+type QuestionItem = QuestionScreenDataQuery['questions']['edges'][number];
 
 export const Question = () => {
-  const renderQuestionItem = useCallback(() => {
-    return <QuestionCard />;
+  const { data } = useQuestionScreenDataQuery();
+
+  const renderQuestionItem = useCallback(({ item }: { item: QuestionItem }) => {
+    return (
+      <QuestionCard
+        questionData={filter<QuestionCardFragment>(
+          QuestionCardFragmentDoc,
+          item.node
+        )}
+      />
+    );
   }, []);
+
+  if (!data) {
+    return <Loading />;
+  }
 
   return (
     <View style={styles.container}>
       <InfiniteFlatList
         renderItem={renderQuestionItem}
-        data={arr}
+        data={data.questions.edges}
         keyExtractor={(_, index) => index.toString()}
         contentContainerStyle={styles.contentContainer}
       />

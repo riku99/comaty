@@ -4,7 +4,10 @@ import { QuestionCreationScreen } from 'src/screens/QuestionCreation';
 
 export type QuestionCreationStackParamList = {
   QuestionCreation: undefined;
-  LocationOfQuestionSelection: undefined;
+  LocationOfQuestionSelection: {
+    text: string;
+    images: { uri: string; mime: string }[];
+  };
 };
 
 const Stack = createNativeStackNavigator<QuestionCreationStackParamList>();

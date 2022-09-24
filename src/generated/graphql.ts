@@ -29,11 +29,11 @@ export type CreatePostInput = {
 };
 
 export type CreateQuestionInput = {
+  anonymity: Scalars['Boolean'];
   displayRange: ApproximateRange;
   images?: InputMaybe<Array<Scalars['Upload']>>;
-  isAnonymity: Scalars['Boolean'];
-  latitude: Scalars['Int'];
-  longitude: Scalars['Int'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
   text: Scalars['String'];
 };
 
@@ -77,7 +77,7 @@ export type Me = UserEntity & {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
-  createQuestion: Question;
+  createQuestion?: Maybe<Question>;
   createUser: Me;
   deletePost?: Maybe<Post>;
   likePost: Post;
@@ -204,8 +204,8 @@ export type Question = {
   id: Scalars['Int'];
   images?: Maybe<Array<Maybe<QuestionImage>>>;
   isAnonymity: Scalars['Boolean'];
-  latitude: Scalars['Int'];
-  longitude: Scalars['Int'];
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
   text: Scalars['String'];
   user?: Maybe<User>;
 };
@@ -313,7 +313,7 @@ export type CreateQuestionMutationVariables = Exact<{
 }>;
 
 
-export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: number, text: string } };
+export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion?: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, latitude: number, longitude: number, displayRange: ApproximateRange } | null };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -591,6 +591,11 @@ export const CreateQuestionDocument = gql`
   createQuestion(input: $input) {
     id
     text
+    createdAt
+    isAnonymity
+    latitude
+    longitude
+    displayRange
   }
 }
     `;

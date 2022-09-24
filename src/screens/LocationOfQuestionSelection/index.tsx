@@ -6,7 +6,11 @@ import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 import { CheckBox } from 'src/components/ui/CheckBox';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import { VStack } from 'src/components/ui/VStack';
-import { ApproximateRange } from 'src/generated/graphql';
+import {
+  ApproximateRange,
+  useCreateQuestionMutation,
+} from 'src/generated/graphql';
+import { processImagesForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import {
   searchForCoodinate,
   searchForLocations,
@@ -16,7 +20,11 @@ import { MapInputAndCandidate } from './MapInputAndCandidate';
 
 type Props = RootNavigationScreenProp<'LocationOfQuestionSelection'>;
 
-export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
+export const LocationOfQuestionSelectionScreen = ({
+  navigation,
+  route,
+}: Props) => {
+  const { images, text } = route.params;
   const mapRef = useRef<MapView>();
   const [selectedCoodinate, setSelectedCoodinate] = useState<{
     latitude: number;
@@ -35,6 +43,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   >([]);
   const [mapInputText, setMapInputText] = useState('');
   const [isAnonymity, setIsAnonymity] = useState(false);
+  const [createQuestionMutation] = useCreateQuestionMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -91,16 +100,37 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
   };
 
   const onCandidateLocationPress = async (index: number) => {
-    setCandidateLocations([]);
     setMapInputText('');
     const location = candidateLocations.find((_, i) => i === index);
     if (!location) {
       return;
     }
     try {
-      const coodinate = await searchForCoodinate(location.subtitle);
+      const coodinate = await searchForCoodinate(location.title);
       setSelectedCoodinate(coodinate);
+      setCandidateLocations([]);
     } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onCreatePress = async () => {
+    try {
+      const files = await processImagesForMultipartRequest(images);
+      await createQuestionMutation({
+        variables: {
+          input: {
+            text,
+            images: files,
+            anonymity: isAnonymity,
+            latitude: selectedCoodinate.latitude,
+            longitude: selectedCoodinate.longitude,
+            displayRange,
+          },
+        },
+      });
+    } catch (e) {
+      console.log('Error');
       console.log(e);
     }
   };
@@ -221,6 +251,7 @@ export const LocationOfQuestionSelectionScreen = ({ navigation }: Props) => {
           buttonStyle={{
             height: 48,
           }}
+          onPress={onCreatePress}
         >
           質問を作成する
         </Button>

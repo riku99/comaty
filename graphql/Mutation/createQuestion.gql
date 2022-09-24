@@ -2,5 +2,10 @@ mutation CreateQuestion($input: CreateQuestionInput!) {
   createQuestion(input: $input) {
     id
     text
+    createdAt
+    isAnonymity
+    latitude
+    longitude
+    displayRange
   }
 }

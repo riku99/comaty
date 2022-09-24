@@ -21,12 +21,15 @@ export const QuestionCreationScreen = ({ navigation }: Props) => {
           title="次へ"
           disable={text.length === 0 || text.length > QUESTION_MAX_TEXT_COUNT}
           onPress={() => {
-            navigation.navigate('LocationOfQuestionSelection');
+            navigation.navigate('LocationOfQuestionSelection', {
+              text,
+              images,
+            });
           }}
         />
       ),
     });
-  }, [navigation, text]);
+  }, [navigation, text, images]);
 
   const onSelectedImages = (response: ImagePickerResponse) => {
     if (response.didCancel || response.errorCode) {

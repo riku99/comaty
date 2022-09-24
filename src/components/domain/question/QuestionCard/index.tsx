@@ -5,7 +5,7 @@ import { theme } from 'src/styles';
 const image =
   'https://scontent-nrt1-1.cdninstagram.com/v/t51.2885-15/302700128_776325980258650_5219257444505277210_n.jpg?stp=dst-jpg_e35_p640x640_sh0.08&_nc_ht=scontent-nrt1-1.cdninstagram.com&_nc_cat=110&_nc_ohc=wMXA13UYsY0AX9QY8os&tn=IvOg5e0MTmVxXJmw&edm=ALQROFkBAAAA&ccb=7-5&ig_cache_key=MjkxOTU3OTY1MTIxMzI0ODMyOQ%3D%3D.2-ccb7-5&oh=00_AT97coUfyK--g4dW99-KTi6UBcOhOmm7HWnCjIM30cPZ-Q&oe=632E9483&_nc_sid=30a2ef';
 
-const images = [image, image, image, image];
+const images = [];
 
 export const QuestionCard = () => {
   const getImageStyle = (
@@ -73,7 +73,7 @@ export const QuestionCard = () => {
         すいません誰か渋谷駅の半蔵門線周辺でこの財布拾った方いませんか😭
       </Text>
 
-      {images.length && (
+      {!!images.length && (
         <View style={styles.images}>
           {images.map((img, index) => {
             return (
@@ -110,6 +110,9 @@ const styles = StyleSheet.create({
   },
   body: {
     paddingHorizontal: 20,
+    borderBottomColor: theme.boarderGray,
+    borderBottomWidth: 0.5,
+    paddingVertical: 18,
   },
   top: {
     flexDirection: 'row',
@@ -149,15 +152,15 @@ const styles = StyleSheet.create({
     marginTop: 14,
     borderWidth: 1.5,
     borderColor: theme.primary,
-    width: 90,
+    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 24,
   },
   answer: {
     color: theme.primary,
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 15,
   },
 });

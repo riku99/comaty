@@ -91,7 +91,9 @@ export const QuestionCard = ({ questionData }: Props) => {
   }, [idData, user.id]);
 
   const onBodyPress = () => {
-    navigation.navigate('QuestionAndReplys');
+    navigation.navigate('QuestionAndReplys', {
+      id: questionData.id,
+    });
   };
 
   return (

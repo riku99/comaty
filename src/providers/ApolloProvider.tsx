@@ -114,6 +114,9 @@ export const ApolloProvider = ({ children }: Props) => {
           },
         },
       },
+      possibleTypes: {
+        QuestionEntity: ['Question', 'QuestionReply'],
+      },
     }),
   });
 

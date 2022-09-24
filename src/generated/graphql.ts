@@ -54,9 +54,14 @@ export enum GetPostError {
   NotFound = 'NOT_FOUND'
 }
 
+export enum GetQuestionError {
+  NotFound = 'NOT_FOUND'
+}
+
 export type Image = {
   __typename?: 'Image';
   height?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['Int']>;
   url: Scalars['String'];
   width?: Maybe<Scalars['Int']>;
 };
@@ -165,6 +170,7 @@ export type Query = {
   nearbyUsers: UserConnection;
   post: Post;
   posts: PostConnection;
+  question: Question;
   questions: QuestionConnection;
   stories: StoryConnection;
   user: User;
@@ -188,6 +194,11 @@ export type QueryPostsArgs = {
 };
 
 
+export type QueryQuestionArgs = {
+  id: Scalars['Int'];
+};
+
+
 export type QueryQuestionsArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -204,15 +215,16 @@ export type QueryUserArgs = {
   id: Scalars['ID'];
 };
 
-export type Question = {
+export type Question = QuestionEntity & {
   __typename?: 'Question';
   createdAt: Scalars['String'];
   displayRange: ApproximateRange;
   id: Scalars['Int'];
-  images?: Maybe<Array<Maybe<QuestionImage>>>;
+  images?: Maybe<Array<Maybe<Image>>>;
   isAnonymity: Scalars['Boolean'];
   latitude: Scalars['Float'];
   longitude: Scalars['Float'];
+  replys?: Maybe<Array<Maybe<QuestionReply>>>;
   text: Scalars['String'];
   user?: Maybe<User>;
 };
@@ -229,12 +241,34 @@ export type QuestionEdge = {
   node: Question;
 };
 
+export type QuestionEntity = {
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  images?: Maybe<Array<Maybe<Image>>>;
+  isAnonymity: Scalars['Boolean'];
+  text: Scalars['String'];
+  user?: Maybe<User>;
+};
+
 export type QuestionImage = {
   __typename?: 'QuestionImage';
   height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
   url: Scalars['String'];
   width?: Maybe<Scalars['Int']>;
+};
+
+export type QuestionReply = QuestionEntity & {
+  __typename?: 'QuestionReply';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  images?: Maybe<Array<Maybe<Image>>>;
+  isAnonymity: Scalars['Boolean'];
+  question?: Maybe<Question>;
+  questionReply?: Maybe<QuestionReply>;
+  replys?: Maybe<Array<Maybe<QuestionReply>>>;
+  text: Scalars['String'];
+  user?: Maybe<User>;
 };
 
 export enum Sex {
@@ -398,7 +432,11 @@ export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, 
 
 export type PostCardFragment = { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null };
 
-export type QuestionCardFragment = { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null };
+type QuestionCard_Question_Fragment = { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null };
+
+type QuestionCard_QuestionReply_Fragment = { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null };
+
+export type QuestionCardFragment = QuestionCard_Question_Fragment | QuestionCard_QuestionReply_Fragment;
 
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
@@ -412,7 +450,7 @@ export type QuestionsScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type QuestionsScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type QuestionsScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityScreenDataQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
@@ -459,6 +497,13 @@ export type PostDetailScreenDataQueryVariables = Exact<{
 
 export type PostDetailScreenDataQuery = { __typename?: 'Query', post: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } | null, replys?: Array<{ __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, replyToPost?: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } };
 
+export type QuestionAndReplysScreenDataQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type QuestionAndReplysScreenDataQuery = { __typename?: 'Query', question: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
+
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
 export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null };
@@ -477,20 +522,22 @@ export const ProfileImageFragmentDoc = gql`
 }
     `;
 export const QuestionCardFragmentDoc = gql`
-    fragment QuestionCard on Question {
-  id
-  text
-  createdAt
-  isAnonymity
-  user {
+    fragment QuestionCard on QuestionEntity {
+  ... on QuestionEntity {
     id
-    nickname
-    firstProfileImage {
-      ...ProfileImage
+    text
+    createdAt
+    isAnonymity
+    user {
+      id
+      nickname
+      firstProfileImage {
+        ...ProfileImage
+      }
     }
-  }
-  images {
-    url
+    images {
+      url
+    }
   }
 }
     ${ProfileImageFragmentDoc}`;
@@ -1274,6 +1321,41 @@ export function usePostDetailScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type PostDetailScreenDataQueryHookResult = ReturnType<typeof usePostDetailScreenDataQuery>;
 export type PostDetailScreenDataLazyQueryHookResult = ReturnType<typeof usePostDetailScreenDataLazyQuery>;
 export type PostDetailScreenDataQueryResult = Apollo.QueryResult<PostDetailScreenDataQuery, PostDetailScreenDataQueryVariables>;
+export const QuestionAndReplysScreenDataDocument = gql`
+    query QuestionAndReplysScreenData($id: Int!) {
+  question(id: $id) {
+    ...QuestionCard
+  }
+}
+    ${QuestionCardFragmentDoc}`;
+
+/**
+ * __useQuestionAndReplysScreenDataQuery__
+ *
+ * To run a query within a React component, call `useQuestionAndReplysScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionAndReplysScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useQuestionAndReplysScreenDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useQuestionAndReplysScreenDataQuery(baseOptions: Apollo.QueryHookOptions<QuestionAndReplysScreenDataQuery, QuestionAndReplysScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<QuestionAndReplysScreenDataQuery, QuestionAndReplysScreenDataQueryVariables>(QuestionAndReplysScreenDataDocument, options);
+      }
+export function useQuestionAndReplysScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionAndReplysScreenDataQuery, QuestionAndReplysScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<QuestionAndReplysScreenDataQuery, QuestionAndReplysScreenDataQueryVariables>(QuestionAndReplysScreenDataDocument, options);
+        }
+export type QuestionAndReplysScreenDataQueryHookResult = ReturnType<typeof useQuestionAndReplysScreenDataQuery>;
+export type QuestionAndReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionAndReplysScreenDataLazyQuery>;
+export type QuestionAndReplysScreenDataQueryResult = Apollo.QueryResult<QuestionAndReplysScreenDataQuery, QuestionAndReplysScreenDataQueryVariables>;
 export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {

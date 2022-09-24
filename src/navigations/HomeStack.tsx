@@ -8,7 +8,9 @@ export type HomeStackParamList = {
   PostDetail: {
     id: number;
   };
-  QuestionAndReplys: undefined;
+  QuestionAndReplys: {
+    id: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

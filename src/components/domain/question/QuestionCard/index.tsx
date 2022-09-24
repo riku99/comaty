@@ -11,9 +11,10 @@ import { getTimeDiff } from 'src/utils';
 
 type Props = {
   questionData: QuestionCardFragment;
+  isReply?: boolean;
 };
 
-export const QuestionCard = ({ questionData }: Props) => {
+export const QuestionCard = ({ questionData, isReply = false }: Props) => {
   const { user, images, isAnonymity } = questionData;
   const { data: idData } = useMyIdQuery({
     fetchPolicy: 'cache-only',
@@ -96,6 +97,10 @@ export const QuestionCard = ({ questionData }: Props) => {
     });
   };
 
+  const onAnswerPress = () => {
+    navigation.navigate('QuestionReplyCreation');
+  };
+
   return (
     <Pressable style={styles.body} onPress={onBodyPress}>
       <View style={styles.top}>
@@ -113,7 +118,7 @@ export const QuestionCard = ({ questionData }: Props) => {
               <Text style={styles.name}>{user.nickname}</Text>
             </>
           ) : (
-            <Text style={styles.anonymity}>匿名投稿</Text>
+            <Text style={styles.anonymity}>匿名質問</Text>
           )}
         </View>
         <Text style={styles.diff}>{getTimeDiff(questionData.createdAt)}</Text>
@@ -142,7 +147,7 @@ export const QuestionCard = ({ questionData }: Props) => {
       )}
 
       <View style={styles.bottomContents}>
-        <Pressable style={styles.answerButton}>
+        <Pressable style={styles.answerButton} onPress={onAnswerPress}>
           <Text style={styles.answer}>答える</Text>
         </Pressable>
 

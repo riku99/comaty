@@ -233,7 +233,7 @@ export const LocationOfQuestionSelectionScreen = ({
 
             <View style={styles.anonymityContainer}>
               <CheckBox
-                label="匿名で投稿"
+                label="匿名で質問"
                 isChecked={isAnonymity}
                 onPress={() => {
                   setIsAnonymity(!isAnonymity);

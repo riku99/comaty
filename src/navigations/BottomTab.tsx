@@ -10,9 +10,9 @@ import { ContentCreationButton } from 'src/components/ui/ContentCreationButton';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { ChatList } from 'src/screens/ChatList';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
-import { HomeScreen } from 'src/screens/Home';
 import { NearbyUsersScreen } from 'src/screens/NearbyUsers';
 import { theme } from 'src/styles';
+import { HomeStack } from './HomeStack';
 import { MyPageStack } from './MyPageStack';
 
 export type TabParamList = {
@@ -46,8 +46,9 @@ export const BottomTab = React.memo(() => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStack}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'home-minus' : 'home-minus-outline'}

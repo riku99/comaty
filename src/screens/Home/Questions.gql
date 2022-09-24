@@ -1,4 +1,4 @@
-query QuestionScreenData($first: Int, $after: String) {
+query QuestionsScreenData($first: Int, $after: String) {
   questions(first: $first, after: $after) {
     edges {
       node {

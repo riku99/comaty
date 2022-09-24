@@ -1,7 +1,10 @@
+import { Entypo } from '@expo/vector-icons';
+import { MenuAction, MenuView } from '@react-native-menu/menu';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
-import { QuestionCardFragment } from 'src/generated/graphql';
+import { QuestionCardFragment, useMyIdQuery } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { getTimeDiff } from 'src/utils';
 
@@ -10,7 +13,17 @@ type Props = {
 };
 
 export const QuestionCard = ({ questionData }: Props) => {
-  const { user, images } = questionData;
+  const { user, images, isAnonymity } = questionData;
+  const { data: idData } = useMyIdQuery({
+    fetchPolicy: 'cache-only',
+  });
+  const [dotsMenuActions, setDotsMenuActions] = useState<MenuAction[]>([
+    {
+      id: reportMenuId,
+      title: '報告',
+    },
+  ]);
+
   const getImageStyle = (
     index: number
   ): {
@@ -56,19 +69,42 @@ export const QuestionCard = ({ questionData }: Props) => {
     }
   };
 
+  useEffect(() => {
+    if (user.id === idData.me.id) {
+      setDotsMenuActions((c) => {
+        return [
+          ...c,
+          {
+            id: deleteMenuId,
+            title: '削除',
+            attributes: {
+              destructive: true,
+            },
+            image: 'trash',
+            imageColor: 'red',
+          },
+        ];
+      });
+    }
+  }, [idData, user.id]);
+
   return (
     <View style={styles.body}>
       <View style={styles.top}>
         <View style={styles.imageAndName}>
-          <ProfileImage
-            imageData={user.firstProfileImage}
-            style={{
-              width: IMAGE_SIZE,
-              height: IMAGE_SIZE,
-              borderRadius: IMAGE_SIZE,
-            }}
-          />
-          <Text style={styles.name}>{user.nickname}</Text>
+          {!isAnonymity && (
+            <>
+              <ProfileImage
+                imageData={user.firstProfileImage}
+                style={{
+                  width: IMAGE_SIZE,
+                  height: IMAGE_SIZE,
+                  borderRadius: IMAGE_SIZE,
+                }}
+              />
+              <Text style={styles.name}>{user.nickname}</Text>
+            </>
+          )}
         </View>
         <Text style={styles.diff}>{getTimeDiff(questionData.createdAt)}</Text>
       </View>
@@ -95,12 +131,23 @@ export const QuestionCard = ({ questionData }: Props) => {
         </View>
       )}
 
-      <Pressable style={styles.answerButton}>
-        <Text style={styles.answer}>答える</Text>
-      </Pressable>
+      <View style={styles.bottomContents}>
+        <Pressable style={styles.answerButton}>
+          <Text style={styles.answer}>答える</Text>
+        </Pressable>
+
+        <MenuView actions={dotsMenuActions} onPressAction={(e) => {}}>
+          <Pressable>
+            <Entypo name="dots-three-horizontal" size={22} color={'#c7c7c7'} />
+          </Pressable>
+        </MenuView>
+      </View>
     </View>
   );
 };
+
+const deleteMenuId = 'delete';
+const reportMenuId = 'report';
 
 const IMAGE_SIZE = 38;
 const IMAGE_BORDER_RADIUS = 16;
@@ -150,7 +197,6 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   answerButton: {
-    marginTop: 14,
     borderWidth: 1.5,
     borderColor: theme.primary,
     width: 80,
@@ -163,5 +209,11 @@ const styles = StyleSheet.create({
     color: theme.primary,
     fontWeight: 'bold',
     fontSize: 15,
+  },
+  bottomContents: {
+    marginTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 });

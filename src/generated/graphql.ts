@@ -406,13 +406,13 @@ export type UserCardFragment = { __typename?: 'User', id: string, nickname?: str
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
-export type QuestionScreenDataQueryVariables = Exact<{
+export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type QuestionScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type QuestionsScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'QuestionImage', url: string } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type ActivityScreenDataQueryVariables = Exact<{
   postsFirst?: InputMaybe<Scalars['Int']>;
@@ -1039,8 +1039,8 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
-export const QuestionScreenDataDocument = gql`
-    query QuestionScreenData($first: Int, $after: String) {
+export const QuestionsScreenDataDocument = gql`
+    query QuestionsScreenData($first: Int, $after: String) {
   questions(first: $first, after: $after) {
     edges {
       node {
@@ -1057,33 +1057,33 @@ export const QuestionScreenDataDocument = gql`
 ${PageInfoFragmentDoc}`;
 
 /**
- * __useQuestionScreenDataQuery__
+ * __useQuestionsScreenDataQuery__
  *
- * To run a query within a React component, call `useQuestionScreenDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useQuestionScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useQuestionsScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useQuestionsScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useQuestionScreenDataQuery({
+ * const { data, loading, error } = useQuestionsScreenDataQuery({
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
  *   },
  * });
  */
-export function useQuestionScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>) {
+export function useQuestionsScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>(QuestionScreenDataDocument, options);
+        return Apollo.useQuery<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>(QuestionsScreenDataDocument, options);
       }
-export function useQuestionScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>) {
+export function useQuestionsScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>(QuestionScreenDataDocument, options);
+          return Apollo.useLazyQuery<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>(QuestionsScreenDataDocument, options);
         }
-export type QuestionScreenDataQueryHookResult = ReturnType<typeof useQuestionScreenDataQuery>;
-export type QuestionScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionScreenDataLazyQuery>;
-export type QuestionScreenDataQueryResult = Apollo.QueryResult<QuestionScreenDataQuery, QuestionScreenDataQueryVariables>;
+export type QuestionsScreenDataQueryHookResult = ReturnType<typeof useQuestionsScreenDataQuery>;
+export type QuestionsScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionsScreenDataLazyQuery>;
+export type QuestionsScreenDataQueryResult = Apollo.QueryResult<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>;
 export const ActivityScreenDataDocument = gql`
     query ActivityScreenData($postsFirst: Int, $postsAfter: String, $storiesFirst: Int, $storiesAfter: String) {
   ...ActivityPosts

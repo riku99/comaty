@@ -1,20 +1,21 @@
 import { filter } from 'graphql-anywhere';
-import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { QuestionCard } from 'src/components/domain/question/QuestionCard';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
 import {
   QuestionCardFragment,
   QuestionCardFragmentDoc,
-  QuestionScreenDataQuery,
-  useQuestionScreenDataQuery,
+  QuestionsScreenDataQuery,
+  useQuestionsScreenDataQuery,
 } from 'src/generated/graphql';
 
-type QuestionItem = QuestionScreenDataQuery['questions']['edges'][number];
+type QuestionItem = QuestionsScreenDataQuery['questions']['edges'][number];
 
-export const Question = () => {
-  const { data } = useQuestionScreenDataQuery();
+export const Questions = () => {
+  const { data, refetch } = useQuestionsScreenDataQuery();
+  const [refreshing, setRefreshing] = useState(false);
 
   const renderQuestionItem = useCallback(({ item }: { item: QuestionItem }) => {
     return (
@@ -27,6 +28,17 @@ export const Question = () => {
     );
   }, []);
 
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   if (!data) {
     return <Loading />;
   }
@@ -38,6 +50,9 @@ export const Question = () => {
         data={data.questions.edges}
         keyExtractor={(_, index) => index.toString()}
         contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

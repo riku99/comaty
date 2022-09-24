@@ -1,9 +1,10 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
+import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { theme } from 'src/styles';
 import { Activity } from './Activity';
-import { Question } from './Question';
+import { Questions } from './Questions';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
@@ -17,7 +18,9 @@ const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 export const HomeScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'ホーム🦄',
+      headerShadowVisible: false,
+      headerLeft: () => <HeaderLeftTitle title="ホーム🦄" />,
+      headerTitle: '',
     });
   }, [navigation]);
 
@@ -52,7 +55,7 @@ export const HomeScreen = ({ navigation }: Props) => {
         />
         <TopTab.Screen
           name="Question"
-          component={Question}
+          component={Questions}
           options={{
             tabBarLabel: 'そこ質',
           }}

@@ -45,6 +45,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '投稿・返信',
+      headerShadowVisible: false,
     });
   }, [navigation]);
 

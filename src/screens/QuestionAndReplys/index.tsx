@@ -1,15 +1,18 @@
 import { filter } from 'graphql-anywhere';
-import { useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { QuestionCard } from 'src/components/domain/question/QuestionCard';
 import { Loading } from 'src/components/ui/Loading';
 import {
+  QuestionAndReplysScreenDataQuery,
   QuestionCardFragment,
   QuestionCardFragmentDoc,
   useQuestionAndReplysScreenDataQuery,
 } from 'src/generated/graphql';
 
 type Props = RootNavigationScreenProp<'QuestionAndReplys'>;
+
+type ReplyItem = QuestionAndReplysScreenDataQuery['question']['replys'][number];
 
 export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
   const { id: questionId } = route.params;
@@ -27,17 +30,35 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
+  const renderReply = useCallback(({ item }: { item: ReplyItem }) => {
+    return (
+      <QuestionCard
+        questionData={filter<QuestionCardFragment>(
+          QuestionCardFragmentDoc,
+          item
+        )}
+      />
+    );
+  }, []);
+
   if (!data) {
     return <Loading />;
   }
 
   return (
     <View style={styles.container}>
-      <QuestionCard
-        questionData={filter<QuestionCardFragment>(
-          QuestionCardFragmentDoc,
-          data.question
-        )}
+      <FlatList
+        data={data.question.replys}
+        renderItem={renderReply}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={
+          <QuestionCard
+            questionData={filter<QuestionCardFragment>(
+              QuestionCardFragmentDoc,
+              data.question
+            )}
+          />
+        }
       />
     </View>
   );

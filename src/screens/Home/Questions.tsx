@@ -48,7 +48,7 @@ export const Questions = () => {
       <InfiniteFlatList
         renderItem={renderQuestionItem}
         data={data.questions.edges}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item.node.id.toString()}
         contentContainerStyle={styles.contentContainer}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

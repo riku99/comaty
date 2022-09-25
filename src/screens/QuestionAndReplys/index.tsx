@@ -27,7 +27,7 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '質問と返信',
+      title: '質問と回答',
       headerShadowVisible: false,
     });
   }, [navigation]);
@@ -70,7 +70,7 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
                 color: theme.gray.text,
               }}
             >
-              返信一覧
+              回答一覧
             </Text>
           </View>
         }

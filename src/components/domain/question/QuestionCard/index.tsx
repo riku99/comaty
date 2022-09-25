@@ -92,9 +92,15 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
   }, [idData, user.id]);
 
   const onBodyPress = () => {
-    navigation.push('QuestionAndReplys', {
-      id: questionData.id,
-    });
+    if (isReply) {
+      navigation.push("QuestionReplys", {
+        id: questionData.id
+      })
+    } else {
+      navigation.push('QuestionAndReplys', {
+        id: questionData.id,
+      });
+    }
   };
 
   const onAnswerOrReplyPress = () => {

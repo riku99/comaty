@@ -1,0 +1,8 @@
+query QuestionReplysScreenData($id: Int!) {
+  questionReply(id: $id) {
+    ...QuestionCard
+    replys {
+      ...QuestionCard
+    }
+  }
+}

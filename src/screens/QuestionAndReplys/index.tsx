@@ -10,7 +10,6 @@ import {
   QuestionCardFragmentDoc,
   useQuestionAndReplysScreenDataQuery,
 } from 'src/generated/graphql';
-import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'QuestionAndReplys'>;
 
@@ -67,7 +66,7 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
                 marginTop: 14,
                 marginLeft: 14,
                 fontWeight: 'bold',
-                color: theme.gray.text,
+                color: '#848484',
               }}
             >
               回答一覧

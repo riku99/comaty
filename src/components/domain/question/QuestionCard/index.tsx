@@ -93,9 +93,9 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
 
   const onBodyPress = () => {
     if (isReply) {
-      navigation.push("QuestionReplys", {
-        id: questionData.id
-      })
+      navigation.push('QuestionReplys', {
+        id: questionData.id,
+      });
     } else {
       navigation.push('QuestionAndReplys', {
         id: questionData.id,
@@ -160,15 +160,22 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
 
       <View style={styles.bottomContents}>
         {isReply ? (
-          <Pressable
-            onPress={onAnswerOrReplyPress}
-            hitSlop={10}
-            style={{
-              marginLeft: 4,
-            }}
-          >
-            <Entypo name="reply" size={22} color={'#c7c7c7'} />
-          </Pressable>
+          <View style={styles.replyContainer}>
+            <Pressable
+              onPress={onAnswerOrReplyPress}
+              hitSlop={10}
+              style={{
+                marginLeft: 4,
+              }}
+            >
+              <Entypo name="reply" size={22} color={ACTION_ICON_COLOR} />
+            </Pressable>
+            {!!questionData.replys.length && (
+              <Text style={styles.replyCount}>
+                {questionData.replys.length}
+              </Text>
+            )}
+          </View>
         ) : (
           <Pressable style={styles.answerButton} onPress={onAnswerOrReplyPress}>
             <Text style={styles.answer}>答える</Text>
@@ -184,6 +191,8 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
     </Pressable>
   );
 };
+
+const ACTION_ICON_COLOR = '#c7c7c7';
 
 const deleteMenuId = 'delete';
 const reportMenuId = 'report';
@@ -258,5 +267,15 @@ const styles = StyleSheet.create({
   anonymity: {
     fontWeight: 'bold',
     color: '#a3a3a3',
+  },
+  replyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  replyCount: {
+    transform: [{ translateX: 4 }],
+    marginTop: 2,
+    fontWeight: 'bold',
+    color: ACTION_ICON_COLOR,
   },
 });

@@ -26,6 +26,7 @@ type Props = RootNavigationScreenProp<'QuestionReplyCreation'>;
 
 export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
   const params = route.params;
+  const isAnswerToQuestion = params.replyTo === 'question';
   const [text, setText] = useState('');
   const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -43,9 +44,8 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
             text,
             isAnonymity,
             images: files,
-            questionId: params.replyTo === 'question' ? params.id : undefined,
-            questionReplyId:
-              params.replyTo === 'questionReply' ? params.id : undefined,
+            questionId: isAnswerToQuestion ? params.id : undefined,
+            questionReplyId: isAnswerToQuestion ? undefined : params.id,
           },
         },
       });
@@ -57,7 +57,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '質問に答える',
+      title: params.replyTo === 'question' ? '質問の回答' : '返信',
       headerLeft: () => <CloseButton />,
       headerRight: () => (
         <HeaderRightCreationButton
@@ -119,7 +119,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
         placeholder={
           params.replyTo === 'question'
             ? `${params.name}さんの質問に答えてあげよう！`
-            : '返信しよう'
+            : `${params.name}さんに返信しよう！`
         }
         inputAccessoryViewID={textInputId}
         inputContainerStyle={{
@@ -133,7 +133,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
       <InputAccessoryView nativeID={textInputId}>
         <View style={styles.accessoryTopContainer}>
           <CheckBox
-            label="匿名で回答"
+            label={isAnswerToQuestion ? '匿名で回答する' : '匿名で返信する'}
             isChecked={isAnonymity}
             onPress={() => {
               setIsAnonymity(!isAnonymity);

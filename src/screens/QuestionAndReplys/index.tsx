@@ -60,6 +60,7 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
                 QuestionCardFragmentDoc,
                 data.question
               )}
+              disableNavigateToDetail
             />
             <Text
               style={{

@@ -4,5 +4,13 @@ query QuestionReplysScreenData($id: Int!) {
     replys {
       ...QuestionCard
     }
+    questionReply {
+      id
+      text
+    }
+    question {
+      id
+      text
+    }
   }
 }

@@ -1,14 +1,8 @@
-import { Text } from '@rneui/themed';
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import {
-  FlatList,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { Loading } from 'src/components/ui/Loading';
+import { ReplyQuote } from 'src/components/ui/ReplyQuote';
 import {
   PostDetailScreenDataQuery,
   usePostDetailScreenDataQuery,
@@ -79,17 +73,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
         renderItem={renderPosts}
         ListHeaderComponent={
           <View>
-            {replyToPost && (
-              <Pressable
-                style={styles.replyToMessage}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              >
-                <View style={styles.quoteLine} />
-                <Text style={styles.quoteText}>{replyToPost.text}</Text>
-              </Pressable>
-            )}
+            {replyToPost && <ReplyQuote text={replyToPost.text} />}
             <PostCard
               postData={data.post}
               disableDetailNavigation

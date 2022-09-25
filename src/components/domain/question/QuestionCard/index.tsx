@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
+import FullImageView from 'react-native-image-viewing';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { QuestionCardFragment, useMyIdQuery } from 'src/generated/graphql';
 import { theme } from 'src/styles';
@@ -12,9 +13,14 @@ import { getTimeDiff } from 'src/utils';
 type Props = {
   questionData: QuestionCardFragment;
   isReply?: boolean;
+  disableNavigateToDetail?: boolean;
 };
 
-export const QuestionCard = ({ questionData, isReply = false }: Props) => {
+export const QuestionCard = ({
+  questionData,
+  isReply = false,
+  disableNavigateToDetail = false,
+}: Props) => {
   const { user, images, isAnonymity } = questionData;
   const { data: idData } = useMyIdQuery({
     fetchPolicy: 'cache-only',
@@ -26,6 +32,10 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
     },
   ]);
   const navigation = useNavigation<RootNavigationProp<any>>();
+  const [fullImageViewingIndex, setFullImageViewingIndex] = useState<
+    number | null
+  >(null);
+  const fullImageViewingData = images?.map((img) => ({ uri: img.url }));
 
   const getImageStyle = (
     index: number
@@ -92,6 +102,10 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
   }, [idData, user.id]);
 
   const onBodyPress = () => {
+    if (disableNavigateToDetail) {
+      return;
+    }
+
     if (isReply) {
       navigation.push('QuestionReplys', {
         id: questionData.id,
@@ -147,6 +161,9 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
                   getImageStyle(index).imageContainerStyle,
                   { marginTop: index > 1 ? 3 : 0 },
                 ]}
+                onPress={() => {
+                  setFullImageViewingIndex(index);
+                }}
               >
                 <FastImage
                   source={{ uri: img.url }}
@@ -188,6 +205,15 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
           </Pressable>
         </MenuView>
       </View>
+
+      <FullImageView
+        visible={fullImageViewingIndex !== null}
+        images={fullImageViewingData}
+        imageIndex={fullImageViewingIndex}
+        onRequestClose={() => {
+          setFullImageViewingIndex(null);
+        }}
+      />
     </Pressable>
   );
 };

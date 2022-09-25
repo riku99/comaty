@@ -541,7 +541,7 @@ export type QuestionReplysScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, replys?: Array<{ __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } | null> | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
+export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, replys?: Array<{ __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } | null> | null, questionReply?: { __typename?: 'QuestionReply', id: number, text: string } | null, question?: { __typename?: 'Question', id: number, text: string } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
@@ -1440,6 +1440,14 @@ export const QuestionReplysScreenDataDocument = gql`
     ...QuestionCard
     replys {
       ...QuestionCard
+    }
+    questionReply {
+      id
+      text
+    }
+    question {
+      id
+      text
     }
   }
 }

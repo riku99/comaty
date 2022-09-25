@@ -4,6 +4,7 @@ import { useCallback, useLayoutEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { QuestionCard } from 'src/components/domain/question/QuestionCard';
 import { Loading } from 'src/components/ui/Loading';
+import { ReplyQuote } from 'src/components/ui/ReplyQuote';
 import {
   QuestionCardFragment,
   QuestionCardFragmentDoc,
@@ -28,6 +29,7 @@ export const QuestionReplysScreen = ({ navigation, route }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '返信',
+      headerShadowVisible: false,
     });
   }, [navigation]);
 
@@ -47,12 +49,20 @@ export const QuestionReplysScreen = ({ navigation, route }: Props) => {
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
           <View style={styles.listHeader}>
+            <ReplyQuote
+              text={
+                !!data.questionReply.question
+                  ? data.questionReply.question.text
+                  : data.questionReply.questionReply.text
+              }
+            />
             <QuestionCard
               questionData={filter<QuestionCardFragment>(
                 QuestionCardFragmentDoc,
                 data.questionReply
               )}
               isReply
+              disableNavigateToDetail
             />
             <Text style={styles.listText}>返信一覧</Text>
           </View>
@@ -74,5 +84,21 @@ const styles = StyleSheet.create({
     marginLeft: 14,
     fontWeight: 'bold',
     color: '#848484',
+  },
+  replyTo: {
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  quoteLine: {
+    width: 6,
+    backgroundColor: '#cccccc',
+    height: '100%',
+    borderRadius: 4,
+  },
+  quoteText: {
+    marginLeft: 6,
+    fontWeight: 'bold',
   },
 });

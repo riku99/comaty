@@ -14,12 +14,17 @@ import {
   View,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useToast } from 'react-native-toast-notifications';
 import { CheckBox } from 'src/components/ui/CheckBox';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { CommonContentsInputKeyboardAccessory } from 'src/components/ui/CommonContentsInputKeyboardAccessory';
 import { HeaderRightCreationButton } from 'src/components/ui/HeaderRightCreationButton';
 import { QUESTION_MAX_TEXT_COUNT } from 'src/constants';
-import { useCreateQuestionReplyMutation } from 'src/generated/graphql';
+import {
+  QuestionAndReplysScreenDataDocument,
+  QuestionReplysScreenDataDocument,
+  useCreateQuestionReplyMutation,
+} from 'src/generated/graphql';
 import { processImagesForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 
 type Props = RootNavigationScreenProp<'QuestionReplyCreation'>;
@@ -34,8 +39,14 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
   const textInputId = 'textInput';
   const [isAnonymity, setIsAnonymity] = useState(false);
   const [createQuestionReply] = useCreateQuestionReplyMutation();
+  const toast = useToast();
 
   const onAnswerOrReplyPress = useCallback(async () => {
+    if (!text) {
+      return;
+    }
+
+    navigation.goBack();
     try {
       const files = await processImagesForMultipartRequest(images);
       await createQuestionReply({
@@ -47,6 +58,22 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
             questionId: isAnswerToQuestion ? params.id : undefined,
             questionReplyId: isAnswerToQuestion ? undefined : params.id,
           },
+        },
+        refetchQueries: [
+          {
+            query: isAnswerToQuestion
+              ? QuestionAndReplysScreenDataDocument
+              : QuestionReplysScreenDataDocument,
+            variables: {
+              id: params.id,
+            },
+          },
+        ],
+        onCompleted: () => {
+          const toastText = isAnswerToQuestion
+            ? '回答しました'
+            : '返信しました';
+          toast.show(toastText, { type: 'success' });
         },
       });
     } catch (e) {
@@ -63,10 +90,11 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
         <HeaderRightCreationButton
           title={params.replyTo === 'question' ? '回答する' : '返信する'}
           onPress={onAnswerOrReplyPress}
+          disable={text.length === 0 || text.length > QUESTION_MAX_TEXT_COUNT}
         />
       ),
     });
-  }, [navigation, params, onAnswerOrReplyPress]);
+  }, [navigation, params, onAnswerOrReplyPress, text]);
 
   useEffect(() => {
     const subscription = Keyboard.addListener('keyboardWillShow', (e) => {

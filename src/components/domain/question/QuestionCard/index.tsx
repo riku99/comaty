@@ -92,14 +92,14 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
   }, [idData, user.id]);
 
   const onBodyPress = () => {
-    navigation.navigate('QuestionAndReplys', {
+    navigation.push('QuestionAndReplys', {
       id: questionData.id,
     });
   };
 
-  const onAnswerPress = () => {
+  const onAnswerOrReplyPress = () => {
     navigation.navigate('QuestionReplyCreation', {
-      replyTo: 'question',
+      replyTo: isReply ? 'questionReply' : 'question',
       id: questionData.id,
       name: isAnonymity ? '匿名' : user.nickname,
     });
@@ -122,7 +122,9 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
               <Text style={styles.name}>{user.nickname}</Text>
             </>
           ) : (
-            <Text style={styles.anonymity}>匿名質問</Text>
+            <Text style={styles.anonymity}>
+              {isReply ? '匿名返信' : '匿名質問'}
+            </Text>
           )}
         </View>
         <Text style={styles.diff}>{getTimeDiff(questionData.createdAt)}</Text>
@@ -151,9 +153,21 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
       )}
 
       <View style={styles.bottomContents}>
-        <Pressable style={styles.answerButton} onPress={onAnswerPress}>
-          <Text style={styles.answer}>答える</Text>
-        </Pressable>
+        {isReply ? (
+          <Pressable
+            onPress={onAnswerOrReplyPress}
+            hitSlop={10}
+            style={{
+              marginLeft: 4,
+            }}
+          >
+            <Entypo name="reply" size={22} color={'#c7c7c7'} />
+          </Pressable>
+        ) : (
+          <Pressable style={styles.answerButton} onPress={onAnswerOrReplyPress}>
+            <Text style={styles.answer}>答える</Text>
+          </Pressable>
+        )}
 
         <MenuView actions={dotsMenuActions} onPressAction={(e) => {}}>
           <Pressable>

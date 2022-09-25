@@ -1,3 +1,4 @@
+import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
 import { useCallback, useLayoutEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -9,6 +10,7 @@ import {
   QuestionCardFragmentDoc,
   useQuestionAndReplysScreenDataQuery,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'QuestionAndReplys'>;
 
@@ -37,6 +39,7 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
           QuestionCardFragmentDoc,
           item
         )}
+        isReply
       />
     );
   }, []);
@@ -52,12 +55,24 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
         renderItem={renderReply}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={
-          <QuestionCard
-            questionData={filter<QuestionCardFragment>(
-              QuestionCardFragmentDoc,
-              data.question
-            )}
-          />
+          <View style={styles.listHeader}>
+            <QuestionCard
+              questionData={filter<QuestionCardFragment>(
+                QuestionCardFragmentDoc,
+                data.question
+              )}
+            />
+            <Text
+              style={{
+                marginTop: 14,
+                marginLeft: 14,
+                fontWeight: 'bold',
+                color: theme.gray.text,
+              }}
+            >
+              返信一覧
+            </Text>
+          </View>
         }
       />
     </View>
@@ -67,5 +82,8 @@ export const QuestionAndReplysScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  listHeader: {
+    marginBottom: 12,
   },
 });

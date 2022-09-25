@@ -40,7 +40,7 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
         },
         imageContainerStyle: {
           width: '100%',
-          height: 160,
+          height: 180,
         },
       };
     } else if (images.length === 2) {
@@ -98,7 +98,11 @@ export const QuestionCard = ({ questionData, isReply = false }: Props) => {
   };
 
   const onAnswerPress = () => {
-    navigation.navigate('QuestionReplyCreation');
+    navigation.navigate('QuestionReplyCreation', {
+      replyTo: 'question',
+      id: questionData.id,
+      name: isAnonymity ? '匿名' : user.nickname,
+    });
   };
 
   return (

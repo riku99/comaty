@@ -37,6 +37,7 @@ export type RootStackParamList = {
     | {
         replyTo: 'question';
         id: number;
+        name: string;
       }
     | {
         replyTo: 'questionReply';

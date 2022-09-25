@@ -37,6 +37,14 @@ export type CreateQuestionInput = {
   text: Scalars['String'];
 };
 
+export type CreateQuestionReplyInput = {
+  images?: InputMaybe<Array<Scalars['Upload']>>;
+  isAnonymity: Scalars['Boolean'];
+  questionId?: InputMaybe<Scalars['Int']>;
+  questionReplyId?: InputMaybe<Scalars['Int']>;
+  text: Scalars['String'];
+};
+
 export enum CreateUserError {
   AlreadyUserExisting = 'ALREADY_USER_EXISTING'
 }
@@ -82,7 +90,8 @@ export type Me = UserEntity & {
 export type Mutation = {
   __typename?: 'Mutation';
   createPost: Post;
-  createQuestion?: Maybe<Question>;
+  createQuestion: Question;
+  createQuestionReply: QuestionReply;
   createUser: Me;
   deletePost?: Maybe<Post>;
   likePost: Post;
@@ -99,6 +108,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateQuestionArgs = {
   input: CreateQuestionInput;
+};
+
+
+export type MutationCreateQuestionReplyArgs = {
+  input: CreateQuestionReplyInput;
 };
 
 
@@ -366,7 +380,14 @@ export type CreateQuestionMutationVariables = Exact<{
 }>;
 
 
-export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion?: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, latitude: number, longitude: number, displayRange: ApproximateRange } | null };
+export type CreateQuestionMutation = { __typename?: 'Mutation', createQuestion: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, latitude: number, longitude: number, displayRange: ApproximateRange } };
+
+export type CreateQuestionReplyMutationVariables = Exact<{
+  input: CreateQuestionReplyInput;
+}>;
+
+
+export type CreateQuestionReplyMutation = { __typename?: 'Mutation', createQuestionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
 
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -719,6 +740,39 @@ export function useCreateQuestionMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateQuestionMutationHookResult = ReturnType<typeof useCreateQuestionMutation>;
 export type CreateQuestionMutationResult = Apollo.MutationResult<CreateQuestionMutation>;
 export type CreateQuestionMutationOptions = Apollo.BaseMutationOptions<CreateQuestionMutation, CreateQuestionMutationVariables>;
+export const CreateQuestionReplyDocument = gql`
+    mutation CreateQuestionReply($input: CreateQuestionReplyInput!) {
+  createQuestionReply(input: $input) {
+    ...QuestionCard
+  }
+}
+    ${QuestionCardFragmentDoc}`;
+export type CreateQuestionReplyMutationFn = Apollo.MutationFunction<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>;
+
+/**
+ * __useCreateQuestionReplyMutation__
+ *
+ * To run a mutation, you first call `useCreateQuestionReplyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateQuestionReplyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createQuestionReplyMutation, { data, loading, error }] = useCreateQuestionReplyMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateQuestionReplyMutation(baseOptions?: Apollo.MutationHookOptions<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>(CreateQuestionReplyDocument, options);
+      }
+export type CreateQuestionReplyMutationHookResult = ReturnType<typeof useCreateQuestionReplyMutation>;
+export type CreateQuestionReplyMutationResult = Apollo.MutationResult<CreateQuestionReplyMutation>;
+export type CreateQuestionReplyMutationOptions = Apollo.BaseMutationOptions<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>;
 export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
   deletePost(id: $id) {

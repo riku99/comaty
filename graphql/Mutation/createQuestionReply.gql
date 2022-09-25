@@ -1,0 +1,5 @@
+mutation CreateQuestionReply($input: CreateQuestionReplyInput!) {
+  createQuestionReply(input: $input) {
+    ...QuestionCard
+  }
+}

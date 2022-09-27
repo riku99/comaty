@@ -1,7 +1,8 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import { useCallback, useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -16,6 +17,7 @@ import {
   UserCardFragment,
   UserCardFragmentDoc,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 import { Stories } from './Stories';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
@@ -29,6 +31,15 @@ export const HomeScreen = ({ navigation }: Props) => {
     navigation.setOptions({
       headerShadowVisible: false,
       headerLeft: () => <HeaderLeftTitle title="ホーム🦄" />,
+      headerRight: () => (
+        <Pressable>
+          <MaterialCommunityIcons
+            name="text-search"
+            size={24}
+            color={theme.black}
+          />
+        </Pressable>
+      ),
       headerTitle: '',
     });
   }, [navigation]);

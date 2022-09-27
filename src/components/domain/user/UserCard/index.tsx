@@ -75,7 +75,7 @@ const { width: screenWidth } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   body: {
-    width: screenWidth * 0.42,
+    width: screenWidth * 0.44,
   },
   image: {
     width: '100%',

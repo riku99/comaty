@@ -1,7 +1,7 @@
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
-import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ComponentProps, useCallback } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
   UserCardFragment,
@@ -15,7 +15,7 @@ type Props = {
   userListData: UserCardListFragment;
   infiniteLoad?: () => Promise<void>;
   takeItemCount: number;
-};
+} & Omit<ComponentProps<typeof FlatList>, 'data' | 'renderItem'>;
 
 type Item = UserCardListFragment['edges'][number];
 
@@ -24,6 +24,7 @@ export const UserCardList = ({
   userListData,
   infiniteLoad,
   takeItemCount,
+  ...flatListProps
 }: Props) => {
   const renderUser = useCallback(
     ({ item, index }: { item: Item; index: number }) => {
@@ -73,7 +74,7 @@ export const UserCardList = ({
       keyExtractor={(_, index) => index.toString()}
       numColumns={2}
       columnWrapperStyle={{
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
       }}
       contentContainerStyle={styles.contentContainer}
       ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
@@ -85,5 +86,7 @@ export const UserCardList = ({
 const CARD_DELAY = 170;
 
 const styles = StyleSheet.create({
-  contentContainer: {},
+  contentContainer: {
+    paddingHorizontal: 16,
+  },
 });

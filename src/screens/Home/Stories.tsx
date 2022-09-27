@@ -6,17 +6,17 @@ import { StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
-  ActivityStoriesFragment,
+  HomeStoriesFragment,
   ProfileImageFragment,
   ProfileImageFragmentDoc,
 } from 'src/generated/graphql';
 
 type Props = {
-  storiesData: ActivityStoriesFragment;
+  storiesData: HomeStoriesFragment;
   infiniteLoadStories: () => Promise<void>;
 };
 
-type Item = ActivityStoriesFragment['stories']['edges'][number];
+type Item = HomeStoriesFragment['stories']['edges'][number];
 
 export const Stories = React.memo(
   ({ storiesData, infiniteLoadStories }: Props) => {

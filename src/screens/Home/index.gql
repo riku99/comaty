@@ -1,28 +1,28 @@
-query ActivityScreenData(
-  $postsFirst: Int
-  $postsAfter: String
+query HomeScreenData(
+  $nearbyUsersFirst: Int
+  $nearbyUsersAfter: String
   $storiesFirst: Int
   $storiesAfter: String
 ) {
-  ...ActivityPosts
-  ...ActivityStories
+  ...HomeNearByUsers
+  ...HomeStories
 }
 
-query ActivityPosts($postsFirst: Int, $postsAfter: String) {
-  ...ActivityPosts
+query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String) {
+  ...HomeNearByUsers
 }
 
-query ActivityStories($storiesFirst: Int, $storiesAfter: String) {
-  ...ActivityStories
+query HomeStories($storiesFirst: Int, $storiesAfter: String) {
+  ...HomeStories
 }
 
-fragment ActivityPosts on Query {
-  posts(first: $postsFirst, after: $postsAfter) {
+fragment HomeNearByUsers on Query {
+  nearbyUsers(first: $nearbyUsersFirst, after: $nearbyUsersAfter) {
     edges {
       node {
-        id
-        ...PostCard
+        ...UserCard
       }
+      cursor
     }
     pageInfo {
       ...PageInfo
@@ -30,7 +30,7 @@ fragment ActivityPosts on Query {
   }
 }
 
-fragment ActivityStories on Query {
+fragment HomeStories on Query {
   stories(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {

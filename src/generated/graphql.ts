@@ -503,35 +503,35 @@ export type QuestionsScreenDataQueryVariables = Exact<{
 
 export type QuestionsScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityScreenDataQueryVariables = Exact<{
-  postsFirst?: InputMaybe<Scalars['Int']>;
-  postsAfter?: InputMaybe<Scalars['String']>;
+export type HomeScreenDataQueryVariables = Exact<{
+  nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
+  nearbyUsersAfter?: InputMaybe<Scalars['String']>;
   storiesFirst?: InputMaybe<Scalars['Int']>;
   storiesAfter?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ActivityScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityPostsQueryVariables = Exact<{
-  postsFirst?: InputMaybe<Scalars['Int']>;
-  postsAfter?: InputMaybe<Scalars['String']>;
+export type HomeNearByUsersQueryVariables = Exact<{
+  nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
+  nearbyUsersAfter?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ActivityPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeNearByUsersQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityStoriesQueryVariables = Exact<{
+export type HomeStoriesQueryVariables = Exact<{
   storiesFirst?: InputMaybe<Scalars['Int']>;
   storiesAfter?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ActivityStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityPostsFragment = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null, replys?: Array<{ __typename?: 'Post', id: number } | null> | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeNearByUsersFragment = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ActivityStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -579,6 +579,30 @@ export const ProfileImageFragmentDoc = gql`
   url
 }
     `;
+export const PostCardFragmentDoc = gql`
+    fragment PostCard on Post {
+  id
+  text
+  createdAt
+  liked
+  likeCount
+  user {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+  replys {
+    id
+  }
+  images {
+    url
+    width
+    height
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const QuestionCardFragmentDoc = gql`
     fragment QuestionCard on QuestionEntity {
   ... on QuestionEntity {
@@ -623,30 +647,6 @@ export const UserCardListFragmentDoc = gql`
   }
 }
     ${UserCardFragmentDoc}`;
-export const PostCardFragmentDoc = gql`
-    fragment PostCard on Post {
-  id
-  text
-  createdAt
-  liked
-  likeCount
-  user {
-    id
-    nickname
-    firstProfileImage {
-      ...ProfileImage
-    }
-  }
-  replys {
-    id
-  }
-  images {
-    url
-    width
-    height
-  }
-}
-    ${ProfileImageFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   hasNextPage
@@ -655,24 +655,24 @@ export const PageInfoFragmentDoc = gql`
   endCursor
 }
     `;
-export const ActivityPostsFragmentDoc = gql`
-    fragment ActivityPosts on Query {
-  posts(first: $postsFirst, after: $postsAfter) {
+export const HomeNearByUsersFragmentDoc = gql`
+    fragment HomeNearByUsers on Query {
+  nearbyUsers(first: $nearbyUsersFirst, after: $nearbyUsersAfter) {
     edges {
       node {
-        id
-        ...PostCard
+        ...UserCard
       }
+      cursor
     }
     pageInfo {
       ...PageInfo
     }
   }
 }
-    ${PostCardFragmentDoc}
+    ${UserCardFragmentDoc}
 ${PageInfoFragmentDoc}`;
-export const ActivityStoriesFragmentDoc = gql`
-    fragment ActivityStories on Query {
+export const HomeStoriesFragmentDoc = gql`
+    fragment HomeStories on Query {
   stories(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {
@@ -1259,112 +1259,112 @@ export function useQuestionsScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type QuestionsScreenDataQueryHookResult = ReturnType<typeof useQuestionsScreenDataQuery>;
 export type QuestionsScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionsScreenDataLazyQuery>;
 export type QuestionsScreenDataQueryResult = Apollo.QueryResult<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>;
-export const ActivityScreenDataDocument = gql`
-    query ActivityScreenData($postsFirst: Int, $postsAfter: String, $storiesFirst: Int, $storiesAfter: String) {
-  ...ActivityPosts
-  ...ActivityStories
+export const HomeScreenDataDocument = gql`
+    query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String) {
+  ...HomeNearByUsers
+  ...HomeStories
 }
-    ${ActivityPostsFragmentDoc}
-${ActivityStoriesFragmentDoc}`;
+    ${HomeNearByUsersFragmentDoc}
+${HomeStoriesFragmentDoc}`;
 
 /**
- * __useActivityScreenDataQuery__
+ * __useHomeScreenDataQuery__
  *
- * To run a query within a React component, call `useActivityScreenDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useActivityScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useActivityScreenDataQuery({
+ * const { data, loading, error } = useHomeScreenDataQuery({
  *   variables: {
- *      postsFirst: // value for 'postsFirst'
- *      postsAfter: // value for 'postsAfter'
+ *      nearbyUsersFirst: // value for 'nearbyUsersFirst'
+ *      nearbyUsersAfter: // value for 'nearbyUsersAfter'
  *      storiesFirst: // value for 'storiesFirst'
  *      storiesAfter: // value for 'storiesAfter'
  *   },
  * });
  */
-export function useActivityScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>) {
+export function useHomeScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<HomeScreenDataQuery, HomeScreenDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>(ActivityScreenDataDocument, options);
+        return Apollo.useQuery<HomeScreenDataQuery, HomeScreenDataQueryVariables>(HomeScreenDataDocument, options);
       }
-export function useActivityScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>) {
+export function useHomeScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeScreenDataQuery, HomeScreenDataQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>(ActivityScreenDataDocument, options);
+          return Apollo.useLazyQuery<HomeScreenDataQuery, HomeScreenDataQueryVariables>(HomeScreenDataDocument, options);
         }
-export type ActivityScreenDataQueryHookResult = ReturnType<typeof useActivityScreenDataQuery>;
-export type ActivityScreenDataLazyQueryHookResult = ReturnType<typeof useActivityScreenDataLazyQuery>;
-export type ActivityScreenDataQueryResult = Apollo.QueryResult<ActivityScreenDataQuery, ActivityScreenDataQueryVariables>;
-export const ActivityPostsDocument = gql`
-    query ActivityPosts($postsFirst: Int, $postsAfter: String) {
-  ...ActivityPosts
+export type HomeScreenDataQueryHookResult = ReturnType<typeof useHomeScreenDataQuery>;
+export type HomeScreenDataLazyQueryHookResult = ReturnType<typeof useHomeScreenDataLazyQuery>;
+export type HomeScreenDataQueryResult = Apollo.QueryResult<HomeScreenDataQuery, HomeScreenDataQueryVariables>;
+export const HomeNearByUsersDocument = gql`
+    query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String) {
+  ...HomeNearByUsers
 }
-    ${ActivityPostsFragmentDoc}`;
+    ${HomeNearByUsersFragmentDoc}`;
 
 /**
- * __useActivityPostsQuery__
+ * __useHomeNearByUsersQuery__
  *
- * To run a query within a React component, call `useActivityPostsQuery` and pass it any options that fit your needs.
- * When your component renders, `useActivityPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeNearByUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeNearByUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useActivityPostsQuery({
+ * const { data, loading, error } = useHomeNearByUsersQuery({
  *   variables: {
- *      postsFirst: // value for 'postsFirst'
- *      postsAfter: // value for 'postsAfter'
+ *      nearbyUsersFirst: // value for 'nearbyUsersFirst'
+ *      nearbyUsersAfter: // value for 'nearbyUsersAfter'
  *   },
  * });
  */
-export function useActivityPostsQuery(baseOptions?: Apollo.QueryHookOptions<ActivityPostsQuery, ActivityPostsQueryVariables>) {
+export function useHomeNearByUsersQuery(baseOptions?: Apollo.QueryHookOptions<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ActivityPostsQuery, ActivityPostsQueryVariables>(ActivityPostsDocument, options);
+        return Apollo.useQuery<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>(HomeNearByUsersDocument, options);
       }
-export function useActivityPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityPostsQuery, ActivityPostsQueryVariables>) {
+export function useHomeNearByUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ActivityPostsQuery, ActivityPostsQueryVariables>(ActivityPostsDocument, options);
+          return Apollo.useLazyQuery<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>(HomeNearByUsersDocument, options);
         }
-export type ActivityPostsQueryHookResult = ReturnType<typeof useActivityPostsQuery>;
-export type ActivityPostsLazyQueryHookResult = ReturnType<typeof useActivityPostsLazyQuery>;
-export type ActivityPostsQueryResult = Apollo.QueryResult<ActivityPostsQuery, ActivityPostsQueryVariables>;
-export const ActivityStoriesDocument = gql`
-    query ActivityStories($storiesFirst: Int, $storiesAfter: String) {
-  ...ActivityStories
+export type HomeNearByUsersQueryHookResult = ReturnType<typeof useHomeNearByUsersQuery>;
+export type HomeNearByUsersLazyQueryHookResult = ReturnType<typeof useHomeNearByUsersLazyQuery>;
+export type HomeNearByUsersQueryResult = Apollo.QueryResult<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>;
+export const HomeStoriesDocument = gql`
+    query HomeStories($storiesFirst: Int, $storiesAfter: String) {
+  ...HomeStories
 }
-    ${ActivityStoriesFragmentDoc}`;
+    ${HomeStoriesFragmentDoc}`;
 
 /**
- * __useActivityStoriesQuery__
+ * __useHomeStoriesQuery__
  *
- * To run a query within a React component, call `useActivityStoriesQuery` and pass it any options that fit your needs.
- * When your component renders, `useActivityStoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useHomeStoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHomeStoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useActivityStoriesQuery({
+ * const { data, loading, error } = useHomeStoriesQuery({
  *   variables: {
  *      storiesFirst: // value for 'storiesFirst'
  *      storiesAfter: // value for 'storiesAfter'
  *   },
  * });
  */
-export function useActivityStoriesQuery(baseOptions?: Apollo.QueryHookOptions<ActivityStoriesQuery, ActivityStoriesQueryVariables>) {
+export function useHomeStoriesQuery(baseOptions?: Apollo.QueryHookOptions<HomeStoriesQuery, HomeStoriesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ActivityStoriesQuery, ActivityStoriesQueryVariables>(ActivityStoriesDocument, options);
+        return Apollo.useQuery<HomeStoriesQuery, HomeStoriesQueryVariables>(HomeStoriesDocument, options);
       }
-export function useActivityStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ActivityStoriesQuery, ActivityStoriesQueryVariables>) {
+export function useHomeStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeStoriesQuery, HomeStoriesQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ActivityStoriesQuery, ActivityStoriesQueryVariables>(ActivityStoriesDocument, options);
+          return Apollo.useLazyQuery<HomeStoriesQuery, HomeStoriesQueryVariables>(HomeStoriesDocument, options);
         }
-export type ActivityStoriesQueryHookResult = ReturnType<typeof useActivityStoriesQuery>;
-export type ActivityStoriesLazyQueryHookResult = ReturnType<typeof useActivityStoriesLazyQuery>;
-export type ActivityStoriesQueryResult = Apollo.QueryResult<ActivityStoriesQuery, ActivityStoriesQueryVariables>;
+export type HomeStoriesQueryHookResult = ReturnType<typeof useHomeStoriesQuery>;
+export type HomeStoriesLazyQueryHookResult = ReturnType<typeof useHomeStoriesLazyQuery>;
+export type HomeStoriesQueryResult = Apollo.QueryResult<HomeStoriesQuery, HomeStoriesQueryVariables>;
 export const NearbyUsersScreenDataDocument = gql`
     query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {

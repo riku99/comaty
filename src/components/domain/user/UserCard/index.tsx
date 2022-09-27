@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
-  const { nickname, statusMessage, id } = userCardData;
+  const { nickname, statusMessage, id, age } = userCardData;
   return (
     <Pressable
       style={[styles.body, containerStyle]}
@@ -63,7 +63,7 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
       </MaskedView>
       <View style={styles.nameAndAge}>
         <Text style={styles.name}>
-          {nickname}, <Text style={styles.age}>24</Text>
+          {nickname}, <Text style={styles.age}>{age}</Text>
         </Text>
         <Text style={styles.singleWord}>{statusMessage}</Text>
       </View>

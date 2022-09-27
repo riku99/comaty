@@ -1,6 +1,7 @@
 fragment UserCard on User {
   id
   nickname
+  age
   statusMessage
   profileImages {
     ...ProfileImage

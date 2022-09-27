@@ -491,9 +491,9 @@ export type QuestionCardFragment = QuestionCard_Question_Fragment | QuestionCard
 
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: string, url: string };
 
-export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
+export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> };
 
-export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
+export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
 export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -539,7 +539,7 @@ export type NearbyUsersScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
+export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> } };
 
 export type PostDetailScreenDataQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -606,6 +606,7 @@ export const UserCardFragmentDoc = gql`
     fragment UserCard on User {
   id
   nickname
+  age
   statusMessage
   profileImages {
     ...ProfileImage

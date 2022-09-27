@@ -10,10 +10,13 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   HomeNearByUsersDocument,
   HomeScreenDataQuery,
+  HomeStoriesDocument,
+  HomeStoriesFragment,
   useHomeScreenDataQuery,
   UserCardFragment,
   UserCardFragmentDoc,
 } from 'src/generated/graphql';
+import { Stories } from './Stories';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
@@ -88,6 +91,20 @@ export const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
+  const infiniteLoadStories = async () => {
+    const { pageInfo } = data.stories;
+
+    if (pageInfo.hasNextPage) {
+      const { endCursor } = pageInfo;
+      await fetchMore({
+        variables: {
+          storiesAfter: endCursor ? btoa(endCursor) : undefined,
+          storiesFirst: TAKE_USER_COUNT,
+        },
+        query: HomeStoriesDocument,
+      });
+    }
+  };
   return (
     <View style={styles.container}>
       <InfiniteFlatList
@@ -96,11 +113,17 @@ export const HomeScreen = ({ navigation }: Props) => {
         keyExtractor={(_, index) => index.toString()}
         numColumns={2}
         columnWrapperStyle={{
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
         }}
-        contentContainerStyle={styles.contentContainer}
         ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
         infiniteLoad={infiniteLoadUsers}
+        ListHeaderComponent={
+          <Stories
+            storiesData={filter<HomeStoriesFragment>(HomeStoriesDocument, data)}
+            infiniteLoadStories={infiniteLoadStories}
+          />
+        }
+        ListHeaderComponentStyle={styles.listHeader}
       />
     </View>
   );
@@ -113,23 +136,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentContainer: {
-    paddingHorizontal: 16,
-  },
-  image: {
-    width: '100%',
-    aspectRatio: 3 / 4,
-    borderRadius: 16,
-    transform: [{ scale: 0.97 }],
-    alignItems: 'center',
-  },
-  name: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    marginTop: 8,
-  },
-  singleWord: {
-    marginTop: 6,
+  listHeader: {
+    paddingTop: 8,
+    paddingBottom: 12,
   },
 });
 

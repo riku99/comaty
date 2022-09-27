@@ -12,6 +12,8 @@ export const ProfileImage = ({ imageData, ...props }: Props) => {
       source={imageData ? { uri: imageData.url } : Youchien}
       resizeMode={imageData ? undefined : 'contain'}
       {...props}
-    />
+    >
+      {props.children}
+    </FastImage>
   );
 };

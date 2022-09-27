@@ -45,7 +45,10 @@ export const UserCardList = ({
         >
           <UserCard
             containerStyle={{
-              marginTop: index % 2 !== 0 ? 45 : 0,
+              marginTop: index % 2 !== 0 ? 30 : 0,
+              transform: [
+                { translateY: index % 2 === 0 && index !== 0 ? -15 : 0 },
+              ],
             }}
             onPress={(id: string) => {
               if (onCardPress) {
@@ -68,10 +71,9 @@ export const UserCardList = ({
       data={userListData.edges}
       renderItem={renderUser}
       keyExtractor={(_, index) => index.toString()}
-      showsVerticalScrollIndicator={false}
       numColumns={2}
       columnWrapperStyle={{
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
       }}
       contentContainerStyle={styles.contentContainer}
       ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
@@ -83,9 +85,5 @@ export const UserCardList = ({
 const CARD_DELAY = 170;
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    paddingHorizontal: '8%',
-    paddingTop: 20,
-    paddingBottom: 26,
-  },
+  contentContainer: {},
 });

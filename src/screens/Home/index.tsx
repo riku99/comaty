@@ -63,12 +63,6 @@ export const HomeScreen = ({ navigation }: Props) => {
           delay={(index % TAKE_USER_COUNT) * CARD_DELAY}
         >
           <UserCard
-            containerStyle={{
-              marginTop: index % 2 !== 0 ? 30 : 0,
-              transform: [
-                { translateY: index % 2 === 0 && index !== 0 ? -15 : 0 },
-              ],
-            }}
             onPress={(id: string) => {
               navigation.navigate('UserProfile', { id });
             }}

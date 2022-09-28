@@ -2,7 +2,7 @@ import { ComponentProps } from 'react';
 import { StyleSheet, TextInput as RNTextInput, View } from 'react-native';
 import { theme } from 'src/styles';
 
-type Props = ComponentProps<typeof RNTextInput>;
+type Props = {} & ComponentProps<typeof RNTextInput>;
 
 export const TextInput = ({ ...inputProps }: Props) => {
   const { style: inputStyle, ...propsWithoutStyle } = inputProps;

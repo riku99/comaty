@@ -42,7 +42,12 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
           <View style={styles.nameContainer}>
             <Text style={styles.inputTitle}>ニックネーム</Text>
-            <TextInput style={styles.input} />
+            <TextInput style={[styles.input, styles.nameInput]} />
+          </View>
+
+          <View style={styles.bioContainer}>
+            <Text style={styles.inputTitle}>自己紹介</Text>
+            <TextInput style={[styles.input, styles.bioInput]} multiline />
           </View>
         </ScrollView>
         <Button
@@ -92,7 +97,16 @@ const styles = StyleSheet.create({
   input: {
     paddingHorizontal: 20,
     backgroundColor: '#fff',
-    height: 40,
     fontSize: 16,
+  },
+  nameInput: {
+    height: 40,
+  },
+  bioContainer: {
+    marginTop: 32,
+  },
+  bioInput: {
+    height: 120,
+    paddingTop: 12,
   },
 });

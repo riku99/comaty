@@ -1,0 +1,15 @@
+query MyPageScreenData {
+  me {
+    id
+    nickname
+    age
+    statusMessage
+    bio
+    profileImages {
+      ...ProfileImage
+    }
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}

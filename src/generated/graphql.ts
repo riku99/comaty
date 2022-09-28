@@ -80,13 +80,16 @@ export type Image = {
 
 export type Me = UserEntity & {
   __typename?: 'Me';
+  age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   birthDay?: Maybe<Scalars['Int']>;
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
+  firstProfileImage?: Maybe<UserProfileImage>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
   nickname?: Maybe<Scalars['String']>;
+  profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
 };
@@ -372,9 +375,12 @@ export type UserEdge = {
 };
 
 export type UserEntity = {
+  age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
+  firstProfileImage?: Maybe<UserProfileImage>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
+  profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
 };
@@ -532,6 +538,11 @@ export type HomeStoriesQuery = { __typename?: 'Query', stories: { __typename?: '
 export type HomeNearByUsersFragment = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type HomeStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: string, url: string } | null } | null };
 
 export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -1365,6 +1376,50 @@ export function useHomeStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type HomeStoriesQueryHookResult = ReturnType<typeof useHomeStoriesQuery>;
 export type HomeStoriesLazyQueryHookResult = ReturnType<typeof useHomeStoriesLazyQuery>;
 export type HomeStoriesQueryResult = Apollo.QueryResult<HomeStoriesQuery, HomeStoriesQueryVariables>;
+export const MyPageScreenDataDocument = gql`
+    query MyPageScreenData {
+  me {
+    id
+    nickname
+    age
+    statusMessage
+    bio
+    profileImages {
+      ...ProfileImage
+    }
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+
+/**
+ * __useMyPageScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMyPageScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyPageScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyPageScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyPageScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>(MyPageScreenDataDocument, options);
+      }
+export function useMyPageScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>(MyPageScreenDataDocument, options);
+        }
+export type MyPageScreenDataQueryHookResult = ReturnType<typeof useMyPageScreenDataQuery>;
+export type MyPageScreenDataLazyQueryHookResult = ReturnType<typeof useMyPageScreenDataLazyQuery>;
+export type MyPageScreenDataQueryResult = Apollo.QueryResult<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>;
 export const NearbyUsersScreenDataDocument = gql`
     query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {

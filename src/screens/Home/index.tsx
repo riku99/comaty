@@ -129,6 +129,7 @@ export const HomeScreen = ({ navigation }: Props) => {
           />
         }
         ListHeaderComponentStyle={styles.listHeader}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

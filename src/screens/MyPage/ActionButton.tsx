@@ -1,17 +1,18 @@
 import { Text } from '@rneui/themed';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 type Props = {
   icon: JSX.Element;
   title: string;
+  onPress?: () => void;
 };
 
-export const ActionButton = ({ icon, title }: Props) => {
+export const ActionButton = ({ icon, title, onPress }: Props) => {
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={onPress}>
       <View style={styles.actionButton}>{icon}</View>
       <Text style={styles.title}>{title}</Text>
-    </View>
+    </Pressable>
   );
 };
 

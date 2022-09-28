@@ -3,6 +3,7 @@ import React from 'react';
 import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
+import { EditProfileScreen } from 'src/screens/EditProfile';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   UserProfile: {
     id: string;
   };
+  EditProfile: undefined;
   PostReply: {
     postId: number;
   };
@@ -109,6 +111,7 @@ export const RootStack = () => {
               name="QuestionReplyCreation"
               component={QuestionReplyCreationScreen}
             />
+            <Stack.Screen name="EditProfile" component={EditProfileScreen} />
           </Stack.Group>
         </>
       ) : (

@@ -53,6 +53,9 @@ export const MyPageScreen = ({ navigation }: Props) => {
         <ActionButton
           icon={<MaterialIcons name="edit" size={28} color="#666666" />}
           title="プロフィール編集"
+          onPress={() => {
+            navigation.navigate('EditProfile');
+          }}
         />
       </View>
     </View>

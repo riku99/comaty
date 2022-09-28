@@ -31,7 +31,7 @@ export const HeaderRightCreationButton = ({
 const styles = StyleSheet.create({
   postText: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
     color: '#29b0ff',
   },
 });

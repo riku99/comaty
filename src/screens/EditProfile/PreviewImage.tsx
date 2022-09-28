@@ -1,5 +1,5 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Dimensions, Pressable, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 type Props = {
@@ -22,8 +22,7 @@ export const PreviewImage = ({ imageUrl, onPress }: Props) => {
   );
 };
 
-const { width: screenWidth } = Dimensions.get('screen');
-const SIZE = screenWidth / 4.6;
+const SIZE = 100;
 
 const styles = StyleSheet.create({
   container: {

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
+import { HStack } from 'src/components/ui/HStack';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
 
@@ -28,15 +29,21 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <SafeAreaView>
         <ScrollView style={styles.contents}>
-          <View style={styles.previewImagesContainer}>
-            <PreviewImage
-              onPress={() => {}}
-              imageUrl="https://storage.googleapis.com/comaty-dev-develop-resource/rose.jpeg"
-            />
-            <PreviewImage onPress={() => {}} />
-            <PreviewImage onPress={() => {}} />
-            <PreviewImage onPress={() => {}} />
-          </View>
+          <ScrollView
+            contentContainerStyle={styles.previewImagesContainer}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+            <HStack space={12}>
+              <PreviewImage
+                onPress={() => {}}
+                imageUrl="https://storage.googleapis.com/comaty-dev-develop-resource/rose.jpeg"
+              />
+              <PreviewImage onPress={() => {}} />
+              <PreviewImage onPress={() => {}} />
+              <PreviewImage onPress={() => {}} />
+            </HStack>
+          </ScrollView>
 
           <View style={styles.nameContainer}>
             <Text style={styles.inputTitle}>ニックネーム</Text>
@@ -75,7 +82,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
     marginTop: 20,
     paddingHorizontal: 16,
   },

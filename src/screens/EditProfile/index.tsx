@@ -1,15 +1,10 @@
 import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
+import { TextInput } from 'src/components/ui/TextInput';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
 
@@ -47,7 +42,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
           <View style={styles.nameContainer}>
             <Text style={styles.inputTitle}>ニックネーム</Text>
-            <TextInput style={styles.input} selectionColor={theme.primary} />
+            <TextInput style={styles.input} />
           </View>
         </ScrollView>
         <Button

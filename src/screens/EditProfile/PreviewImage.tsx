@@ -1,22 +1,38 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Pressable, StyleSheet } from 'react-native';
+import { View } from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
 
 type Props = {
   imageUrl?: string | null;
   onPress: () => void;
+  disable?: boolean;
 };
 
-export const PreviewImage = ({ imageUrl, onPress }: Props) => {
+export const PreviewImage = ({ imageUrl, onPress, disable = false }: Props) => {
   return (
-    <Pressable onPress={onPress} style={styles.container}>
+    <Pressable
+      onPress={() => {
+        if (disable) {
+          return;
+        }
+        onPress();
+      }}
+      style={styles.container}
+    >
       <FastImage source={{ uri: imageUrl }} style={styles.image}>
-        <FontAwesome
-          name="plus-circle"
-          size={24}
-          color="#fff"
-          style={styles.plus}
-        />
+        {disable ? (
+          <View style={styles.lock}>
+            <FontAwesome name="lock" size={32} color="#fff" />
+          </View>
+        ) : (
+          <FontAwesome
+            name="plus-circle"
+            size={24}
+            color="#fff"
+            style={styles.plus}
+          />
+        )}
       </FastImage>
     </Pressable>
   );
@@ -40,5 +56,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 4,
     top: 4,
+  },
+  lock: {
+    position: 'absolute',
+    alignItems: 'center',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
   },
 });

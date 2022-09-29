@@ -1,5 +1,6 @@
 mutation UploadProfileImage($input: UploadProfileImageInput!) {
   uploadProfileImage(input: $input) {
+    id
     url
     width
     height

@@ -41,16 +41,21 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     data?.me.statusMessage ?? ''
   );
   const [height, setHeight] = useState(data?.me.height);
-  const [images, setImages] = useState<{ uri: string }[]>([]);
+  const [images, setImages] = useState<{ uri: string; id: number }[]>([]);
   const disableComplete = !nickname;
   const [updateMeMutation] = useUpdateMeMutation();
   const [uploadProfileImageMutation] = useUploadProfileImageMutation();
   const [deleteProfileImageMutation] = useDeleteProfileImageMutation();
-  const [deleteImageModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteTargetImageId, setDeleteTargetImageId] = useState<null | number>(
+    null
+  );
 
   useEffect(() => {
     if (data?.me) {
-      const _images = data.me.profileImages.map((img) => ({ uri: img.url }));
+      const _images = data.me.profileImages.map((img) => ({
+        uri: img.url,
+        id: img.id,
+      }));
       setImages(_images);
     }
   }, [data?.me]);
@@ -109,7 +114,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const onImagePress = async ({ index }: { index: number }) => {
     // 既に画像が存在する場合は削除のみ行える
     if (images[index]) {
-      setDeleteModalVisible(true);
+      setDeleteTargetImageId(images[index].id);
       return;
     }
 
@@ -128,9 +133,27 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
     if (uploadImageData) {
       setImages((c) => {
-        return [...c, { uri: uploadImageData.uploadProfileImage.url }];
+        return [
+          ...c,
+          {
+            uri: uploadImageData.uploadProfileImage.url,
+            id: uploadImageData.uploadProfileImage.id,
+          },
+        ];
       });
     }
+  };
+
+  const onDeleteImagePress = async () => {
+    if (deleteTargetImageId) {
+      return;
+    }
+
+    const { data: deleteData } = await deleteProfileImageMutation({
+      variables: {
+        id: deleteTargetImageId,
+      },
+    });
   };
 
   if (!data) {
@@ -273,13 +296,13 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       </SafeAreaView>
 
       <OverlayModal
-        isVisible={deleteImageModalVisible}
+        isVisible={!!deleteTargetImageId}
         items={[{ title: '削除', onPress: () => {}, titleColor: '#FF2A2A' }]}
         onBackdropPress={() => {
-          setDeleteModalVisible(false);
+          setDeleteTargetImageId(null);
         }}
         onCancel={() => {
-          setDeleteModalVisible(false);
+          setDeleteTargetImageId(null);
         }}
       />
     </View>

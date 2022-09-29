@@ -515,7 +515,7 @@ export type UploadProfileImageMutationVariables = Exact<{
 }>;
 
 
-export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfileImage: { __typename?: 'UserProfileImage', url: string, width?: number | null, height?: number | null } };
+export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfileImage: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } };
 
 export type MyBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1178,6 +1178,7 @@ export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<UpdateMeMutatio
 export const UploadProfileImageDocument = gql`
     mutation UploadProfileImage($input: UploadProfileImageInput!) {
   uploadProfileImage(input: $input) {
+    id
     url
     width
     height

@@ -1,0 +1,8 @@
+mutation DeleteProfileImage($id: Int!) {
+  deleteProfileImage(id: $id) {
+    id
+    url
+    width
+    height
+  }
+}

@@ -16,9 +16,11 @@ import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
 import { Loading } from 'src/components/ui/Loading';
+import { OverlayModal } from 'src/components/ui/OverlayModal';
 import { Picker } from 'src/components/ui/Picker';
 import { TextInput } from 'src/components/ui/TextInput';
 import {
+  useDeleteProfileImageMutation,
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
   useUploadProfileImageMutation,
@@ -43,6 +45,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const disableComplete = !nickname;
   const [updateMeMutation] = useUpdateMeMutation();
   const [uploadProfileImageMutation] = useUploadProfileImageMutation();
+  const [deleteProfileImageMutation] = useDeleteProfileImageMutation();
+  const [deleteImageModalVisible, setDeleteModalVisible] = useState(false);
 
   useEffect(() => {
     if (data?.me) {
@@ -102,7 +106,13 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     }
   };
 
-  const onImagePress = async () => {
+  const onImagePress = async ({ index }: { index: number }) => {
+    // 既に画像が存在する場合は削除のみ行える
+    if (images[index]) {
+      setDeleteModalVisible(true);
+      return;
+    }
+
     const uri = await getImageUri();
     if (!uri) {
       return;
@@ -142,18 +152,32 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             >
               <HStack space={18}>
                 <PreviewImage
-                  onPress={onImagePress}
+                  onPress={() => {
+                    onImagePress({ index: 0 });
+                  }}
                   imageUrl={images[0]?.uri}
                 />
 
                 <PreviewImage
                   imageUrl={images[1]?.uri}
-                  onPress={onImagePress}
+                  onPress={() => {
+                    onImagePress({ index: 1 });
+                  }}
                 />
 
-                <PreviewImage imageUrl={images[2]?.uri} onPress={() => {}} />
+                <PreviewImage
+                  imageUrl={images[2]?.uri}
+                  onPress={() => {
+                    onImagePress({ index: 2 });
+                  }}
+                />
 
-                <PreviewImage imageUrl={images[3]?.uri} onPress={() => {}} />
+                <PreviewImage
+                  imageUrl={images[3]?.uri}
+                  onPress={() => {
+                    onImagePress({ index: 3 });
+                  }}
+                />
               </HStack>
             </ScrollView>
 
@@ -247,12 +271,22 @@ export const EditProfileScreen = ({ navigation }: Props) => {
           />
         </View>
       </SafeAreaView>
+
+      <OverlayModal
+        isVisible={deleteImageModalVisible}
+        items={[{ title: '削除', onPress: () => {}, titleColor: '#FF2A2A' }]}
+        onBackdropPress={() => {
+          setDeleteModalVisible(false);
+        }}
+        onCancel={() => {
+          setDeleteModalVisible(false);
+        }}
+      />
     </View>
   );
 };
 
 const INITIAL_HEIGHT = 165;
-const arr4 = [1, 2, 3, 4];
 
 const getHeightList = () => {
   const list: number[] = [];

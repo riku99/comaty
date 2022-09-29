@@ -54,6 +54,10 @@ export type CreateUserInput = {
   idToken: Scalars['String'];
 };
 
+export enum DeleteProfileImageError {
+  UnexpectedError = 'UNEXPECTED_ERROR'
+}
+
 export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
 }
@@ -102,6 +106,7 @@ export type Mutation = {
   createQuestionReply: QuestionReply;
   createUser: Me;
   deletePost?: Maybe<Post>;
+  deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
   deleteQuestionReply?: Maybe<QuestionReply>;
   likePost: Post;
@@ -134,6 +139,11 @@ export type MutationCreateUserArgs = {
 
 
 export type MutationDeletePostArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteProfileImageArgs = {
   id: Scalars['Int'];
 };
 
@@ -450,6 +460,13 @@ export type DeletePostMutationVariables = Exact<{
 
 
 export type DeletePostMutation = { __typename?: 'Mutation', deletePost?: { __typename?: 'Post', id: number } | null };
+
+export type DeleteProfileImageMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteProfileImageMutation = { __typename?: 'Mutation', deleteProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
 export type DeleteQuestionMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -903,6 +920,42 @@ export function useDeletePostMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const DeleteProfileImageDocument = gql`
+    mutation DeleteProfileImage($id: Int!) {
+  deleteProfileImage(id: $id) {
+    id
+    url
+    width
+    height
+  }
+}
+    `;
+export type DeleteProfileImageMutationFn = Apollo.MutationFunction<DeleteProfileImageMutation, DeleteProfileImageMutationVariables>;
+
+/**
+ * __useDeleteProfileImageMutation__
+ *
+ * To run a mutation, you first call `useDeleteProfileImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteProfileImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteProfileImageMutation, { data, loading, error }] = useDeleteProfileImageMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteProfileImageMutation(baseOptions?: Apollo.MutationHookOptions<DeleteProfileImageMutation, DeleteProfileImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteProfileImageMutation, DeleteProfileImageMutationVariables>(DeleteProfileImageDocument, options);
+      }
+export type DeleteProfileImageMutationHookResult = ReturnType<typeof useDeleteProfileImageMutation>;
+export type DeleteProfileImageMutationResult = Apollo.MutationResult<DeleteProfileImageMutation>;
+export type DeleteProfileImageMutationOptions = Apollo.BaseMutationOptions<DeleteProfileImageMutation, DeleteProfileImageMutationVariables>;
 export const DeleteQuestionDocument = gql`
     mutation DeleteQuestion($id: Int!) {
   deleteQuestion(id: $id) {

@@ -1,0 +1,10 @@
+query EditProfileScreenData {
+  me {
+    id
+    nickname
+    bio
+    profileImages {
+      url
+    }
+  }
+}

@@ -501,6 +501,11 @@ export type UserCardFragment = { __typename?: 'User', id: string, nickname?: str
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } } | null> };
 
+export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', url: string } | null> } | null };
+
 export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
@@ -1225,6 +1230,45 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const EditProfileScreenDataDocument = gql`
+    query EditProfileScreenData {
+  me {
+    id
+    nickname
+    bio
+    profileImages {
+      url
+    }
+  }
+}
+    `;
+
+/**
+ * __useEditProfileScreenDataQuery__
+ *
+ * To run a query within a React component, call `useEditProfileScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEditProfileScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEditProfileScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEditProfileScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>(EditProfileScreenDataDocument, options);
+      }
+export function useEditProfileScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>(EditProfileScreenDataDocument, options);
+        }
+export type EditProfileScreenDataQueryHookResult = ReturnType<typeof useEditProfileScreenDataQuery>;
+export type EditProfileScreenDataLazyQueryHookResult = ReturnType<typeof useEditProfileScreenDataLazyQuery>;
+export type EditProfileScreenDataQueryResult = Apollo.QueryResult<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>;
 export const QuestionsScreenDataDocument = gql`
     query QuestionsScreenData($first: Int, $after: String) {
   questions(first: $first, after: $after) {

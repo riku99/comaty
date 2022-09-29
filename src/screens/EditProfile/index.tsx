@@ -1,22 +1,33 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
+import { Loading } from 'src/components/ui/Loading';
 import { Picker } from 'src/components/ui/Picker';
 import { TextInput } from 'src/components/ui/TextInput';
+import { useEditProfileScreenDataQuery } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
 
 type Props = RootNavigationScreenProp<'EditProfile'>;
 
 export const EditProfileScreen = ({ navigation }: Props) => {
+  const { data } = useEditProfileScreenDataQuery();
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
+  const [nickname, setNickName] = useState(data?.me.nickname);
+  const [bio, setBio] = useState(data?.me.bio);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,93 +38,126 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  if (!data) {
+    return <Loading />;
+  }
+
   return (
     <View style={styles.container}>
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.scrollContainer}
-        extraHeight={130}
-      >
-        <View>
-          <ScrollView
-            contentContainerStyle={styles.previewImagesContainer}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
-            <HStack space={12}>
-              <PreviewImage
-                onPress={() => {}}
-                imageUrl="https://storage.googleapis.com/comaty-dev-develop-resource/rose.jpeg"
-              />
-              <PreviewImage onPress={() => {}} />
-              <PreviewImage onPress={() => {}} disable />
-              <PreviewImage onPress={() => {}} disable />
-            </HStack>
-          </ScrollView>
-
-          <View style={styles.nameContainer}>
-            <Text style={styles.inputTitle}>ニックネーム</Text>
-            <TextInput
-              style={[styles.input, styles.nameInput]}
-              editable={!heightPickerVisible}
-            />
-          </View>
-
-          <View style={styles.bioContainer}>
-            <Text style={styles.inputTitle}>自己紹介</Text>
-            <TextInput
-              style={[styles.input, styles.bioInput]}
-              multiline
-              editable={!heightPickerVisible}
-            />
-          </View>
-
-          <View style={styles.heightContainer}>
-            <Text style={styles.inputTitle}>身長</Text>
-            <Pressable
-              style={styles.heightInput}
-              onPress={() => {
-                setHeightPickerVisible(!heightPickerVisible);
-              }}
+      <SafeAreaView>
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.scrollContainer}
+          extraHeight={130}
+        >
+          <View>
+            <ScrollView
+              contentContainerStyle={styles.previewImagesContainer}
+              horizontal
+              showsHorizontalScrollIndicator={false}
             >
-              <Text style={styles.heightText}>183</Text>
-              <FontAwesome
-                name="angle-right"
-                size={24}
-                color={theme.gray.rightIcon}
+              <HStack space={12}>
+                <PreviewImage
+                  onPress={() => {}}
+                  imageUrl="https://storage.googleapis.com/comaty-dev-develop-resource/rose.jpeg"
+                />
+                <PreviewImage onPress={() => {}} />
+                <PreviewImage onPress={() => {}} disable />
+                <PreviewImage onPress={() => {}} disable />
+              </HStack>
+            </ScrollView>
+
+            <View style={styles.nameContainer}>
+              <Text style={styles.inputTitle}>ニックネーム</Text>
+              <TextInput
+                style={[styles.input, styles.nameInput]}
+                editable={!heightPickerVisible}
+                value={nickname}
               />
-            </Pressable>
+            </View>
+
+            <View style={styles.statusMessageContainer}>
+              <Text style={styles.inputTitle}>一言</Text>
+              <TextInput style={[styles.input, styles.statusMessageInput]} />
+            </View>
+
+            <View style={styles.bioContainer}>
+              <Text style={styles.inputTitle}>自己紹介</Text>
+              <TextInput
+                style={[styles.input, styles.bioInput]}
+                multiline
+                editable={!heightPickerVisible}
+                value={bio}
+              />
+            </View>
+
+            <View style={styles.heightContainer}>
+              <Text style={styles.inputTitle}>身長</Text>
+              <Pressable
+                style={styles.heightInput}
+                onPress={() => {
+                  setHeightPickerVisible(!heightPickerVisible);
+                }}
+              >
+                <Text style={styles.heightText}>183</Text>
+                <FontAwesome
+                  name="angle-right"
+                  size={24}
+                  color={theme.gray.rightIcon}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.myTagContainer}>
+              <Text style={styles.inputTitle}>マイタグ</Text>
+              <Pressable style={styles.myTags}>
+                <View></View>
+                <FontAwesome
+                  name="angle-right"
+                  size={24}
+                  color={theme.gray.rightIcon}
+                />
+              </Pressable>
+            </View>
           </View>
+        </KeyboardAwareScrollView>
+
+        <Button
+          title="プレビュー"
+          titleStyle={{
+            color: theme.black,
+          }}
+          containerStyle={{
+            paddingHorizontal: 16,
+            width: '100%',
+            position: 'absolute',
+            bottom: safeAreaBottom,
+          }}
+          buttonStyle={{
+            height: 48,
+            backgroundColor: '#fff',
+            borderWidth: 0.7,
+            borderColor: '#B5B5B5',
+          }}
+        />
+
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+          }}
+        >
+          <Picker
+            isVisible={heightPickerVisible}
+            items={getHeightList().map((h) => ({ value: h, label: `${h}cm` }))}
+            selectedValue={180}
+            onValueChange={(itemValue, itemIndex) => {}}
+            hidePicker={() => {
+              setHeightPickerVisible(false);
+            }}
+          />
         </View>
-      </KeyboardAwareScrollView>
-
-      <Button
-        title="プレビュー"
-        titleStyle={{
-          color: theme.black,
-        }}
-        containerStyle={{
-          paddingHorizontal: 16,
-          position: 'absolute',
-          width: '100%',
-          bottom: safeAreaBottom,
-        }}
-        buttonStyle={{
-          height: 48,
-          backgroundColor: '#fff',
-          borderWidth: 0.7,
-          borderColor: '#B5B5B5',
-        }}
-      />
-
-      <Picker
-        isVisible={heightPickerVisible}
-        items={getHeightList().map((h) => ({ value: h, label: `${h}cm` }))}
-        selectedValue={180}
-        onValueChange={(itemValue, itemIndex) => {}}
-        hidePicker={() => {
-          setHeightPickerVisible(false);
-        }}
-      />
+      </SafeAreaView>
     </View>
   );
 };
@@ -132,7 +176,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F3F3',
   },
   scrollContainer: {
-    paddingBottom: 30,
+    paddingBottom: 88,
   },
   previewImagesContainer: {
     alignSelf: 'center',
@@ -146,7 +190,7 @@ const styles = StyleSheet.create({
   },
   inputTitle: {
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 16,
     marginLeft: 16,
     marginBottom: 8,
   },
@@ -178,5 +222,22 @@ const styles = StyleSheet.create({
   },
   heightText: {
     fontSize: 16,
+  },
+  statusMessageContainer: {
+    marginTop: 32,
+  },
+  statusMessageInput: {
+    height: 40,
+  },
+  myTagContainer: {
+    marginTop: 32,
+  },
+  myTags: {
+    height: 90,
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
 });

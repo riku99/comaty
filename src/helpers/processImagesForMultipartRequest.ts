@@ -14,6 +14,8 @@ export const processImageForMultipartRequest = async ({
 
   const ext = getExtention(uri);
 
+  console.log(ext);
+
   if (ext === 'HEIC') {
     const { path: jpegPath, type: jpegType } = await convertHeicToJpeg(uri);
 

@@ -1,0 +1,7 @@
+mutation UploadProfileImage($input: UploadProfileImageInput!) {
+  uploadProfileImage(input: $input) {
+    url
+    width
+    height
+  }
+}

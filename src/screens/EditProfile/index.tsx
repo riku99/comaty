@@ -21,7 +21,9 @@ import { TextInput } from 'src/components/ui/TextInput';
 import {
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
+  useUploadProfileImageMutation,
 } from 'src/generated/graphql';
+import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
 
@@ -37,21 +39,10 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     data?.me.statusMessage ?? ''
   );
   const [height, setHeight] = useState(data?.me.height);
+  const [images, setImages] = useState<{ uri: string }[]>([]);
   const disableComplete = !nickname;
   const [updateMeMutation] = useUpdateMeMutation();
-  const [profileImage1, setProfileImage1] = useState(
-    data?.me.profileImages[0]?.url
-  );
-  const [profileImage2, setProfileImage2] = useState(
-    data?.me.profileImages[1]?.url
-  );
-  const [profileImage3, setProfileImage3] = useState(
-    data?.me.profileImages[2]?.url
-  );
-  const [profileImage4, setProfileImage4] = useState(
-    data?.me.profileImages[3]?.url
-  );
-  const [images, setImages] = useState<{ uri: string }[]>([]);
+  const [uploadProfileImageMutation] = useUploadProfileImageMutation();
 
   useEffect(() => {
     if (data?.me) {
@@ -111,13 +102,23 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     }
   };
 
-  const setImage = async (index: number) => {
+  const onImagePress = async () => {
     const uri = await getImageUri();
-    if (uri) {
-      setImages((current) => {
-        const copy = [...current];
-        copy[index] = { uri };
-        return copy;
+    if (!uri) {
+      return;
+    }
+    const file = await processImageForMultipartRequest({ uri });
+    const { data: uploadImageData } = await uploadProfileImageMutation({
+      variables: {
+        input: {
+          file,
+        },
+      },
+    });
+
+    if (uploadImageData) {
+      setImages((c) => {
+        return [...c, { uri: uploadImageData.uploadProfileImage.url }];
       });
     }
   };
@@ -139,37 +140,20 @@ export const EditProfileScreen = ({ navigation }: Props) => {
               horizontal
               showsHorizontalScrollIndicator={false}
             >
-              <HStack space={12}>
+              <HStack space={18}>
                 <PreviewImage
-                  onPress={async () => {
-                    await setImage(0);
-                  }}
+                  onPress={onImagePress}
                   imageUrl={images[0]?.uri}
                 />
 
                 <PreviewImage
                   imageUrl={images[1]?.uri}
-                  disable={!images[0]?.uri}
-                  onPress={async () => {
-                    await setImage(1);
-                  }}
+                  onPress={onImagePress}
                 />
 
-                <PreviewImage
-                  imageUrl={images[2]?.uri}
-                  disable={!images[1]?.uri}
-                  onPress={async () => {
-                    await setImage(2);
-                  }}
-                />
+                <PreviewImage imageUrl={images[2]?.uri} onPress={() => {}} />
 
-                <PreviewImage
-                  onPress={async () => {
-                    await setImage(3);
-                  }}
-                  imageUrl={images[3]?.uri}
-                  disable={!images[2]?.uri}
-                />
+                <PreviewImage imageUrl={images[3]?.uri} onPress={() => {}} />
               </HStack>
             </ScrollView>
 
@@ -268,6 +252,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 };
 
 const INITIAL_HEIGHT = 165;
+const arr4 = [1, 2, 3, 4];
 
 const getHeightList = () => {
   const list: number[] = [];

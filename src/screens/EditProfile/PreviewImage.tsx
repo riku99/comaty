@@ -1,6 +1,5 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Pressable, StyleSheet } from 'react-native';
-import { View } from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
 
 type Props = {
@@ -21,11 +20,7 @@ export const PreviewImage = ({ imageUrl, onPress, disable = false }: Props) => {
       style={styles.container}
     >
       <FastImage source={{ uri: imageUrl }} style={styles.image}>
-        {disable ? (
-          <View style={styles.lock}>
-            <FontAwesome name="lock" size={32} color="#fff" />
-          </View>
-        ) : (
+        {!imageUrl && (
           <FontAwesome
             name="plus-circle"
             size={24}

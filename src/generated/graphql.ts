@@ -107,6 +107,7 @@ export type Mutation = {
   likePost: Post;
   unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
+  updateMe: Me;
   updateUserProfile: Me;
 };
 
@@ -158,6 +159,11 @@ export type MutationUnlikePostArgs = {
 
 export type MutationUpdateInitialStatusArgs = {
   input: UpdateInitialStatusInput;
+};
+
+
+export type MutationUpdateMeArgs = {
+  input: UpdateMeInput;
 };
 
 
@@ -346,6 +352,17 @@ export type UpdateInitialStatusInput = {
   sex: Sex;
 };
 
+export type UpdateMeInput = {
+  bio: Scalars['String'];
+  height?: InputMaybe<Scalars['Int']>;
+  nickname: Scalars['String'];
+  profileImage1?: InputMaybe<Scalars['Upload']>;
+  profileImage2?: InputMaybe<Scalars['Upload']>;
+  profileImage3?: InputMaybe<Scalars['Upload']>;
+  profileImage4?: InputMaybe<Scalars['Upload']>;
+  statusMessage: Scalars['String'];
+};
+
 export type UpdateUserProfileInput = {
   bio?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
@@ -463,6 +480,13 @@ export type UpdateInitialStatusMutationVariables = Exact<{
 
 export type UpdateInitialStatusMutation = { __typename?: 'Mutation', updateInitialStatus: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } };
 
+export type UpdateMeMutationVariables = Exact<{
+  input: UpdateMeInput;
+}>;
+
+
+export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } };
+
 export type MyBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -476,7 +500,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: string, url: string } | null> } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1044,6 +1068,47 @@ export function useUpdateInitialStatusMutation(baseOptions?: Apollo.MutationHook
 export type UpdateInitialStatusMutationHookResult = ReturnType<typeof useUpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationResult = Apollo.MutationResult<UpdateInitialStatusMutation>;
 export type UpdateInitialStatusMutationOptions = Apollo.BaseMutationOptions<UpdateInitialStatusMutation, UpdateInitialStatusMutationVariables>;
+export const UpdateMeDocument = gql`
+    mutation UpdateMe($input: UpdateMeInput!) {
+  updateMe(input: $input) {
+    id
+    nickname
+    bio
+    statusMessage
+    bio
+    height
+    profileImages {
+      ...ProfileImage
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+export type UpdateMeMutationFn = Apollo.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>;
+
+/**
+ * __useUpdateMeMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMeMutation, UpdateMeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, options);
+      }
+export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
+export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
+export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<UpdateMeMutation, UpdateMeMutationVariables>;
 export const MyBasicInfoDocument = gql`
     query MyBasicInfo {
   me {
@@ -1129,9 +1194,15 @@ export const GetInitialDataDocument = gql`
     birthYear
     birthMonth
     birthDay
+    height
+    statusMessage
+    bio
+    profileImages {
+      ...ProfileImage
+    }
   }
 }
-    `;
+    ${ProfileImageFragmentDoc}`;
 
 /**
  * __useGetInitialDataQuery__

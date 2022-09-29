@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
-import { useLayoutEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WhiteButton } from 'src/components/ui/Buttons';
@@ -17,7 +18,10 @@ import { HStack } from 'src/components/ui/HStack';
 import { Loading } from 'src/components/ui/Loading';
 import { Picker } from 'src/components/ui/Picker';
 import { TextInput } from 'src/components/ui/TextInput';
-import { useEditProfileScreenDataQuery } from 'src/generated/graphql';
+import {
+  useEditProfileScreenDataQuery,
+  useUpdateMeMutation,
+} from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
 
@@ -28,10 +32,50 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
   const [nickname, setNickName] = useState(data?.me.nickname);
-  const [bio, setBio] = useState(data?.me.bio);
-  const [statusMessage, setStatusMessage] = useState(data?.me.statusMessage);
-  const [height, setHeight] = useState(data.me.height);
+  const [bio, setBio] = useState(data?.me.bio ?? '');
+  const [statusMessage, setStatusMessage] = useState(
+    data?.me.statusMessage ?? ''
+  );
+  const [height, setHeight] = useState(data?.me.height);
   const disableComplete = !nickname;
+  const [updateMeMutation] = useUpdateMeMutation();
+  const [profileImage1, setProfileImage1] = useState(
+    data?.me.profileImages[0]?.url
+  );
+  const [profileImage2, setProfileImage2] = useState(
+    data?.me.profileImages[1]?.url
+  );
+  const [profileImage3, setProfileImage3] = useState(
+    data?.me.profileImages[2]?.url
+  );
+  const [profileImage4, setProfileImage4] = useState(
+    data?.me.profileImages[3]?.url
+  );
+  const [images, setImages] = useState<{ uri: string }[]>([]);
+
+  useEffect(() => {
+    if (data?.me) {
+      const _images = data.me.profileImages.map((img) => ({ uri: img.url }));
+      setImages(_images);
+    }
+  }, [data?.me]);
+
+  const updateMe = useCallback(async () => {
+    if (disableComplete) {
+      return;
+    }
+
+    await updateMeMutation({
+      variables: {
+        input: {
+          nickname,
+          bio,
+          statusMessage,
+          height,
+        },
+      },
+    });
+  }, [nickname, bio, statusMessage, height]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,13 +84,43 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       headerShadowVisible: false,
       headerRight: () => (
         <HeaderRightButton
-          onPress={() => {}}
+          onPress={async () => {
+            await updateMe();
+          }}
           title="完了"
           disabled={disableComplete}
         />
       ),
     });
-  }, [navigation, disableComplete]);
+  }, [navigation, disableComplete, updateMe]);
+
+  const getImageUri = async () => {
+    try {
+      const result = await launchImageLibrary({
+        selectionLimit: 1,
+        mediaType: 'photo',
+      });
+
+      if (result.didCancel) {
+        return;
+      }
+
+      return result.assets[0].uri;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const setImage = async (index: number) => {
+    const uri = await getImageUri();
+    if (uri) {
+      setImages((current) => {
+        const copy = [...current];
+        copy[index] = { uri };
+        return copy;
+      });
+    }
+  };
 
   if (!data) {
     return <Loading />;
@@ -67,12 +141,35 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             >
               <HStack space={12}>
                 <PreviewImage
-                  onPress={() => {}}
-                  imageUrl="https://storage.googleapis.com/comaty-dev-develop-resource/rose.jpeg"
+                  onPress={async () => {
+                    await setImage(0);
+                  }}
+                  imageUrl={images[0]?.uri}
                 />
-                <PreviewImage onPress={() => {}} />
-                <PreviewImage onPress={() => {}} disable />
-                <PreviewImage onPress={() => {}} disable />
+
+                <PreviewImage
+                  imageUrl={images[1]?.uri}
+                  disable={!images[0]?.uri}
+                  onPress={async () => {
+                    await setImage(1);
+                  }}
+                />
+
+                <PreviewImage
+                  imageUrl={images[2]?.uri}
+                  disable={!images[1]?.uri}
+                  onPress={async () => {
+                    await setImage(2);
+                  }}
+                />
+
+                <PreviewImage
+                  onPress={async () => {
+                    await setImage(3);
+                  }}
+                  imageUrl={images[3]?.uri}
+                  disable={!images[2]?.uri}
+                />
               </HStack>
             </ScrollView>
 
@@ -115,7 +212,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 }}
               >
                 <Text style={styles.heightText}>
-                  {`${height}cm` ?? '選択されていません'}
+                  {!!height ? `${height}cm` : '選択されていません'}
                 </Text>
                 <FontAwesome
                   name="angle-right"

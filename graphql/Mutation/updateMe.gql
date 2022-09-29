@@ -1,0 +1,13 @@
+mutation UpdateMe($input: UpdateMeInput!) {
+  updateMe(input: $input) {
+    id
+    nickname
+    bio
+    statusMessage
+    bio
+    height
+    profileImages {
+      ...ProfileImage
+    }
+  }
+}

@@ -7,7 +7,7 @@ export const processImageForMultipartRequest = async ({
   mime,
 }: {
   uri: string;
-  mime: string;
+  mime?: string;
 }) => {
   let fileUri = uri;
   let fileType = mime;
@@ -29,7 +29,7 @@ export const processImageForMultipartRequest = async ({
 };
 
 export const processImagesForMultipartRequest = async (
-  images: { uri: string; mime: string }[]
+  images: { uri: string; mime?: string }[]
 ) => {
   let files: ReactNativeFile[] | undefined;
   if (images.length) {

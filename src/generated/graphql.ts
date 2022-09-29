@@ -504,7 +504,7 @@ export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', url: string } | null> } | null };
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', url: string } | null> } | null };
 
 export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -1236,6 +1236,7 @@ export const EditProfileScreenDataDocument = gql`
     id
     nickname
     bio
+    statusMessage
     profileImages {
       url
     }

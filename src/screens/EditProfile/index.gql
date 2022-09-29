@@ -3,6 +3,7 @@ query EditProfileScreenData {
     id
     nickname
     bio
+    statusMessage
     profileImages {
       url
     }

@@ -1,5 +1,5 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Button, Text } from '@rneui/themed';
+import { Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
 import {
   Pressable,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { WhiteButton } from 'src/components/ui/Buttons';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
@@ -28,6 +29,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
   const [nickname, setNickName] = useState(data?.me.nickname);
   const [bio, setBio] = useState(data?.me.bio);
+  const [statusMessage, setStatusMessage] = useState(data?.me.statusMessage);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -76,8 +78,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             </View>
 
             <View style={styles.statusMessageContainer}>
-              <Text style={styles.inputTitle}>一言</Text>
-              <TextInput style={[styles.input, styles.statusMessageInput]} />
+              <Text style={styles.inputTitle}>ステータスメッセージ</Text>
+              <TextInput
+                style={[styles.input, styles.statusMessageInput]}
+                value={statusMessage}
+              />
             </View>
 
             <View style={styles.bioContainer}>
@@ -121,32 +126,17 @@ export const EditProfileScreen = ({ navigation }: Props) => {
           </View>
         </KeyboardAwareScrollView>
 
-        <Button
+        <WhiteButton
           title="プレビュー"
-          titleStyle={{
-            color: theme.black,
-          }}
           containerStyle={{
             paddingHorizontal: 16,
             width: '100%',
             position: 'absolute',
             bottom: safeAreaBottom,
           }}
-          buttonStyle={{
-            height: 48,
-            backgroundColor: '#fff',
-            borderWidth: 0.7,
-            borderColor: '#B5B5B5',
-          }}
         />
 
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            width: '100%',
-          }}
-        >
+        <View style={styles.pickerContainer}>
           <Picker
             isVisible={heightPickerVisible}
             items={getHeightList().map((h) => ({ value: h, label: `${h}cm` }))}
@@ -239,5 +229,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+  },
+  pickerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
 });

@@ -30,15 +30,23 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const [nickname, setNickName] = useState(data?.me.nickname);
   const [bio, setBio] = useState(data?.me.bio);
   const [statusMessage, setStatusMessage] = useState(data?.me.statusMessage);
+  const [height, setHeight] = useState(data.me.height);
+  const disableComplete = !nickname;
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'プロフィール編集',
       headerLeft: () => <CloseButton />,
       headerShadowVisible: false,
-      headerRight: () => <HeaderRightButton onPress={() => {}} title="完了" />,
+      headerRight: () => (
+        <HeaderRightButton
+          onPress={() => {}}
+          title="完了"
+          disabled={disableComplete}
+        />
+      ),
     });
-  }, [navigation]);
+  }, [navigation, disableComplete]);
 
   if (!data) {
     return <Loading />;
@@ -74,6 +82,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 style={[styles.input, styles.nameInput]}
                 editable={!heightPickerVisible}
                 value={nickname}
+                onChangeText={setNickName}
               />
             </View>
 
@@ -82,6 +91,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
               <TextInput
                 style={[styles.input, styles.statusMessageInput]}
                 value={statusMessage}
+                onChangeText={setStatusMessage}
               />
             </View>
 
@@ -92,6 +102,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 multiline
                 editable={!heightPickerVisible}
                 value={bio}
+                onChangeText={setBio}
               />
             </View>
 
@@ -103,7 +114,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                   setHeightPickerVisible(!heightPickerVisible);
                 }}
               >
-                <Text style={styles.heightText}>183</Text>
+                <Text style={styles.heightText}>
+                  {`${height}cm` ?? '選択されていません'}
+                </Text>
                 <FontAwesome
                   name="angle-right"
                   size={24}
@@ -140,9 +153,14 @@ export const EditProfileScreen = ({ navigation }: Props) => {
           <Picker
             isVisible={heightPickerVisible}
             items={getHeightList().map((h) => ({ value: h, label: `${h}cm` }))}
-            selectedValue={180}
-            onValueChange={(itemValue, itemIndex) => {}}
+            selectedValue={height ?? INITIAL_HEIGHT}
+            onValueChange={(itemValue) => {
+              setHeight(Number(itemValue));
+            }}
             hidePicker={() => {
+              if (!height) {
+                setHeight(INITIAL_HEIGHT);
+              }
               setHeightPickerVisible(false);
             }}
           />
@@ -151,6 +169,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     </View>
   );
 };
+
+const INITIAL_HEIGHT = 165;
 
 const getHeightList = () => {
   const list: number[] = [];

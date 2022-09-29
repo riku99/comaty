@@ -4,6 +4,7 @@ query EditProfileScreenData {
     nickname
     bio
     statusMessage
+    height
     profileImages {
       url
     }

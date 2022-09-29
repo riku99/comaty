@@ -180,39 +180,43 @@ export const useSignUpWithGoogle = () => {
 
       const userIdToken = await googleResult.user.getIdToken();
 
-      const { data: meData } = await meQuery({
+      await meQuery({
         fetchPolicy: 'no-cache',
-      });
-
-      if (!meData?.me) {
-        try {
-          await createUser({
-            variables: {
-              input: {
-                idToken: userIdToken,
-                email: googleResult.user.email,
+        onCompleted: async (meData) => {
+          if (!meData?.me) {
+            try {
+              await createUser({
+                variables: {
+                  input: {
+                    idToken: userIdToken,
+                    email: googleResult.user.email,
+                  },
+                },
+                onCompleted: () => {
+                  setLoggedIn(true);
+                  storage.set(
+                    mmkvStorageKeys.loginProviders,
+                    loginProviders.google
+                  );
+                },
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          } else {
+            await getInitialData({
+              fetchPolicy: 'network-only',
+              onCompleted: () => {
+                setLoggedIn(true);
+                storage.set(
+                  mmkvStorageKeys.loginProviders,
+                  loginProviders.google
+                );
               },
-            },
-            onCompleted: () => {
-              setLoggedIn(true);
-              storage.set(
-                mmkvStorageKeys.loginProviders,
-                loginProviders.google
-              );
-            },
-          });
-        } catch (e) {
-          console.log(e);
-        }
-      } else {
-        await getInitialData({
-          fetchPolicy: 'network-only',
-          onCompleted: () => {
-            setLoggedIn(true);
-            storage.set(mmkvStorageKeys.loginProviders, loginProviders.google);
-          },
-        });
-      }
+            });
+          }
+        },
+      });
     } catch (e) {
       console.log(e);
     }

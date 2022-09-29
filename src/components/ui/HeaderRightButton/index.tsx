@@ -5,12 +5,26 @@ import { theme } from 'src/styles';
 type Props = {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 };
 
-export const HeaderRightButton = ({ onPress, title }: Props) => {
+export const HeaderRightButton = ({
+  onPress,
+  title,
+  disabled = false,
+}: Props) => {
   return (
-    <Pressable onPress={onPress}>
-      <Text style={styles.title}>{title}</Text>
+    <Pressable onPress={onPress} disabled={disabled}>
+      <Text
+        style={[
+          styles.title,
+          {
+            color: disabled ? theme.gray.disable : theme.primary,
+          },
+        ]}
+      >
+        {title}
+      </Text>
     </Pressable>
   );
 };
@@ -18,7 +32,6 @@ export const HeaderRightButton = ({ onPress, title }: Props) => {
 const styles = StyleSheet.create({
   title: {
     fontWeight: 'bold',
-    fontSize: 16,
-    color: theme.primary,
+    fontSize: 18,
   },
 });

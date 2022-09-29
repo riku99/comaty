@@ -86,6 +86,7 @@ export type Me = UserEntity & {
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
   nickname?: Maybe<Scalars['String']>;
@@ -355,6 +356,7 @@ export type User = UserEntity & {
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
@@ -378,6 +380,7 @@ export type UserEntity = {
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
@@ -504,7 +507,7 @@ export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', url: string } | null> } | null };
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', url: string } | null> } | null };
 
 export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -1237,6 +1240,7 @@ export const EditProfileScreenDataDocument = gql`
     nickname
     bio
     statusMessage
+    height
     profileImages {
       url
     }

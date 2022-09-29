@@ -13,5 +13,6 @@ export const theme = {
     boarder: '#dbdbdb',
     text: '#575757',
     background: '#fafafa',
+    rightIcon: '#A5A5A5',
   },
 };

@@ -1,26 +1,58 @@
 import { Picker as RNPicker } from '@react-native-picker/picker';
 import { Text } from '@rneui/themed';
+import { AnimatePresence, MotiView } from 'moti';
 import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { theme } from 'src/styles';
 
 type Props = {
+  isVisible: boolean;
   items: { value: number | string; label: string }[];
+  hidePicker: () => void;
 } & ComponentProps<typeof RNPicker>;
 
-export const Picker = ({ items, ...pickerProps }: Props) => {
+export const Picker = ({
+  isVisible,
+  items,
+  hidePicker,
+  ...pickerProps
+}: Props) => {
   return (
-    <View style={styles.container}>
-      <RNPicker style={[styles.picker]} {...pickerProps}>
-        {items.map((item, index) => (
-          <RNPicker.Item key={index} label={item.label} value={item.value} />
-        ))}
-      </RNPicker>
+    <AnimatePresence>
+      {isVisible && (
+        <MotiView
+          from={{
+            translateY: 250,
+          }}
+          animate={{
+            translateY: 0,
+          }}
+          transition={{
+            duration: 200,
+            type: 'timing',
+          }}
+          exit={{
+            translateY: 250,
+          }}
+        >
+          <View style={styles.container}>
+            <RNPicker style={[styles.picker]} {...pickerProps}>
+              {items.map((item, index) => (
+                <RNPicker.Item
+                  key={index}
+                  label={item.label}
+                  value={item.value}
+                />
+              ))}
+            </RNPicker>
 
-      <Pressable style={styles.doneButton}>
-        <Text style={styles.doneText}>完了</Text>
-      </Pressable>
-    </View>
+            <Pressable style={styles.doneButton} onPress={hidePicker}>
+              <Text style={styles.doneText}>完了</Text>
+            </Pressable>
+          </View>
+        </MotiView>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -33,10 +65,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopColor: theme.gray.boarder,
     borderTopWidth: 1,
+    height: 250,
   },
   picker: {
     backgroundColor: '#fff',
-    height: 250,
+    marginTop: 12,
   },
   doneButton: {
     backgroundColor: theme.primary,

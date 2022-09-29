@@ -1,5 +1,4 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -8,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
+import { Picker } from 'src/components/ui/Picker';
 import { TextInput } from 'src/components/ui/TextInput';
 import { theme } from 'src/styles';
 import { PreviewImage } from './PreviewImage';
@@ -16,7 +16,7 @@ type Props = RootNavigationScreenProp<'EditProfile'>;
 
 export const EditProfileScreen = ({ navigation }: Props) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
-  const [showHeightPicker, setShowHeightPicker] = useState(false);
+  const [heightPickerVisible, setHeightPickerVisible] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -52,12 +52,19 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
           <View style={styles.nameContainer}>
             <Text style={styles.inputTitle}>ニックネーム</Text>
-            <TextInput style={[styles.input, styles.nameInput]} />
+            <TextInput
+              style={[styles.input, styles.nameInput]}
+              editable={!heightPickerVisible}
+            />
           </View>
 
           <View style={styles.bioContainer}>
             <Text style={styles.inputTitle}>自己紹介</Text>
-            <TextInput style={[styles.input, styles.bioInput]} multiline />
+            <TextInput
+              style={[styles.input, styles.bioInput]}
+              multiline
+              editable={!heightPickerVisible}
+            />
           </View>
 
           <View style={styles.heightContainer}>
@@ -65,11 +72,15 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             <Pressable
               style={styles.heightInput}
               onPress={() => {
-                setShowHeightPicker(!showHeightPicker);
+                setHeightPickerVisible(!heightPickerVisible);
               }}
             >
               <Text style={styles.heightText}>183</Text>
-              <FontAwesome name="angle-right" size={24} color="black" />
+              <FontAwesome
+                name="angle-right"
+                size={24}
+                color={theme.gray.rightIcon}
+              />
             </Pressable>
           </View>
         </View>
@@ -94,55 +105,15 @@ export const EditProfileScreen = ({ navigation }: Props) => {
         }}
       />
 
-      {showHeightPicker && (
-        <View
-          style={{
-            backgroundColor: '#fff',
-            position: 'absolute',
-            left: 0,
-            width: '100%',
-            bottom: 0,
-            borderTopColor: theme.gray.boarder,
-            borderTopWidth: 1,
-          }}
-        >
-          <Picker
-            selectedValue={180}
-            onValueChange={(itemValue, itemIndex) => {}}
-            style={{
-              height: 250,
-              backgroundColor: '#fff',
-            }}
-          >
-            {getHeightList().map((h) => (
-              <Picker.Item key={h} label={`${h}cm`} value={h} />
-            ))}
-          </Picker>
-
-          <Pressable
-            style={{
-              backgroundColor: theme.primary,
-              width: 60,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingVertical: 10,
-              borderRadius: 20,
-              position: 'absolute',
-              top: 6,
-              right: 14,
-            }}
-          >
-            <Text
-              style={{
-                color: '#fff',
-                fontWeight: 'bold',
-              }}
-            >
-              完了
-            </Text>
-          </Pressable>
-        </View>
-      )}
+      <Picker
+        isVisible={heightPickerVisible}
+        items={getHeightList().map((h) => ({ value: h, label: `${h}cm` }))}
+        selectedValue={180}
+        onValueChange={(itemValue, itemIndex) => {}}
+        hidePicker={() => {
+          setHeightPickerVisible(false);
+        }}
+      />
     </View>
   );
 };

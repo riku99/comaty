@@ -1,18 +1,25 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { Pressable, StyleSheet } from 'react-native';
+import { Text } from '@rneui/themed';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
 type Props = {
   imageUrl?: string | null;
   onPress: () => void;
-  disable?: boolean;
+
+  isUploding?: boolean;
 };
 
-export const PreviewImage = ({ imageUrl, onPress, disable = false }: Props) => {
+export const PreviewImage = ({
+  imageUrl,
+  onPress,
+
+  isUploding = false,
+}: Props) => {
   return (
     <Pressable
       onPress={() => {
-        if (disable) {
+        if (isUploding) {
           return;
         }
         onPress();
@@ -20,13 +27,20 @@ export const PreviewImage = ({ imageUrl, onPress, disable = false }: Props) => {
       style={styles.container}
     >
       <FastImage source={{ uri: imageUrl }} style={styles.image}>
-        {!imageUrl && (
-          <FontAwesome
-            name="plus-circle"
-            size={24}
-            color="#fff"
-            style={styles.plus}
-          />
+        {isUploding ? (
+          <View style={styles.uploadContainer}>
+            <ActivityIndicator color="#fff" />
+            <Text style={styles.uploadText}>アップロード中</Text>
+          </View>
+        ) : (
+          !imageUrl && (
+            <FontAwesome
+              name="plus-circle"
+              size={24}
+              color="#fff"
+              style={styles.plus}
+            />
+          )
         )}
       </FastImage>
     </Pressable>
@@ -60,5 +74,16 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: 'center',
+  },
+  uploadContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+  uploadText: {
+    fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 2,
+    fontSize: 11,
   },
 });

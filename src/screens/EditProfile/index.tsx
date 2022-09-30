@@ -6,13 +6,12 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WhiteButton } from 'src/components/ui/Buttons';
-import { CloseButton } from 'src/components/ui/CloseButton';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { HStack } from 'src/components/ui/HStack';
 import { Loading } from 'src/components/ui/Loading';
@@ -23,7 +22,7 @@ import {
   useDeleteProfileImageMutation,
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
-  useUploadProfileImageMutation
+  useUploadProfileImageMutation,
 } from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { theme } from 'src/styles';
@@ -42,6 +41,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   );
   const [height, setHeight] = useState(data?.me.height);
   const [images, setImages] = useState<{ uri: string; id: number }[]>([]);
+  const [uploadIngImageiIndices, setUploadIngIndices] = useState([]);
   const disableComplete = !nickname;
   const [updateMeMutation] = useUpdateMeMutation();
   const [uploadProfileImageMutation] = useUploadProfileImageMutation();
@@ -80,7 +80,6 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'プロフィール編集',
-      headerLeft: () => <CloseButton />,
       headerShadowVisible: false,
       headerRight: () => (
         <HeaderRightButton
@@ -93,23 +92,6 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       ),
     });
   }, [navigation, disableComplete, updateMe]);
-
-  const getImageUri = async () => {
-    try {
-      const result = await launchImageLibrary({
-        selectionLimit: 1,
-        mediaType: 'photo',
-      });
-
-      if (result.didCancel) {
-        return;
-      }
-
-      return result.assets[0].uri;
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const onImagePress = async ({ index }: { index: number }) => {
     // 既に画像が存在する場合は削除のみ行える
@@ -171,7 +153,10 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       });
 
       setImages((current) => {
-        return current.filter((c) => c.id !== deleteTargetImageId);
+        return current.filter(
+          (c) =>
+            c.id !== deleteData.deleteProfileImage.id ?? deleteTargetImageId
+        );
       });
     } catch (e) {
       console.log(e);
@@ -214,6 +199,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
                 <PreviewImage
                   imageUrl={images[2]?.uri}
+                  isUploding
                   onPress={() => {
                     onImagePress({ index: 2 });
                   }}

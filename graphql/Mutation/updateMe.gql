@@ -9,5 +9,8 @@ mutation UpdateMe($input: UpdateMeInput!) {
     profileImages {
       ...ProfileImage
     }
+    firstProfileImage {
+      ...ProfileImage
+    }
   }
 }

@@ -1,0 +1,10 @@
+query MyProfileImages {
+  me {
+    profileImages {
+      ...ProfileImage
+    }
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}

@@ -19,6 +19,7 @@ import { OverlayModal } from 'src/components/ui/OverlayModal';
 import { Picker } from 'src/components/ui/Picker';
 import { TextInput } from 'src/components/ui/TextInput';
 import {
+  MyProfileImagesDocument,
   useDeleteProfileImageMutation,
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
@@ -31,7 +32,7 @@ import { PreviewImage } from './PreviewImage';
 type Props = RootNavigationScreenProp<'EditProfile'>;
 
 export const EditProfileScreen = ({ navigation }: Props) => {
-  const { data } = useEditProfileScreenDataQuery();
+  const { data, refetch } = useEditProfileScreenDataQuery();
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
   const [nickname, setNickName] = useState(data?.me.nickname);
@@ -65,6 +66,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       return;
     }
 
+    navigation.goBack();
+
     await updateMeMutation({
       variables: {
         input: {
@@ -75,7 +78,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
         },
       },
     });
-  }, [nickname, bio, statusMessage, height]);
+  }, [nickname, bio, statusMessage, height, refetch]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -110,11 +113,16 @@ export const EditProfileScreen = ({ navigation }: Props) => {
         return;
       }
 
+      setUploadIngIndices((current) => {
+        return [...current, index];
+      });
+
       const { uri, type } = result.assets[0];
 
       if (!uri) {
         return;
       }
+
       const file = await processImageForMultipartRequest({ uri, type });
       const { data: uploadImageData } = await uploadProfileImageMutation({
         variables: {
@@ -122,6 +130,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             file,
           },
         },
+        refetchQueries: [
+          {
+            query: MyProfileImagesDocument,
+          },
+        ],
       });
 
       if (uploadImageData) {
@@ -137,6 +150,10 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setUploadIngIndices((current) => {
+        return current.filter((i) => i !== index);
+      });
     }
   };
 
@@ -150,6 +167,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
         variables: {
           id: deleteTargetImageId,
         },
+        refetchQueries: [
+          {
+            query: MyProfileImagesDocument,
+          },
+        ],
       });
 
       setImages((current) => {
@@ -183,34 +205,16 @@ export const EditProfileScreen = ({ navigation }: Props) => {
               showsHorizontalScrollIndicator={false}
             >
               <HStack space={18}>
-                <PreviewImage
-                  onPress={() => {
-                    onImagePress({ index: 0 });
-                  }}
-                  imageUrl={images[0]?.uri}
-                />
-
-                <PreviewImage
-                  imageUrl={images[1]?.uri}
-                  onPress={() => {
-                    onImagePress({ index: 1 });
-                  }}
-                />
-
-                <PreviewImage
-                  imageUrl={images[2]?.uri}
-                  isUploding
-                  onPress={() => {
-                    onImagePress({ index: 2 });
-                  }}
-                />
-
-                <PreviewImage
-                  imageUrl={images[3]?.uri}
-                  onPress={() => {
-                    onImagePress({ index: 3 });
-                  }}
-                />
+                {arr4.map((_, index) => (
+                  <PreviewImage
+                    key={index}
+                    onPress={() => {
+                      onImagePress({ index });
+                    }}
+                    imageUrl={images[index]?.uri}
+                    isUploding={uploadIngImageiIndices.includes(index)}
+                  />
+                ))}
               </HStack>
             </ScrollView>
 
@@ -322,6 +326,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 };
 
 const INITIAL_HEIGHT = 165;
+const arr4 = [1, 2, 3, 4];
 
 const getHeightList = () => {
   const list: number[] = [];

@@ -1,4 +1,6 @@
 fragment ProfileImage on UserProfileImage {
   id
   url
+  width
+  height
 }

@@ -33,7 +33,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
   const params = route.params;
   const isAnswerToQuestion = params.replyTo === 'question';
   const [text, setText] = useState('');
-  const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
+  const [images, setImages] = useState<{ uri: string; type: string }[]>([]);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const inputRef = useRef<Input>(null);
   const textInputId = 'textInput';
@@ -120,7 +120,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
 
       if (!result.didCancel) {
         const d = result.assets?.map((asset) => {
-          return { uri: asset.uri, mime: asset.type };
+          return { uri: asset.uri, type: asset.type };
         });
         setImages(d);
       }

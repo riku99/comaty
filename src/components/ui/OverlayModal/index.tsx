@@ -40,6 +40,7 @@ export const OverlayModal = ({
                 },
               ]}
               key={index}
+              onPress={item.onPress}
             >
               <Text
                 style={[

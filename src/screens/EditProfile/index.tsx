@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -23,7 +23,7 @@ import {
   useDeleteProfileImageMutation,
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
-  useUploadProfileImageMutation,
+  useUploadProfileImageMutation
 } from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { theme } from 'src/styles';
@@ -118,42 +118,66 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       return;
     }
 
-    const uri = await getImageUri();
-    if (!uri) {
-      return;
-    }
-    const file = await processImageForMultipartRequest({ uri });
-    const { data: uploadImageData } = await uploadProfileImageMutation({
-      variables: {
-        input: {
-          file,
-        },
-      },
-    });
-
-    if (uploadImageData) {
-      setImages((c) => {
-        return [
-          ...c,
-          {
-            uri: uploadImageData.uploadProfileImage.url,
-            id: uploadImageData.uploadProfileImage.id,
-          },
-        ];
+    try {
+      const result = await launchImageLibrary({
+        selectionLimit: 1,
+        mediaType: 'photo',
       });
+
+      if (result.didCancel) {
+        return;
+      }
+
+      const { uri, type } = result.assets[0];
+
+      if (!uri) {
+        return;
+      }
+      const file = await processImageForMultipartRequest({ uri, type });
+      const { data: uploadImageData } = await uploadProfileImageMutation({
+        variables: {
+          input: {
+            file,
+          },
+        },
+      });
+
+      if (uploadImageData) {
+        setImages((c) => {
+          return [
+            ...c,
+            {
+              uri: uploadImageData.uploadProfileImage.url,
+              id: uploadImageData.uploadProfileImage.id,
+            },
+          ];
+        });
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
 
   const onDeleteImagePress = async () => {
-    if (deleteTargetImageId) {
+    if (!deleteTargetImageId) {
       return;
     }
 
-    const { data: deleteData } = await deleteProfileImageMutation({
-      variables: {
-        id: deleteTargetImageId,
-      },
-    });
+    try {
+      const { data: deleteData } = await deleteProfileImageMutation({
+        variables: {
+          id: deleteTargetImageId,
+        },
+      });
+
+      setImages((current) => {
+        return current.filter((c) => c.id !== deleteTargetImageId);
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setDeleteTargetImageId(null);
+    }
   };
 
   if (!data) {
@@ -297,7 +321,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
       <OverlayModal
         isVisible={!!deleteTargetImageId}
-        items={[{ title: '削除', onPress: () => {}, titleColor: '#FF2A2A' }]}
+        items={[
+          { title: '削除', onPress: onDeleteImagePress, titleColor: '#FF2A2A' },
+        ]}
         onBackdropPress={() => {
           setDeleteTargetImageId(null);
         }}

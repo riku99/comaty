@@ -13,7 +13,7 @@ type Props = RootNavigationScreenProp<'PostCreation'>;
 
 export const PostCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
-  const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
+  const [images, setImages] = useState<{ uri: string; type: string }[]>([]);
   const toast = useToast();
   const { setCreatingPost } = useCreatingPost();
   const { createPost } = useCreatePost();
@@ -63,7 +63,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
       return;
     }
     const d = response.assets?.map((asset) => {
-      return { uri: asset.uri, mime: asset.type };
+      return { uri: asset.uri, type: asset.type };
     });
     setImages(d);
   };

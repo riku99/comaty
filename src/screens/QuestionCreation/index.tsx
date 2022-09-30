@@ -10,7 +10,7 @@ type Props = RootNavigationScreenProp<'QuestionCreation'>;
 
 export const QuestionCreationScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
-  const [images, setImages] = useState<{ uri: string; mime: string }[]>([]);
+  const [images, setImages] = useState<{ uri: string; type: string }[]>([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,7 +36,7 @@ export const QuestionCreationScreen = ({ navigation }: Props) => {
       return;
     }
     const d = response.assets?.map((asset) => {
-      return { uri: asset.uri, mime: asset.type };
+      return { uri: asset.uri, type: asset.type };
     });
     setImages(d);
   };

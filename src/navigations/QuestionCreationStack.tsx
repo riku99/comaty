@@ -6,7 +6,7 @@ export type QuestionCreationStackParamList = {
   QuestionCreation: undefined;
   LocationOfQuestionSelection: {
     text: string;
-    images: { uri: string; mime: string }[];
+    images: { uri: string; type: string }[];
   };
 };
 

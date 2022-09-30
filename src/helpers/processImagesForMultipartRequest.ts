@@ -4,13 +4,13 @@ import { getExtention } from 'src/utils';
 
 export const processImageForMultipartRequest = async ({
   uri,
-  mime,
+  type,
 }: {
   uri: string;
-  mime?: string;
+  type: string;
 }) => {
   let fileUri = uri;
-  let fileType = mime;
+  let fileType = type;
 
   const ext = getExtention(uri);
 
@@ -29,7 +29,7 @@ export const processImageForMultipartRequest = async ({
 };
 
 export const processImagesForMultipartRequest = async (
-  images: { uri: string; mime?: string }[]
+  images: { uri: string; type: string }[]
 ) => {
   let files: ReactNativeFile[] | undefined;
   if (images.length) {

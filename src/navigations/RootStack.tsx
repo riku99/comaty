@@ -74,6 +74,13 @@ export const RootStack = () => {
     >
       {loggedIn ? (
         <>
+          <Stack.Screen
+            name="StoryCamera"
+            component={StoryCameraScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
           {!initialStatusCompletion && (
             <Stack.Screen
               name="SignUpCompletion"
@@ -118,17 +125,24 @@ export const RootStack = () => {
               component={EditProfileStack}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               name="StoryCamera"
               component={StoryCameraScreen}
               options={{
                 headerShown: false,
               }}
-            />
+            /> */}
           </Stack.Group>
         </>
       ) : (
         <>
+          <Stack.Screen
+            name="StoryCamera"
+            component={StoryCameraScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="Auth"
             component={AuthStack}

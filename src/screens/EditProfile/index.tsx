@@ -17,6 +17,7 @@ import { HStack } from 'src/components/ui/HStack';
 import { Loading } from 'src/components/ui/Loading';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
 import { Picker } from 'src/components/ui/Picker';
+import { Tag } from 'src/components/ui/Tag';
 import { TextInput } from 'src/components/ui/TextInput';
 import {
   MyProfileImagesDocument,
@@ -270,12 +271,18 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             <View style={styles.myTagContainer}>
               <Text style={styles.inputTitle}>マイタグ</Text>
               <Pressable
-                style={styles.myTags}
+                style={styles.myTagsWrapper}
                 onPress={() => {
                   navigation.navigate('MyTagSelection');
                 }}
               >
-                <View></View>
+                <View style={styles.myTags}>
+                  {tags.map((t, index) => (
+                    <View key={index} style={styles.tag}>
+                      <Tag text={t} />
+                    </View>
+                  ))}
+                </View>
                 <FontAwesome
                   name="angle-right"
                   size={24}
@@ -330,6 +337,13 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   );
 };
 
+const tags = [
+  'ビール好き！🍺',
+  '飲も〜',
+  'よく話す😎',
+  '気軽に会お〜',
+  'カフェ行きたい',
+];
 const INITIAL_HEIGHT = 165;
 const arr4 = [1, 2, 3, 4];
 
@@ -403,13 +417,23 @@ const styles = StyleSheet.create({
   myTagContainer: {
     marginTop: 32,
   },
-  myTags: {
-    height: 90,
+  myTagsWrapper: {
+    paddingBottom: 12,
     backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
+  },
+  myTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: '90%',
+    transform: [{ translateX: -4 }],
+  },
+  tag: {
+    marginTop: 12,
+    marginLeft: 4,
   },
   pickerContainer: {
     position: 'absolute',

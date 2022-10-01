@@ -15,6 +15,7 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
   const isFocused = useIsFocused();
   const cameraRef = useRef<Camera>(null);
   const [flash, setFlash] = useState(false);
+  const onRecording = useRef(false);
 
   const onCaptureButtonPress = async () => {
     const photo = await cameraRef.current?.takePhoto({
@@ -23,7 +24,25 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
     console.log(photo);
   };
 
-  console.log("😆device is" + device)
+  const onCaptureButtonLongPress = () => {
+    onRecording.current = true;
+    cameraRef.current?.startRecording({
+      flash: flash ? 'on' : 'off',
+      onRecordingFinished: (video) => {
+        console.log(video);
+      },
+      onRecordingError: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const onCaptureButtonPressOut = async () => {
+    if (onRecording.current) {
+      await cameraRef.current?.stopRecording();
+      onRecording.current = false;
+    }
+  };
 
   if (!devices.back || !devices.front) {
     return null;
@@ -37,10 +56,11 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
           device={device === 'back' ? devices.back : devices.front}
           isActive={isFocused}
           ref={cameraRef}
-          photo={true}
+          photo
+          audio
+          video
           enableZoomGesture
         />
-        {/* <View style={styles.camrea} /> */}
 
         <View style={styles.closeButton}>
           <CloseButton color={'#fff'} size={32} />
@@ -74,6 +94,8 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
         <Pressable
           style={styles.caputureButtonOuter}
           onPress={onCaptureButtonPress}
+          onLongPress={onCaptureButtonLongPress}
+          onPressOut={onCaptureButtonPressOut}
         >
           <View style={styles.captureButtonInner} />
         </Pressable>

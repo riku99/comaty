@@ -35,7 +35,6 @@ export const TagWithOption = ({ text, onOptionPress, type }: Props) => {
 const BUTTON_SIZE = 18;
 
 const styles = StyleSheet.create({
-  container: {},
   optionButton: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -78,9 +78,27 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
     });
   };
 
+  const onTagPlusPress = async (text: string) => {
+    await createMyTagMutation({
+      variables: {
+        input: {
+          text,
+        },
+      },
+      refetchQueries: [
+        {
+          query: MyTagSelectionScreenDataDocument,
+        },
+      ],
+    });
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contents}>
+        <Text style={styles.desc}>
+          身長とグループ人数は自動でタグに追加されます
+        </Text>
         <View style={styles.inputContainer}>
           <Text style={styles.hash}># </Text>
           <View
@@ -94,6 +112,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
               }}
               value={`${text}`}
               onChangeText={setText}
+              placeholder="タグを入力してください"
             />
           </View>
 
@@ -151,7 +170,9 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
                 >
                   <TagWithOption
                     text={tagText}
-                    onOptionPress={() => {}}
+                    onOptionPress={() => {
+                      onTagPlusPress(tagText);
+                    }}
                     type="add"
                   />
                 </View>
@@ -168,11 +189,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  desc: {
+    color: '#A1A1A1',
+    marginTop: 20,
+    fontSize: 12,
+  },
   contents: {
     paddingHorizontal: 16,
   },
   inputContainer: {
-    marginTop: 34,
+    marginTop: 18,
     width: '100%',
     borderBottomColor: theme.gray.formBorder,
     borderBottomWidth: 0.6,

@@ -19,7 +19,7 @@ export const Root = () => {
   const { contentsCreationModalVisible, setContentsCreationModalVisible } =
     useContentsCreationVisible();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['28%'], []);
+  const snapPoints = useMemo(() => ['25%'], []);
 
   useEffect(() => {
     if (initialData?.me) {

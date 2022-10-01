@@ -3,7 +3,11 @@ import { useNavigation } from '@react-navigation/native';
 import { Pressable } from 'react-native';
 import { theme } from 'src/styles';
 
-export const CloseButton = () => {
+type Props = {
+  color?: string;
+};
+
+export const CloseButton = ({ color = theme.black }: Props) => {
   const navigation = useNavigation();
 
   return (
@@ -12,7 +16,7 @@ export const CloseButton = () => {
         navigation.goBack();
       }}
     >
-      <Ionicons name="close" size={28} color={theme.black} />
+      <Ionicons name="close" size={28} color={color} />
     </Pressable>
   );
 };

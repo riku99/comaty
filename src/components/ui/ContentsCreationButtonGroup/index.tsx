@@ -40,23 +40,15 @@ export const ContentsCreationButtonGroup = () => {
         <Ionicons name="create" size={ICON_SIZE} color={theme.secondary} />
       </CreationButton>
 
-      <CreationButton label="ストーリー" onPress={() => {}}>
-        <MaterialCommunityIcons
-          name="star-shooting"
-          size={ICON_SIZE}
-          color={theme.secondary}
-        />
-      </CreationButton>
-
       <CreationButton
-        label="そこ質"
+        label="ストーリー"
         onPress={() => {
-          navigation.navigate('QuestionCreationStack');
+          navigation.navigate('StoryCamera');
           setContentsCreationModalVisible(false);
         }}
       >
         <MaterialCommunityIcons
-          name="message-question"
+          name="star-shooting"
           size={ICON_SIZE}
           color={theme.secondary}
         />
@@ -72,7 +64,7 @@ const styles = StyleSheet.create({
   body: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   buttonContainer: {
     alignItems: 'center',

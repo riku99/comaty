@@ -1,23 +1,32 @@
 import { AntDesign } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Tag } from 'src/components/ui/Tag';
+import { theme } from 'src/styles';
 
 type Props = {
   text: string;
   onOptionPress: () => void;
+  type: 'add' | 'delete';
 };
 
-export const TagWithOption = ({ text, onOptionPress }: Props) => {
+export const TagWithOption = ({ text, onOptionPress, type }: Props) => {
   return (
     <View>
       <Tag text={text} />
 
       <Pressable
-        style={styles.optionButton}
+        style={[
+          styles.optionButton,
+          { backgroundColor: type === 'add' ? theme.primary : '#575757' },
+        ]}
         onPress={onOptionPress}
         hitSlop={10}
       >
-        <AntDesign name="minus" size={18} color="#fff" />
+        <AntDesign
+          name={type === 'add' ? 'plus' : 'minus'}
+          size={type === 'add' ? 14 : 18}
+          color="#fff"
+        />
       </Pressable>
     </View>
   );

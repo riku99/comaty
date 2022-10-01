@@ -28,6 +28,7 @@ import {
 } from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { theme } from 'src/styles';
+import { getHeightList } from 'src/utils';
 import { PreviewImage } from './PreviewImage';
 
 type Props = RootNavigationScreenProp<'EditProfile'>;
@@ -340,23 +341,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   );
 };
 
-const tags = [
-  'ビール好き！🍺',
-  '飲も〜',
-  'よく話す😎',
-  '気軽に会お〜',
-  'カフェ行きたい',
-];
 const INITIAL_HEIGHT = 165;
 const arr4 = [1, 2, 3, 4];
-
-const getHeightList = () => {
-  const list: number[] = [];
-  for (let i = 130; i <= 230; i++) {
-    list.push(i);
-  }
-  return list;
-};
 
 const styles = StyleSheet.create({
   container: {

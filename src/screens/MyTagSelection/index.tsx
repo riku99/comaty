@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { TextInput } from 'src/components/ui/TextInput';
+import { recommendedTags } from 'src/constants';
 import {
   MyTagSelectionScreenDataDocument,
   useCreateMyTagMutation,
@@ -124,6 +125,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
                         onOptionPress={() => {
                           onTagMinusOptionPress(tag.id);
                         }}
+                        type="delete"
                       />
                     </View>
                   );
@@ -132,6 +134,29 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
             ) : (
               <ActivityIndicator />
             )}
+          </View>
+        </View>
+
+        <View style={styles.recommendedTagsContainer}>
+          <Text style={styles.labelStyle}>おすすめのタグ</Text>
+          <View style={[styles.tags, { marginTop: 12 }]}>
+            {recommendedTags.map((tagText, index) => {
+              return (
+                <View
+                  key={index}
+                  style={{
+                    marginLeft: 18,
+                    marginTop: 22,
+                  }}
+                >
+                  <TagWithOption
+                    text={tagText}
+                    onOptionPress={() => {}}
+                    type="add"
+                  />
+                </View>
+              );
+            })}
           </View>
         </View>
       </ScrollView>
@@ -181,5 +206,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     transform: [{ translateX: -14 }, { translateY: -18 }],
+  },
+  recommendedTagsContainer: {
+    marginTop: 32,
   },
 });

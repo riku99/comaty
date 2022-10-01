@@ -52,3 +52,12 @@ export const getTimeDiff = (date: string | number) => {
     addSuffix: true,
   });
 };
+
+// 身長リスト
+export const getHeightList = () => {
+  const list: number[] = [];
+  for (let i = 130; i <= 230; i++) {
+    list.push(i);
+  }
+  return list;
+};

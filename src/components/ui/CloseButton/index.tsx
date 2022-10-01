@@ -5,9 +5,10 @@ import { theme } from 'src/styles';
 
 type Props = {
   color?: string;
+  size?: number;
 };
 
-export const CloseButton = ({ color = theme.black }: Props) => {
+export const CloseButton = ({ color = theme.black, size = 28 }: Props) => {
   const navigation = useNavigation();
 
   return (
@@ -16,7 +17,7 @@ export const CloseButton = ({ color = theme.black }: Props) => {
         navigation.goBack();
       }}
     >
-      <Ionicons name="close" size={28} color={color} />
+      <Ionicons name="close" size={size} color={color} />
     </Pressable>
   );
 };

@@ -10,7 +10,9 @@ import {
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { TextInput } from 'src/components/ui/TextInput';
 import {
+  MyTagSelectionScreenDataDocument,
   useCreateMyTagMutation,
+  useDeleteMyTagMutation,
   useMyTagSelectionScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
@@ -22,6 +24,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
   const { data } = useMyTagSelectionScreenDataQuery();
   const [text, setText] = useState('');
   const [createMyTagMutation] = useCreateMyTagMutation();
+  const [deleteMyTagMutation] = useDeleteMyTagMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -44,12 +47,33 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
       return;
     }
 
-    const { data: createTagData } = await createMyTagMutation({
+    setText('');
+
+    await createMyTagMutation({
       variables: {
         input: {
           text,
         },
       },
+      refetchQueries: [
+        {
+          query: MyTagSelectionScreenDataDocument,
+        },
+      ],
+    });
+  };
+  1;
+
+  const onTagMinusOptionPress = async (id: number) => {
+    await deleteMyTagMutation({
+      variables: {
+        id,
+      },
+      refetchQueries: [
+        {
+          query: MyTagSelectionScreenDataDocument,
+        },
+      ],
     });
   };
 
@@ -92,9 +116,15 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
                       key={tag.id}
                       style={{
                         marginLeft: 14,
+                        marginTop: 18,
                       }}
                     >
-                      <TagWithOption text={tag.text} onOptionPress={() => {}} />
+                      <TagWithOption
+                        text={tag.text}
+                        onOptionPress={() => {
+                          onTagMinusOptionPress(tag.id);
+                        }}
+                      />
                     </View>
                   );
                 })}
@@ -150,6 +180,6 @@ const styles = StyleSheet.create({
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    transform: [{ translateX: -14 }],
+    transform: [{ translateX: -14 }, { translateY: -18 }],
   },
 });

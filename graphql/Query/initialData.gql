@@ -1,18 +1,5 @@
 query GetInitialData {
   me {
-    id
-    nickname
-    sex
-    initialStatusCompletion
-    birthYear
-    birthMonth
-    birthDay
-    height
-    statusMessage
-    bio
-    profileImages {
-      id
-      ...ProfileImage
-    }
+    ...MyProfile
   }
 }

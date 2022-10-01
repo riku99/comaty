@@ -1,0 +1,5 @@
+mutation DeleteMyTag($id: Int!) {
+  deleteUserTag(id: $id) {
+    id
+  }
+}

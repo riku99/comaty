@@ -1,0 +1,21 @@
+fragment MyProfile on Me {
+  id
+  nickname
+  sex
+  initialStatusCompletion
+  age
+  birthYear
+  birthMonth
+  birthDay
+  height
+  statusMessage
+  bio
+  profileImages {
+    id
+    ...ProfileImage
+  }
+  myTags {
+    id
+    text
+  }
+}

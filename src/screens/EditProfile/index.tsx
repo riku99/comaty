@@ -33,7 +33,9 @@ import { PreviewImage } from './PreviewImage';
 type Props = RootNavigationScreenProp<'EditProfile'>;
 
 export const EditProfileScreen = ({ navigation }: Props) => {
-  const { data, refetch } = useEditProfileScreenDataQuery();
+  const { data, refetch } = useEditProfileScreenDataQuery({
+    fetchPolicy: 'cache-and-network',
+  });
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
   const [nickname, setNickName] = useState(data?.me.nickname);
@@ -54,7 +56,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     if (data?.me) {
-      const _images = data.me.profileImages.map((img) => ({
+      const { profileImages, nickname, bio } = data.me;
+      const _images = profileImages.map((img) => ({
         uri: img.url,
         id: img.id,
       }));

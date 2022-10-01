@@ -115,6 +115,7 @@ export type Mutation = {
   deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
   deleteQuestionReply?: Maybe<QuestionReply>;
+  deleteUserTag?: Maybe<UserTag>;
   likePost: Post;
   unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
@@ -165,6 +166,11 @@ export type MutationDeleteQuestionArgs = {
 
 
 export type MutationDeleteQuestionReplyArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteUserTagArgs = {
   id: Scalars['Int'];
 };
 
@@ -481,6 +487,13 @@ export type CreateQuestionReplyMutationVariables = Exact<{
 
 export type CreateQuestionReplyMutation = { __typename?: 'Mutation', createQuestionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } };
 
+export type DeleteMyTagMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteMyTagMutation = { __typename?: 'Mutation', deleteUserTag?: { __typename?: 'UserTag', id: number } | null };
+
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -562,7 +575,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -573,6 +586,8 @@ export type GetInitialStatusCompletionQueryVariables = Exact<{ [key: string]: ne
 
 
 export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __typename?: 'Me', initialStatusCompletion: boolean } | null };
+
+export type MyProfileFragment = { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
@@ -691,6 +706,29 @@ export const ProfileImageFragmentDoc = gql`
   height
 }
     `;
+export const MyProfileFragmentDoc = gql`
+    fragment MyProfile on Me {
+  id
+  nickname
+  sex
+  initialStatusCompletion
+  age
+  birthYear
+  birthMonth
+  birthDay
+  height
+  statusMessage
+  bio
+  profileImages {
+    id
+    ...ProfileImage
+  }
+  myTags {
+    id
+    text
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const PostCardFragmentDoc = gql`
     fragment PostCard on Post {
   id
@@ -960,6 +998,39 @@ export function useCreateQuestionReplyMutation(baseOptions?: Apollo.MutationHook
 export type CreateQuestionReplyMutationHookResult = ReturnType<typeof useCreateQuestionReplyMutation>;
 export type CreateQuestionReplyMutationResult = Apollo.MutationResult<CreateQuestionReplyMutation>;
 export type CreateQuestionReplyMutationOptions = Apollo.BaseMutationOptions<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>;
+export const DeleteMyTagDocument = gql`
+    mutation DeleteMyTag($id: Int!) {
+  deleteUserTag(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteMyTagMutationFn = Apollo.MutationFunction<DeleteMyTagMutation, DeleteMyTagMutationVariables>;
+
+/**
+ * __useDeleteMyTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteMyTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMyTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMyTagMutation, { data, loading, error }] = useDeleteMyTagMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMyTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMyTagMutation, DeleteMyTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMyTagMutation, DeleteMyTagMutationVariables>(DeleteMyTagDocument, options);
+      }
+export type DeleteMyTagMutationHookResult = ReturnType<typeof useDeleteMyTagMutation>;
+export type DeleteMyTagMutationResult = Apollo.MutationResult<DeleteMyTagMutation>;
+export type DeleteMyTagMutationOptions = Apollo.BaseMutationOptions<DeleteMyTagMutation, DeleteMyTagMutationVariables>;
 export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
   deletePost(id: $id) {
@@ -1404,23 +1475,10 @@ export type MyIdQueryResult = Apollo.QueryResult<MyIdQuery, MyIdQueryVariables>;
 export const GetInitialDataDocument = gql`
     query GetInitialData {
   me {
-    id
-    nickname
-    sex
-    initialStatusCompletion
-    birthYear
-    birthMonth
-    birthDay
-    height
-    statusMessage
-    bio
-    profileImages {
-      id
-      ...ProfileImage
-    }
+    ...MyProfile
   }
 }
-    ${ProfileImageFragmentDoc}`;
+    ${MyProfileFragmentDoc}`;
 
 /**
  * __useGetInitialDataQuery__

@@ -269,7 +269,12 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 
             <View style={styles.myTagContainer}>
               <Text style={styles.inputTitle}>マイタグ</Text>
-              <Pressable style={styles.myTags}>
+              <Pressable
+                style={styles.myTags}
+                onPress={() => {
+                  navigation.navigate('MyTagSelection');
+                }}
+              >
                 <View></View>
                 <FontAwesome
                   name="angle-right"

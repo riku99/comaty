@@ -113,6 +113,13 @@ export const ApolloProvider = ({ children }: Props) => {
             },
           },
         },
+        Me: {
+          fields: {
+            profileImages: {
+              merge: (_, incoming) => incoming,
+            },
+          },
+        },
       },
       possibleTypes: {
         QuestionEntity: ['Question', 'QuestionReply'],

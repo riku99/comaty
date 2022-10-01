@@ -54,7 +54,7 @@ export const MyPageScreen = ({ navigation }: Props) => {
           icon={<MaterialIcons name="edit" size={28} color="#666666" />}
           title="プロフィール編集"
           onPress={() => {
-            navigation.navigate('EditProfile');
+            navigation.navigate('EditProfileStack');
           }}
         />
       </View>

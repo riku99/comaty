@@ -46,6 +46,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>撮影のためにカメラにアクセスします</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>撮影のためにマイクにアクセスします</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>アプリで使用するための写真をライブラリから選択するためにリクエストします。</string>
 	<key>UILaunchStoryboardName</key>

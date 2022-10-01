@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { CloseButton } from 'src/components/ui/CloseButton';
@@ -14,30 +14,45 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
   const firstCameraRollPhotoUri = useFirstCameraRollPhotoUri();
   const isFocused = useIsFocused();
   const cameraRef = useRef<Camera>(null);
+  const [flash, setFlash] = useState(false);
 
   const onCaptureButtonPress = async () => {
-    console.log('Capture✋');
-    const photo = await cameraRef.current?.takePhoto();
+    const photo = await cameraRef.current?.takePhoto({
+      flash: flash ? 'on' : 'off',
+    });
     console.log(photo);
   };
 
-  if (!device) {
-    return null;
-  }
+  // if (!device) {
+  //   return null;
+  // }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-        <Camera
+        {/* <Camera
           style={styles.camrea}
           device={device}
           isActive={isFocused}
           ref={cameraRef}
           photo={true}
-        />
-        {/* <View style={styles.camrea} /> */}
+        /> */}
+        <View style={styles.camrea} />
+
         <View style={styles.closeButton}>
           <CloseButton color={'#fff'} size={32} />
+
+          <Pressable
+            onPress={() => {
+              setFlash(!flash);
+            }}
+          >
+            <Ionicons
+              name={flash ? 'flash' : 'flash-off'}
+              size={32}
+              color="#fff"
+            />
+          </Pressable>
 
           <Pressable>
             <Ionicons name="camera-reverse" size={32} color="#fff" />
@@ -52,25 +67,10 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
           <View style={styles.captureButtonInner} />
         </Pressable>
 
-        <Pressable
-          style={{
-            position: 'absolute',
-            bottom: 40,
-            left: 14,
-            alignSelf: 'center',
-            backgroundColor: 'red',
-            borderRadius: 10,
-            overflow: 'hidden',
-            borderWidth: 2,
-            borderColor: '#fff',
-          }}
-        >
+        <Pressable style={styles.cameraRollPhotoContainer}>
           <Image
             source={{ uri: firstCameraRollPhotoUri }}
-            style={{
-              height: CAMERAROLL_PHOTO_SIZE,
-              width: CAMERAROLL_PHOTO_SIZE,
-            }}
+            style={styles.cameraRollPhoto}
           />
         </Pressable>
       </SafeAreaView>
@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: undefined,
     aspectRatio: 9 / 16,
-    backgroundColor: 'gray',
     borderRadius: 12,
   },
   caputureButtonOuter: {
@@ -119,5 +118,20 @@ const styles = StyleSheet.create({
     width: CAPTURE_BUTTON_SIZE,
     height: CAPTURE_BUTTON_SIZE,
     borderRadius: CAPTURE_BUTTON_SIZE,
+  },
+  cameraRollPhotoContainer: {
+    position: 'absolute',
+    bottom: 40,
+    left: 14,
+    alignSelf: 'center',
+    backgroundColor: 'red',
+    borderRadius: 10,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  cameraRollPhoto: {
+    height: CAMERAROLL_PHOTO_SIZE,
+    width: CAMERAROLL_PHOTO_SIZE,
   },
 });

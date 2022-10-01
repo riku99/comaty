@@ -3,12 +3,14 @@ import { useLayoutEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { TextInput } from 'src/components/ui/TextInput';
+import { useCreateMyTagMutation } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'MyTagSelection'>;
 
 export const MyTagSelectionScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
+  const [createMyTagMutation] = useCreateMyTagMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -25,6 +27,22 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
       ),
     });
   }, [navigation]);
+
+  const onAddPress = async () => {
+    if (!text) {
+      return;
+    }
+
+    const { data: createTagData } = await createMyTagMutation({
+      variables: {
+        input: {
+          text,
+        },
+      },
+    });
+
+    console.log(createTagData);
+  };
 
   return (
     <View style={styles.container}>
@@ -45,7 +63,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
             />
           </View>
 
-          <Pressable style={styles.addButton}>
+          <Pressable style={styles.addButton} onPress={onAddPress}>
             <Text style={styles.addText}>追加</Text>
           </Pressable>
         </View>

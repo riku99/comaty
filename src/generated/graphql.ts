@@ -54,6 +54,10 @@ export type CreateUserInput = {
   idToken: Scalars['String'];
 };
 
+export type CreateUserTagInput = {
+  text: Scalars['String'];
+};
+
 export enum DeleteProfileImageError {
   UnexpectedError = 'UNEXPECTED_ERROR'
 }
@@ -93,6 +97,7 @@ export type Me = UserEntity & {
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
+  myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
@@ -105,6 +110,7 @@ export type Mutation = {
   createQuestion: Question;
   createQuestionReply: QuestionReply;
   createUser: Me;
+  createUserTag: UserTag;
   deletePost?: Maybe<Post>;
   deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
@@ -135,6 +141,11 @@ export type MutationCreateQuestionReplyArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+export type MutationCreateUserTagArgs = {
+  input: CreateUserTagInput;
 };
 
 
@@ -391,6 +402,7 @@ export type User = UserEntity & {
   firstProfileImage?: Maybe<UserProfileImage>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
+  myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
   profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
@@ -415,8 +427,9 @@ export type UserEntity = {
   firstProfileImage?: Maybe<UserProfileImage>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
+  myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
-  profileImages: Array<Maybe<UserProfileImage>>;
+  profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
 };
@@ -432,6 +445,20 @@ export type UserProfileImage = {
   url: Scalars['String'];
   width?: Maybe<Scalars['Int']>;
 };
+
+export type UserTag = {
+  __typename?: 'UserTag';
+  id: Scalars['Int'];
+  text: Scalars['String'];
+  user?: Maybe<User>;
+};
+
+export type CreateMyTagMutationVariables = Exact<{
+  input: CreateUserTagInput;
+}>;
+
+
+export type CreateMyTagMutation = { __typename?: 'Mutation', createUserTag: { __typename?: 'UserTag', id: number, text: string } };
 
 export type CreatePostMutationVariables = Exact<{
   input: CreatePostInput;
@@ -788,6 +815,40 @@ export const BottomSheetContentInUserProfileFragmentDoc = gql`
   age
 }
     `;
+export const CreateMyTagDocument = gql`
+    mutation CreateMyTag($input: CreateUserTagInput!) {
+  createUserTag(input: $input) {
+    id
+    text
+  }
+}
+    `;
+export type CreateMyTagMutationFn = Apollo.MutationFunction<CreateMyTagMutation, CreateMyTagMutationVariables>;
+
+/**
+ * __useCreateMyTagMutation__
+ *
+ * To run a mutation, you first call `useCreateMyTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMyTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMyTagMutation, { data, loading, error }] = useCreateMyTagMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateMyTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateMyTagMutation, CreateMyTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMyTagMutation, CreateMyTagMutationVariables>(CreateMyTagDocument, options);
+      }
+export type CreateMyTagMutationHookResult = ReturnType<typeof useCreateMyTagMutation>;
+export type CreateMyTagMutationResult = Apollo.MutationResult<CreateMyTagMutation>;
+export type CreateMyTagMutationOptions = Apollo.BaseMutationOptions<CreateMyTagMutation, CreateMyTagMutationVariables>;
 export const CreatePostDocument = gql`
     mutation CreatePost($input: CreatePostInput!) {
   createPost(input: $input) {

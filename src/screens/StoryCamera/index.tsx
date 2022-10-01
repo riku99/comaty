@@ -10,7 +10,7 @@ type Props = RootNavigationScreenProp<'StoryCamera'>;
 
 export const StoryCameraScreen = ({ navigation }: Props) => {
   const devices = useCameraDevices();
-  const device = devices.back;
+  const [device, setDevice] = useState<'back' | 'front'>('back');
   const firstCameraRollPhotoUri = useFirstCameraRollPhotoUri();
   const isFocused = useIsFocused();
   const cameraRef = useRef<Camera>(null);
@@ -23,21 +23,24 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
     console.log(photo);
   };
 
-  // if (!device) {
-  //   return null;
-  // }
+  console.log("😆device is" + device)
+
+  if (!devices.back || !devices.front) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-        {/* <Camera
+        <Camera
           style={styles.camrea}
-          device={device}
+          device={device === 'back' ? devices.back : devices.front}
           isActive={isFocused}
           ref={cameraRef}
           photo={true}
-        /> */}
-        <View style={styles.camrea} />
+          enableZoomGesture
+        />
+        {/* <View style={styles.camrea} /> */}
 
         <View style={styles.closeButton}>
           <CloseButton color={'#fff'} size={32} />
@@ -54,7 +57,15 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
             />
           </Pressable>
 
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              if (device === 'back') {
+                setDevice('front');
+              } else {
+                setDevice('back');
+              }
+            }}
+          >
             <Ionicons name="camera-reverse" size={32} color="#fff" />
           </Pressable>
         </View>

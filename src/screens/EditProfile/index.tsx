@@ -277,9 +277,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 }}
               >
                 <View style={styles.myTags}>
-                  {tags.map((t, index) => (
-                    <View key={index} style={styles.tag}>
-                      <Tag text={t} />
+                  {data.me.myTags.map((t) => (
+                    <View key={t.id} style={styles.tag}>
+                      <Tag text={t.text} />
                     </View>
                   ))}
                 </View>

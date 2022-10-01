@@ -1,14 +1,25 @@
 import { Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { TextInput } from 'src/components/ui/TextInput';
-import { useCreateMyTagMutation } from 'src/generated/graphql';
+import {
+  useCreateMyTagMutation,
+  useMyTagSelectionScreenDataQuery,
+} from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { TagWithOption } from './TagWithOption';
 
 type Props = RootNavigationScreenProp<'MyTagSelection'>;
 
 export const MyTagSelectionScreen = ({ navigation }: Props) => {
+  const { data } = useMyTagSelectionScreenDataQuery();
   const [text, setText] = useState('');
   const [createMyTagMutation] = useCreateMyTagMutation();
 
@@ -40,8 +51,6 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
         },
       },
     });
-
-    console.log(createTagData);
   };
 
   return (
@@ -66,6 +75,34 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
           <Pressable style={styles.addButton} onPress={onAddPress}>
             <Text style={styles.addText}>追加</Text>
           </Pressable>
+        </View>
+
+        <View style={styles.currentMyTagsContainer}>
+          <Text style={styles.labelStyle}>設定されているマイタグ</Text>
+          <View
+            style={{
+              marginTop: 12,
+            }}
+          >
+            {data?.me ? (
+              <View style={styles.tags}>
+                {data.me.myTags.map((tag) => {
+                  return (
+                    <View
+                      key={tag.id}
+                      style={{
+                        marginLeft: 14,
+                      }}
+                    >
+                      <TagWithOption text={tag.text} onOptionPress={() => {}} />
+                    </View>
+                  );
+                })}
+              </View>
+            ) : (
+              <ActivityIndicator />
+            )}
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -102,5 +139,17 @@ const styles = StyleSheet.create({
   addText: {
     fontWeight: 'bold',
     color: '#fff',
+  },
+  currentMyTagsContainer: {
+    marginTop: 42,
+  },
+  labelStyle: {
+    fontWeight: 'bold',
+    color: theme.gray.text,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    transform: [{ translateX: -14 }],
   },
 });

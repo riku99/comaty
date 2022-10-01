@@ -593,7 +593,7 @@ export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> } | null };
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type QuestionsScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
@@ -637,6 +637,11 @@ export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+
+export type MyTagSelectionScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyTagSelectionScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type NearbyUsersScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -1529,6 +1534,10 @@ export const EditProfileScreenDataDocument = gql`
       id
       url
     }
+    myTags {
+      id
+      text
+    }
   }
 }
     `;
@@ -1754,6 +1763,44 @@ export function useMyPageScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type MyPageScreenDataQueryHookResult = ReturnType<typeof useMyPageScreenDataQuery>;
 export type MyPageScreenDataLazyQueryHookResult = ReturnType<typeof useMyPageScreenDataLazyQuery>;
 export type MyPageScreenDataQueryResult = Apollo.QueryResult<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>;
+export const MyTagSelectionScreenDataDocument = gql`
+    query MyTagSelectionScreenData {
+  me {
+    id
+    myTags {
+      id
+      text
+    }
+  }
+}
+    `;
+
+/**
+ * __useMyTagSelectionScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMyTagSelectionScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyTagSelectionScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyTagSelectionScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyTagSelectionScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>(MyTagSelectionScreenDataDocument, options);
+      }
+export function useMyTagSelectionScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>(MyTagSelectionScreenDataDocument, options);
+        }
+export type MyTagSelectionScreenDataQueryHookResult = ReturnType<typeof useMyTagSelectionScreenDataQuery>;
+export type MyTagSelectionScreenDataLazyQueryHookResult = ReturnType<typeof useMyTagSelectionScreenDataLazyQuery>;
+export type MyTagSelectionScreenDataQueryResult = Apollo.QueryResult<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>;
 export const NearbyUsersScreenDataDocument = gql`
     query NearbyUsersScreenData($after: String, $first: Int) {
   nearbyUsers(after: $after, first: $first) {

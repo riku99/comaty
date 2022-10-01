@@ -9,5 +9,9 @@ query EditProfileScreenData {
       id
       url
     }
+    myTags {
+      id
+      text
+    }
   }
 }

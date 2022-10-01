@@ -1,0 +1,9 @@
+query MyTagSelectionScreenData {
+  me {
+    id
+    myTags {
+      id
+      text
+    }
+  }
+}

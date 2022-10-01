@@ -118,6 +118,9 @@ export const ApolloProvider = ({ children }: Props) => {
             profileImages: {
               merge: (_, incoming) => incoming,
             },
+            myTags: {
+              merge: (_, incoming) => incoming,
+            },
           },
         },
       },

@@ -2,6 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import {
+  Alert,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -118,47 +119,63 @@ export const EditProfileScreen = ({ navigation }: Props) => {
         return;
       }
 
-      setUploadIngIndices((current) => {
-        return [...current, index];
-      });
+      Alert.alert('アップロードしてよろしいですか？', '', [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: 'アップロード',
+          onPress: async () => {
+            try {
+              setUploadIngIndices((current) => {
+                return [...current, index];
+              });
 
-      const { uri, type } = result.assets[0];
+              const { uri, type } = result.assets[0];
 
-      if (!uri) {
-        return;
-      }
+              if (!uri) {
+                return;
+              }
 
-      const file = await processImageForMultipartRequest({ uri, type });
-      const { data: uploadImageData } = await uploadProfileImageMutation({
-        variables: {
-          input: {
-            file,
+              const file = await processImageForMultipartRequest({ uri, type });
+              const { data: uploadImageData } =
+                await uploadProfileImageMutation({
+                  variables: {
+                    input: {
+                      file,
+                    },
+                  },
+                  refetchQueries: [
+                    {
+                      query: MyProfileImagesDocument,
+                    },
+                  ],
+                });
+
+              if (uploadImageData) {
+                setImages((c) => {
+                  return [
+                    ...c,
+                    {
+                      uri: uploadImageData.uploadProfileImage.url,
+                      id: uploadImageData.uploadProfileImage.id,
+                    },
+                  ];
+                });
+              }
+            } catch (e) {
+              console.log(e);
+            } finally {
+              setUploadIngIndices((current) => {
+                return current.filter((i) => i !== index);
+              });
+            }
           },
         },
-        refetchQueries: [
-          {
-            query: MyProfileImagesDocument,
-          },
-        ],
-      });
-
-      if (uploadImageData) {
-        setImages((c) => {
-          return [
-            ...c,
-            {
-              uri: uploadImageData.uploadProfileImage.url,
-              id: uploadImageData.uploadProfileImage.id,
-            },
-          ];
-        });
-      }
+      ]);
     } catch (e) {
       console.log(e);
-    } finally {
-      setUploadIngIndices((current) => {
-        return current.filter((i) => i !== index);
-      });
     }
   };
 

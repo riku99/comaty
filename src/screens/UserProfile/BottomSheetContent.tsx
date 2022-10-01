@@ -6,33 +6,30 @@ import { Tag } from 'src/components/ui/Tag';
 import { BottomSheetContentInUserProfileFragment } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
-const tags = [
-  '3人でいます✌️',
-  '184㌢',
-  'ビール好き🍺',
-  '奢ります🆗',
-  'よく喋る😏',
-  '新宿Love💜',
-];
-
 type Props = {
   data: BottomSheetContentInUserProfileFragment;
 };
 
 export const BottomSheetContent = React.memo(({ data }: Props) => {
-  const { nickname, bio, age } = data;
+  const { nickname, bio, age, myTags, height } = data;
+
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
       <View>
         <Text style={styles.name}>
-          {nickname} <Text style={styles.age}>{age}</Text>
+          {nickname}, <Text style={styles.age}>{age}</Text>
         </Text>
 
         <View style={styles.tagsContainer}>
-          {tags.map((tag, index) => {
+          {height && (
+            <View style={[styles.tag]}>
+              <Tag text={`${height}㌢`} />
+            </View>
+          )}
+          {myTags?.map((tag) => {
             return (
-              <View style={[styles.tag]} key={index}>
-                <Tag text={tag} />
+              <View style={[styles.tag]} key={tag.id}>
+                <Tag text={tag.text} />
               </View>
             );
           })}

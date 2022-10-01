@@ -9,6 +9,11 @@ fragment BottomSheetContentInUserProfile on User {
   nickname
   bio
   age
+  height
+  myTags {
+    id
+    text
+  }
 }
 
 query UserProfileScreenData($id: ID!) {

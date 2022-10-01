@@ -689,14 +689,14 @@ export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionRepl
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
 
-export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null };
+export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
 export type UserProfileScreenDataQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } };
 
 export const ProfileImageFragmentDoc = gql`
     fragment ProfileImage on UserProfileImage {
@@ -856,6 +856,11 @@ export const BottomSheetContentInUserProfileFragmentDoc = gql`
   nickname
   bio
   age
+  height
+  myTags {
+    id
+    text
+  }
 }
     `;
 export const CreateMyTagDocument = gql`

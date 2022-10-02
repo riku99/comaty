@@ -20,7 +20,7 @@ import {
 import { theme } from 'src/styles';
 import { Stories } from './Stories';
 
-type Props = RootNavigationScreenProp<'BottomTab'>;
+type Props = RootNavigationScreenProp<'HomeMain'>;
 
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
 

@@ -10,7 +10,7 @@ import {
   UserCardListFragmentDoc,
 } from 'src/generated/graphql';
 
-type Props = RootNavigationScreenProp<'BottomTab'>;
+type Props = RootNavigationScreenProp<any>;
 
 export const NearbyUsersScreen = ({ navigation }: Props) => {
   const { data, fetchMore } = useNearbyUsersScreenDataQuery({

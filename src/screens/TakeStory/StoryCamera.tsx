@@ -2,14 +2,28 @@ import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { useRef, useState } from 'react';
 import { Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
-import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import {
+  Camera,
+  PhotoFile,
+  useCameraDevices,
+  VideoFile,
+} from 'react-native-vision-camera';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { useFirstCameraRollPhotoUri } from 'src/hooks/useFirstCameraRollPhotoUri';
 import { CaptureButton } from './CaptureButton';
 
-type Props = RootNavigationScreenProp<'StoryCamera'>;
+export type CapturePhotoSuccessData = PhotoFile;
+export type RecordVideoSuccessData = VideoFile;
 
-export const StoryCameraScreen = ({ navigation }: Props) => {
+type Props = {
+  onCapturePhotoSuccess: (data: CapturePhotoSuccessData) => void;
+  onRecordVideoSuccess: (data: RecordVideoSuccessData) => void;
+};
+
+export const StoryCamera = ({
+  onCapturePhotoSuccess,
+  onRecordVideoSuccess,
+}: Props) => {
   const devices = useCameraDevices();
   const [device, setDevice] = useState<'back' | 'front'>('back');
   const firstCameraRollPhotoUri = useFirstCameraRollPhotoUri();
@@ -19,10 +33,14 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
   const onRecording = useRef(false);
 
   const onCaptureButtonPress = async () => {
-    const photo = await cameraRef.current?.takePhoto({
-      flash: flash ? 'on' : 'off',
-    });
-    console.log(photo);
+    try {
+      const photo = await cameraRef.current?.takePhoto({
+        flash: flash ? 'on' : 'off',
+      });
+      onCapturePhotoSuccess(photo);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onCaptureButtonLongPress = () => {
@@ -30,7 +48,7 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
     cameraRef.current?.startRecording({
       flash: flash ? 'on' : 'off',
       onRecordingFinished: (video) => {
-        console.log(video);
+        onRecordVideoSuccess(video);
       },
       onRecordingError: (error) => {
         console.log(error);
@@ -147,7 +165,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   captureButtonInner: {
-    // backgroundColor: '#fff',
     width: CAPTURE_BUTTON_SIZE,
     height: CAPTURE_BUTTON_SIZE,
     borderRadius: CAPTURE_BUTTON_SIZE,

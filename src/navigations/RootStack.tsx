@@ -10,7 +10,7 @@ import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
 import { QuestionReplyCreationScreen } from 'src/screens/QuestionReplyCreation';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
-import { StoryCameraScreen } from 'src/screens/StoryCamera';
+import { TakeStoryScreen } from 'src/screens/TakeStory';
 import { UserProfileScreen } from 'src/screens/UserProfile';
 import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
@@ -28,7 +28,7 @@ export type RootStackParamList = {
     id: string;
   };
   EditProfileStack: undefined;
-  StoryCamera: undefined;
+  TakeStory: undefined;
   PostReply: {
     postId: number;
   };
@@ -119,8 +119,8 @@ export const RootStack = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="StoryCamera"
-              component={StoryCameraScreen}
+              name="TakeStory"
+              component={TakeStoryScreen}
               options={{
                 headerShown: false,
               }}
@@ -130,8 +130,8 @@ export const RootStack = () => {
       ) : (
         <>
           <Stack.Screen
-            name="StoryCamera"
-            component={StoryCameraScreen}
+            name="TakeStory"
+            component={TakeStoryScreen}
             options={{
               headerShown: false,
             }}

@@ -2,6 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { useRef, useState } from 'react';
 import { Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Camera,
   PhotoFile,
@@ -18,11 +20,13 @@ export type RecordVideoSuccessData = VideoFile;
 type Props = {
   onCapturePhotoSuccess: (data: CapturePhotoSuccessData) => void;
   onRecordVideoSuccess: (data: RecordVideoSuccessData) => void;
+  onSelectDataFromCameraRoll: (uri: string, type: string) => void;
 };
 
 export const StoryCamera = ({
   onCapturePhotoSuccess,
   onRecordVideoSuccess,
+  onSelectDataFromCameraRoll,
 }: Props) => {
   const devices = useCameraDevices();
   const [device, setDevice] = useState<'back' | 'front'>('back');
@@ -31,6 +35,7 @@ export const StoryCamera = ({
   const cameraRef = useRef<Camera>(null);
   const [flash, setFlash] = useState(false);
   const onRecording = useRef(false);
+  const { bottom: safeAreaBottom } = useSafeAreaInsets();
 
   const onCaptureButtonPress = async () => {
     try {
@@ -63,14 +68,32 @@ export const StoryCamera = ({
     }
   };
 
-  if (!devices.back || !devices.front) {
-    return null;
-  }
+  const onCameraRollPress = async () => {
+    try {
+      const result = await launchImageLibrary({
+        selectionLimit: 1,
+        mediaType: 'mixed',
+      });
+
+      if (result.didCancel) {
+        return;
+      }
+
+      const { uri, type } = result.assets[0];
+      onSelectDataFromCameraRoll(uri, type);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // if (!devices.back || !devices.front) {
+  //   return null;
+  // }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-        <Camera
+        {/* <Camera
           style={styles.camrea}
           device={device === 'back' ? devices.back : devices.front}
           isActive={isFocused}
@@ -79,7 +102,7 @@ export const StoryCamera = ({
           audio
           video
           enableZoomGesture
-        />
+        /> */}
 
         <View style={styles.closeButton}>
           <CloseButton color={'#fff'} size={32} />
@@ -120,7 +143,13 @@ export const StoryCamera = ({
           />
         </View>
 
-        <Pressable style={styles.cameraRollPhotoContainer}>
+        <Pressable
+          style={[
+            styles.cameraRollPhotoContainer,
+            { bottom: safeAreaBottom + 8 },
+          ]}
+          onPress={onCameraRollPress}
+        >
           <Image
             source={{ uri: firstCameraRollPhotoUri }}
             style={styles.cameraRollPhoto}
@@ -171,10 +200,8 @@ const styles = StyleSheet.create({
   },
   cameraRollPhotoContainer: {
     position: 'absolute',
-    bottom: 40,
     left: 14,
     alignSelf: 'center',
-    backgroundColor: 'red',
     borderRadius: 10,
     overflow: 'hidden',
     borderWidth: 2,

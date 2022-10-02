@@ -61,3 +61,16 @@ export const getHeightList = () => {
   }
   return list;
 };
+
+export const getImageOrVideoType = (type: string) => {
+  const imgRegexp = /^image/;
+  const videoRegexp = /^video/;
+
+  if (imgRegexp.test(type)) {
+    return 'image';
+  } else if (videoRegexp.test(type)) {
+    return 'video';
+  } else {
+    return null;
+  }
+};

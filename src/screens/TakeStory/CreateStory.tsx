@@ -73,6 +73,7 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
           </Pressable>
         </View>
       </SafeAreaView>
+
       <Pressable style={[styles.shareButton, { bottom: safeAreaBottom + 8 }]}>
         <Text style={styles.shareText}>シェア🎈</Text>
       </Pressable>

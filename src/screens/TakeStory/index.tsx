@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { getImageOrVideoType } from 'src/utils';
 import { CreateStory } from './CreateStory';
 import { StoryCamera } from './StoryCamera';
 
@@ -9,17 +10,6 @@ type Props = RootNavigationScreenProp<'TakeStory'>;
 export const TakeStoryScreen = ({ navigation }: Props) => {
   const [capturedPhotoUri, setCapturedPhotoUri] = useState(null);
   const [recordedVidepUri, setRecordedVideoUri] = useState(null);
-
-  // return (
-  //   <CreateStory
-  //     sourceType={'photo'}
-  //     uri={capturedPhotoUri ?? recordedVidepUri}
-  //     onBackPress={() => {
-  //       setCapturedPhotoUri(null)
-  //       setRecordedVideoUri(null)
-  //     }}
-  //   />
-  // );
 
   return (
     <>
@@ -46,6 +36,14 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
             setTimeout(() => {
               setCapturedPhotoUri(photo.path);
             }, 300);
+          }}
+          onSelectDataFromCameraRoll={(uri, type) => {
+            console.log('Run');
+            if (getImageOrVideoType(type) === 'image') {
+              setCapturedPhotoUri(uri);
+            } else {
+              setRecordedVideoUri(uri);
+            }
           }}
         />
       )}

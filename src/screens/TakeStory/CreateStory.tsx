@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Video from 'react-native-video';
 
 type Props = {
   sourceType: 'photo' | 'video';
@@ -47,12 +48,16 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <FastImage
-          source={{
-            uri: a,
-          }}
-          style={styles.source}
-        />
+        {sourceType === 'photo' ? (
+          <FastImage
+            source={{
+              uri,
+            }}
+            style={styles.source}
+          />
+        ) : (
+          <Video source={{ uri }} style={styles.source} repeat />
+        )}
 
         <View style={styles.topButtonGroup}>
           <Pressable style={styles.grayButton} onPress={onBackPress}>

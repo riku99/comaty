@@ -1,41 +1,51 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { CreateStory } from './CreateStory';
 import { StoryCamera } from './StoryCamera';
 
 type Props = RootNavigationScreenProp<'TakeStory'>;
 
-export const TakeStoryScreen = () => {
+export const TakeStoryScreen = ({ navigation }: Props) => {
   const [capturedPhotoUri, setCapturedPhotoUri] = useState(null);
   const [recordedVidepUri, setRecordedVideoUri] = useState(null);
 
-  return (
-    <CreateStory
-      sourceType={'photo'}
-      uri={capturedPhotoUri ?? recordedVidepUri}
-      onBackPress={() => {
-        setCapturedPhotoUri(null);
-        setRecordedVideoUri(null);
-      }}
-    />
-  );
+  // return (
+  //   <CreateStory
+  //     sourceType={'photo'}
+  //     uri={capturedPhotoUri ?? recordedVidepUri}
+  //     onBackPress={() => {
+  //       setCapturedPhotoUri(null)
+  //       setRecordedVideoUri(null)
+  //     }}
+  //   />
+  // );
 
   return (
     <>
       {!!capturedPhotoUri || !!recordedVidepUri ? (
         <CreateStory
-          sourceType={'photo'}
+          sourceType={capturedPhotoUri ? 'photo' : 'video'}
           uri={capturedPhotoUri ?? recordedVidepUri}
+          onBackPress={() => {
+            setCapturedPhotoUri(null);
+            setRecordedVideoUri(null);
+          }}
         />
       ) : (
         <StoryCamera
           onRecordVideoSuccess={(video) => {
-            console.log(video.path);
             setRecordedVideoUri(video.path);
           }}
           onCapturePhotoSuccess={(photo) => {
-            console.log(photo.path);
-            setCapturedPhotoUri(photo.path);
+            FastImage.preload([
+              {
+                uri: photo.path,
+              },
+            ]);
+            setTimeout(() => {
+              setCapturedPhotoUri(photo.path);
+            }, 300);
           }}
         />
       )}

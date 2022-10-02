@@ -43,7 +43,7 @@ export const CaptureButton = (props: Props) => {
       activeStrokeWidth={onLongPressing ? 4 : 0}
       inActiveStrokeOpacity={0}
       value={outerProgressValue}
-      radius={CAPTURE_BUTTON_SIZE - 14}
+      radius={CAPTURE_BUTTON_SIZE - 5}
       duration={15000}
       activeStrokeColor={theme.primary}
       ref={videoProgressRef}
@@ -60,9 +60,9 @@ export const CaptureButton = (props: Props) => {
             scale: 1,
           }}
           animate={{
-            scale: onLongPressing ? 1.18 : 1,
+            scale: onLongPressing ? 1.45 : 1,
             backgroundColor: onLongPressing
-              ? 'rgba(134, 134, 134, 0.8)'
+              ? 'rgba(134, 134, 134, 0.5)'
               : 'transparent',
             borderColor: onLongPressing ? 'transparent' : '#fff',
             borderWidth: onLongPressing ? 0 : 3,

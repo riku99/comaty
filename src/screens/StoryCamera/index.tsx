@@ -93,7 +93,7 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
 
         {/* 撮影ボタン */}
         <View
-          style={{ position: 'absolute', bottom: '17%', alignSelf: 'center' }}
+          style={{ position: 'absolute', bottom: '15%', alignSelf: 'center' }}
         >
           <CaptureButton
             onPress={onCaptureButtonPress}

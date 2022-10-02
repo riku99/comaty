@@ -5,6 +5,7 @@ import { Image, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { useFirstCameraRollPhotoUri } from 'src/hooks/useFirstCameraRollPhotoUri';
+import { CaptureButton } from './CaptureButton';
 
 type Props = RootNavigationScreenProp<'StoryCamera'>;
 
@@ -91,14 +92,15 @@ export const StoryCameraScreen = ({ navigation }: Props) => {
         </View>
 
         {/* 撮影ボタン */}
-        <Pressable
-          style={styles.caputureButtonOuter}
-          onPress={onCaptureButtonPress}
-          onLongPress={onCaptureButtonLongPress}
-          onPressOut={onCaptureButtonPressOut}
+        <View
+          style={{ position: 'absolute', bottom: '17%', alignSelf: 'center' }}
         >
-          <View style={styles.captureButtonInner} />
-        </Pressable>
+          <CaptureButton
+            onPress={onCaptureButtonPress}
+            onLongPress={onCaptureButtonLongPress}
+            onPressOut={onCaptureButtonPressOut}
+          />
+        </View>
 
         <Pressable style={styles.cameraRollPhotoContainer}>
           <Image
@@ -135,8 +137,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   caputureButtonOuter: {
-    position: 'absolute',
-    bottom: '17%',
     alignSelf: 'center',
     borderWidth: 3,
     borderColor: '#fff',
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   captureButtonInner: {
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
     width: CAPTURE_BUTTON_SIZE,
     height: CAPTURE_BUTTON_SIZE,
     borderRadius: CAPTURE_BUTTON_SIZE,

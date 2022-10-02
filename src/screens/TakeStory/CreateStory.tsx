@@ -14,14 +14,15 @@ import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
+import { StorySource } from 'src/types';
 
 type Props = {
-  sourceType: 'photo' | 'video';
-  uri: string;
   onBackPress: () => void;
+  sourceData: StorySource;
 };
 
-export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
+export const CreateStory = ({ onBackPress, sourceData }: Props) => {
+  const { uri, type, backgroundColors } = sourceData;
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSavingSource, setIsSavingSource] = useState(false);
@@ -49,8 +50,8 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <StoryContainer backgroundColors={['#504A43', '#BE9200']}>
-          {sourceType === 'photo' ? (
+        <StoryContainer backgroundColors={backgroundColors}>
+          {type === 'photo' ? (
             <FastImage
               source={{
                 uri,

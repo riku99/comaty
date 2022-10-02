@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ImageColors from 'react-native-image-colors';
+import { StorySource } from 'src/types';
 import { getImageOrVideoType } from 'src/utils';
 import { CreateStory } from './CreateStory';
 import { StoryCamera } from './StoryCamera';
@@ -9,24 +10,26 @@ import { StoryCamera } from './StoryCamera';
 type Props = RootNavigationScreenProp<'TakeStory'>;
 
 export const TakeStoryScreen = ({ navigation }: Props) => {
-  const [capturedPhotoUri, setCapturedPhotoUri] = useState(null);
-  const [recordedVidepUri, setRecordedVideoUri] = useState(null);
+  const [sourceData, setSourceData] = useState<StorySource>(null);
 
   return (
     <>
-      {!!capturedPhotoUri || !!recordedVidepUri ? (
+      {sourceData ? (
         <CreateStory
-          sourceType={capturedPhotoUri ? 'photo' : 'video'}
-          uri={capturedPhotoUri ?? recordedVidepUri}
           onBackPress={() => {
-            setCapturedPhotoUri(null);
-            setRecordedVideoUri(null);
+            setSourceData(null);
           }}
+          sourceData={sourceData}
         />
       ) : (
         <StoryCamera
           onRecordVideoSuccess={(video) => {
-            setRecordedVideoUri(video.path);
+            setSourceData({
+              uri: video.path,
+              type: 'video',
+              backgroundColors: [],
+              mime: 'video/mp4',
+            });
           }}
           onCapturePhotoSuccess={async (photo) => {
             FastImage.preload([
@@ -35,21 +38,49 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
               },
             ]);
 
+            const colorResult = await ImageColors.getColors(photo.path, {
+              cache: true,
+              key: photo.path,
+            });
+
             setTimeout(() => {
-              setCapturedPhotoUri(photo.path);
+              if (colorResult.platform === 'ios') {
+                setSourceData({
+                  uri: photo.path,
+                  type: 'photo',
+                  backgroundColors: [
+                    colorResult.background,
+                    colorResult.primary,
+                  ],
+                  mime: 'image/jpg',
+                });
+              }
             }, 300);
           }}
           onSelectDataFromCameraRoll={async (uri, type) => {
             if (getImageOrVideoType(type) === 'image') {
-              const result = await ImageColors.getColors(uri, {
-                fallback: '#228B22',
+              const colorResult = await ImageColors.getColors(uri, {
                 cache: true,
                 key: uri,
               });
-              console.log(result);
-              setCapturedPhotoUri(uri);
+              if (colorResult.platform === 'ios') {
+                setSourceData({
+                  uri,
+                  mime: type,
+                  type: 'photo',
+                  backgroundColors: [
+                    colorResult.background,
+                    colorResult.primary,
+                  ],
+                });
+              }
             } else {
-              setRecordedVideoUri(uri);
+              setSourceData({
+                uri,
+                type: 'video',
+                backgroundColors: [],
+                mime: 'video/mp4',
+              });
             }
           }}
         />

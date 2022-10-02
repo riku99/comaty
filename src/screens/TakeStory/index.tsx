@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import ImageColors from 'react-native-image-colors';
 import { getImageOrVideoType } from 'src/utils';
 import { CreateStory } from './CreateStory';
 import { StoryCamera } from './StoryCamera';
@@ -27,19 +28,25 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
           onRecordVideoSuccess={(video) => {
             setRecordedVideoUri(video.path);
           }}
-          onCapturePhotoSuccess={(photo) => {
+          onCapturePhotoSuccess={async (photo) => {
             FastImage.preload([
               {
                 uri: photo.path,
               },
             ]);
+
             setTimeout(() => {
               setCapturedPhotoUri(photo.path);
             }, 300);
           }}
-          onSelectDataFromCameraRoll={(uri, type) => {
-            console.log('Run');
+          onSelectDataFromCameraRoll={async (uri, type) => {
             if (getImageOrVideoType(type) === 'image') {
+              const result = await ImageColors.getColors(uri, {
+                fallback: '#228B22',
+                cache: true,
+                key: uri,
+              });
+              console.log(result);
               setCapturedPhotoUri(uri);
             } else {
               setRecordedVideoUri(uri);

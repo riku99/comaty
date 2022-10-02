@@ -13,6 +13,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
+import { StoryContainer } from 'src/components/ui/StoryContainer';
 
 type Props = {
   sourceType: 'photo' | 'video';
@@ -48,31 +49,39 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        {sourceType === 'photo' ? (
-          <FastImage
-            source={{
-              uri,
-            }}
-            style={styles.source}
-          />
-        ) : (
-          <Video source={{ uri }} style={styles.source} repeat />
-        )}
-
-        <View style={styles.topButtonGroup}>
-          <Pressable style={styles.grayButton} onPress={onBackPress}>
-            <AntDesign name="left" size={24} color="#fff" />
-          </Pressable>
-
-          <Pressable style={styles.grayButton} onPress={onSavePress}>
-            {isSavingSource ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <MaterialIcons name="save-alt" size={24} color="#fff" />
-            )}
-          </Pressable>
-        </View>
+        <StoryContainer backgroundColors={['#504A43', '#BE9200']}>
+          {sourceType === 'photo' ? (
+            <FastImage
+              source={{
+                uri,
+              }}
+              style={styles.source}
+              resizeMode="contain"
+            />
+          ) : (
+            <Video
+              source={{ uri }}
+              style={styles.source}
+              repeat
+              resizeMode="contain"
+            />
+          )}
+        </StoryContainer>
       </SafeAreaView>
+
+      <View style={styles.topButtonGroup}>
+        <Pressable style={styles.grayButton} onPress={onBackPress}>
+          <AntDesign name="left" size={24} color="#fff" />
+        </Pressable>
+
+        <Pressable style={styles.grayButton} onPress={onSavePress}>
+          {isSavingSource ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <MaterialIcons name="save-alt" size={24} color="#fff" />
+          )}
+        </Pressable>
+      </View>
 
       <Pressable style={[styles.shareButton, { bottom: safeAreaBottom + 8 }]}>
         <Text style={styles.shareText}>シェア🎈</Text>
@@ -104,9 +113,6 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
   );
 };
 
-const a =
-  'https://storage.googleapis.com/comaty-dev-user-upload/4OZK33XXmGgDqd5bsiT2KXLZTHau5PuoDZFSfaFp4am7J1Lh7fsEYv3HyN16l1';
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -114,10 +120,7 @@ const styles = StyleSheet.create({
   },
   source: {
     width: '100%',
-    height: undefined,
-    aspectRatio: 9 / 16,
-    borderRadius: 12,
-    backgroundColor: '#F3F3F3',
+    height: '100%',
   },
   topButtonGroup: {
     position: 'absolute',

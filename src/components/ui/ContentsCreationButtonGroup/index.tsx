@@ -43,7 +43,7 @@ export const ContentsCreationButtonGroup = () => {
       <CreationButton
         label="ストーリー"
         onPress={() => {
-          navigation.navigate('StoryCamera');
+          navigation.navigate('TakeStory');
           setContentsCreationModalVisible(false);
         }}
       >

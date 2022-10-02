@@ -10,9 +10,23 @@ export const TakeStoryScreen = () => {
   const [recordedVidepUri, setRecordedVideoUri] = useState(null);
 
   return (
+    <CreateStory
+      sourceType={'photo'}
+      uri={capturedPhotoUri ?? recordedVidepUri}
+      onBackPress={() => {
+        setCapturedPhotoUri(null);
+        setRecordedVideoUri(null);
+      }}
+    />
+  );
+
+  return (
     <>
       {!!capturedPhotoUri || !!recordedVidepUri ? (
-        <CreateStory />
+        <CreateStory
+          sourceType={'photo'}
+          uri={capturedPhotoUri ?? recordedVidepUri}
+        />
       ) : (
         <StoryCamera
           onRecordVideoSuccess={(video) => {

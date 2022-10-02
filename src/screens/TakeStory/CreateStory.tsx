@@ -141,16 +141,17 @@ const styles = StyleSheet.create({
   },
   shareButton: {
     backgroundColor: '#fff',
-    width: 80,
+    width: 84,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 14,
     borderRadius: 32,
     position: 'absolute',
     right: 16,
   },
   shareText: {
     fontWeight: 'bold',
+    fontSize: 16,
   },
   saveTextContainer: {
     position: 'absolute',

@@ -32,18 +32,21 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
             });
           }}
           onCapturePhotoSuccess={async (photo) => {
-            FastImage.preload([
-              {
-                uri: photo.path,
-              },
-            ]);
+            try {
+              FastImage.preload([
+                {
+                  uri: photo.path,
+                },
+              ]);
 
-            const colorResult = await ImageColors.getColors(photo.path, {
-              cache: true,
-              key: photo.path,
-            });
+              const colorResult = await ImageColors.getColors(
+                `file://${photo.path}`,
+                {
+                  cache: true,
+                  key: photo.path,
+                }
+              );
 
-            setTimeout(() => {
               if (colorResult.platform === 'ios') {
                 setSourceData({
                   uri: photo.path,
@@ -55,7 +58,9 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
                   mime: 'image/jpg',
                 });
               }
-            }, 300);
+            } catch (e) {
+              console.log(e);
+            }
           }}
           onSelectDataFromCameraRoll={async (uri, type) => {
             if (getImageOrVideoType(type) === 'image') {

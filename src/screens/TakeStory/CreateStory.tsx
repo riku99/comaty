@@ -1,6 +1,15 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import { Text } from '@rneui/themed';
-import { Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
+import { AnimatePresence, MotiView } from 'moti';
+import { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -12,6 +21,28 @@ type Props = {
 
 export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isSavingSource, setIsSavingSource] = useState(false);
+
+  useEffect(() => {
+    if (saveSuccess) {
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 2000);
+    }
+  }, [saveSuccess]);
+
+  const onSavePress = async () => {
+    try {
+      setIsSavingSource(true);
+      await CameraRoll.save(uri);
+      setSaveSuccess(true);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsSavingSource(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -28,14 +59,41 @@ export const CreateStory = ({ sourceType, uri, onBackPress }: Props) => {
             <AntDesign name="left" size={24} color="#fff" />
           </Pressable>
 
-          <Pressable style={styles.grayButton}>
-            <MaterialIcons name="save-alt" size={24} color="#fff" />
+          <Pressable style={styles.grayButton} onPress={onSavePress}>
+            {isSavingSource ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <MaterialIcons name="save-alt" size={24} color="#fff" />
+            )}
           </Pressable>
         </View>
       </SafeAreaView>
       <Pressable style={[styles.shareButton, { bottom: safeAreaBottom + 8 }]}>
         <Text style={styles.shareText}>シェア🎈</Text>
       </Pressable>
+
+      <AnimatePresence>
+        {saveSuccess && (
+          <MotiView
+            from={{
+              opacity: 0,
+            }}
+            animate={{
+              opacity: 1,
+            }}
+            transition={{
+              type: 'timing',
+              duration: 300,
+            }}
+            exit={{
+              opacity: 0,
+            }}
+            style={styles.saveTextContainer}
+          >
+            <Text style={styles.saveText}>保存しました</Text>
+          </MotiView>
+        )}
+      </AnimatePresence>
     </View>
   );
 };
@@ -82,6 +140,22 @@ const styles = StyleSheet.create({
     right: 16,
   },
   shareText: {
+    fontWeight: 'bold',
+  },
+  saveTextContainer: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    width: 110,
+    height: 40,
+    top: '50%',
+    transform: [{ translateY: -20 }],
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,
+  },
+  saveText: {
+    color: '#fff',
     fontWeight: 'bold',
   },
 });

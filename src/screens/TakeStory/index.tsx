@@ -34,6 +34,7 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
               type: 'video',
               backgroundColors: [],
               mime: 'video/quicktime',
+              thumbnailUri,
             });
           }}
           onCapturePhotoSuccess={async (photo) => {
@@ -86,6 +87,7 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
                       colorResult.primary,
                     ],
                     mime: type,
+                    thumbnailUri,
                   });
                 }
               } catch (e) {

@@ -3,4 +3,5 @@ export type StorySource = {
   type: 'photo' | 'video';
   mime: string;
   backgroundColors: string[];
+  thumbnailUri?: string;
 };

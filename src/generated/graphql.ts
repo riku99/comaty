@@ -22,6 +22,10 @@ export enum ApproximateRange {
   Wide = 'WIDE'
 }
 
+export type CreareStoryInput = {
+  type?: InputMaybe<StoryType>;
+};
+
 export type CreatePostInput = {
   images?: InputMaybe<Array<Scalars['Upload']>>;
   replyTo?: InputMaybe<Scalars['Int']>;
@@ -359,10 +363,14 @@ export enum Sex {
 
 export type Story = {
   __typename?: 'Story';
-  contentUrl: Scalars['String'];
+  backgroundColors?: Maybe<Array<Maybe<Scalars['String']>>>;
   createdAt: Scalars['String'];
+  height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
+  type: StoryType;
+  url: Scalars['String'];
   user?: Maybe<User>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type StoryConnection = {
@@ -376,6 +384,11 @@ export type StoryEdge = {
   cursor: Scalars['String'];
   node: Story;
 };
+
+export enum StoryType {
+  Photo = 'PHOTO',
+  Video = 'VIDEO'
+}
 
 export type UpdateInitialStatusInput = {
   birthDay: Scalars['Int'];
@@ -626,7 +639,7 @@ export type HomeScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type HomeScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } }, stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type HomeNearByUsersQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
@@ -642,11 +655,11 @@ export type HomeStoriesQueryVariables = Exact<{
 }>;
 
 
-export type HomeStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeStoriesQuery = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type HomeNearByUsersFragment = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type HomeStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, contentUrl: string, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+export type HomeStoriesFragment = { __typename?: 'Query', stories: { __typename?: 'StoryConnection', edges: Array<{ __typename?: 'StoryEdge', node: { __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -827,7 +840,9 @@ export const HomeStoriesFragmentDoc = gql`
     edges {
       node {
         id
-        contentUrl
+        url
+        backgroundColors
+        type
         user {
           id
           firstProfileImage {

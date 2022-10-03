@@ -8,7 +8,7 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

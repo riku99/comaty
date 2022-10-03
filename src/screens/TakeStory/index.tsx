@@ -1,6 +1,6 @@
+import * as VideoThumbnails from 'expo-video-thumbnails';
 import { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import ImageColors from 'react-native-image-colors';
 import { StorySource } from 'src/types';
 import { getImageOrVideoType } from 'src/utils';
@@ -23,41 +23,27 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
         />
       ) : (
         <StoryCamera
-          onRecordVideoSuccess={(video) => {
+          onRecordVideoSuccess={async (video) => {
+            const { uri: thumbnailUri } =
+              await VideoThumbnails.getThumbnailAsync(video.path, {
+                time: 100,
+              });
+
             setSourceData({
               uri: video.path,
               type: 'video',
               backgroundColors: [],
-              mime: 'video/mp4',
+              mime: 'video/quicktime',
             });
           }}
           onCapturePhotoSuccess={async (photo) => {
             try {
-              FastImage.preload([
-                {
-                  uri: photo.path,
-                },
-              ]);
-
-              const colorResult = await ImageColors.getColors(
-                `file://${photo.path}`,
-                {
-                  cache: true,
-                  key: photo.path,
-                }
-              );
-
-              if (colorResult.platform === 'ios') {
-                setSourceData({
-                  uri: photo.path,
-                  type: 'photo',
-                  backgroundColors: [
-                    colorResult.background,
-                    colorResult.primary,
-                  ],
-                  mime: 'image/jpg',
-                });
-              }
+              setSourceData({
+                uri: photo.path,
+                type: 'photo',
+                backgroundColors: [],
+                mime: 'image/jpeg',
+              });
             } catch (e) {
               console.log(e);
             }
@@ -80,12 +66,31 @@ export const TakeStoryScreen = ({ navigation }: Props) => {
                 });
               }
             } else {
-              setSourceData({
-                uri,
-                type: 'video',
-                backgroundColors: [],
-                mime: 'video/mp4',
-              });
+              try {
+                const { uri: thumbnailUri } =
+                  await VideoThumbnails.getThumbnailAsync(uri, {
+                    time: 100,
+                  });
+
+                const colorResult = await ImageColors.getColors(thumbnailUri, {
+                  cache: true,
+                  key: uri,
+                });
+
+                if (colorResult.platform === 'ios') {
+                  setSourceData({
+                    uri,
+                    type: 'video',
+                    backgroundColors: [
+                      colorResult.background,
+                      colorResult.primary,
+                    ],
+                    mime: type,
+                  });
+                }
+              } catch (e) {
+                console.log(e);
+              }
             }
           }}
         />

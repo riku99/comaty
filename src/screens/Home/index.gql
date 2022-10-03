@@ -35,7 +35,9 @@ fragment HomeStories on Query {
     edges {
       node {
         id
-        contentUrl
+        url
+        backgroundColors
+        type
         user {
           id
           firstProfileImage {

@@ -1,5 +1,6 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { AnimatePresence, MotiView } from 'moti';
 import { useEffect, useState } from 'react';
@@ -29,6 +30,7 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSavingSource, setIsSavingSource] = useState(false);
   const [createStoryMutation] = useCreateStoryMutation();
+  const navigation = useNavigation<RootNavigationProp<'TakeStory'>>();
 
   useEffect(() => {
     if (saveSuccess) {
@@ -52,6 +54,8 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
 
   const onCreateStoryPress = async () => {
     try {
+      navigation.goBack();
+
       const file = await processImageForMultipartRequest({ uri, type: mime });
       const thumbnailFile = thumbnailUri
         ? await processImageForMultipartRequest({

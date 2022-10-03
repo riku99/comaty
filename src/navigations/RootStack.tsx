@@ -130,13 +130,6 @@ export const RootStack = () => {
       ) : (
         <>
           <Stack.Screen
-            name="TakeStory"
-            component={TakeStoryScreen}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
             name="Auth"
             component={AuthStack}
             options={{ headerShown: false }}

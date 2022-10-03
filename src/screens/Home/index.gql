@@ -31,18 +31,21 @@ fragment HomeNearByUsers on Query {
 }
 
 fragment HomeStories on Query {
-  stories(first: $storiesFirst, after: $storiesAfter) {
+  storyUsers(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {
         id
-        url
-        backgroundColors
-        type
-        user {
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+        stories {
           id
-          firstProfileImage {
-            ...ProfileImage
-          }
+          url
+          backgroundColors
+          type
+          createdAt
+          thumbnailUrl
         }
       }
     }

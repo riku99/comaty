@@ -16,7 +16,7 @@ type Props = {
   infiniteLoadStories: () => Promise<void>;
 };
 
-type Item = HomeStoriesFragment['stories']['edges'][number];
+type Item = HomeStoriesFragment['storyUsers']['edges'][number];
 
 export const Stories = React.memo(
   ({ storiesData, infiniteLoadStories }: Props) => {
@@ -42,7 +42,7 @@ export const Stories = React.memo(
                 <ProfileImage
                   imageData={filter<ProfileImageFragment>(
                     ProfileImageFragmentDoc,
-                    item.node.user.firstProfileImage
+                    item.node.firstProfileImage
                   )}
                   style={style.userImage}
                 />
@@ -71,7 +71,7 @@ export const Stories = React.memo(
     return (
       <InfiniteFlatList
         renderItem={renderItem}
-        data={storiesData.stories.edges}
+        data={storiesData.storyUsers.edges}
         keyExtractor={(item) => item.node.id.toString()}
         horizontal
         showsHorizontalScrollIndicator={false}

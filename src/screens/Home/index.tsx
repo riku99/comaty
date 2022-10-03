@@ -15,7 +15,7 @@ import {
   HomeStoriesFragment,
   useHomeScreenDataQuery,
   UserCardFragment,
-  UserCardFragmentDoc,
+  UserCardFragmentDoc
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { Stories } from './Stories';
@@ -97,7 +97,7 @@ export const HomeScreen = ({ navigation }: Props) => {
   };
 
   const infiniteLoadStories = async () => {
-    const { pageInfo } = data.stories;
+    const { pageInfo } = data.storyUsers;
 
     if (pageInfo.hasNextPage) {
       const { endCursor } = pageInfo;
@@ -148,59 +148,3 @@ const styles = StyleSheet.create({
   },
 });
 
-// type TopTabParamList = {
-//   Activity: undefined;
-//   Question: undefined;
-// };
-
-// const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
-
-// export const _HomeScreen = ({ navigation }: Props) => {
-//   useLayoutEffect(() => {
-//     navigation.setOptions({
-//       headerShadowVisible: false,
-//       headerLeft: () => <HeaderLeftTitle title="ホーム🦄" />,
-//       headerTitle: '',
-//     });
-//   }, [navigation]);
-
-//   return (
-//     <>
-//       <TopTab.Navigator
-//         screenOptions={{
-//           tabBarStyle: {
-//             height: 40,
-//           },
-//           tabBarLabelStyle: {
-//             fontSize: 12,
-//             fontWeight: '500',
-//           },
-//           tabBarIndicatorStyle: {
-//             backgroundColor: theme.primary,
-//             width: 100,
-//             height: 1.5,
-//           },
-//           tabBarIndicatorContainerStyle: {
-//             marginLeft: screenWidth / 4,
-//             transform: [{ translateX: -50 }],
-//           },
-//         }}
-//       >
-//         <TopTab.Screen
-//           name="Activity"
-//           component={Activity}
-//           options={{
-//             tabBarLabel: 'アクテビティ',
-//           }}
-//         />
-//         <TopTab.Screen
-//           name="Question"
-//           component={Questions}
-//           options={{
-//             tabBarLabel: 'そこ質',
-//           }}
-//         />
-//       </TopTab.Navigator>
-//     </>
-//   );
-// };

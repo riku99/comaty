@@ -101,6 +101,7 @@ export const ApolloProvider = ({ children }: Props) => {
             nearbyUsers: relayStylePagination(),
             posts: relayStylePagination(),
             stories: relayStylePagination(),
+            storyUsers: relayStylePagination(),
             post: {
               read: (_: Post, { args, toReference }) => {
                 if (args) {

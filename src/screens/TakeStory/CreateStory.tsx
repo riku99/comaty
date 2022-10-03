@@ -14,6 +14,8 @@ import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
+import { StoryType, useCreateStoryMutation } from 'src/generated/graphql';
+import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { StorySource } from 'src/types';
 
 type Props = {
@@ -22,10 +24,11 @@ type Props = {
 };
 
 export const CreateStory = ({ onBackPress, sourceData }: Props) => {
-  const { uri, type, backgroundColors } = sourceData;
+  const { uri, type, backgroundColors, mime } = sourceData;
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSavingSource, setIsSavingSource] = useState(false);
+  const [createStoryMutation] = useCreateStoryMutation();
 
   useEffect(() => {
     if (saveSuccess) {
@@ -47,7 +50,25 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
     }
   };
 
-  const onCreateStoryPress = async () => {};
+  const onCreateStoryPress = async () => {
+    try {
+      if (type === 'photo') {
+        const file = await processImageForMultipartRequest({ uri, type: mime });
+        await createStoryMutation({
+          variables: {
+            input: {
+              file,
+              type: StoryType.Photo,
+              backgroundColors,
+            },
+          },
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -87,7 +108,9 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
       </View>
 
       <Pressable style={[styles.shareButton, { bottom: safeAreaBottom + 8 }]}>
-        <Text style={styles.shareText}>シェア🎈</Text>
+        <Text style={styles.shareText} onPress={onCreateStoryPress}>
+          シェア🎈
+        </Text>
       </Pressable>
 
       <AnimatePresence>

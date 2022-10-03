@@ -86,14 +86,14 @@ export const StoryCamera = ({
     }
   };
 
-  if (!devices.back || !devices.front) {
-    return null;
-  }
+  // if (!devices.back || !devices.front) {
+  //   return null;
+  // }
 
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-        <Camera
+        {/* <Camera
           style={styles.camrea}
           device={device === 'back' ? devices.back : devices.front}
           isActive={isFocused}
@@ -102,7 +102,7 @@ export const StoryCamera = ({
           audio
           video
           enableZoomGesture
-        />
+        /> */}
 
         <View style={styles.closeButton}>
           <CloseButton color={'#fff'} size={32} />

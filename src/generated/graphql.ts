@@ -22,10 +22,6 @@ export enum ApproximateRange {
   Wide = 'WIDE'
 }
 
-export type CreareStoryInput = {
-  type?: InputMaybe<StoryType>;
-};
-
 export type CreatePostInput = {
   images?: InputMaybe<Array<Scalars['Upload']>>;
   replyTo?: InputMaybe<Scalars['Int']>;
@@ -47,6 +43,13 @@ export type CreateQuestionReplyInput = {
   questionId?: InputMaybe<Scalars['Int']>;
   questionReplyId?: InputMaybe<Scalars['Int']>;
   text: Scalars['String'];
+};
+
+export type CreateStoryInput = {
+  backgroundColors?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  file: Scalars['Upload'];
+  thumbnailFile?: InputMaybe<Scalars['Upload']>;
+  type: StoryType;
 };
 
 export enum CreateUserError {
@@ -113,6 +116,7 @@ export type Mutation = {
   createPost: Post;
   createQuestion: Question;
   createQuestionReply: QuestionReply;
+  createStory: Story;
   createUser: Me;
   createUserTag: UserTag;
   deletePost?: Maybe<Post>;
@@ -141,6 +145,11 @@ export type MutationCreateQuestionArgs = {
 
 export type MutationCreateQuestionReplyArgs = {
   input: CreateQuestionReplyInput;
+};
+
+
+export type MutationCreateStoryArgs = {
+  input: CreateStoryInput;
 };
 
 
@@ -367,6 +376,7 @@ export type Story = {
   createdAt: Scalars['String'];
   height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
+  thumbnailUrl?: Maybe<Scalars['String']>;
   type: StoryType;
   url: Scalars['String'];
   user?: Maybe<User>;
@@ -499,6 +509,13 @@ export type CreateQuestionReplyMutationVariables = Exact<{
 
 
 export type CreateQuestionReplyMutation = { __typename?: 'Mutation', createQuestionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } };
+
+export type CreateStoryMutationVariables = Exact<{
+  input: CreateStoryInput;
+}>;
+
+
+export type CreateStoryMutation = { __typename?: 'Mutation', createStory: { __typename?: 'Story', id: number, url: string, thumbnailUrl?: string | null, backgroundColors?: Array<string | null> | null } };
 
 export type DeleteMyTagMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -1018,6 +1035,42 @@ export function useCreateQuestionReplyMutation(baseOptions?: Apollo.MutationHook
 export type CreateQuestionReplyMutationHookResult = ReturnType<typeof useCreateQuestionReplyMutation>;
 export type CreateQuestionReplyMutationResult = Apollo.MutationResult<CreateQuestionReplyMutation>;
 export type CreateQuestionReplyMutationOptions = Apollo.BaseMutationOptions<CreateQuestionReplyMutation, CreateQuestionReplyMutationVariables>;
+export const CreateStoryDocument = gql`
+    mutation CreateStory($input: CreateStoryInput!) {
+  createStory(input: $input) {
+    id
+    url
+    thumbnailUrl
+    backgroundColors
+  }
+}
+    `;
+export type CreateStoryMutationFn = Apollo.MutationFunction<CreateStoryMutation, CreateStoryMutationVariables>;
+
+/**
+ * __useCreateStoryMutation__
+ *
+ * To run a mutation, you first call `useCreateStoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStoryMutation, { data, loading, error }] = useCreateStoryMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateStoryMutation(baseOptions?: Apollo.MutationHookOptions<CreateStoryMutation, CreateStoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStoryMutation, CreateStoryMutationVariables>(CreateStoryDocument, options);
+      }
+export type CreateStoryMutationHookResult = ReturnType<typeof useCreateStoryMutation>;
+export type CreateStoryMutationResult = Apollo.MutationResult<CreateStoryMutation>;
+export type CreateStoryMutationOptions = Apollo.BaseMutationOptions<CreateStoryMutation, CreateStoryMutationVariables>;
 export const DeleteMyTagDocument = gql`
     mutation DeleteMyTag($id: Int!) {
   deleteUserTag(id: $id) {

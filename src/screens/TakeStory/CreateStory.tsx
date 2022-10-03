@@ -24,7 +24,7 @@ type Props = {
 };
 
 export const CreateStory = ({ onBackPress, sourceData }: Props) => {
-  const { uri, type, backgroundColors, mime } = sourceData;
+  const { uri, type, backgroundColors, mime, thumbnailUri } = sourceData;
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isSavingSource, setIsSavingSource] = useState(false);
@@ -52,18 +52,27 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
 
   const onCreateStoryPress = async () => {
     try {
-      if (type === 'photo') {
-        const file = await processImageForMultipartRequest({ uri, type: mime });
-        await createStoryMutation({
-          variables: {
-            input: {
-              file,
-              type: StoryType.Photo,
-              backgroundColors,
-            },
+      const file = await processImageForMultipartRequest({ uri, type: mime });
+      const thumbnailFile = thumbnailUri
+        ? await processImageForMultipartRequest({
+            uri: thumbnailUri,
+            type: 'image/jpg',
+          })
+        : undefined;
+
+      await createStoryMutation({
+        variables: {
+          input: {
+            file,
+            type: type === 'photo' ? StoryType.Photo : StoryType.Video,
+            backgroundColors,
+            thumbnailFile,
           },
-        });
-      }
+        },
+        onCompleted: (d) => {
+          console.log(d);
+        },
+      });
     } catch (e) {
       console.log(e);
     } finally {

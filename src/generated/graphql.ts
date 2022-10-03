@@ -639,6 +639,8 @@ type QuestionCard_QuestionReply_Fragment = { __typename?: 'QuestionReply', id: n
 
 export type QuestionCardFragment = QuestionCard_Question_Fragment | QuestionCard_QuestionReply_Fragment;
 
+export type StoryUserCircleFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null };
+
 export type ProfileImageFragment = { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null };
 
 export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
@@ -861,24 +863,29 @@ export const HomeNearByUsersFragmentDoc = gql`
 }
     ${UserCardFragmentDoc}
 ${PageInfoFragmentDoc}`;
+export const StoryUserCircleFragmentDoc = gql`
+    fragment StoryUserCircle on User {
+  id
+  nickname
+  firstProfileImage {
+    ...ProfileImage
+  }
+  stories {
+    id
+    url
+    backgroundColors
+    type
+    createdAt
+    thumbnailUrl
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const HomeStoriesFragmentDoc = gql`
     fragment HomeStories on Query {
   storyUsers(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {
-        id
-        nickname
-        firstProfileImage {
-          ...ProfileImage
-        }
-        stories {
-          id
-          url
-          backgroundColors
-          type
-          createdAt
-          thumbnailUrl
-        }
+        ...StoryUserCircle
       }
     }
     pageInfo {
@@ -886,7 +893,7 @@ export const HomeStoriesFragmentDoc = gql`
     }
   }
 }
-    ${ProfileImageFragmentDoc}
+    ${StoryUserCircleFragmentDoc}
 ${PageInfoFragmentDoc}`;
 export const ProfileImagesInUserProfileFragmentDoc = gql`
     fragment ProfileImagesInUserProfile on User {

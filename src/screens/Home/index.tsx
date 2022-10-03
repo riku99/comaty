@@ -15,7 +15,7 @@ import {
   HomeStoriesFragment,
   useHomeScreenDataQuery,
   UserCardFragment,
-  UserCardFragmentDoc
+  UserCardFragmentDoc,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { Stories } from './Stories';
@@ -147,4 +147,3 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
 });
-

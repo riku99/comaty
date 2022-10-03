@@ -7,8 +7,8 @@ type Props = {
 };
 
 export const ProfileStoryOuter = ({ children, imageSize }: Props) => {
-  const outerSize = imageSize + 12;
-  const whiteOuterSize = outerSize - 6;
+  const outerSize = imageSize + 10;
+  const whiteOuterSize = outerSize - 5;
 
   return (
     <LinearGradient

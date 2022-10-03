@@ -1,14 +1,13 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
   HomeStoriesFragment,
-  ProfileImageFragment,
-  ProfileImageFragmentDoc,
+  StoryUserCircleFragment,
+  StoryUserCircleFragmentDoc,
 } from 'src/generated/graphql';
 
 type Props = {
@@ -34,20 +33,13 @@ export const Stories = React.memo(
             }}
             delay={(index % 15) * 150}
           >
-            <LinearGradient
-              colors={['#9089fa', '#b289fa', '#e389fa']}
-              style={style.gradientContainer}
-            >
-              <View style={style.blankContainer}>
-                <ProfileImage
-                  imageData={filter<ProfileImageFragment>(
-                    ProfileImageFragmentDoc,
-                    item.node.firstProfileImage
-                  )}
-                  style={style.userImage}
-                />
-              </View>
-            </LinearGradient>
+            <StoryUserCircle
+              imageSize={58}
+              storyUserData={filter<StoryUserCircleFragment>(
+                StoryUserCircleFragmentDoc,
+                item.node
+              )}
+            />
           </MotiView>
         );
       },

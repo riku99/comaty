@@ -15,7 +15,12 @@ import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
-import { StoryType, useCreateStoryMutation } from 'src/generated/graphql';
+import {
+  HomeStoriesDocument,
+  HomeStoriesQuery,
+  StoryType,
+  useCreateStoryMutation,
+} from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { StorySource } from 'src/types';
 
@@ -72,6 +77,37 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
             backgroundColors,
             thumbnailFile,
           },
+        },
+        update: (cache, { data: responseData }) => {
+          if (!responseData) {
+            return;
+          }
+
+          const cachedStoryUsersQuery = cache.readQuery<HomeStoriesQuery>({
+            query: HomeStoriesDocument,
+          });
+
+          if (cachedStoryUsersQuery) {
+            const myEdge = {
+              node: responseData.createStory,
+              cursor: '',
+            };
+
+            const newEdges = [
+              myEdge,
+              ...cachedStoryUsersQuery.storyUsers.edges,
+            ];
+
+            cache.writeQuery({
+              query: HomeStoriesDocument,
+              data: {
+                storyUsers: {
+                  ...cachedStoryUsersQuery.storyUsers,
+                  edges: newEdges,
+                },
+              },
+            });
+          }
         },
         onCompleted: (d) => {
           console.log(d);

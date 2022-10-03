@@ -34,19 +34,7 @@ fragment HomeStories on Query {
   storyUsers(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {
-        id
-        nickname
-        firstProfileImage {
-          ...ProfileImage
-        }
-        stories {
-          id
-          url
-          backgroundColors
-          type
-          createdAt
-          thumbnailUrl
-        }
+        ...StoryUserCircle
       }
     }
     pageInfo {

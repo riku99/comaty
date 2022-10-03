@@ -17,6 +17,7 @@ import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
 import { StoryType, useCreateStoryMutation } from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
+import { useCreatingStory } from 'src/hooks/app';
 import { StorySource } from 'src/types';
 
 type Props = {
@@ -31,6 +32,7 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
   const [isSavingSource, setIsSavingSource] = useState(false);
   const [createStoryMutation] = useCreateStoryMutation();
   const navigation = useNavigation<RootNavigationProp<'TakeStory'>>();
+  const { setCreatingStory } = useCreatingStory();
 
   useEffect(() => {
     if (saveSuccess) {
@@ -54,6 +56,8 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
 
   const onCreateStoryPress = async () => {
     try {
+      setCreatingStory(true);
+
       navigation.goBack();
 
       const file = await processImageForMultipartRequest({ uri, type: mime });
@@ -77,6 +81,7 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
     } catch (e) {
       console.log(e);
     } finally {
+      setCreatingStory(false);
     }
   };
 

@@ -1,8 +1,8 @@
 mutation CreateStory($input: CreateStoryInput!) {
   createStory(input: $input) {
     id
-    url
-    thumbnailUrl
-    backgroundColors
+    user {
+      ...StoryUserCircle
+    }
   }
 }

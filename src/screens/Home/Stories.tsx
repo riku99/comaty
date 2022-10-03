@@ -34,7 +34,7 @@ export const Stories = React.memo(
             delay={(index % 15) * 150}
           >
             <StoryUserCircle
-              imageSize={58}
+              imageSize={IMAGE_SIZE}
               storyUserData={filter<StoryUserCircleFragment>(
                 StoryUserCircleFragmentDoc,
                 item.node
@@ -50,7 +50,7 @@ export const Stories = React.memo(
       return (
         <View
           style={{
-            width: 10,
+            width: SEPALATOR_SIZE,
           }}
         />
       );
@@ -68,35 +68,31 @@ export const Stories = React.memo(
         horizontal
         showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={renderItemSeparator}
-        contentContainerStyle={style.storiesContent}
+        contentContainerStyle={styles.storiesContent}
         infiniteLoad={infiniteLoadStories}
+        ListHeaderComponent={
+          <StoryUserCircle
+            imageSize={IMAGE_SIZE}
+            storyUserData={filter<StoryUserCircleFragment>(
+              StoryUserCircleFragmentDoc,
+              storiesData.me
+            )}
+          />
+        }
+        ListHeaderComponentStyle={styles.header}
       />
     );
   }
 );
 
-const style = StyleSheet.create({
+const SEPALATOR_SIZE = 10;
+const IMAGE_SIZE = 59;
+
+const styles = StyleSheet.create({
   storiesContent: {
     paddingHorizontal: 16,
   },
-  gradientContainer: {
-    width: 69,
-    height: 69,
-    borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  blankContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  userImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 100,
+  header: {
+    marginRight: SEPALATOR_SIZE,
   },
 });

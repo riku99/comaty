@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
 
 type Props = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   imageSize: number;
 };
 

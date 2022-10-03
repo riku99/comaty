@@ -31,6 +31,9 @@ fragment HomeNearByUsers on Query {
 }
 
 fragment HomeStories on Query {
+  me {
+    ...StoryUserCircle
+  }
   storyUsers(first: $storiesFirst, after: $storiesAfter) {
     edges {
       node {

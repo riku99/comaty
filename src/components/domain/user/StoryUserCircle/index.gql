@@ -1,4 +1,4 @@
-fragment StoryUserCircle on User {
+fragment StoryUserCircle on UserEntity {
   id
   nickname
   firstProfileImage {

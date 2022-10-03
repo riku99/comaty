@@ -9,6 +9,7 @@ import {
   StoryUserCircleFragment,
   StoryUserCircleFragmentDoc,
 } from 'src/generated/graphql';
+import { useCreatingStory } from 'src/hooks/app';
 
 type Props = {
   storiesData: HomeStoriesFragment;
@@ -19,6 +20,8 @@ type Item = HomeStoriesFragment['storyUsers']['edges'][number];
 
 export const Stories = React.memo(
   ({ storiesData, infiniteLoadStories }: Props) => {
+    const { creatingStory } = useCreatingStory();
+
     const renderItem = useCallback(
       ({ item, index }: { item: Item; index: number }) => {
         return (
@@ -71,15 +74,21 @@ export const Stories = React.memo(
         contentContainerStyle={styles.storiesContent}
         infiniteLoad={infiniteLoadStories}
         ListHeaderComponent={
-          <StoryUserCircle
-            imageSize={IMAGE_SIZE}
-            storyUserData={filter<StoryUserCircleFragment>(
-              StoryUserCircleFragmentDoc,
-              storiesData.me
+          <>
+            {(!!storiesData.me.stories.length || creatingStory) && (
+              <View style={styles.header}>
+                <StoryUserCircle
+                  imageSize={IMAGE_SIZE}
+                  storyUserData={filter<StoryUserCircleFragment>(
+                    StoryUserCircleFragmentDoc,
+                    storiesData.me
+                  )}
+                  creatingStory={creatingStory}
+                />
+              </View>
             )}
-          />
+          </>
         }
-        ListHeaderComponentStyle={styles.header}
       />
     );
   }

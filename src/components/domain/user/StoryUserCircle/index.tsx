@@ -11,13 +11,13 @@ import {
 type Props = {
   storyUserData: StoryUserCircleFragment;
   imageSize: number;
-  isLoading?: boolean;
+  creatingStory?: boolean;
 };
 
 export const StoryUserCircle = ({
   storyUserData,
   imageSize,
-  isLoading = false,
+  creatingStory = false,
 }: Props) => {
   return (
     <ProfileStoryOuter imageSize={imageSize}>
@@ -33,18 +33,20 @@ export const StoryUserCircle = ({
         }}
       />
 
-      {isLoading && <View
-        style={[
-          styles.blur,
-          {
-            width: imageSize,
-            height: imageSize,
-            borderRadius: imageSize,
-          },
-        ]}
-      >
-        <ActivityIndicator color="#fff" />
-      </View>}
+      {creatingStory && (
+        <View
+          style={[
+            styles.blur,
+            {
+              width: imageSize,
+              height: imageSize,
+              borderRadius: imageSize,
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" />
+        </View>
+      )}
     </ProfileStoryOuter>
   );
 };

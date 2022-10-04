@@ -1,5 +1,7 @@
 import { Text } from '@rneui/themed';
+import { MotiView } from 'moti';
 import { Dimensions, StyleSheet, View } from 'react-native';
+import { Easing } from 'react-native-reanimated';
 import { CloseButton } from 'src/components/ui/CloseButton';
 
 export const IndicatorAndMetaData = () => {
@@ -7,7 +9,24 @@ export const IndicatorAndMetaData = () => {
     <View style={styles.container}>
       <View style={styles.indicatorContainr}>
         {inds.map((_, index) => {
-          return <View key={index} style={styles.indicatorBack}></View>;
+          return (
+            <View key={index} style={[styles.indicator, styles.indicatorBack]}>
+              <MotiView
+                style={[styles.indicator, styles.indicatorFront]}
+                from={{
+                  translateX: -(screenWidth / 2 - PADDING_H),
+                }}
+                animate={{
+                  translateX: 0,
+                }}
+                transition={{
+                  type: 'timing',
+                  duration: 4000,
+                  easing: Easing.linear,
+                }}
+              />
+            </View>
+          );
         })}
       </View>
 
@@ -23,7 +42,7 @@ export const IndicatorAndMetaData = () => {
   );
 };
 
-const inds = [1, 2, 3, 4];
+const inds = [1, 2];
 
 const { width: screenWidth } = Dimensions.get('screen');
 const PADDING_H = 4;
@@ -39,11 +58,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  indicatorBack: {
+  indicator: {
     height: 3,
     borderRadius: 2,
-    width: screenWidth / 4 - PADDING_H,
+    width: screenWidth / 2.01 - PADDING_H,
+  },
+  indicatorBack: {
     backgroundColor: '#919191',
+    overflow: 'hidden',
+  },
+  indicatorFront: {
+    backgroundColor: '#fff',
   },
   nameAndCloseContainer: {
     marginTop: 12,

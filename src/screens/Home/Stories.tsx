@@ -24,10 +24,16 @@ export const Stories = React.memo(
     const { creatingStory } = useCreatingStory();
     const navigation = useNavigation<RootNavigationProp<'HomeMain'>>();
 
+    const storyUsers = storiesData.storyUsers.edges.map((e) => ({
+      userId: e.node.id,
+    }));
+
     const renderItem = useCallback(
       ({ item, index }: { item: Item; index: number }) => {
         const onPress = () => {
-          navigation.navigate('Stories');
+          navigation.navigate('Stories', {
+            storyUsers,
+          });
         };
 
         return (

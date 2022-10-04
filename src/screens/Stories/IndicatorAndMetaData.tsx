@@ -8,9 +8,14 @@ import { range } from 'src/utils';
 type Props = {
   count: number;
   currentIndex: number;
+  duration: number;
 };
 
-export const IndicatorAndMetaData = ({ count, currentIndex }: Props) => {
+export const IndicatorAndMetaData = ({
+  count,
+  currentIndex,
+  duration,
+}: Props) => {
   const totalAmountOfSpace = (count - 1) * INDICAOTR_SPACE;
   const w = screenWidth - PADDING_H * 2 - totalAmountOfSpace;
 
@@ -35,11 +40,11 @@ export const IndicatorAndMetaData = ({ count, currentIndex }: Props) => {
                   translateX: -(w / count),
                 }}
                 animate={{
-                  translateX: 0,
+                  translateX: currentIndex === index ? 0 : undefined,
                 }}
                 transition={{
                   type: 'timing',
-                  duration: 4000,
+                  duration: duration,
                   easing: Easing.linear,
                 }}
               />

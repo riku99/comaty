@@ -30,7 +30,9 @@ export type RootStackParamList = {
   };
   EditProfileStack: undefined;
   TakeStory: undefined;
-  Stories: undefined;
+  Stories: {
+    storyUsers: { userId: string }[];
+  };
   PostReply: {
     postId: number;
   };

@@ -1,3 +1,4 @@
+import { Dimensions } from 'react-native';
 import Config from 'react-native-config';
 
 export const loginProviders = {
@@ -30,3 +31,8 @@ export const recommendedTags = [
   '仕事マン',
   '人類',
 ];
+
+const dimensions = Dimensions.get('screen');
+
+export const IPHONE_X_HEIGHT = 812;
+export const isMoreRecentThanXDevice = dimensions.height >= IPHONE_X_HEIGHT;

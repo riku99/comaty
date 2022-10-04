@@ -4,18 +4,13 @@ import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { AnimatePresence, MotiView } from 'moti';
 import { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
+import { isMoreRecentThanXDevice } from 'src/constants';
 import {
   AfterCreateingStoryDocument,
   StoryType,
@@ -101,28 +96,33 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
 
   return (
     <View style={styles.container}>
-      <SafeAreaView>
-        <StoryContainer backgroundColors={backgroundColors}>
-          {type === 'photo' ? (
-            <FastImage
-              source={{
-                uri,
-              }}
-              style={styles.source}
-              resizeMode="contain"
-            />
-          ) : (
-            <Video
-              source={{ uri }}
-              style={styles.source}
-              repeat
-              resizeMode="contain"
-            />
-          )}
-        </StoryContainer>
-      </SafeAreaView>
+      <StoryContainer backgroundColors={backgroundColors}>
+        {type === 'photo' ? (
+          <FastImage
+            source={{
+              uri,
+            }}
+            style={styles.source}
+            resizeMode="contain"
+          />
+        ) : (
+          <Video
+            source={{ uri }}
+            style={styles.source}
+            repeat
+            resizeMode="contain"
+          />
+        )}
+      </StoryContainer>
 
-      <View style={styles.topButtonGroup}>
+      <View
+        style={[
+          styles.topButtonGroup,
+          {
+            top: isMoreRecentThanXDevice ? '9%' : '6%',
+          },
+        ]}
+      >
         <Pressable style={styles.grayButton} onPress={onBackPress}>
           <AntDesign name="left" size={24} color="#fff" />
         </Pressable>

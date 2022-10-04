@@ -19,7 +19,7 @@ export const Root = () => {
   const { contentsCreationModalVisible, setContentsCreationModalVisible } =
     useContentsCreationVisible();
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['25%'], []);
+  const snapPoints = useMemo(() => ['24%'], []);
 
   useEffect(() => {
     if (initialData?.me) {
@@ -76,9 +76,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   bottomSheetButtonGroups: {
     width: '80%',
-    marginTop: '10%',
   },
 });

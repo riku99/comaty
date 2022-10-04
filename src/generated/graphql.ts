@@ -733,6 +733,11 @@ export type QuestionReplysScreenDataQueryVariables = Exact<{
 
 export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, replys?: Array<{ __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } | null> | null, questionReply?: { __typename?: 'QuestionReply', id: number, text: string } | null, question?: { __typename?: 'Question', id: number, text: string } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
 
+export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AfterCreateingStoryQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } | null };
+
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
 
 export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
@@ -2127,6 +2132,40 @@ export function useQuestionReplysScreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type QuestionReplysScreenDataQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataQuery>;
 export type QuestionReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataLazyQuery>;
 export type QuestionReplysScreenDataQueryResult = Apollo.QueryResult<QuestionReplysScreenDataQuery, QuestionReplysScreenDataQueryVariables>;
+export const AfterCreateingStoryDocument = gql`
+    query AfterCreateingStory {
+  me {
+    ...StoryUserCircle
+  }
+}
+    ${StoryUserCircleFragmentDoc}`;
+
+/**
+ * __useAfterCreateingStoryQuery__
+ *
+ * To run a query within a React component, call `useAfterCreateingStoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAfterCreateingStoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAfterCreateingStoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAfterCreateingStoryQuery(baseOptions?: Apollo.QueryHookOptions<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>(AfterCreateingStoryDocument, options);
+      }
+export function useAfterCreateingStoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>(AfterCreateingStoryDocument, options);
+        }
+export type AfterCreateingStoryQueryHookResult = ReturnType<typeof useAfterCreateingStoryQuery>;
+export type AfterCreateingStoryLazyQueryHookResult = ReturnType<typeof useAfterCreateingStoryLazyQuery>;
+export type AfterCreateingStoryQueryResult = Apollo.QueryResult<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>;
 export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {

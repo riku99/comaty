@@ -13,9 +13,14 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useToast } from 'react-native-toast-notifications';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
-import { StoryType, useCreateStoryMutation } from 'src/generated/graphql';
+import {
+  AfterCreateingStoryDocument,
+  StoryType,
+  useCreateStoryMutation,
+} from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { useCreatingStory } from 'src/hooks/app';
 import { StorySource } from 'src/types';
@@ -33,6 +38,7 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
   const [createStoryMutation] = useCreateStoryMutation();
   const navigation = useNavigation<RootNavigationProp<'TakeStory'>>();
   const { setCreatingStory } = useCreatingStory();
+  const toast = useToast();
 
   useEffect(() => {
     if (saveSuccess) {
@@ -76,6 +82,14 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
             backgroundColors,
             thumbnailFile,
           },
+        },
+        refetchQueries: [
+          {
+            query: AfterCreateingStoryDocument,
+          },
+        ],
+        onCompleted: (d) => {
+          toast.show('作成しました', { type: 'success' });
         },
       });
     } catch (e) {

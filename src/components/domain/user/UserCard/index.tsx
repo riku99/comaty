@@ -1,4 +1,3 @@
-import MaskedView from '@react-native-masked-view/masked-view';
 import { Text } from '@rneui/themed';
 import { BlurView } from 'expo-blur';
 import { filter } from 'graphql-anywhere';
@@ -9,7 +8,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { SquircleView } from 'react-native-figma-squircle';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import {
   ProfileImageFragment,
@@ -32,35 +30,24 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
         onPress(id);
       }}
     >
-      <MaskedView
-        maskElement={
-          <SquircleView
-            style={StyleSheet.absoluteFill}
-            squircleParams={{
-              cornerRadius: 36,
-              cornerSmoothing: 1,
-            }}
-          />
+      <ProfileImage
+        imageData={
+          userCardData.profileImages.length
+            ? filter<ProfileImageFragment>(
+                ProfileImageFragmentDoc,
+                userCardData.profileImages[0]
+              )
+            : null
         }
+        style={styles.image}
       >
-        <ProfileImage
-          imageData={
-            userCardData.profileImages.length
-              ? filter<ProfileImageFragment>(
-                  ProfileImageFragmentDoc,
-                  userCardData.profileImages[0]
-                )
-              : null
-          }
-          style={styles.image}
-        >
-          <View style={styles.distanceContainer}>
-            <BlurView intensity={40} style={styles.blurView}>
-              <Text style={styles.distance}>400m先</Text>
-            </BlurView>
-          </View>
-        </ProfileImage>
-      </MaskedView>
+        <View style={styles.distanceContainer}>
+          <BlurView intensity={40} style={styles.blurView}>
+            <Text style={styles.distance}>400m先</Text>
+          </BlurView>
+        </View>
+      </ProfileImage>
+
       <View style={styles.nameAndAge}>
         <Text style={styles.name}>
           {nickname}, <Text style={styles.age}>{age}</Text>

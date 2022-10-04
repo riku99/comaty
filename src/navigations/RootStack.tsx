@@ -10,6 +10,7 @@ import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
 import { QuestionReplyCreationScreen } from 'src/screens/QuestionReplyCreation';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
+import { StoriesScreen } from 'src/screens/Stories';
 import { TakeStoryScreen } from 'src/screens/TakeStory';
 import { UserProfileScreen } from 'src/screens/UserProfile';
 import { AuthStack } from './AuthStack';
@@ -29,6 +30,7 @@ export type RootStackParamList = {
   };
   EditProfileStack: undefined;
   TakeStory: undefined;
+  Stories: undefined;
   PostReply: {
     postId: number;
   };
@@ -93,6 +95,7 @@ export const RootStack = () => {
           <Stack.Screen name="SexSelection" component={SexSelectionScreen} />
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           <Stack.Screen name="PostDetail" component={PostDetailScreen} />
+          <Stack.Screen name="Stories" component={StoriesScreen} />
 
           <Stack.Group
             screenOptions={{

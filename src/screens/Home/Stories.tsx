@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import React, { useCallback } from 'react';
@@ -21,9 +22,14 @@ type Item = HomeStoriesFragment['storyUsers']['edges'][number];
 export const Stories = React.memo(
   ({ storiesData, infiniteLoadStories }: Props) => {
     const { creatingStory } = useCreatingStory();
+    const navigation = useNavigation<RootNavigationProp<'HomeMain'>>();
 
     const renderItem = useCallback(
       ({ item, index }: { item: Item; index: number }) => {
+        const onPress = () => {
+          navigation.navigate('Stories');
+        };
+
         return (
           <MotiView
             from={{ scale: 0 }}
@@ -42,6 +48,7 @@ export const Stories = React.memo(
                 StoryUserCircleFragmentDoc,
                 item.node
               )}
+              onPress={onPress}
             />
           </MotiView>
         );

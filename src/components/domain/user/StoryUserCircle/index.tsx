@@ -1,5 +1,5 @@
 import { filter } from 'graphql-anywhere';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { ProfileStoryOuter } from 'src/components/ui/ProfileStoryOuter';
 import {
@@ -12,42 +12,46 @@ type Props = {
   storyUserData: StoryUserCircleFragment;
   imageSize: number;
   creatingStory?: boolean;
+  onPress?: () => void;
 };
 
 export const StoryUserCircle = ({
   storyUserData,
   imageSize,
+  onPress,
   creatingStory = false,
 }: Props) => {
   return (
-    <ProfileStoryOuter imageSize={imageSize}>
-      <ProfileImage
-        imageData={filter<ProfileImageFragment>(
-          ProfileImageFragmentDoc,
-          storyUserData.firstProfileImage
-        )}
-        style={{
-          width: imageSize,
-          height: imageSize,
-          borderRadius: imageSize,
-        }}
-      />
+    <Pressable onPress={onPress}>
+      <ProfileStoryOuter imageSize={imageSize}>
+        <ProfileImage
+          imageData={filter<ProfileImageFragment>(
+            ProfileImageFragmentDoc,
+            storyUserData.firstProfileImage
+          )}
+          style={{
+            width: imageSize,
+            height: imageSize,
+            borderRadius: imageSize,
+          }}
+        />
 
-      {creatingStory && (
-        <View
-          style={[
-            styles.blur,
-            {
-              width: imageSize,
-              height: imageSize,
-              borderRadius: imageSize,
-            },
-          ]}
-        >
-          <ActivityIndicator color="#fff" />
-        </View>
-      )}
-    </ProfileStoryOuter>
+        {creatingStory && (
+          <View
+            style={[
+              styles.blur,
+              {
+                width: imageSize,
+                height: imageSize,
+                borderRadius: imageSize,
+              },
+            ]}
+          >
+            <ActivityIndicator color="#fff" />
+          </View>
+        )}
+      </ProfileStoryOuter>
+    </Pressable>
   );
 };
 

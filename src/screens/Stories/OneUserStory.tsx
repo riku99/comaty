@@ -16,7 +16,7 @@ export const OneUserStory = () => {
           width: '100%',
         }}
       >
-        <IndicatorAndMetaData />
+        <IndicatorAndMetaData count={2} currentIndex={0} />
       </View>
     </View>
   );

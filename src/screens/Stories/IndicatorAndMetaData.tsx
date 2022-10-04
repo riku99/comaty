@@ -3,18 +3,36 @@ import { MotiView } from 'moti';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Easing } from 'react-native-reanimated';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { range } from 'src/utils';
 
-export const IndicatorAndMetaData = () => {
+type Props = {
+  count: number;
+  currentIndex: number;
+};
+
+export const IndicatorAndMetaData = ({ count, currentIndex }: Props) => {
+  const totalAmountOfSpace = (count - 1) * INDICAOTR_SPACE;
+  const w = screenWidth - PADDING_H * 2 - totalAmountOfSpace;
+
   return (
     <View style={styles.container}>
       <View style={styles.indicatorContainr}>
-        {inds.map((_, index) => {
+        {[...range(0, count)].map((_, index) => {
           return (
-            <View key={index} style={[styles.indicator, styles.indicatorBack]}>
+            <View
+              key={index}
+              style={[
+                styles.indicator,
+                styles.indicatorBack,
+                {
+                  width: w / count,
+                },
+              ]}
+            >
               <MotiView
                 style={[styles.indicator, styles.indicatorFront]}
                 from={{
-                  translateX: -(screenWidth / 2 - PADDING_H),
+                  translateX: -(w / count),
                 }}
                 animate={{
                   translateX: 0,
@@ -47,6 +65,7 @@ const inds = [1, 2];
 const { width: screenWidth } = Dimensions.get('screen');
 const PADDING_H = 4;
 const IMAGE_SIZE = 34;
+const INDICAOTR_SPACE = 4;
 
 const styles = StyleSheet.create({
   container: {
@@ -60,8 +79,7 @@ const styles = StyleSheet.create({
   },
   indicator: {
     height: 3,
-    borderRadius: 2,
-    width: screenWidth / 2.01 - PADDING_H,
+    borderRadius: 3,
   },
   indicatorBack: {
     backgroundColor: '#919191',

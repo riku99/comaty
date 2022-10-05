@@ -96,6 +96,16 @@ export const OneUserStories = ({ userId }: Props) => {
     }
   };
 
+  const onRightPress = () => {
+    indicatorProgressValues[currentlyDisplayedStoryIndex].value = 0;
+
+    const hasNextStory = storyCount - 1 > currentlyDisplayedStoryIndex;
+    if (hasNextStory) {
+      setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
+    } else {
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StoryContainer
@@ -132,6 +142,7 @@ export const OneUserStories = ({ userId }: Props) => {
         <Pressable style={styles.halfPressable} onPress={onLeftPress} />
 
         <Pressable
+          onPress={onRightPress}
           style={[
             styles.halfPressable,
             {

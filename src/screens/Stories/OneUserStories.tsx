@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {
@@ -25,10 +25,14 @@ export const OneUserStories = ({ userId }: Props) => {
 
   const [currentlyDisplayedStoryIndex, setCurrentlyDisplayedStoryIndex] =
     useState(0);
-
   const [indicatorProgressValues, setIndicatorProgressValues] = useState<{
     [key: number]: SharedValue<number>;
   }>([]);
+  const checkedVideoProgress = useRef(false);
+
+  useEffect(() => {
+    checkedVideoProgress.current = false;
+  }, [currentlyDisplayedStoryIndex]);
 
   if (!data?.user) {
     return null;
@@ -109,8 +113,12 @@ export const OneUserStories = ({ userId }: Props) => {
             }}
             style={styles.source}
             resizeMode="contain"
-            onLoad={startProgress}
-            onProgress={() => {}}
+            onProgress={() => {
+              if (!checkedVideoProgress.current) {
+                checkedVideoProgress.current = true;
+                startProgress();
+              }
+            }}
           />
         )}
 

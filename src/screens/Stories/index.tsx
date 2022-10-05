@@ -34,8 +34,8 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
           };
         }}
         decelerationRate="fast"
-        initialNumToRender={2}
-        maxToRenderPerBatch={2}
+        initialNumToRender={1}
+        maxToRenderPerBatch={1}
         windowSize={1}
       />
     </View>

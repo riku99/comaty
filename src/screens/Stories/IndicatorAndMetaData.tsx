@@ -65,8 +65,6 @@ export const IndicatorAndMetaData = ({
   );
 };
 
-const inds = [1, 2];
-
 const { width: screenWidth } = Dimensions.get('screen');
 const PADDING_H = 4;
 const IMAGE_SIZE = 34;

@@ -5,7 +5,7 @@ import { isMoreRecentThanXDevice } from 'src/constants';
 
 type Props = {
   backgroundColors: string[];
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 };
 
 export const StoryContainer = ({ backgroundColors, children }: Props) => {

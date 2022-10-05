@@ -28,6 +28,7 @@ export const OneUserStories = ({ userId }: Props) => {
   const [indicatorProgressValues, setIndicatorProgressValues] = useState<{
     [key: number]: SharedValue<number>;
   }>([]);
+  const [videoDuration, setVideoDuration] = useState(0);
   const checkedVideoProgress = useRef(false);
 
   useEffect(() => {
@@ -58,7 +59,10 @@ export const OneUserStories = ({ userId }: Props) => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value = withTiming(
       0,
       {
-        duration: 4000,
+        duration:
+          currentlyDisplayedStory.type === StoryType.Photo
+            ? PHOTO_DURATION
+            : videoDuration,
         easing: Easing.linear,
       },
       (completed) => {
@@ -113,6 +117,9 @@ export const OneUserStories = ({ userId }: Props) => {
             }}
             style={styles.source}
             resizeMode="contain"
+            onLoad={(e) => {
+              setVideoDuration(e.duration * 1000);
+            }}
             onProgress={() => {
               if (!checkedVideoProgress.current) {
                 checkedVideoProgress.current = true;
@@ -140,7 +147,11 @@ export const OneUserStories = ({ userId }: Props) => {
             <Indicator
               width={oneIndicatorWidth}
               setProgressValue={(v) => {
-                indicatorProgressValues[index] = v;
+                setIndicatorProgressValues((currentValues) => {
+                  const newValues = { ...currentValues };
+                  newValues[index] = v;
+                  return newValues;
+                });
               }}
               key={index}
             />
@@ -155,6 +166,7 @@ const { height: screenHeight, width: screenWidth } = Dimensions.get('screen');
 
 const PADDING_H = 4;
 const INDICAOTR_SPACE = 2.5;
+const PHOTO_DURATION = 4000;
 
 const styles = StyleSheet.create({
   container: {

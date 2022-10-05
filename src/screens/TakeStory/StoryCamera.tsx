@@ -88,13 +88,13 @@ export const StoryCamera = ({
     }
   };
 
-  if (!devices.back || !devices.front) {
-    return null;
-  }
+  // if (!devices.back || !devices.front) {
+  //   return null;
+  // }
 
   return (
     <View style={styles.container}>
-      <Camera
+      {/* <Camera
         style={[
           styles.camrea,
           { marginTop: isMoreRecentThanXDevice ? safeAreaTop : 0 },
@@ -106,7 +106,7 @@ export const StoryCamera = ({
         audio
         video
         enableZoomGesture
-      />
+      /> */}
 
       <View
         style={[

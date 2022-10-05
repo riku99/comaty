@@ -6,6 +6,8 @@ import { AnimatePresence, MotiView } from 'moti';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { RNFFmpeg } from 'react-native-ffmpeg';
+import { TemporaryDirectoryPath } from 'react-native-fs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import Video from 'react-native-video';
@@ -61,7 +63,18 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
 
       navigation.goBack();
 
-      const file = await processImageForMultipartRequest({ uri, type: mime });
+      const outputVideoName = `output.mp4`;
+      const outputVideoUri = `file://${TemporaryDirectoryPath}/${outputVideoName}`;
+
+      if (type === 'video') {
+        await RNFFmpeg.execute(`-y -i ${uri} -c:v libx264 ${outputVideoUri}`);
+      }
+
+      const file = await processImageForMultipartRequest({
+        uri: type === 'photo' ? uri : outputVideoUri,
+        type: type === 'photo' ? 'image/jpg' : 'video/mp4',
+      });
+
       const thumbnailFile = thumbnailUri
         ? await processImageForMultipartRequest({
             uri: thumbnailUri,

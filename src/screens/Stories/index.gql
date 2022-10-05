@@ -1,0 +1,17 @@
+query OneUserStories($id: ID!) {
+  user(id: $id) {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+    stories {
+      id
+      url
+      type
+      backgroundColors
+      thumbnailUrl
+      createdAt
+    }
+  }
+}

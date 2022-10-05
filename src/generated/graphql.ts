@@ -733,6 +733,13 @@ export type QuestionReplysScreenDataQueryVariables = Exact<{
 
 export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, replys?: Array<{ __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } | null> | null, questionReply?: { __typename?: 'QuestionReply', id: number, text: string } | null, question?: { __typename?: 'Question', id: number, text: string } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
 
+export type OneUserStoriesQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string } | null> | null } };
+
 export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2132,6 +2139,53 @@ export function useQuestionReplysScreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type QuestionReplysScreenDataQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataQuery>;
 export type QuestionReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataLazyQuery>;
 export type QuestionReplysScreenDataQueryResult = Apollo.QueryResult<QuestionReplysScreenDataQuery, QuestionReplysScreenDataQueryVariables>;
+export const OneUserStoriesDocument = gql`
+    query OneUserStories($id: ID!) {
+  user(id: $id) {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+    stories {
+      id
+      url
+      type
+      backgroundColors
+      thumbnailUrl
+      createdAt
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+
+/**
+ * __useOneUserStoriesQuery__
+ *
+ * To run a query within a React component, call `useOneUserStoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOneUserStoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOneUserStoriesQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOneUserStoriesQuery(baseOptions: Apollo.QueryHookOptions<OneUserStoriesQuery, OneUserStoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OneUserStoriesQuery, OneUserStoriesQueryVariables>(OneUserStoriesDocument, options);
+      }
+export function useOneUserStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OneUserStoriesQuery, OneUserStoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OneUserStoriesQuery, OneUserStoriesQueryVariables>(OneUserStoriesDocument, options);
+        }
+export type OneUserStoriesQueryHookResult = ReturnType<typeof useOneUserStoriesQuery>;
+export type OneUserStoriesLazyQueryHookResult = ReturnType<typeof useOneUserStoriesLazyQuery>;
+export type OneUserStoriesQueryResult = Apollo.QueryResult<OneUserStoriesQuery, OneUserStoriesQueryVariables>;
 export const AfterCreateingStoryDocument = gql`
     query AfterCreateingStory {
   me {

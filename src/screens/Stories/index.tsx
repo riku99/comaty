@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect } from 'react';
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
-import { OneUserStory } from './OneUserStory';
+import { OneUserStories } from './OneUserStories';
 
 type Props = RootNavigationScreenProp<'Stories'>;
 
@@ -14,7 +14,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
 
   const renderOneUserStory = useCallback(
     ({ item }: { item: { userId: string } }) => {
-      return <OneUserStory userId={item.userId} />;
+      return <OneUserStories userId={item.userId} />;
     },
     []
   );
@@ -34,6 +34,9 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
           };
         }}
         decelerationRate="fast"
+        initialNumToRender={2}
+        maxToRenderPerBatch={2}
+        windowSize={1}
       />
     </View>
   );

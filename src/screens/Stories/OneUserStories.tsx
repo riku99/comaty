@@ -43,12 +43,14 @@ export const OneUserStories = ({ userId }: Props) => {
   const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
 
   const onProgressDone = (completed: boolean) => {
-    if (completed && storyCount - 1 > currentlyDisplayedStoryIndex) {
+    const hasNextStory =
+      completed && storyCount - 1 > currentlyDisplayedStoryIndex;
+    if (hasNextStory) {
       setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
     }
   };
 
-  const onLoad = () => {
+  const startProgress = () => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value = withTiming(
       0,
       {
@@ -59,6 +61,31 @@ export const OneUserStories = ({ userId }: Props) => {
         runOnJS(onProgressDone)(completed);
       }
     );
+  };
+
+  const resetProgress = () => {
+    indicatorProgressValues[currentlyDisplayedStoryIndex].value =
+      -oneIndicatorWidth;
+  };
+
+  const onLeftPress = () => {
+    resetProgress();
+
+    const isEarlyTimingPress =
+      -indicatorProgressValues[currentlyDisplayedStoryIndex].value >
+      oneIndicatorWidth - oneIndicatorWidth / 5;
+
+    if (isEarlyTimingPress) {
+      if (currentlyDisplayedStoryIndex !== 0) {
+        indicatorProgressValues[currentlyDisplayedStoryIndex - 1].value =
+          -oneIndicatorWidth;
+        setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex - 1);
+      } else {
+        startProgress();
+      }
+    } else {
+      startProgress();
+    }
   };
 
   return (
@@ -73,7 +100,7 @@ export const OneUserStories = ({ userId }: Props) => {
             }}
             style={styles.source}
             resizeMode="contain"
-            onLoad={onLoad}
+            onLoad={startProgress}
           />
         ) : (
           <Video
@@ -81,24 +108,13 @@ export const OneUserStories = ({ userId }: Props) => {
               uri: currentlyDisplayedStory.url,
             }}
             style={styles.source}
-            repeat
             resizeMode="contain"
-            onLoad={onLoad}
+            onLoad={startProgress}
+            onProgress={() => {}}
           />
         )}
 
-        <Pressable
-          style={styles.halfPressable}
-          onPress={() => {
-            indicatorProgressValues[currentlyDisplayedStoryIndex].value =
-              -oneIndicatorWidth;
-            indicatorProgressValues[currentlyDisplayedStoryIndex].value =
-              withTiming(0, {
-                duration: 4000,
-                easing: Easing.linear,
-              });
-          }}
-        />
+        <Pressable style={styles.halfPressable} onPress={onLeftPress} />
 
         <Pressable
           style={[
@@ -114,7 +130,6 @@ export const OneUserStories = ({ userId }: Props) => {
         <View style={styles.indicatorContainer}>
           {data.user.stories.map((d, index) => (
             <Indicator
-              index={index}
               width={oneIndicatorWidth}
               setProgressValue={(v) => {
                 indicatorProgressValues[index] = v;

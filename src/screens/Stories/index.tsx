@@ -64,6 +64,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
         decelerationRate="fast"
         onScroll={onScroll}
         initialScrollIndex={0}
+        initialNumToRender={4}
       />
     </View>
   );

@@ -29,42 +29,44 @@ export const OneUserStories = ({
     },
   });
 
+  const isUserStoriesVisibleInViewport =
+    index === currentlyDisplayedUserStoryInViewport;
   const [currentlyDisplayedStoryIndex, setCurrentlyDisplayedStoryIndex] =
     useState(0);
   const [indicatorProgressValues, setIndicatorProgressValues] = useState<{
     [key: number]: SharedValue<number>;
-  }>([]);
+  }>({});
   const [videoDuration, setVideoDuration] = useState(0);
   const checkedVideoProgress = useRef(false);
   const videoRef = useRef<Video>(null);
+  const storyCount = data?.user.stories.length;
+  const totalAmountOfSpace = (storyCount - 1) * INDICAOTR_SPACE;
+  const oneIndicatorWidth =
+    (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
 
   useEffect(() => {
     checkedVideoProgress.current = false;
   }, [currentlyDisplayedStoryIndex]);
 
+  // このOneUserStoriesがviewportから外れた時の初期化
   useEffect(() => {
     checkedVideoProgress.current = false;
-  }, [currentlyDisplayedUserStoryInViewport]);
-
-  if (Math.abs(index - currentlyDisplayedUserStoryInViewport) > 3) {
-    return (
-      <View
-        style={{
-          height: screenHeight,
-          width: screenWidth,
-        }}
-      ></View>
-    );
-  }
+    if (!isUserStoriesVisibleInViewport) {
+      videoRef.current?.seek(0);
+      setCurrentlyDisplayedStoryIndex(0);
+      Object.keys(indicatorProgressValues).forEach((key) => {
+        indicatorProgressValues[Number(key)].value = -oneIndicatorWidth;
+      });
+    }
+  }, [
+    isUserStoriesVisibleInViewport,
+    indicatorProgressValues,
+    oneIndicatorWidth,
+  ]);
 
   if (!data?.user) {
     return null;
   }
-
-  const storyCount = data.user.stories.length;
-  const totalAmountOfSpace = (storyCount - 1) * INDICAOTR_SPACE;
-  const oneIndicatorWidth =
-    (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
 
   const { stories } = data.user;
   const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
@@ -136,12 +138,17 @@ export const OneUserStories = ({
       >
         {currentlyDisplayedStory.type === StoryType.Photo ? (
           <FastImage
+            key={currentlyDisplayedUserStoryInViewport}
             source={{
               uri: currentlyDisplayedStory.url,
             }}
             style={styles.source}
             resizeMode="contain"
-            onLoad={startProgress}
+            onLoad={() => {
+              if (isUserStoriesVisibleInViewport) {
+                startProgress();
+              }
+            }}
           />
         ) : (
           <Video
@@ -155,11 +162,15 @@ export const OneUserStories = ({
               setVideoDuration(e.duration * 1000);
             }}
             onProgress={() => {
-              if (!checkedVideoProgress.current) {
+              if (
+                isUserStoriesVisibleInViewport &&
+                !checkedVideoProgress.current
+              ) {
                 checkedVideoProgress.current = true;
                 startProgress();
               }
             }}
+            paused={!isUserStoriesVisibleInViewport}
           />
         )}
 
@@ -178,17 +189,17 @@ export const OneUserStories = ({
 
       <View style={styles.topContainer}>
         <View style={styles.indicatorContainer}>
-          {data.user.stories.map((d, index) => (
+          {data.user.stories.map((d, _index) => (
             <Indicator
               width={oneIndicatorWidth}
               setProgressValue={(v) => {
                 setIndicatorProgressValues((currentValues) => {
                   const newValues = { ...currentValues };
-                  newValues[index] = v;
+                  newValues[_index] = v;
                   return newValues;
                 });
               }}
-              key={index}
+              key={_index}
             />
           ))}
         </View>

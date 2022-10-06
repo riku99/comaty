@@ -16,12 +16,14 @@ type Props = {
   userId: string;
   index: number;
   currentlyDisplayedUserStoryInViewport: number;
+  onDoneLastStory: () => void;
 };
 
 export const OneUserStories = ({
   userId,
   index,
   currentlyDisplayedUserStoryInViewport,
+  onDoneLastStory,
 }: Props) => {
   const { data } = useOneUserStoriesQuery({
     variables: {
@@ -43,6 +45,7 @@ export const OneUserStories = ({
   const totalAmountOfSpace = (storyCount - 1) * INDICAOTR_SPACE;
   const oneIndicatorWidth =
     (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
+  const resetNow = useRef(false);
 
   useEffect(() => {
     checkedVideoProgress.current = false;
@@ -52,6 +55,7 @@ export const OneUserStories = ({
   useEffect(() => {
     checkedVideoProgress.current = false;
     if (!isUserStoriesVisibleInViewport) {
+      resetNow.current = true;
       videoRef.current?.seek(0);
       setCurrentlyDisplayedStoryIndex(0);
       Object.keys(indicatorProgressValues).forEach((key) => {
@@ -64,6 +68,12 @@ export const OneUserStories = ({
     oneIndicatorWidth,
   ]);
 
+  useEffect(() => {
+    if (isUserStoriesVisibleInViewport && resetNow.current) {
+      resetNow.current = false;
+    }
+  }, [isUserStoriesVisibleInViewport]);
+
   if (!data?.user) {
     return null;
   }
@@ -72,10 +82,15 @@ export const OneUserStories = ({
   const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
 
   const onProgressDone = (completed: boolean) => {
-    const hasNextStory =
-      completed && storyCount - 1 > currentlyDisplayedStoryIndex;
+    const hasNextStory = storyCount - 1 > currentlyDisplayedStoryIndex;
     if (hasNextStory) {
-      setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
+      if (completed) {
+        setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
+      }
+    } else {
+      if (!resetNow.current) {
+        onDoneLastStory();
+      }
     }
   };
 

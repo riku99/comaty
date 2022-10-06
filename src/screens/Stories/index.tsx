@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -17,6 +17,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
     currentlyDisplayedUserStoryInViewport,
     setCurrentlyDisplayedStoryInViewport,
   ] = useState(0);
+  const flatListRef = useRef<FlatList>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,6 +34,11 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
           currentlyDisplayedUserStoryInViewport={
             currentlyDisplayedUserStoryInViewport
           }
+          onDoneLastStory={() => {
+            flatListRef.current?.scrollToIndex({
+              index: currentlyDisplayedUserStoryInViewport + 1,
+            });
+          }}
         />
       );
     },
@@ -49,6 +55,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={flatListRef}
         data={storyUsers}
         renderItem={renderOneUserStory}
         keyExtractor={(item) => item.userId}
@@ -57,7 +64,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
         getItemLayout={(_, index) => {
           return {
             length: screenHeight,
-            offset: index,
+            offset: index * screenHeight,
             index,
           };
         }}

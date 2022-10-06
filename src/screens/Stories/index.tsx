@@ -35,14 +35,19 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
             currentlyDisplayedUserStoryInViewport
           }
           onDoneLastStory={() => {
-            flatListRef.current?.scrollToIndex({
-              index: currentlyDisplayedUserStoryInViewport + 1,
-            });
+            const hasNextStory = index < storyUsers.length - 1;
+            if (hasNextStory) {
+              flatListRef.current?.scrollToIndex({
+                index: currentlyDisplayedUserStoryInViewport + 1,
+              });
+            } else {
+              navigation.goBack();
+            }
           }}
         />
       );
     },
-    [currentlyDisplayedUserStoryInViewport]
+    [currentlyDisplayedUserStoryInViewport, navigation, storyUsers.length]
   );
 
   const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {

@@ -738,7 +738,9 @@ export type OneUserStoriesQueryVariables = Exact<{
 }>;
 
 
-export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string } | null> | null } };
+export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+
+export type StoryUserMetaDataFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
 export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -914,6 +916,15 @@ export const HomeStoriesFragmentDoc = gql`
 }
     ${StoryUserCircleFragmentDoc}
 ${PageInfoFragmentDoc}`;
+export const StoryUserMetaDataFragmentDoc = gql`
+    fragment StoryUserMetaData on User {
+  id
+  nickname
+  firstProfileImage {
+    ...ProfileImage
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const ProfileImagesInUserProfileFragmentDoc = gql`
     fragment ProfileImagesInUserProfile on User {
   profileImages {
@@ -2143,10 +2154,7 @@ export const OneUserStoriesDocument = gql`
     query OneUserStories($id: ID!) {
   user(id: $id) {
     id
-    nickname
-    firstProfileImage {
-      ...ProfileImage
-    }
+    ...StoryUserMetaData
     stories {
       id
       url
@@ -2157,7 +2165,7 @@ export const OneUserStoriesDocument = gql`
     }
   }
 }
-    ${ProfileImageFragmentDoc}`;
+    ${StoryUserMetaDataFragmentDoc}`;
 
 /**
  * __useOneUserStoriesQuery__

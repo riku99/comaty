@@ -1,3 +1,4 @@
+import { filter } from 'graphql-anywhere';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -9,8 +10,14 @@ import {
 } from 'react-native-reanimated';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
-import { StoryType, useOneUserStoriesQuery } from 'src/generated/graphql';
+import {
+  StoryType,
+  StoryUserMetaDataFragment,
+  StoryUserMetaDataFragmentDoc,
+  useOneUserStoriesQuery,
+} from 'src/generated/graphql';
 import { Indicator } from './Indicator';
+import { StoryUserMetaData } from './StoryUserMetaData';
 
 type Props = {
   userId: string;
@@ -218,6 +225,15 @@ export const OneUserStories = ({
             />
           ))}
         </View>
+
+        <View style={styles.storyUser}>
+          <StoryUserMetaData
+            userData={filter<StoryUserMetaDataFragment>(
+              StoryUserMetaDataFragmentDoc,
+              data.user
+            )}
+          />
+        </View>
       </View>
     </View>
   );
@@ -254,5 +270,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: '100%',
     width: '50%',
+  },
+  storyUser: {
+    marginTop: 12,
   },
 });

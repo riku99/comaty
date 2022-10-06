@@ -14,9 +14,15 @@ import { Indicator } from './Indicator';
 
 type Props = {
   userId: string;
+  index: number;
+  currentlyDisplayedUserStoryInViewport: number;
 };
 
-export const OneUserStories = ({ userId }: Props) => {
+export const OneUserStories = ({
+  userId,
+  index,
+  currentlyDisplayedUserStoryInViewport,
+}: Props) => {
   const { data } = useOneUserStoriesQuery({
     variables: {
       id: userId,
@@ -30,10 +36,26 @@ export const OneUserStories = ({ userId }: Props) => {
   }>([]);
   const [videoDuration, setVideoDuration] = useState(0);
   const checkedVideoProgress = useRef(false);
+  const videoRef = useRef<Video>(null);
 
   useEffect(() => {
     checkedVideoProgress.current = false;
   }, [currentlyDisplayedStoryIndex]);
+
+  useEffect(() => {
+    checkedVideoProgress.current = false;
+  }, [currentlyDisplayedUserStoryInViewport]);
+
+  if (Math.abs(index - currentlyDisplayedUserStoryInViewport) > 3) {
+    return (
+      <View
+        style={{
+          height: screenHeight,
+          width: screenWidth,
+        }}
+      ></View>
+    );
+  }
 
   if (!data?.user) {
     return null;
@@ -74,6 +96,7 @@ export const OneUserStories = ({ userId }: Props) => {
   const resetProgress = () => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value =
       -oneIndicatorWidth;
+    videoRef.current?.seek(0);
   };
 
   const onLeftPress = () => {
@@ -122,6 +145,7 @@ export const OneUserStories = ({ userId }: Props) => {
           />
         ) : (
           <Video
+            ref={videoRef}
             source={{
               uri: currentlyDisplayedStory.url,
             }}

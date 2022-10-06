@@ -1,11 +1,23 @@
-import { useCallback, useLayoutEffect } from 'react';
-import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { OneUserStories } from './OneUserStories';
 
 type Props = RootNavigationScreenProp<'Stories'>;
 
 export const StoriesScreen = ({ navigation, route }: Props) => {
   const { storyUsers } = route.params;
+  const [
+    currentlyDisplayedUserStoryInViewport,
+    setCurrentlyDisplayedStoryInViewport,
+  ] = useState(0);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: false,
@@ -13,11 +25,26 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
   }, [navigation]);
 
   const renderOneUserStory = useCallback(
-    ({ item }: { item: { userId: string } }) => {
-      return <OneUserStories userId={item.userId} />;
+    ({ item, index }: { item: { userId: string }; index: number }) => {
+      return (
+        <OneUserStories
+          userId={item.userId}
+          index={index}
+          currentlyDisplayedUserStoryInViewport={
+            currentlyDisplayedUserStoryInViewport
+          }
+        />
+      );
     },
-    []
+    [currentlyDisplayedUserStoryInViewport]
   );
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (e.nativeEvent.contentOffset.y % screenHeight === 0) {
+      const displayedIndex = e.nativeEvent.contentOffset.y / screenHeight;
+      setCurrentlyDisplayedStoryInViewport(displayedIndex);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -26,6 +53,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
         renderItem={renderOneUserStory}
         keyExtractor={(item) => item.userId}
         snapToInterval={screenHeight}
+        showsVerticalScrollIndicator={false}
         getItemLayout={(_, index) => {
           return {
             length: screenHeight,
@@ -34,9 +62,8 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
           };
         }}
         decelerationRate="fast"
-        initialNumToRender={1}
-        maxToRenderPerBatch={1}
-        windowSize={1}
+        onScroll={onScroll}
+        initialScrollIndex={0}
       />
     </View>
   );

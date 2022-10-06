@@ -25,7 +25,7 @@ export const Indicator = React.memo(({ width, setProgressValue }: Props) => {
 
   useEffect(() => {
     setProgressValue(frontTranslateX);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <View style={[styles.common, styles.back, { width }]}>

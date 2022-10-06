@@ -49,6 +49,9 @@ export const OneUserStories = ({
   const checkedVideoProgress = useRef(false);
   const videoRef = useRef<Video>(null);
   const storyCount = data?.user.stories.length;
+  const hasNextStory = storyCount
+    ? storyCount - 1 > currentlyDisplayedStoryIndex
+    : false;
   const totalAmountOfSpace = (storyCount - 1) * INDICAOTR_SPACE;
   const oneIndicatorWidth =
     (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
@@ -57,6 +60,19 @@ export const OneUserStories = ({
   useEffect(() => {
     checkedVideoProgress.current = false;
   }, [currentlyDisplayedStoryIndex]);
+
+  useEffect(() => {
+    if (
+      data?.user.stories.length &&
+      Math.abs(index - currentlyDisplayedUserStoryInViewport) <= 1
+    ) {
+      const preloadUrls = data?.user.stories.map((s) => {
+        const uri = s.type === StoryType.Photo ? s.url : s.thumbnailUrl;
+        return { uri };
+      });
+      FastImage.preload(preloadUrls);
+    }
+  }, [data, index, currentlyDisplayedUserStoryInViewport]);
 
   // このOneUserStoriesがviewportから外れた時の初期化
   useEffect(() => {
@@ -89,7 +105,6 @@ export const OneUserStories = ({
   const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
 
   const onProgressDone = (completed: boolean) => {
-    const hasNextStory = storyCount - 1 > currentlyDisplayedStoryIndex;
     if (hasNextStory) {
       if (completed) {
         setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
@@ -150,7 +165,6 @@ export const OneUserStories = ({
   const onRightPress = () => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value = 0;
 
-    const hasNextStory = storyCount - 1 > currentlyDisplayedStoryIndex;
     if (hasNextStory) {
       setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
     } else {
@@ -177,27 +191,41 @@ export const OneUserStories = ({
             }}
           />
         ) : (
-          <Video
-            ref={videoRef}
-            source={{
-              uri: currentlyDisplayedStory.url,
-            }}
-            style={styles.source}
-            resizeMode="contain"
-            onLoad={(e) => {
-              setVideoDuration(e.duration * 1000);
-            }}
-            onProgress={() => {
-              if (
-                isUserStoriesVisibleInViewport &&
-                !checkedVideoProgress.current
-              ) {
-                checkedVideoProgress.current = true;
-                startProgress();
-              }
-            }}
-            paused={!isUserStoriesVisibleInViewport}
-          />
+          <View>
+            <Video
+              ref={videoRef}
+              source={{
+                uri: currentlyDisplayedStory.url,
+              }}
+              style={[
+                styles.source,
+                {
+                  position: 'absolute',
+                  zIndex: 10,
+                },
+              ]}
+              resizeMode="contain"
+              onLoad={(e) => {
+                setVideoDuration(e.duration * 1000);
+              }}
+              onProgress={() => {
+                if (
+                  isUserStoriesVisibleInViewport &&
+                  !checkedVideoProgress.current
+                ) {
+                  checkedVideoProgress.current = true;
+                  startProgress();
+                }
+              }}
+              paused={!isUserStoriesVisibleInViewport}
+            />
+
+            {/* サムネ */}
+            <FastImage
+              source={{ uri: currentlyDisplayedStory.thumbnailUrl }}
+              style={styles.source}
+            />
+          </View>
         )}
 
         <Pressable style={styles.halfPressable} onPress={onLeftPress} />

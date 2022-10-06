@@ -95,7 +95,11 @@ export const OneUserStories = ({
         setCurrentlyDisplayedStoryIndex(currentlyDisplayedStoryIndex + 1);
       }
     } else {
-      if (!resetNow.current) {
+      if (
+        !resetNow.current &&
+        // 画面左を押して実行された場合はonDoneLastStoryを実行したくない。画面左をプレスした場合はvalueが -oneIndicatorWidth に近い値になる。それ以外の場合のみ実行できるようにしている。
+        indicatorProgressValues[currentlyDisplayedStoryIndex].value > -10
+      ) {
         onDoneLastStory();
       }
     }

@@ -37,12 +37,24 @@ export const OneUserStories = ({
   currentlyDisplayedUserStoryInViewport,
   onDoneLastStory,
 }: Props) => {
+  const [skipQuery, setSkipQuery] = useState(
+    Math.abs(index - currentlyDisplayedUserStoryInViewport) > 2
+  );
+
   const { data } = useOneUserStoriesQuery({
     variables: {
       id: userId,
       seenCount: 3,
     },
+    skip: skipQuery,
   });
+
+  useEffect(() => {
+    // skip: が false -> true になると data も undfined になってしまうので、まだスキップ中のもののみ検証
+    if (skipQuery) {
+      setSkipQuery(Math.abs(index - currentlyDisplayedUserStoryInViewport) > 2);
+    }
+  }, [currentlyDisplayedUserStoryInViewport, index, skipQuery]);
 
   const isUserStoriesVisibleInViewport =
     index === currentlyDisplayedUserStoryInViewport;
@@ -133,7 +145,14 @@ export const OneUserStories = ({
   ]);
 
   if (!data?.user) {
-    return null;
+    return (
+      <View
+        style={{
+          height: screenHeight,
+          width: screenWidth,
+        }}
+      ></View>
+    );
   }
 
   const { stories } = data.user;

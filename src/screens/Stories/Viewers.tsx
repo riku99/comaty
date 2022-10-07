@@ -8,6 +8,10 @@ type Props = {
 };
 
 export const Viewers = ({ viewersData }: Props) => {
+  if (!viewersData.seenList.length) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.images}>

@@ -2,6 +2,7 @@ import { filter } from 'graphql-anywhere';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { SkypeIndicator } from 'react-native-indicators';
 import {
   Easing,
   runOnJS,
@@ -20,6 +21,7 @@ import {
   ViewersInStoriesFragment,
   ViewersInStoriesFragmentDoc,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 import { Indicator } from './Indicator';
 import { StoryUserMetaData } from './StoryUserMetaData';
 import { Viewers } from './Viewers';
@@ -150,8 +152,12 @@ export const OneUserStories = ({
         style={{
           height: screenHeight,
           width: screenWidth,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
-      ></View>
+      >
+        <SkypeIndicator color={theme.primary} />
+      </View>
     );
   }
 

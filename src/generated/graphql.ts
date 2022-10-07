@@ -118,6 +118,7 @@ export type Mutation = {
   createQuestion: Question;
   createQuestionReply: QuestionReply;
   createStory: Story;
+  createStorySeen?: Maybe<StorySeen>;
   createUser: Me;
   createUserTag: UserTag;
   deletePost?: Maybe<Post>;
@@ -151,6 +152,11 @@ export type MutationCreateQuestionReplyArgs = {
 
 export type MutationCreateStoryArgs = {
   input: CreateStoryInput;
+};
+
+
+export type MutationCreateStorySeenArgs = {
+  storyId: Scalars['Int'];
 };
 
 
@@ -384,11 +390,18 @@ export type Story = {
   createdAt: Scalars['String'];
   height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
+  seen?: Maybe<Scalars['Boolean']>;
+  seenList?: Maybe<Array<Maybe<StorySeen>>>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   type: StoryType;
   url: Scalars['String'];
   user?: Maybe<User>;
   width?: Maybe<Scalars['Int']>;
+};
+
+
+export type StorySeenListArgs = {
+  count?: InputMaybe<Scalars['Int']>;
 };
 
 export type StoryConnection = {
@@ -401,6 +414,14 @@ export type StoryEdge = {
   __typename?: 'StoryEdge';
   cursor: Scalars['String'];
   node: Story;
+};
+
+export type StorySeen = {
+  __typename?: 'StorySeen';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  story?: Maybe<Story>;
+  user?: Maybe<User>;
 };
 
 export enum StoryType {
@@ -526,6 +547,13 @@ export type CreateStoryMutationVariables = Exact<{
 
 
 export type CreateStoryMutation = { __typename?: 'Mutation', createStory: { __typename?: 'Story', id: number, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } | null } };
+
+export type CreateStorySeenMutationVariables = Exact<{
+  storyId: Scalars['Int'];
+}>;
+
+
+export type CreateStorySeenMutation = { __typename?: 'Mutation', createStorySeen?: { __typename?: 'StorySeen', id: number } | null };
 
 export type DeleteMyTagMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -735,10 +763,11 @@ export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionRepl
 
 export type OneUserStoriesQueryVariables = Exact<{
   id: Scalars['ID'];
+  seenCount?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string, seenList?: Array<{ __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
 export type StoryUserMetaDataFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
@@ -1121,6 +1150,39 @@ export function useCreateStoryMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateStoryMutationHookResult = ReturnType<typeof useCreateStoryMutation>;
 export type CreateStoryMutationResult = Apollo.MutationResult<CreateStoryMutation>;
 export type CreateStoryMutationOptions = Apollo.BaseMutationOptions<CreateStoryMutation, CreateStoryMutationVariables>;
+export const CreateStorySeenDocument = gql`
+    mutation CreateStorySeen($storyId: Int!) {
+  createStorySeen(storyId: $storyId) {
+    id
+  }
+}
+    `;
+export type CreateStorySeenMutationFn = Apollo.MutationFunction<CreateStorySeenMutation, CreateStorySeenMutationVariables>;
+
+/**
+ * __useCreateStorySeenMutation__
+ *
+ * To run a mutation, you first call `useCreateStorySeenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateStorySeenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createStorySeenMutation, { data, loading, error }] = useCreateStorySeenMutation({
+ *   variables: {
+ *      storyId: // value for 'storyId'
+ *   },
+ * });
+ */
+export function useCreateStorySeenMutation(baseOptions?: Apollo.MutationHookOptions<CreateStorySeenMutation, CreateStorySeenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateStorySeenMutation, CreateStorySeenMutationVariables>(CreateStorySeenDocument, options);
+      }
+export type CreateStorySeenMutationHookResult = ReturnType<typeof useCreateStorySeenMutation>;
+export type CreateStorySeenMutationResult = Apollo.MutationResult<CreateStorySeenMutation>;
+export type CreateStorySeenMutationOptions = Apollo.BaseMutationOptions<CreateStorySeenMutation, CreateStorySeenMutationVariables>;
 export const DeleteMyTagDocument = gql`
     mutation DeleteMyTag($id: Int!) {
   deleteUserTag(id: $id) {
@@ -2151,7 +2213,7 @@ export type QuestionReplysScreenDataQueryHookResult = ReturnType<typeof useQuest
 export type QuestionReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataLazyQuery>;
 export type QuestionReplysScreenDataQueryResult = Apollo.QueryResult<QuestionReplysScreenDataQuery, QuestionReplysScreenDataQueryVariables>;
 export const OneUserStoriesDocument = gql`
-    query OneUserStories($id: ID!) {
+    query OneUserStories($id: ID!, $seenCount: Int) {
   user(id: $id) {
     id
     ...StoryUserMetaData
@@ -2162,10 +2224,20 @@ export const OneUserStoriesDocument = gql`
       backgroundColors
       thumbnailUrl
       createdAt
+      seenList(count: $seenCount) {
+        id
+        user {
+          id
+          firstProfileImage {
+            ...ProfileImage
+          }
+        }
+      }
     }
   }
 }
-    ${StoryUserMetaDataFragmentDoc}`;
+    ${StoryUserMetaDataFragmentDoc}
+${ProfileImageFragmentDoc}`;
 
 /**
  * __useOneUserStoriesQuery__
@@ -2180,6 +2252,7 @@ export const OneUserStoriesDocument = gql`
  * const { data, loading, error } = useOneUserStoriesQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      seenCount: // value for 'seenCount'
  *   },
  * });
  */

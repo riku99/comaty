@@ -1,0 +1,5 @@
+mutation CreateStorySeen($storyId: Int!) {
+  createStorySeen(storyId: $storyId) {
+    id
+  }
+}

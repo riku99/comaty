@@ -1,4 +1,4 @@
-query OneUserStories($id: ID!) {
+query OneUserStories($id: ID!, $seenCount: Int) {
   user(id: $id) {
     id
     ...StoryUserMetaData
@@ -9,6 +9,15 @@ query OneUserStories($id: ID!) {
       backgroundColors
       thumbnailUrl
       createdAt
+      seenList(count: $seenCount) {
+        id
+        user {
+          id
+          firstProfileImage {
+            ...ProfileImage
+          }
+        }
+      }
     }
   }
 }

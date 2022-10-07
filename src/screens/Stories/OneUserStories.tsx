@@ -14,6 +14,7 @@ import {
   StoryType,
   StoryUserMetaDataFragment,
   StoryUserMetaDataFragmentDoc,
+  useCreateStorySeenMutation,
   useOneUserStoriesQuery,
 } from 'src/generated/graphql';
 import { Indicator } from './Indicator';
@@ -35,6 +36,7 @@ export const OneUserStories = ({
   const { data } = useOneUserStoriesQuery({
     variables: {
       id: userId,
+      seenCount: 3,
     },
   });
 
@@ -56,6 +58,7 @@ export const OneUserStories = ({
   const oneIndicatorWidth =
     (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
   const resetNow = useRef(false);
+  const [createSeenMutation] = useCreateStorySeenMutation();
 
   useEffect(() => {
     checkedVideoProgress.current = false;
@@ -96,6 +99,33 @@ export const OneUserStories = ({
       resetNow.current = false;
     }
   }, [isUserStoriesVisibleInViewport]);
+
+  useEffect(() => {
+    (async () => {
+      const currentlyDisplayedStory =
+        data?.user.stories[currentlyDisplayedStoryIndex];
+      if (
+        currentlyDisplayedStory &&
+        index === currentlyDisplayedUserStoryInViewport
+      ) {
+        try {
+          await createSeenMutation({
+            variables: {
+              storyId: currentlyDisplayedStory.id,
+            },
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    })();
+  }, [
+    data,
+    currentlyDisplayedStoryIndex,
+    createSeenMutation,
+    currentlyDisplayedUserStoryInViewport,
+    index,
+  ]);
 
   if (!data?.user) {
     return null;

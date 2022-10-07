@@ -12,6 +12,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
+import { ThreeDots } from 'src/components/ui/ThreeDots';
 import {
   StoryType,
   StoryUserMetaDataFragment,
@@ -148,14 +149,7 @@ export const OneUserStories = ({
 
   if (!data?.user) {
     return (
-      <View
-        style={{
-          height: screenHeight,
-          width: screenWidth,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <View style={styles.loading}>
         <SkypeIndicator color={theme.primary} />
       </View>
     );
@@ -342,6 +336,8 @@ export const OneUserStories = ({
             currentlyDisplayedStory
           )}
         />
+
+        <ThreeDots dotsColor={'#fff'} dotsSize={24} />
       </View>
     </View>
   );
@@ -388,5 +384,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 26,
+    width: '100%',
+    alignItems: 'center',
+  },
+  loading: {
+    height: screenHeight,
+    width: screenWidth,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

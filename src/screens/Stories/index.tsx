@@ -12,7 +12,7 @@ import { OneUserStories } from './OneUserStories';
 type Props = RootNavigationScreenProp<'Stories'>;
 
 export const StoriesScreen = ({ navigation, route }: Props) => {
-  const { storyUsers } = route.params;
+  const { storyUsers, startingIndex } = route.params;
   const [
     currentlyDisplayedUserStoryInViewport,
     setCurrentlyDisplayedStoryInViewport,
@@ -75,7 +75,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
         }}
         decelerationRate="fast"
         onScroll={onScroll}
-        initialScrollIndex={0}
+        initialScrollIndex={startingIndex}
         initialNumToRender={4}
       />
     </View>

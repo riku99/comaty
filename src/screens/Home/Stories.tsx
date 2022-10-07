@@ -33,6 +33,7 @@ export const Stories = React.memo(
         const onPress = () => {
           navigation.navigate('Stories', {
             storyUsers,
+            startingIndex: index,
           });
         };
 
@@ -59,7 +60,7 @@ export const Stories = React.memo(
           </MotiView>
         );
       },
-      []
+      [storyUsers, navigation]
     );
 
     const renderItemSeparator = useCallback(() => {

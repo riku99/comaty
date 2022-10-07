@@ -32,6 +32,7 @@ export type RootStackParamList = {
   TakeStory: undefined;
   Stories: {
     storyUsers: { userId: string }[];
+    startingIndex: number;
   };
   PostReply: {
     postId: number;

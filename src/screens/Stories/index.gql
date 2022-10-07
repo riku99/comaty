@@ -9,15 +9,7 @@ query OneUserStories($id: ID!, $seenCount: Int) {
       backgroundColors
       thumbnailUrl
       createdAt
-      seenList(count: $seenCount) {
-        id
-        user {
-          id
-          firstProfileImage {
-            ...ProfileImage
-          }
-        }
-      }
+      ...ViewersInStories
     }
   }
 }
@@ -27,5 +19,17 @@ fragment StoryUserMetaData on User {
   nickname
   firstProfileImage {
     ...ProfileImage
+  }
+}
+
+fragment ViewersInStories on Story {
+  seenList(count: $seenCount) {
+    id
+    user {
+      id
+      firstProfileImage {
+        ...ProfileImage
+      }
+    }
   }
 }

@@ -771,6 +771,8 @@ export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: '
 
 export type StoryUserMetaDataFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
+export type ViewersInStoriesFragment = { __typename?: 'Story', seenList?: Array<{ __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null };
+
 export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -951,6 +953,19 @@ export const StoryUserMetaDataFragmentDoc = gql`
   nickname
   firstProfileImage {
     ...ProfileImage
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+export const ViewersInStoriesFragmentDoc = gql`
+    fragment ViewersInStories on Story {
+  seenList(count: $seenCount) {
+    id
+    user {
+      id
+      firstProfileImage {
+        ...ProfileImage
+      }
+    }
   }
 }
     ${ProfileImageFragmentDoc}`;
@@ -2224,20 +2239,12 @@ export const OneUserStoriesDocument = gql`
       backgroundColors
       thumbnailUrl
       createdAt
-      seenList(count: $seenCount) {
-        id
-        user {
-          id
-          firstProfileImage {
-            ...ProfileImage
-          }
-        }
-      }
+      ...ViewersInStories
     }
   }
 }
     ${StoryUserMetaDataFragmentDoc}
-${ProfileImageFragmentDoc}`;
+${ViewersInStoriesFragmentDoc}`;
 
 /**
  * __useOneUserStoriesQuery__

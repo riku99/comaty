@@ -8,6 +8,7 @@ import {
   SharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { StoryContainer } from 'src/components/ui/StoryContainer';
 import {
@@ -16,9 +17,12 @@ import {
   StoryUserMetaDataFragmentDoc,
   useCreateStorySeenMutation,
   useOneUserStoriesQuery,
+  ViewersInStoriesFragment,
+  ViewersInStoriesFragmentDoc,
 } from 'src/generated/graphql';
 import { Indicator } from './Indicator';
 import { StoryUserMetaData } from './StoryUserMetaData';
+import { Viewers } from './Viewers';
 
 type Props = {
   userId: string;
@@ -59,6 +63,7 @@ export const OneUserStories = ({
     (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
   const resetNow = useRef(false);
   const [createSeenMutation] = useCreateStorySeenMutation();
+  const { bottom: safeAreaBottom } = useSafeAreaInsets();
 
   useEffect(() => {
     checkedVideoProgress.current = false;
@@ -297,6 +302,22 @@ export const OneUserStories = ({
           />
         </View>
       </View>
+
+      <View
+        style={[
+          styles.bottomContainer,
+          {
+            bottom: safeAreaBottom,
+          },
+        ]}
+      >
+        <Viewers
+          viewersData={filter<ViewersInStoriesFragment>(
+            ViewersInStoriesFragmentDoc,
+            currentlyDisplayedStory
+          )}
+        />
+      </View>
     </View>
   );
 };
@@ -335,5 +356,12 @@ const styles = StyleSheet.create({
   },
   storyUser: {
     marginTop: 12,
+  },
+  bottomContainer: {
+    position: 'absolute',
+    bottom: '10%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 26,
   },
 });

@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { SkypeIndicator } from 'react-native-indicators';
@@ -85,6 +85,8 @@ export const OneUserStories = ({
   // seek()の後にsetVideoPaused(true)を実行しても、内部的に後からseek()が実行されてビデオが再生されてしまう。なのでVideoのonSeekのタイミングでsetVidePaused(true)を実行する必要があるが、画面左をタップした場合など、seekしてもポーズせずに再生したい場合もある。
   // つまり、onSeekのタイミングでポーズさせたい場合、そうでない場合が存在する。それを表すフラグがpauseVideoOnSeek
   const pauseVideoOnSeek = useRef(false);
+  // ユーザーページに遷移したかどうか。戻ってきた時に進行を再開させるために使用
+  const navigatedToUserProfile = useRef(false);
 
   useEffect(() => {
     if (data?.user.stories.length === 0 && !loading) {
@@ -180,17 +182,6 @@ export const OneUserStories = ({
     }
   }, [videoPaused]);
 
-  if (!data?.user?.stories.length) {
-    return (
-      <View style={styles.loading}>
-        <SkypeIndicator color={theme.primary} />
-      </View>
-    );
-  }
-
-  const { stories } = data.user;
-  const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
-
   const onProgressDone = (completed: boolean) => {
     if (hasNextStory) {
       if (completed) {
@@ -222,6 +213,27 @@ export const OneUserStories = ({
       }
     );
   };
+
+  const onFocus = useCallback(() => {
+    if (navigatedToUserProfile.current) {
+      navigatedToUserProfile.current = false;
+      setVideoPaused(false);
+      startProgress();
+    }
+  }, [indicatorProgressValues, startProgress]);
+
+  useFocusEffect(onFocus);
+
+  if (!data?.user?.stories.length) {
+    return (
+      <View style={styles.loading}>
+        <SkypeIndicator color={theme.primary} />
+      </View>
+    );
+  }
+
+  const { stories } = data.user;
+  const currentlyDisplayedStory = stories[currentlyDisplayedStoryIndex];
 
   const resetProgress = () => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value =
@@ -273,6 +285,14 @@ export const OneUserStories = ({
   const restartProgress = () => {
     setVideoPaused(false);
     startProgress();
+  };
+
+  const onUserPress = () => {
+    navigatedToUserProfile.current = true;
+    stopProgress();
+    navigation.navigate('UserProfile', {
+      id: userId,
+    });
   };
 
   return (
@@ -373,6 +393,7 @@ export const OneUserStories = ({
               StoryUserMetaDataFragmentDoc,
               data.user
             )}
+            onUserPress={onUserPress}
           />
         </View>
       </View>

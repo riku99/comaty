@@ -6,6 +6,7 @@ import {
   AfterDeletingStoryDocument,
   OneUserStoriesDocument,
   useDeleteStoryMutation,
+  useReportStoryMutation,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
@@ -21,6 +22,7 @@ export const Modal = ({ isVisible, hideMenu, storyUserId, storyId }: Props) => {
   const navigation = useNavigation<RootNavigationProp<'Stories'>>();
   const myId = useMyId();
   const [deleteStoryMutation] = useDeleteStoryMutation();
+  const [reportStoryMutation] = useReportStoryMutation();
   const toast = useToast();
 
   const deleteStory = async () => {
@@ -64,10 +66,42 @@ export const Modal = ({ isVisible, hideMenu, storyUserId, storyId }: Props) => {
     ]);
   };
 
+  const onReportPress = () => {
+    Alert.alert(
+      '不適切な投稿として報告してよろしいですか？',
+      '報告したことは相手ユーザーに知らされません',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '報告',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await reportStoryMutation({
+                variables: {
+                  id: storyId,
+                },
+                onCompleted: () => {
+                  toast.show('報告しました');
+                  hideMenu();
+                },
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   const items: ModalItem[] =
     myId === storyUserId
       ? [{ title: '削除', titleColor: theme.red, onPress: deleteStory }]
-      : [{ title: '報告', onPress: () => {} }];
+      : [{ title: '報告', onPress: onReportPress }];
 
   return (
     <OverlayModal

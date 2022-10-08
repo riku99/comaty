@@ -1,6 +1,6 @@
 import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import {
@@ -11,12 +11,13 @@ import {
 
 type Props = {
   userData: StoryUserMetaDataFragment;
+  onUserPress: () => void;
 };
 
-export const StoryUserMetaData = ({ userData }: Props) => {
+export const StoryUserMetaData = ({ userData, onUserPress }: Props) => {
   return (
     <View style={styles.container}>
-      <View style={styles.imageAndName}>
+      <Pressable style={styles.imageAndName} onPress={onUserPress}>
         <ProfileImage
           imageData={filter<ProfileImageFragment>(
             ProfileImageFragmentDoc,
@@ -25,7 +26,7 @@ export const StoryUserMetaData = ({ userData }: Props) => {
           style={styles.image}
         />
         <Text style={styles.nickname}>{userData.nickname}</Text>
-      </View>
+      </Pressable>
 
       <CloseButton color="#fff" size={32} />
     </View>

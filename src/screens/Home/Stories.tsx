@@ -91,14 +91,31 @@ export const Stories = React.memo(
           <>
             {(!!storiesData.me.stories.length || creatingStory) && (
               <View style={styles.header}>
-                <StoryUserCircle
-                  imageSize={IMAGE_SIZE}
-                  storyUserData={filter<StoryUserCircleFragment>(
-                    StoryUserCircleFragmentDoc,
-                    storiesData.me
-                  )}
-                  creatingStory={creatingStory}
-                />
+                <MotiView
+                  from={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{
+                    scale: {
+                      type: 'timing',
+                      duration: 600,
+                    },
+                  }}
+                >
+                  <StoryUserCircle
+                    imageSize={IMAGE_SIZE}
+                    storyUserData={filter<StoryUserCircleFragment>(
+                      StoryUserCircleFragmentDoc,
+                      storiesData.me
+                    )}
+                    creatingStory={creatingStory}
+                    onPress={() => {
+                      navigation.navigate('Stories', {
+                        storyUsers: [{ userId: storiesData.me.id }],
+                        startingIndex: 0,
+                      });
+                    }}
+                  />
+                </MotiView>
               </View>
             )}
           </>

@@ -825,10 +825,12 @@ export type ViewersInStoriesFragment = { __typename?: 'Story', seenList?: { __ty
 
 export type StoryViewersScreenDataQueryVariables = Exact<{
   storyId: Scalars['Int'];
+  seenListFirst?: InputMaybe<Scalars['Int']>;
+  seenListAfter?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type StoryViewersScreenDataQuery = { __typename?: 'Query', story: { __typename?: 'Story', id: number } };
+export type StoryViewersScreenDataQuery = { __typename?: 'Query', story: { __typename?: 'Story', id: number, seenList?: { __typename?: 'StorySeenConnection', edges: Array<{ __typename?: 'StorySeenEdge', node: { __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
 
 export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2391,12 +2393,30 @@ export type AfterDeletingStoryQueryHookResult = ReturnType<typeof useAfterDeleti
 export type AfterDeletingStoryLazyQueryHookResult = ReturnType<typeof useAfterDeletingStoryLazyQuery>;
 export type AfterDeletingStoryQueryResult = Apollo.QueryResult<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>;
 export const StoryViewersScreenDataDocument = gql`
-    query StoryViewersScreenData($storyId: Int!) {
+    query StoryViewersScreenData($storyId: Int!, $seenListFirst: Int, $seenListAfter: String) {
   story(id: $storyId) {
     id
+    seenList(first: $seenListFirst, after: $seenListAfter) {
+      edges {
+        node {
+          id
+          user {
+            id
+            nickname
+            firstProfileImage {
+              ...ProfileImage
+            }
+          }
+        }
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
   }
 }
-    `;
+    ${ProfileImageFragmentDoc}
+${PageInfoFragmentDoc}`;
 
 /**
  * __useStoryViewersScreenDataQuery__
@@ -2411,6 +2431,8 @@ export const StoryViewersScreenDataDocument = gql`
  * const { data, loading, error } = useStoryViewersScreenDataQuery({
  *   variables: {
  *      storyId: // value for 'storyId'
+ *      seenListFirst: // value for 'seenListFirst'
+ *      seenListAfter: // value for 'seenListAfter'
  *   },
  * });
  */

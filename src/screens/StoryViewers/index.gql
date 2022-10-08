@@ -5,14 +5,21 @@ query StoryViewersScreenData(
 ) {
   story(id: $storyId) {
     id
-    seenList {
-      id
-      user {
-        id
-        nickname
-        firstProfileImage {
-          ...ProfileImage
+    seenList(first: $seenListFirst, after: $seenListAfter) {
+      edges {
+        node {
+          id
+          user {
+            id
+            nickname
+            firstProfileImage {
+              ...ProfileImage
+            }
+          }
         }
+      }
+      pageInfo {
+        ...PageInfo
       }
     }
   }

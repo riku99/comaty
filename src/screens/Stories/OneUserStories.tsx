@@ -79,10 +79,19 @@ export const OneUserStories = ({
   const resetNow = useRef(false);
   const [createSeenMutation] = useCreateStorySeenMutation();
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
+  const [videoPaused, setVideoPaused] = useState(
+    !isUserStoriesVisibleInViewport
+  );
 
   useEffect(() => {
     checkedVideoProgress.current = false;
   }, [currentlyDisplayedStoryIndex]);
+
+  useEffect(() => {
+    if (index === currentlyDisplayedUserStoryInViewport && videoPaused) {
+      setVideoPaused(false);
+    }
+  }, [index, currentlyDisplayedUserStoryInViewport, videoPaused]);
 
   useEffect(() => {
     if (
@@ -107,6 +116,11 @@ export const OneUserStories = ({
       Object.keys(indicatorProgressValues).forEach((key) => {
         indicatorProgressValues[Number(key)].value = -oneIndicatorWidth;
       });
+
+      // timeout内でpausedにしないと videoRef.seek() が内部で後から実行されてしまい再開されてしまうので、遅延させている
+      setTimeout(() => {
+        setVideoPaused(true);
+      }, 100);
     }
   }, [
     isUserStoriesVisibleInViewport,
@@ -225,6 +239,13 @@ export const OneUserStories = ({
     }
   };
 
+  const stopProgress = () => {
+    indicatorProgressValues[currentlyDisplayedStoryIndex].value =
+      -oneIndicatorWidth;
+    videoRef.current?.seek(0);
+    setVideoPaused(true);
+  };
+
   return (
     <View style={styles.container}>
       <StoryContainer
@@ -271,7 +292,7 @@ export const OneUserStories = ({
                   startProgress();
                 }
               }}
-              paused={!isUserStoriesVisibleInViewport}
+              paused={videoPaused}
             />
 
             {/* サムネ */}
@@ -337,7 +358,7 @@ export const OneUserStories = ({
           )}
         />
 
-        <ThreeDots dotsColor={'#fff'} dotsSize={24} />
+        <ThreeDots dotsColor={'#fff'} dotsSize={24} onPress={stopProgress} />
       </View>
     </View>
   );

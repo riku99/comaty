@@ -15,4 +15,5 @@ export const theme = {
     background: '#fafafa',
     rightIcon: '#A5A5A5',
   },
+  red: '#FF2A2A',
 };

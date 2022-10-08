@@ -345,7 +345,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
       <OverlayModal
         isVisible={!!deleteTargetImageId}
         items={[
-          { title: '削除', onPress: onDeleteImagePress, titleColor: '#FF2A2A' },
+          { title: '削除', onPress: onDeleteImagePress, titleColor: theme.red },
         ]}
         onBackdropPress={() => {
           setDeleteTargetImageId(null);

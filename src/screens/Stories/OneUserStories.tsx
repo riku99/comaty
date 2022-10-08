@@ -7,7 +7,7 @@ import {
   Easing,
   runOnJS,
   SharedValue,
-  withTiming
+  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
@@ -20,8 +20,9 @@ import {
   useCreateStorySeenMutation,
   useOneUserStoriesQuery,
   ViewersInStoriesFragment,
-  ViewersInStoriesFragmentDoc
+  ViewersInStoriesFragmentDoc,
 } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
 import { Indicator } from './Indicator';
 import { Modal } from './Modal';
@@ -52,6 +53,8 @@ export const OneUserStories = ({
     },
     skip: skipQuery,
   });
+
+  const myId = useMyId();
 
   useEffect(() => {
     // skip: が false -> true になると data も undfined になってしまうので、まだスキップ中のもののみ検証
@@ -140,6 +143,7 @@ export const OneUserStories = ({
       const currentlyDisplayedStory =
         data?.user.stories[currentlyDisplayedStoryIndex];
       if (
+        data?.user.id !== myId &&
         currentlyDisplayedStory &&
         index === currentlyDisplayedUserStoryInViewport
       ) {
@@ -373,12 +377,14 @@ export const OneUserStories = ({
           },
         ]}
       >
-        <Viewers
-          viewersData={filter<ViewersInStoriesFragment>(
-            ViewersInStoriesFragmentDoc,
-            currentlyDisplayedStory
-          )}
-        />
+        <View>
+          <Viewers
+            viewersData={filter<ViewersInStoriesFragment>(
+              ViewersInStoriesFragmentDoc,
+              currentlyDisplayedStory
+            )}
+          />
+        </View>
 
         <ThreeDots dotsColor={'#fff'} dotsSize={24} onPress={onDodtsPress} />
       </View>
@@ -389,6 +395,7 @@ export const OneUserStories = ({
           setModalVisible(false);
           restartProgress();
         }}
+        storyUserId={data.user.id}
       />
     </View>
   );

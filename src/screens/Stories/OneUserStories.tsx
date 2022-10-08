@@ -77,7 +77,7 @@ export const OneUserStories = ({
     (screenWidth - PADDING_H * 2 - totalAmountOfSpace) / storyCount;
   const resetNow = useRef(false);
   const [createSeenMutation] = useCreateStorySeenMutation();
-  const { bottom: safeAreaBottom } = useSafeAreaInsets();
+  const { bottom: safeAreaBottom, top: safeAreaTop } = useSafeAreaInsets();
   const [videoPaused, setVideoPaused] = useState(
     !isUserStoriesVisibleInViewport
   );
@@ -381,7 +381,14 @@ export const OneUserStories = ({
         />
       </StoryContainer>
 
-      <View style={styles.topContainer}>
+      <View
+        style={[
+          styles.topContainer,
+          {
+            top: safeAreaTop + 10,
+          },
+        ]}
+      >
         <View style={styles.indicatorContainer}>
           {data.user.stories.map((d, _index) => (
             <Indicator
@@ -464,7 +471,6 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     position: 'absolute',
-    top: 70,
     width: '100%',
     paddingHorizontal: PADDING_H,
     justifyContent: 'space-between',
@@ -483,12 +489,12 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: '10%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 26,
     width: '100%',
     alignItems: 'center',
+    height: 62,
   },
   loading: {
     height: screenHeight,

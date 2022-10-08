@@ -1,6 +1,7 @@
 import { filter } from 'graphql-anywhere';
 import { useCallback, useLayoutEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { btoa } from 'react-native-quick-base64';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
@@ -19,7 +20,7 @@ type UserItem =
 export const StoryViewersScreen = ({ navigation, route }: Props) => {
   const { storyId } = route.params;
 
-  const { data } = useStoryViewersScreenDataQuery({
+  const { data, fetchMore } = useStoryViewersScreenDataQuery({
     variables: {
       storyId,
     },
@@ -32,26 +33,50 @@ export const StoryViewersScreen = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  const renderUserItem = useCallback(({ item }: { item: UserItem }) => {
-    const { user } = item.node;
-    return (
-      <Pressable style={styles.itemContainer}>
-        <ProfileImage
-          imageData={filter<ProfileImageFragment>(
-            ProfileImageFragmentDoc,
-            user.firstProfileImage
-          )}
-          style={styles.profileImage}
-        />
+  const renderUserItem = useCallback(
+    ({ item }: { item: UserItem }) => {
+      const { user } = item.node;
+      return (
+        <Pressable
+          style={styles.itemContainer}
+          onPress={() => {
+            navigation.goBack();
+            navigation.navigate('UserProfile', {
+              id: user.id,
+            });
+          }}
+        >
+          <ProfileImage
+            imageData={filter<ProfileImageFragment>(
+              ProfileImageFragmentDoc,
+              user.firstProfileImage
+            )}
+            style={styles.profileImage}
+          />
 
-        <Text style={styles.nickname}>{user.nickname}</Text>
-      </Pressable>
-    );
-  }, []);
+          <Text style={styles.nickname}>{user.nickname}</Text>
+        </Pressable>
+      );
+    },
+    [navigation]
+  );
 
   if (!data?.story) {
     return <Loading />;
   }
+
+  const infiniteLoad = async () => {
+    const { pageInfo } = data.story.seenList;
+
+    if (pageInfo.hasNextPage) {
+      const { endCursor } = pageInfo;
+      await fetchMore({
+        variables: {
+          seenListAfter: endCursor ? btoa(endCursor) : undefined,
+        },
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -59,6 +84,8 @@ export const StoryViewersScreen = ({ navigation, route }: Props) => {
         data={data.story.seenList.edges}
         renderItem={renderUserItem}
         contentContainerStyle={styles.listContents}
+        infiniteLoad={infiniteLoad}
+        keyExtractor={(item) => item.node.id.toString()}
       />
     </View>
   );

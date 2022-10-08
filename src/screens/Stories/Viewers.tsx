@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     width: IMAGE_SIZE + 6,
     height: IMAGE_SIZE + 6,
     borderRadius: IMAGE_SIZE + 6,
-    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },

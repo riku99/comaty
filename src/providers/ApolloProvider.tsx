@@ -124,6 +124,11 @@ export const ApolloProvider = ({ children }: Props) => {
             },
           },
         },
+        Story: {
+          fields: {
+            seenList: relayStylePagination(),
+          },
+        },
       },
       possibleTypes: {
         UserEntity: ['Me', 'User'],

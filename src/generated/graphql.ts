@@ -69,6 +69,10 @@ export enum DeleteProfileImageError {
   UnexpectedError = 'UNEXPECTED_ERROR'
 }
 
+export enum DeleteStoryError {
+  InvalidId = 'INVALID_ID'
+}
+
 export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
 }
@@ -125,6 +129,7 @@ export type Mutation = {
   deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
   deleteQuestionReply?: Maybe<QuestionReply>;
+  deleteStory?: Maybe<Story>;
   deleteUserTag?: Maybe<UserTag>;
   likePost: Post;
   unlikePost?: Maybe<Post>;
@@ -186,6 +191,11 @@ export type MutationDeleteQuestionArgs = {
 
 
 export type MutationDeleteQuestionReplyArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteStoryArgs = {
   id: Scalars['Int'];
 };
 
@@ -583,6 +593,13 @@ export type DeleteQuestionMutationVariables = Exact<{
 
 export type DeleteQuestionMutation = { __typename?: 'Mutation', deleteQuestion?: { __typename?: 'Question', id: number } | null };
 
+export type DeleteStoryMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteStoryMutation = { __typename?: 'Mutation', deleteStory?: { __typename?: 'Story', id: number } | null };
+
 export type LikePostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -684,14 +701,6 @@ export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; 
 
 export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
-export type QuestionsScreenDataQueryVariables = Exact<{
-  first?: InputMaybe<Scalars['Int']>;
-  after?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type QuestionsScreenDataQuery = { __typename?: 'Query', questions: { __typename?: 'QuestionConnection', edges: Array<{ __typename?: 'QuestionEdge', cursor: string, node: { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
-
 export type HomeScreenDataQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
   nearbyUsersAfter?: InputMaybe<Scalars['String']>;
@@ -768,6 +777,11 @@ export type OneUserStoriesQueryVariables = Exact<{
 
 
 export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string, seenList?: Array<{ __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+
+export type AfterDeletingStoryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AfterDeletingStoryQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } | null };
 
 export type StoryUserMetaDataFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
@@ -1333,6 +1347,39 @@ export function useDeleteQuestionMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteQuestionMutationHookResult = ReturnType<typeof useDeleteQuestionMutation>;
 export type DeleteQuestionMutationResult = Apollo.MutationResult<DeleteQuestionMutation>;
 export type DeleteQuestionMutationOptions = Apollo.BaseMutationOptions<DeleteQuestionMutation, DeleteQuestionMutationVariables>;
+export const DeleteStoryDocument = gql`
+    mutation DeleteStory($id: Int!) {
+  deleteStory(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteStoryMutationFn = Apollo.MutationFunction<DeleteStoryMutation, DeleteStoryMutationVariables>;
+
+/**
+ * __useDeleteStoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteStoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteStoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteStoryMutation, { data, loading, error }] = useDeleteStoryMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteStoryMutation(baseOptions?: Apollo.MutationHookOptions<DeleteStoryMutation, DeleteStoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteStoryMutation, DeleteStoryMutationVariables>(DeleteStoryDocument, options);
+      }
+export type DeleteStoryMutationHookResult = ReturnType<typeof useDeleteStoryMutation>;
+export type DeleteStoryMutationResult = Apollo.MutationResult<DeleteStoryMutation>;
+export type DeleteStoryMutationOptions = Apollo.BaseMutationOptions<DeleteStoryMutation, DeleteStoryMutationVariables>;
 export const LikePostDocument = gql`
     mutation LikePost($id: Int!) {
   likePost(id: $id) {
@@ -1826,51 +1873,6 @@ export function useEditProfileScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type EditProfileScreenDataQueryHookResult = ReturnType<typeof useEditProfileScreenDataQuery>;
 export type EditProfileScreenDataLazyQueryHookResult = ReturnType<typeof useEditProfileScreenDataLazyQuery>;
 export type EditProfileScreenDataQueryResult = Apollo.QueryResult<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>;
-export const QuestionsScreenDataDocument = gql`
-    query QuestionsScreenData($first: Int, $after: String) {
-  questions(first: $first, after: $after) {
-    edges {
-      node {
-        ...QuestionCard
-      }
-      cursor
-    }
-    pageInfo {
-      ...PageInfo
-    }
-  }
-}
-    ${QuestionCardFragmentDoc}
-${PageInfoFragmentDoc}`;
-
-/**
- * __useQuestionsScreenDataQuery__
- *
- * To run a query within a React component, call `useQuestionsScreenDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useQuestionsScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useQuestionsScreenDataQuery({
- *   variables: {
- *      first: // value for 'first'
- *      after: // value for 'after'
- *   },
- * });
- */
-export function useQuestionsScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>(QuestionsScreenDataDocument, options);
-      }
-export function useQuestionsScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>(QuestionsScreenDataDocument, options);
-        }
-export type QuestionsScreenDataQueryHookResult = ReturnType<typeof useQuestionsScreenDataQuery>;
-export type QuestionsScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionsScreenDataLazyQuery>;
-export type QuestionsScreenDataQueryResult = Apollo.QueryResult<QuestionsScreenDataQuery, QuestionsScreenDataQueryVariables>;
 export const HomeScreenDataDocument = gql`
     query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String) {
   ...HomeNearByUsers
@@ -2274,6 +2276,40 @@ export function useOneUserStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type OneUserStoriesQueryHookResult = ReturnType<typeof useOneUserStoriesQuery>;
 export type OneUserStoriesLazyQueryHookResult = ReturnType<typeof useOneUserStoriesLazyQuery>;
 export type OneUserStoriesQueryResult = Apollo.QueryResult<OneUserStoriesQuery, OneUserStoriesQueryVariables>;
+export const AfterDeletingStoryDocument = gql`
+    query AfterDeletingStory {
+  me {
+    ...StoryUserCircle
+  }
+}
+    ${StoryUserCircleFragmentDoc}`;
+
+/**
+ * __useAfterDeletingStoryQuery__
+ *
+ * To run a query within a React component, call `useAfterDeletingStoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAfterDeletingStoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAfterDeletingStoryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAfterDeletingStoryQuery(baseOptions?: Apollo.QueryHookOptions<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>(AfterDeletingStoryDocument, options);
+      }
+export function useAfterDeletingStoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>(AfterDeletingStoryDocument, options);
+        }
+export type AfterDeletingStoryQueryHookResult = ReturnType<typeof useAfterDeletingStoryQuery>;
+export type AfterDeletingStoryLazyQueryHookResult = ReturnType<typeof useAfterDeletingStoryLazyQuery>;
+export type AfterDeletingStoryQueryResult = Apollo.QueryResult<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>;
 export const AfterCreateingStoryDocument = gql`
     query AfterCreateingStory {
   me {

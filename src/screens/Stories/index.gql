@@ -14,6 +14,12 @@ query OneUserStories($id: ID!, $seenCount: Int) {
   }
 }
 
+query AfterDeletingStory {
+  me {
+    ...StoryUserCircle
+  }
+}
+
 fragment StoryUserMetaData on User {
   id
   nickname

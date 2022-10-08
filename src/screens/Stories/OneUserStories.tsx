@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
@@ -7,7 +8,7 @@ import {
   Easing,
   runOnJS,
   SharedValue,
-  withTiming,
+  withTiming
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
@@ -20,7 +21,7 @@ import {
   useCreateStorySeenMutation,
   useOneUserStoriesQuery,
   ViewersInStoriesFragment,
-  ViewersInStoriesFragmentDoc,
+  ViewersInStoriesFragmentDoc
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
@@ -42,11 +43,12 @@ export const OneUserStories = ({
   currentlyDisplayedUserStoryInViewport,
   onDoneLastStory,
 }: Props) => {
+  const navigation = useNavigation<RootNavigationProp<'Stories'>>();
   const [skipQuery, setSkipQuery] = useState(
     Math.abs(index - currentlyDisplayedUserStoryInViewport) > 2
   );
 
-  const { data } = useOneUserStoriesQuery({
+  const { data, loading } = useOneUserStoriesQuery({
     variables: {
       id: userId,
       seenCount: 3,
@@ -55,13 +57,6 @@ export const OneUserStories = ({
   });
 
   const myId = useMyId();
-
-  useEffect(() => {
-    // skip: が false -> true になると data も undfined になってしまうので、まだスキップ中のもののみ検証
-    if (skipQuery) {
-      setSkipQuery(Math.abs(index - currentlyDisplayedUserStoryInViewport) > 2);
-    }
-  }, [currentlyDisplayedUserStoryInViewport, index, skipQuery]);
 
   const isUserStoriesVisibleInViewport =
     index === currentlyDisplayedUserStoryInViewport;
@@ -90,6 +85,19 @@ export const OneUserStories = ({
   // seek()の後にsetVideoPaused(true)を実行しても、内部的に後からseek()が実行されてビデオが再生されてしまう。なのでVideoのonSeekのタイミングでsetVidePaused(true)を実行する必要があるが、画面左をタップした場合など、seekしてもポーズせずに再生したい場合もある。
   // つまり、onSeekのタイミングでポーズさせたい場合、そうでない場合が存在する。それを表すフラグがpauseVideoOnSeek
   const pauseVideoOnSeek = useRef(false);
+
+  useEffect(() => {
+    if (!data?.user.stories.length && !loading) {
+      navigation.goBack();
+    }
+  }, [data, loading]);
+
+  useEffect(() => {
+    // skip: が false -> true になると data も undfined になってしまうので、まだスキップ中のもののみ検証
+    if (skipQuery) {
+      setSkipQuery(Math.abs(index - currentlyDisplayedUserStoryInViewport) > 2);
+    }
+  }, [currentlyDisplayedUserStoryInViewport, index, skipQuery]);
 
   useEffect(() => {
     checkedVideoProgress.current = false;
@@ -172,7 +180,7 @@ export const OneUserStories = ({
     }
   }, [videoPaused]);
 
-  if (!data?.user) {
+  if (!data?.user?.stories.length) {
     return (
       <View style={styles.loading}>
         <SkypeIndicator color={theme.primary} />
@@ -396,6 +404,7 @@ export const OneUserStories = ({
           restartProgress();
         }}
         storyUserId={data.user.id}
+        storyId={currentlyDisplayedStory.id}
       />
     </View>
   );

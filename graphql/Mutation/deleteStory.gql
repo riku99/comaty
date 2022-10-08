@@ -1,0 +1,5 @@
+mutation DeleteStory($id: Int!) {
+  deleteStory(id: $id) {
+    id
+  }
+}

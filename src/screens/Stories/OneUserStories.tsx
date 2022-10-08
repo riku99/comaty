@@ -8,7 +8,7 @@ import {
   Easing,
   runOnJS,
   SharedValue,
-  withTiming
+  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
@@ -21,7 +21,7 @@ import {
   useCreateStorySeenMutation,
   useOneUserStoriesQuery,
   ViewersInStoriesFragment,
-  ViewersInStoriesFragmentDoc
+  ViewersInStoriesFragmentDoc,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
@@ -87,7 +87,7 @@ export const OneUserStories = ({
   const pauseVideoOnSeek = useRef(false);
 
   useEffect(() => {
-    if (!data?.user.stories.length && !loading) {
+    if (data?.user.stories.length === 0 && !loading) {
       navigation.goBack();
     }
   }, [data, loading]);
@@ -403,7 +403,7 @@ export const OneUserStories = ({
           setModalVisible(false);
           restartProgress();
         }}
-        storyUserId={data.user.id}
+        storyUserId={userId}
         storyId={currentlyDisplayedStory.id}
       />
     </View>

@@ -6,6 +6,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from 'src/components/ui/BackButton';
 import { Loading } from 'src/components/ui/Loading';
 import {
+  BottomButtonGroupInUserProfileFragment,
+  BottomButtonGroupInUserProfileFragmentDoc,
   BottomSheetContentInUserProfileFragment,
   BottomSheetContentInUserProfileFragmentDoc,
   ProfileImagesInUserProfileFragment,
@@ -69,7 +71,12 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
           },
         ]}
       >
-        <BottomButtonGroup />
+        <BottomButtonGroup
+          data={filter<BottomButtonGroupInUserProfileFragment>(
+            BottomButtonGroupInUserProfileFragmentDoc,
+            data.user
+          )}
+        />
       </View>
     </View>
   );
@@ -82,6 +89,8 @@ const styles = StyleSheet.create({
   buttonButtomGroupContainer: {
     position: 'absolute',
     alignSelf: 'center',
+    width: '100%',
+    alignItems: 'center',
   },
   backButtonContainer: {
     position: 'absolute',

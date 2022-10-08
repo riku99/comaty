@@ -8,13 +8,15 @@ type Props = {
 
 export const HStack = ({ children, space = 0, ...props }: Props) => {
   const { style, ...withoutStyleProps } = props;
+  // @ts-ignore
+  const e = children.filter((ch) => !!ch);
   return (
     <View
       style={[{ flexDirection: 'row', alignItems: 'center' }, style]}
       {...withoutStyleProps}
     >
       {Array.isArray(children)
-        ? children.map((c, index) => (
+        ? e.map((c, index) => (
             <View
               key={index}
               style={index === 0 ? undefined : { marginLeft: space }}

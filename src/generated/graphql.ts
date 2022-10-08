@@ -841,12 +841,14 @@ export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileI
 
 export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
+export type BottomButtonGroupInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null };
+
 export type UserProfileScreenDataQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } };
 
 export const ProfileImageFragmentDoc = gql`
     fragment ProfileImage on UserProfileImage {
@@ -1052,6 +1054,12 @@ export const BottomSheetContentInUserProfileFragmentDoc = gql`
   }
 }
     `;
+export const BottomButtonGroupInUserProfileFragmentDoc = gql`
+    fragment BottomButtonGroupInUserProfile on User {
+  id
+  ...StoryUserCircle
+}
+    ${StoryUserCircleFragmentDoc}`;
 export const CreateMyTagDocument = gql`
     mutation CreateMyTag($input: CreateUserTagInput!) {
   createUserTag(input: $input) {
@@ -2487,10 +2495,12 @@ export const UserProfileScreenDataDocument = gql`
     id
     ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
+    ...BottomButtonGroupInUserProfile
   }
 }
     ${BottomSheetContentInUserProfileFragmentDoc}
-${ProfileImagesInUserProfileFragmentDoc}`;
+${ProfileImagesInUserProfileFragmentDoc}
+${BottomButtonGroupInUserProfileFragmentDoc}`;
 
 /**
  * __useUserProfileScreenDataQuery__

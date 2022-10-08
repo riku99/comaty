@@ -16,10 +16,16 @@ fragment BottomSheetContentInUserProfile on User {
   }
 }
 
+fragment BottomButtonGroupInUserProfile on User {
+  id
+  ...StoryUserCircle
+}
+
 query UserProfileScreenData($id: ID!) {
   user(id: $id) {
     id
     ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
+    ...BottomButtonGroupInUserProfile
   }
 }

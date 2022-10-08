@@ -11,6 +11,7 @@ import { QuestionReplyCreationScreen } from 'src/screens/QuestionReplyCreation';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { StoriesScreen } from 'src/screens/Stories';
+import { StoryViewersScreen } from 'src/screens/StoryViewers';
 import { TakeStoryScreen } from 'src/screens/TakeStory';
 import { UserProfileScreen } from 'src/screens/UserProfile';
 import { AuthStack } from './AuthStack';
@@ -33,6 +34,9 @@ export type RootStackParamList = {
   Stories: {
     storyUsers: { userId: string }[];
     startingIndex: number;
+  };
+  StoryViewers: {
+    storyId: number;
   };
   PostReply: {
     postId: number;
@@ -99,6 +103,14 @@ export const RootStack = () => {
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           <Stack.Screen name="PostDetail" component={PostDetailScreen} />
           <Stack.Screen name="Stories" component={StoriesScreen} />
+
+          <Stack.Group
+            screenOptions={{
+              presentation: 'modal',
+            }}
+          >
+            <Stack.Screen name="StoryViewers" component={StoryViewersScreen} />
+          </Stack.Group>
 
           <Stack.Group
             screenOptions={{

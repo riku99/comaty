@@ -51,7 +51,7 @@ export const OneUserStories = ({
   const { data, loading } = useOneUserStoriesQuery({
     variables: {
       id: userId,
-      seenCount: 3,
+      viewersFirst: 3,
     },
     skip: skipQuery,
   });
@@ -85,8 +85,8 @@ export const OneUserStories = ({
   // seek()の後にsetVideoPaused(true)を実行しても、内部的に後からseek()が実行されてビデオが再生されてしまう。なのでVideoのonSeekのタイミングでsetVidePaused(true)を実行する必要があるが、画面左をタップした場合など、seekしてもポーズせずに再生したい場合もある。
   // つまり、onSeekのタイミングでポーズさせたい場合、そうでない場合が存在する。それを表すフラグがpauseVideoOnSeek
   const pauseVideoOnSeek = useRef(false);
-  // ユーザーページに遷移したかどうか。戻ってきた時に進行を再開させるために使用
-  const navigatedToUserProfile = useRef(false);
+  // 他の画面に遷移したかどうか。戻ってきた時に進行を再開させるために使用
+  const navigatedToOtherPages = useRef(false);
 
   useEffect(() => {
     if (data?.user.stories.length === 0 && !loading) {
@@ -215,8 +215,8 @@ export const OneUserStories = ({
   };
 
   const onFocus = useCallback(() => {
-    if (navigatedToUserProfile.current) {
-      navigatedToUserProfile.current = false;
+    if (navigatedToOtherPages.current) {
+      navigatedToOtherPages.current = false;
       setVideoPaused(false);
       startProgress();
     }
@@ -288,10 +288,21 @@ export const OneUserStories = ({
   };
 
   const onUserPress = () => {
-    navigatedToUserProfile.current = true;
+    navigatedToOtherPages.current = true;
     stopProgress();
     navigation.navigate('UserProfile', {
       id: userId,
+    });
+  };
+
+  const onViewersPress = () => {
+    if (!currentlyDisplayedStory) {
+      return;
+    }
+    navigatedToOtherPages.current = true;
+    stopProgress();
+    navigation.navigate('StoryViewers', {
+      storyId: currentlyDisplayedStory.id,
     });
   };
 
@@ -407,12 +418,16 @@ export const OneUserStories = ({
         ]}
       >
         <View>
-          <Viewers
-            viewersData={filter<ViewersInStoriesFragment>(
-              ViewersInStoriesFragmentDoc,
-              currentlyDisplayedStory
-            )}
-          />
+          {userId === myId && (
+            <Pressable onPress={onViewersPress}>
+              <Viewers
+                viewersData={filter<ViewersInStoriesFragment>(
+                  ViewersInStoriesFragmentDoc,
+                  currentlyDisplayedStory
+                )}
+              />
+            </Pressable>
+          )}
         </View>
 
         <ThreeDots dotsColor={'#fff'} dotsSize={24} onPress={onDodtsPress} />

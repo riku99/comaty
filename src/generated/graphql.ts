@@ -89,6 +89,10 @@ export enum GetQuestionReplyError {
   NotFound = 'NOT_FOUND'
 }
 
+export enum GetStoryError {
+  NotFound = 'NOT_FOUND'
+}
+
 export type Image = {
   __typename?: 'Image';
   height?: Maybe<Scalars['Int']>;
@@ -283,6 +287,7 @@ export type Query = {
   questionReply: QuestionReply;
   questions: QuestionConnection;
   stories: StoryConnection;
+  story: Story;
   storyUsers: UserConnection;
   user: User;
 };
@@ -324,6 +329,11 @@ export type QueryQuestionsArgs = {
 export type QueryStoriesArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryStoryArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -407,7 +417,7 @@ export type Story = {
   height?: Maybe<Scalars['Int']>;
   id: Scalars['Int'];
   seen?: Maybe<Scalars['Boolean']>;
-  seenList?: Maybe<Array<Maybe<StorySeen>>>;
+  seenList?: Maybe<StorySeenConnection>;
   thumbnailUrl?: Maybe<Scalars['String']>;
   type: StoryType;
   url: Scalars['String'];
@@ -417,7 +427,8 @@ export type Story = {
 
 
 export type StorySeenListArgs = {
-  count?: InputMaybe<Scalars['Int']>;
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 export type StoryConnection = {
@@ -438,6 +449,18 @@ export type StorySeen = {
   id: Scalars['Int'];
   story?: Maybe<Story>;
   user?: Maybe<User>;
+};
+
+export type StorySeenConnection = {
+  __typename?: 'StorySeenConnection';
+  edges: Array<Maybe<StorySeenEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type StorySeenEdge = {
+  __typename?: 'StorySeenEdge';
+  cursor: Scalars['String'];
+  node: StorySeen;
 };
 
 export enum StoryType {
@@ -785,11 +808,11 @@ export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionRepl
 
 export type OneUserStoriesQueryVariables = Exact<{
   id: Scalars['ID'];
-  seenCount?: InputMaybe<Scalars['Int']>;
+  viewersFirst?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string, seenList?: Array<{ __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+export type OneUserStoriesQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, type: StoryType, backgroundColors?: Array<string | null> | null, thumbnailUrl?: string | null, createdAt: string, seenList?: { __typename?: 'StorySeenConnection', edges: Array<{ __typename?: 'StorySeenEdge', node: { __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null> } | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
 export type AfterDeletingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -798,7 +821,14 @@ export type AfterDeletingStoryQuery = { __typename?: 'Query', me?: { __typename?
 
 export type StoryUserMetaDataFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
 
-export type ViewersInStoriesFragment = { __typename?: 'Story', seenList?: Array<{ __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null };
+export type ViewersInStoriesFragment = { __typename?: 'Story', seenList?: { __typename?: 'StorySeenConnection', edges: Array<{ __typename?: 'StorySeenEdge', node: { __typename?: 'StorySeen', id: number, user?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null> } | null };
+
+export type StoryViewersScreenDataQueryVariables = Exact<{
+  storyId: Scalars['Int'];
+}>;
+
+
+export type StoryViewersScreenDataQuery = { __typename?: 'Query', story: { __typename?: 'Story', id: number } };
 
 export type AfterCreateingStoryQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -985,12 +1015,16 @@ export const StoryUserMetaDataFragmentDoc = gql`
     ${ProfileImageFragmentDoc}`;
 export const ViewersInStoriesFragmentDoc = gql`
     fragment ViewersInStories on Story {
-  seenList(count: $seenCount) {
-    id
-    user {
-      id
-      firstProfileImage {
-        ...ProfileImage
+  seenList(first: $viewersFirst) {
+    edges {
+      node {
+        id
+        user {
+          id
+          firstProfileImage {
+            ...ProfileImage
+          }
+        }
       }
     }
   }
@@ -2276,7 +2310,7 @@ export type QuestionReplysScreenDataQueryHookResult = ReturnType<typeof useQuest
 export type QuestionReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataLazyQuery>;
 export type QuestionReplysScreenDataQueryResult = Apollo.QueryResult<QuestionReplysScreenDataQuery, QuestionReplysScreenDataQueryVariables>;
 export const OneUserStoriesDocument = gql`
-    query OneUserStories($id: ID!, $seenCount: Int) {
+    query OneUserStories($id: ID!, $viewersFirst: Int) {
   user(id: $id) {
     id
     ...StoryUserMetaData
@@ -2307,7 +2341,7 @@ ${ViewersInStoriesFragmentDoc}`;
  * const { data, loading, error } = useOneUserStoriesQuery({
  *   variables: {
  *      id: // value for 'id'
- *      seenCount: // value for 'seenCount'
+ *      viewersFirst: // value for 'viewersFirst'
  *   },
  * });
  */
@@ -2356,6 +2390,41 @@ export function useAfterDeletingStoryLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AfterDeletingStoryQueryHookResult = ReturnType<typeof useAfterDeletingStoryQuery>;
 export type AfterDeletingStoryLazyQueryHookResult = ReturnType<typeof useAfterDeletingStoryLazyQuery>;
 export type AfterDeletingStoryQueryResult = Apollo.QueryResult<AfterDeletingStoryQuery, AfterDeletingStoryQueryVariables>;
+export const StoryViewersScreenDataDocument = gql`
+    query StoryViewersScreenData($storyId: Int!) {
+  story(id: $storyId) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useStoryViewersScreenDataQuery__
+ *
+ * To run a query within a React component, call `useStoryViewersScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStoryViewersScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStoryViewersScreenDataQuery({
+ *   variables: {
+ *      storyId: // value for 'storyId'
+ *   },
+ * });
+ */
+export function useStoryViewersScreenDataQuery(baseOptions: Apollo.QueryHookOptions<StoryViewersScreenDataQuery, StoryViewersScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StoryViewersScreenDataQuery, StoryViewersScreenDataQueryVariables>(StoryViewersScreenDataDocument, options);
+      }
+export function useStoryViewersScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StoryViewersScreenDataQuery, StoryViewersScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StoryViewersScreenDataQuery, StoryViewersScreenDataQueryVariables>(StoryViewersScreenDataDocument, options);
+        }
+export type StoryViewersScreenDataQueryHookResult = ReturnType<typeof useStoryViewersScreenDataQuery>;
+export type StoryViewersScreenDataLazyQueryHookResult = ReturnType<typeof useStoryViewersScreenDataLazyQuery>;
+export type StoryViewersScreenDataQueryResult = Apollo.QueryResult<StoryViewersScreenDataQuery, StoryViewersScreenDataQueryVariables>;
 export const AfterCreateingStoryDocument = gql`
     query AfterCreateingStory {
   me {

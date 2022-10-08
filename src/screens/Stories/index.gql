@@ -1,4 +1,4 @@
-query OneUserStories($id: ID!, $seenCount: Int) {
+query OneUserStories($id: ID!, $viewersFirst: Int) {
   user(id: $id) {
     id
     ...StoryUserMetaData
@@ -29,12 +29,16 @@ fragment StoryUserMetaData on User {
 }
 
 fragment ViewersInStories on Story {
-  seenList(count: $seenCount) {
-    id
-    user {
-      id
-      firstProfileImage {
-        ...ProfileImage
+  seenList(first: $viewersFirst) {
+    edges {
+      node {
+        id
+        user {
+          id
+          firstProfileImage {
+            ...ProfileImage
+          }
+        }
       }
     }
   }

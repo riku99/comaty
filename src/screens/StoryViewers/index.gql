@@ -1,0 +1,19 @@
+query StoryViewersScreenData(
+  $storyId: Int!
+  $seenListFirst: Int
+  $seenListAfter: String
+) {
+  story(id: $storyId) {
+    id
+    seenList {
+      id
+      user {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+    }
+  }
+}

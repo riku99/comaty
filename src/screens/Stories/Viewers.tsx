@@ -8,17 +8,17 @@ type Props = {
 };
 
 export const Viewers = ({ viewersData }: Props) => {
-  if (!viewersData.seenList.length) {
+  if (!viewersData.seenList.edges.length) {
     return null;
   }
 
   return (
     <View style={styles.container}>
       <View style={styles.images}>
-        {viewersData.seenList.map((s, index) => {
+        {viewersData.seenList.edges.map((s, index) => {
           return (
             <View
-              key={s.id}
+              key={s.node.id}
               style={[
                 styles.imageOuter,
                 {
@@ -27,7 +27,7 @@ export const Viewers = ({ viewersData }: Props) => {
               ]}
             >
               <ProfileImage
-                imageData={s.user.firstProfileImage}
+                imageData={s.node.user.firstProfileImage}
                 style={{
                   width: IMAGE_SIZE,
                   height: IMAGE_SIZE,
@@ -46,8 +46,8 @@ export const Viewers = ({ viewersData }: Props) => {
             transform: [
               {
                 translateX:
-                  viewersData.seenList.length > 1
-                    ? -(viewersData.seenList.length - 1 * 7)
+                  viewersData.seenList.edges.length > 1
+                    ? -(viewersData.seenList.edges.length - 1 * 7)
                     : 0,
               },
             ],

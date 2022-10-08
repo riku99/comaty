@@ -7,7 +7,7 @@ import {
   Easing,
   runOnJS,
   SharedValue,
-  withTiming,
+  withTiming
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
@@ -20,10 +20,11 @@ import {
   useCreateStorySeenMutation,
   useOneUserStoriesQuery,
   ViewersInStoriesFragment,
-  ViewersInStoriesFragmentDoc,
+  ViewersInStoriesFragmentDoc
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { Indicator } from './Indicator';
+import { Modal } from './Modal';
 import { StoryUserMetaData } from './StoryUserMetaData';
 import { Viewers } from './Viewers';
 
@@ -82,16 +83,20 @@ export const OneUserStories = ({
   const [videoPaused, setVideoPaused] = useState(
     !isUserStoriesVisibleInViewport
   );
+  const [modalVisible, setModalVisible] = useState(false);
+  // seek()の後にsetVideoPaused(true)を実行しても、内部的に後からseek()が実行されてビデオが再生されてしまう。なのでVideoのonSeekのタイミングでsetVidePaused(true)を実行する必要があるが、画面左をタップした場合など、seekしてもポーズせずに再生したい場合もある。
+  // つまり、onSeekのタイミングでポーズさせたい場合、そうでない場合が存在する。それを表すフラグがpauseVideoOnSeek
+  const pauseVideoOnSeek = useRef(false);
 
   useEffect(() => {
     checkedVideoProgress.current = false;
   }, [currentlyDisplayedStoryIndex]);
 
   useEffect(() => {
-    if (index === currentlyDisplayedUserStoryInViewport && videoPaused) {
+    if (index === currentlyDisplayedUserStoryInViewport) {
       setVideoPaused(false);
     }
-  }, [index, currentlyDisplayedUserStoryInViewport, videoPaused]);
+  }, [index, currentlyDisplayedUserStoryInViewport]);
 
   useEffect(() => {
     if (
@@ -111,16 +116,12 @@ export const OneUserStories = ({
     checkedVideoProgress.current = false;
     if (!isUserStoriesVisibleInViewport) {
       resetNow.current = true;
+      pauseVideoOnSeek.current = true;
       videoRef.current?.seek(0);
       setCurrentlyDisplayedStoryIndex(0);
       Object.keys(indicatorProgressValues).forEach((key) => {
         indicatorProgressValues[Number(key)].value = -oneIndicatorWidth;
       });
-
-      // timeout内でpausedにしないと videoRef.seek() が内部で後から実行されてしまい再開されてしまうので、遅延させている
-      setTimeout(() => {
-        setVideoPaused(true);
-      }, 100);
     }
   }, [
     isUserStoriesVisibleInViewport,
@@ -160,6 +161,12 @@ export const OneUserStories = ({
     currentlyDisplayedUserStoryInViewport,
     index,
   ]);
+
+  useEffect(() => {
+    if (!videoPaused) {
+      pauseVideoOnSeek.current = false;
+    }
+  }, [videoPaused]);
 
   if (!data?.user) {
     return (
@@ -242,8 +249,18 @@ export const OneUserStories = ({
   const stopProgress = () => {
     indicatorProgressValues[currentlyDisplayedStoryIndex].value =
       -oneIndicatorWidth;
+    pauseVideoOnSeek.current = true;
     videoRef.current?.seek(0);
-    setVideoPaused(true);
+  };
+
+  const onDodtsPress = () => {
+    setModalVisible(true);
+    stopProgress();
+  };
+
+  const restartProgress = () => {
+    setVideoPaused(false);
+    startProgress();
   };
 
   return (
@@ -293,6 +310,11 @@ export const OneUserStories = ({
                 }
               }}
               paused={videoPaused}
+              onSeek={(d) => {
+                if (pauseVideoOnSeek.current && d.seekTime === 0) {
+                  setVideoPaused(true);
+                }
+              }}
             />
 
             {/* サムネ */}
@@ -358,8 +380,16 @@ export const OneUserStories = ({
           )}
         />
 
-        <ThreeDots dotsColor={'#fff'} dotsSize={24} onPress={stopProgress} />
+        <ThreeDots dotsColor={'#fff'} dotsSize={24} onPress={onDodtsPress} />
       </View>
+
+      <Modal
+        isVisible={modalVisible}
+        hideMenu={() => {
+          setModalVisible(false);
+          restartProgress();
+        }}
+      />
     </View>
   );
 };

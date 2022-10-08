@@ -61,7 +61,6 @@ export const Viewers = ({ viewersData }: Props) => {
 };
 
 const IMAGE_SIZE = 34;
-const ll = 3;
 
 const styles = StyleSheet.create({
   container: {

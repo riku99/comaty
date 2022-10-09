@@ -148,6 +148,7 @@ export const OneUserStories = ({
     }
   }, [isUserStoriesVisibleInViewport]);
 
+  // 閲覧作成
   useEffect(() => {
     (async () => {
       const currentlyDisplayedStory =

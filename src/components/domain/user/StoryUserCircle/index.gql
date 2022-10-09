@@ -11,5 +11,6 @@ fragment StoryUserCircle on UserEntity {
     type
     createdAt
     thumbnailUrl
+    seen
   }
 }

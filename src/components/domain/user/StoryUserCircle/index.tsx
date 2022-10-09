@@ -21,9 +21,14 @@ export const StoryUserCircle = ({
   onPress,
   creatingStory = false,
 }: Props) => {
+  const allSeen = storyUserData.stories.every((s) => s.seen);
+
   return (
     <Pressable onPress={onPress}>
-      <ProfileStoryOuter imageSize={imageSize}>
+      <ProfileStoryOuter
+        imageSize={imageSize}
+        type={allSeen ? 'silver' : 'gradient'}
+      >
         <ProfileImage
           imageData={filter<ProfileImageFragment>(
             ProfileImageFragmentDoc,

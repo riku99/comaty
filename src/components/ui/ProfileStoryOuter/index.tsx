@@ -4,15 +4,24 @@ import { StyleSheet, View } from 'react-native';
 type Props = {
   children: JSX.Element | JSX.Element[];
   imageSize: number;
+  type?: 'gradient' | 'silver';
 };
 
-export const ProfileStoryOuter = ({ children, imageSize }: Props) => {
+export const ProfileStoryOuter = ({
+  children,
+  imageSize,
+  type = 'gradient',
+}: Props) => {
   const outerSize = imageSize + 10;
   const whiteOuterSize = outerSize - 5;
 
   return (
     <LinearGradient
-      colors={['#9089fa', '#b289fa', '#e389fa']}
+      colors={
+        type === 'gradient'
+          ? ['#9089fa', '#b289fa', '#e389fa']
+          : ['#D6D6D6', '#CECECE']
+      }
       style={[
         styles.outer,
         {

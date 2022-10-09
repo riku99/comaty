@@ -23,6 +23,7 @@ import {
   ProfileImagesInUserProfileFragment,
   ProfileImagesInUserProfileFragmentDoc,
   useBlockUserMutation,
+  UserGetError,
   useUnblockUserMutation,
   useUserProfileScreenDataQuery,
 } from 'src/generated/graphql';
@@ -42,6 +43,19 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    onError: (e) => {
+      const ge = getGraphQLError(e, 0);
+      if (ge.code === UserGetError.NotFound) {
+        Alert.alert('ユーザーが見つかりません', '', [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.goBack();
+            },
+          },
+        ]);
+      }
+    },
   });
 
   useLayoutEffect(() => {

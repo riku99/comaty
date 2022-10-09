@@ -51,11 +51,34 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
       <View style={styles.actionButtons1}>
         <ActionButton
-          icon={<MaterialIcons name="edit" size={28} color="#666666" />}
-          title="プロフィール編集"
+          icon={<MaterialIcons name="settings" size={24} color="#666666" />}
+          title="設定"
           onPress={() => {
             navigation.navigate('EditProfileStack');
           }}
+          buttonSize={60}
+        />
+
+        <View style={styles.editButton}>
+          <ActionButton
+            icon={<MaterialIcons name="edit" size={28} color="#666666" />}
+            title="プロフィール編集"
+            onPress={() => {
+              navigation.navigate('EditProfileStack');
+            }}
+            buttonSize={66}
+          />
+        </View>
+
+        <ActionButton
+          icon={
+            <MaterialIcons name="notifications" size={24} color="#666666" />
+          }
+          title="通知"
+          onPress={() => {
+            navigation.navigate('EditProfileStack');
+          }}
+          buttonSize={60}
         />
       </View>
     </View>
@@ -63,6 +86,7 @@ export const MyPageScreen = ({ navigation }: Props) => {
 };
 
 const PROFILE_IMAGE_SIZE = 110;
+const ACTION_BUTTON_SIZE = 66;
 
 const styles = StyleSheet.create({
   container: {
@@ -86,10 +110,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   actionButtons1: {
-    width: '88%',
+    width: '80%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 22,
+  },
+  editButton: {
+    transform: [{ translateY: 18 }],
   },
 });

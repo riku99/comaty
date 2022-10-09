@@ -5,18 +5,28 @@ type Props = {
   icon: JSX.Element;
   title: string;
   onPress?: () => void;
+  buttonSize: number;
 };
 
-export const ActionButton = ({ icon, title, onPress }: Props) => {
+export const ActionButton = ({ icon, title, onPress, buttonSize }: Props) => {
   return (
     <Pressable style={styles.container} onPress={onPress}>
-      <View style={styles.actionButton}>{icon}</View>
+      <View
+        style={[
+          styles.actionButton,
+          {
+            width: buttonSize,
+            height: buttonSize,
+            borderRadius: buttonSize,
+          },
+        ]}
+      >
+        {icon}
+      </View>
       <Text style={styles.title}>{title}</Text>
     </Pressable>
   );
 };
-
-const ACTION_BUTTON_SIZE = 66;
 
 const styles = StyleSheet.create({
   container: {
@@ -34,9 +44,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
-    width: ACTION_BUTTON_SIZE,
-    height: ACTION_BUTTON_SIZE,
-    borderRadius: ACTION_BUTTON_SIZE,
   },
   title: {
     fontWeight: 'bold',

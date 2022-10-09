@@ -1,6 +1,12 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { filter } from 'graphql-anywhere';
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
@@ -31,10 +37,11 @@ type Props = RootNavigationScreenProp<'UserProfile'>;
 
 export const UserProfileScreen = ({ navigation, route }: Props) => {
   const { id } = route.params;
-  const { data } = useUserProfileScreenDataQuery({
+  const { data, loading } = useUserProfileScreenDataQuery({
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   useLayoutEffect(() => {
@@ -50,6 +57,19 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
   const toast = useToast();
   const [blockUserMutation] = useBlockUserMutation();
   const [unblockMutation] = useUnblockUserMutation();
+
+  useEffect(() => {
+    if (data?.user.blocking && !loading) {
+      Alert.alert('ユーザーが見つかりません', '', [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ]);
+    }
+  }, [data, navigation]);
 
   const onBlockPress = () => {
     Alert.alert('ブロックしますか？', '', [
@@ -114,7 +134,12 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
     return <Loading />;
   }
 
-  const { blocked } = data.user;
+  if (data.user.blocking) {
+    return null;
+  }
+
+  const { blocked, blocking } = data.user;
+  const blockingOrBlocked = blocked || blocking;
 
   return (
     <View style={styles.container}>
@@ -153,21 +178,23 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
         />
       </BottomSheet>
 
-      <View
-        style={[
-          styles.buttonButtomGroupContainer,
-          {
-            bottom: safeAreaBottom + 4,
-          },
-        ]}
-      >
-        <BottomButtonGroup
-          data={filter<BottomButtonGroupInUserProfileFragment>(
-            BottomButtonGroupInUserProfileFragmentDoc,
-            data.user
-          )}
-        />
-      </View>
+      {!blockingOrBlocked && (
+        <View
+          style={[
+            styles.buttonButtomGroupContainer,
+            {
+              bottom: safeAreaBottom + 4,
+            },
+          ]}
+        >
+          <BottomButtonGroup
+            data={filter<BottomButtonGroupInUserProfileFragment>(
+              BottomButtonGroupInUserProfileFragmentDoc,
+              data.user
+            )}
+          />
+        </View>
+      )}
 
       <OverlayModal
         isVisible={modalVisible}

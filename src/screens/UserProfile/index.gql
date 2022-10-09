@@ -9,6 +9,8 @@ fragment BottomSheetContentInUserProfile on User {
   nickname
   bio
   age
+  blocking
+  blocked
   height
   myTags {
     id

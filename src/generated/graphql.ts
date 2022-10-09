@@ -871,7 +871,7 @@ export type AfterCreateingStoryQuery = { __typename?: 'Query', me?: { __typename
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
 
-export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
+export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
 export type BottomButtonGroupInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null };
 
@@ -1079,6 +1079,8 @@ export const BottomSheetContentInUserProfileFragmentDoc = gql`
   nickname
   bio
   age
+  blocking
+  blocked
   height
   myTags {
     id

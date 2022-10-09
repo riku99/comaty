@@ -11,7 +11,8 @@ type Props = {
 };
 
 export const BottomSheetContent = React.memo(({ data }: Props) => {
-  const { nickname, bio, age, myTags, height } = data;
+  const { nickname, bio, age, myTags, height, blocking, blocked } = data;
+  const blockingOrBlocked = blocking || blocked;
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
@@ -20,24 +21,28 @@ export const BottomSheetContent = React.memo(({ data }: Props) => {
           {nickname}, <Text style={styles.age}>{age}</Text>
         </Text>
 
-        <View style={styles.tagsContainer}>
-          {height && (
-            <View style={[styles.tag]}>
-              <Tag text={`${height}㌢`} />
+        {!blockingOrBlocked && (
+          <>
+            <View style={styles.tagsContainer}>
+              {height && (
+                <View style={[styles.tag]}>
+                  <Tag text={`${height}㌢`} />
+                </View>
+              )}
+              {myTags?.map((tag) => {
+                return (
+                  <View style={[styles.tag]} key={tag.id}>
+                    <Tag text={tag.text} />
+                  </View>
+                );
+              })}
             </View>
-          )}
-          {myTags?.map((tag) => {
-            return (
-              <View style={[styles.tag]} key={tag.id}>
-                <Tag text={tag.text} />
-              </View>
-            );
-          })}
-        </View>
 
-        <View style={styles.bioContainer}>
-          <Text style={styles.bio}>{bio}</Text>
-        </View>
+            <View style={styles.bioContainer}>
+              <Text style={styles.bio}>{bio}</Text>
+            </View>
+          </>
+        )}
       </View>
     </BottomSheetScrollView>
   );

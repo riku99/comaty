@@ -1,8 +1,4 @@
-import {
-  FontAwesome,
-  Ionicons,
-  MaterialCommunityIcons,
-} from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Pressable } from 'react-native';
@@ -10,14 +6,14 @@ import { ContentCreationButton } from 'src/components/ui/ContentCreationButton';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { ChatList } from 'src/screens/ChatList';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
-import { NearbyUsersScreen } from 'src/screens/NearbyUsers';
+import { TimelineScreen } from 'src/screens/Timeline';
 import { theme } from 'src/styles';
 import { HomeStack } from './HomeStack';
 import { MyPageStack } from './MyPageStack';
 
 export type TabParamList = {
   Home: undefined;
-  NearbyUsers: undefined;
+  Timeline: undefined;
   CreateStory: undefined;
   ChatList: undefined;
   MyPage: undefined;
@@ -52,20 +48,20 @@ export const BottomTab = React.memo(() => {
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'home-minus' : 'home-minus-outline'}
-              size={ICON_SIZE + 2}
+              size={ICON_SIZE}
               color={theme.black}
             />
           ),
         }}
       />
       <Tab.Screen
-        name="NearbyUsers"
-        component={NearbyUsersScreen}
+        name="Timeline"
+        component={TimelineScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={focused ? 'md-search' : 'md-search-outline'}
-              size={ICON_SIZE + 2}
+            <MaterialCommunityIcons
+              name={focused ? 'card-text' : 'card-text-outline'}
+              size={ICON_SIZE}
               color={theme.black}
             />
           ),
@@ -111,9 +107,9 @@ export const BottomTab = React.memo(() => {
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: ({ color, focused }) => (
-            <FontAwesome
-              name={focused ? 'user' : 'user-o'}
-              size={ICON_SIZE - 1}
+            <MaterialCommunityIcons
+              name={focused ? 'account' : 'account-outline'}
+              size={ICON_SIZE}
               color={theme.black}
             />
           ),
@@ -123,4 +119,4 @@ export const BottomTab = React.memo(() => {
   );
 });
 
-const ICON_SIZE = 22;
+const ICON_SIZE = 24;

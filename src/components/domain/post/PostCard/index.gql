@@ -11,9 +11,6 @@ fragment PostCard on Post {
       ...ProfileImage
     }
   }
-  replys {
-    id
-  }
   images {
     url
     width

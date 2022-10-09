@@ -36,7 +36,7 @@ export const PostCard = ({
   onDelete,
   disableDetailNavigation = false,
 }: Props) => {
-  const { text, user, createdAt, liked, id, replys, images } = postData;
+  const { text, user, createdAt, liked, id, images } = postData;
   const diff = formatDistanceToNow(new Date(Number(createdAt)), {
     locale: ja,
     addSuffix: true,
@@ -272,21 +272,6 @@ export const PostCard = ({
 
           <View style={[styles.actions, { marginTop: images.length ? 14 : 0 }]}>
             <HStack style={styles.actionsLeft} space={44}>
-              <Pressable
-                onPress={onReplyPress}
-                hitSlop={10}
-                style={styles.reply}
-              >
-                <Entypo
-                  name="reply"
-                  size={ACTION_ICON_SIZE}
-                  color={ACTION_ICON_COLOR}
-                />
-                <Text style={styles.replyCount}>
-                  {!!replys.length && replys.length}
-                </Text>
-              </Pressable>
-
               <Pressable onPress={onLikePress} style={styles.like}>
                 <LottieView
                   ref={likeRef}

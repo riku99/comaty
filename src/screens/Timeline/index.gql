@@ -1,0 +1,13 @@
+query TimelineScreenData($first: Int, $after: String) {
+  posts(first: $first, after: $after) {
+    edges {
+      node {
+        ...PostCard
+      }
+      cursor
+    }
+    pageInfo {
+      ...PageInfo
+    }
+  }
+}

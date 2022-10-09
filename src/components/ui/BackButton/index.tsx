@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { theme } from 'src/styles';
 
 type Props = {
-  containerStyle: ViewStyle;
+  containerStyle?: ViewStyle;
 };
 
 export const BackButton = ({ containerStyle }: Props) => {

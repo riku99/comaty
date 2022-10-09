@@ -24,6 +24,8 @@ fragment BottomButtonGroupInUserProfile on User {
 query UserProfileScreenData($id: ID!) {
   user(id: $id) {
     id
+    blocking
+    blocked
     ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
     ...BottomButtonGroupInUserProfile

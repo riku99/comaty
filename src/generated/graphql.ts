@@ -22,6 +22,10 @@ export enum ApproximateRange {
   Wide = 'WIDE'
 }
 
+export enum BlockUserError {
+  AlreadyBlockedUser = 'ALREADY_BLOCKED_USER'
+}
+
 export type CreatePostInput = {
   images?: InputMaybe<Array<Scalars['Upload']>>;
   replyTo?: InputMaybe<Scalars['Int']>;
@@ -122,6 +126,7 @@ export type Me = UserEntity & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  blockUser?: Maybe<User>;
   createPost: Post;
   createQuestion: Question;
   createQuestionReply: QuestionReply;
@@ -137,11 +142,17 @@ export type Mutation = {
   deleteUserTag?: Maybe<UserTag>;
   likePost: Post;
   reportStory?: Maybe<Story>;
+  unblockUser?: Maybe<User>;
   unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
   updateMe: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
+};
+
+
+export type MutationBlockUserArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -217,6 +228,11 @@ export type MutationLikePostArgs = {
 
 export type MutationReportStoryArgs = {
   id: Scalars['Int'];
+};
+
+
+export type MutationUnblockUserArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -496,6 +512,8 @@ export type User = UserEntity & {
   __typename?: 'User';
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
+  blocked?: Maybe<Scalars['Boolean']>;
+  blocking?: Maybe<Scalars['Boolean']>;
   firstProfileImage?: Maybe<UserProfileImage>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
@@ -551,6 +569,13 @@ export type UserTag = {
   text: Scalars['String'];
   user?: Maybe<User>;
 };
+
+export type BlockUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type BlockUserMutation = { __typename?: 'Mutation', blockUser?: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null } | null };
 
 export type CreateMyTagMutationVariables = Exact<{
   input: CreateUserTagInput;
@@ -649,6 +674,13 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean } };
+
+export type UnblockUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UnblockUserMutation = { __typename?: 'Mutation', unblockUser?: { __typename?: 'User', id: string, nickname?: string | null, blocked?: boolean | null } | null };
 
 export type UnlikePostMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -848,7 +880,7 @@ export type UserProfileScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null } | null> | null } };
 
 export const ProfileImageFragmentDoc = gql`
     fragment ProfileImage on UserProfileImage {
@@ -1060,6 +1092,41 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
   ...StoryUserCircle
 }
     ${StoryUserCircleFragmentDoc}`;
+export const BlockUserDocument = gql`
+    mutation BlockUser($id: ID!) {
+  blockUser(id: $id) {
+    id
+    blocking
+    blocked
+  }
+}
+    `;
+export type BlockUserMutationFn = Apollo.MutationFunction<BlockUserMutation, BlockUserMutationVariables>;
+
+/**
+ * __useBlockUserMutation__
+ *
+ * To run a mutation, you first call `useBlockUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBlockUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [blockUserMutation, { data, loading, error }] = useBlockUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBlockUserMutation(baseOptions?: Apollo.MutationHookOptions<BlockUserMutation, BlockUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BlockUserMutation, BlockUserMutationVariables>(BlockUserDocument, options);
+      }
+export type BlockUserMutationHookResult = ReturnType<typeof useBlockUserMutation>;
+export type BlockUserMutationResult = Apollo.MutationResult<BlockUserMutation>;
+export type BlockUserMutationOptions = Apollo.BaseMutationOptions<BlockUserMutation, BlockUserMutationVariables>;
 export const CreateMyTagDocument = gql`
     mutation CreateMyTag($input: CreateUserTagInput!) {
   createUserTag(input: $input) {
@@ -1541,6 +1608,41 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const UnblockUserDocument = gql`
+    mutation UnblockUser($id: ID!) {
+  unblockUser(id: $id) {
+    id
+    nickname
+    blocked
+  }
+}
+    `;
+export type UnblockUserMutationFn = Apollo.MutationFunction<UnblockUserMutation, UnblockUserMutationVariables>;
+
+/**
+ * __useUnblockUserMutation__
+ *
+ * To run a mutation, you first call `useUnblockUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnblockUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unblockUserMutation, { data, loading, error }] = useUnblockUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUnblockUserMutation(baseOptions?: Apollo.MutationHookOptions<UnblockUserMutation, UnblockUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnblockUserMutation, UnblockUserMutationVariables>(UnblockUserDocument, options);
+      }
+export type UnblockUserMutationHookResult = ReturnType<typeof useUnblockUserMutation>;
+export type UnblockUserMutationResult = Apollo.MutationResult<UnblockUserMutation>;
+export type UnblockUserMutationOptions = Apollo.BaseMutationOptions<UnblockUserMutation, UnblockUserMutationVariables>;
 export const UnlikePostDocument = gql`
     mutation UnlikePost($id: Int!) {
   unlikePost(id: $id) {
@@ -2493,6 +2595,8 @@ export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
   user(id: $id) {
     id
+    blocking
+    blocked
     ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
     ...BottomButtonGroupInUserProfile

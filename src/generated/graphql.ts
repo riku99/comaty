@@ -141,6 +141,7 @@ export type Mutation = {
   deleteStory?: Maybe<Story>;
   deleteUserTag?: Maybe<UserTag>;
   likePost: Post;
+  reportPost?: Maybe<Post>;
   reportStory?: Maybe<Story>;
   unblockUser?: Maybe<User>;
   unlikePost?: Maybe<Post>;
@@ -222,6 +223,11 @@ export type MutationDeleteUserTagArgs = {
 
 
 export type MutationLikePostArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type MutationReportPostArgs = {
   id: Scalars['Int'];
 };
 
@@ -660,6 +666,13 @@ export type LikePostMutationVariables = Exact<{
 
 
 export type LikePostMutation = { __typename?: 'Mutation', likePost: { __typename?: 'Post', id: number, liked?: boolean | null, likeCount?: number | null } };
+
+export type ReportPostMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type ReportPostMutation = { __typename?: 'Mutation', reportPost?: { __typename?: 'Post', id: number } | null };
 
 export type ReportStoryMutationVariables = Exact<{
   id: Scalars['Int'];
@@ -1551,6 +1564,39 @@ export function useLikePostMutation(baseOptions?: Apollo.MutationHookOptions<Lik
 export type LikePostMutationHookResult = ReturnType<typeof useLikePostMutation>;
 export type LikePostMutationResult = Apollo.MutationResult<LikePostMutation>;
 export type LikePostMutationOptions = Apollo.BaseMutationOptions<LikePostMutation, LikePostMutationVariables>;
+export const ReportPostDocument = gql`
+    mutation ReportPost($id: Int!) {
+  reportPost(id: $id) {
+    id
+  }
+}
+    `;
+export type ReportPostMutationFn = Apollo.MutationFunction<ReportPostMutation, ReportPostMutationVariables>;
+
+/**
+ * __useReportPostMutation__
+ *
+ * To run a mutation, you first call `useReportPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useReportPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [reportPostMutation, { data, loading, error }] = useReportPostMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useReportPostMutation(baseOptions?: Apollo.MutationHookOptions<ReportPostMutation, ReportPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ReportPostMutation, ReportPostMutationVariables>(ReportPostDocument, options);
+      }
+export type ReportPostMutationHookResult = ReturnType<typeof useReportPostMutation>;
+export type ReportPostMutationResult = Apollo.MutationResult<ReportPostMutation>;
+export type ReportPostMutationOptions = Apollo.BaseMutationOptions<ReportPostMutation, ReportPostMutationVariables>;
 export const ReportStoryDocument = gql`
     mutation ReportStory($id: Int!) {
   reportStory(id: $id) {

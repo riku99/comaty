@@ -1,5 +1,5 @@
-import { useCallback, useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { RefreshControl, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -9,13 +9,17 @@ import {
   TimelineScreenDataQuery,
   useTimelineScreenDataQuery,
 } from 'src/generated/graphql';
+import { useDeletePost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'BottomTab'>;
 
 type PostItem = TimelineScreenDataQuery['posts']['edges'][number];
 
 export const TimelineScreen = ({ navigation }: Props) => {
-  const { data, fetchMore } = useTimelineScreenDataQuery();
+  const { data, fetchMore, refetch } = useTimelineScreenDataQuery();
+
+  const [refreshing, setRefreshing] = useState(false);
+  const { deletePost } = useDeletePost();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -31,10 +35,28 @@ export const TimelineScreen = ({ navigation }: Props) => {
 
   const renderPostItem = useCallback(
     ({ item }: { item: PostItem }) => {
-      return <PostCard postData={item.node} onDelete={async () => {}} />;
+      const onPostDelete = async () => {
+        try {
+          await deletePost(item.node.id);
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      return <PostCard postData={item.node} onDelete={onPostDelete} />;
     },
     [navigation]
   );
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+    } catch (e) {
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   if (!data?.posts) {
     return <Loading />;
@@ -61,6 +83,9 @@ export const TimelineScreen = ({ navigation }: Props) => {
         renderItem={renderPostItem}
         keyExtractor={(item) => item.node.id.toString()}
         infiniteLoad={infiniteLoad}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

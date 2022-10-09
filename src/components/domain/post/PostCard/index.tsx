@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 import FullImageView from 'react-native-image-viewing';
+import { useToast } from 'react-native-toast-notifications';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { HStack } from 'src/components/ui/HStack';
 import {
@@ -18,9 +19,10 @@ import {
   ProfileImageFragment,
   ProfileImageFragmentDoc,
   useLikePostMutation,
-  useMyIdQuery,
+  useReportPostMutation,
   useUnlikePostMutation,
 } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
 
 const Like = require('../../../../assets/lottie/like.json');
@@ -46,22 +48,17 @@ export const PostCard = ({
   const isFirstRender = useRef(true);
   const [likePostMutation] = useLikePostMutation();
   const [unlikePostMutation] = useUnlikePostMutation();
+  const [reportPostMutation] = useReportPostMutation();
   const navigation = useNavigation<RootNavigationProp<any>>();
   const [likeCount, setLikeCount] = useState(postData.likeCount);
-  const { data: idData } = useMyIdQuery({
-    fetchPolicy: 'cache-only',
-  });
-  const [dotsMenuActions, setDotsMenuActions] = useState<MenuAction[]>([
-    {
-      id: reportMenuId,
-      title: '報告',
-    },
-  ]);
+  const myId = useMyId();
+  const [dotsMenuActions, setDotsMenuActions] = useState<MenuAction[]>([]);
   const likePressed = useRef(false);
   const [fullImageViewingIndex, setFullImageViewingIndex] = useState<
     number | null
   >(null);
   const fullImageViewingData = images?.map((img) => ({ uri: img.url }));
+  const toast = useToast();
 
   const getImageStyle = (
     index: number
@@ -137,7 +134,7 @@ export const PostCard = ({
   }, [isLiked]);
 
   useEffect(() => {
-    if (idData.me.id === user.id) {
+    if (myId === user.id) {
       setDotsMenuActions((c) => {
         return [
           ...c,
@@ -152,8 +149,18 @@ export const PostCard = ({
           },
         ];
       });
+    } else {
+      setDotsMenuActions((c) => {
+        return [
+          ...c,
+          {
+            id: reportMenuId,
+            title: '報告',
+          },
+        ];
+      });
     }
-  }, [idData, user.id]);
+  }, [myId, user.id]);
 
   const onLikePress = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -181,23 +188,6 @@ export const PostCard = ({
     }
   };
 
-  const onReplyPress = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    navigation.navigate('PostReply', {
-      postId: id,
-    });
-  };
-
-  const onBodyPress = () => {
-    if (disableDetailNavigation) {
-      return;
-    }
-
-    navigation.push('PostDetail', {
-      id,
-    });
-  };
-
   const onDotsMenuActionPress = async (menuId: string) => {
     switch (menuId) {
       case deleteMenuId:
@@ -219,6 +209,36 @@ export const PostCard = ({
           },
         ]);
         break;
+      case reportMenuId:
+        Alert.alert(
+          '不適切な投稿として報告してよろしいですか？',
+          '報告したことは相手ユーザーに知らされません',
+          [
+            {
+              text: 'キャンセル',
+              style: 'cancel',
+            },
+            {
+              text: '報告',
+              style: 'destructive',
+              onPress: async () => {
+                try {
+                  await reportPostMutation({
+                    variables: {
+                      id,
+                    },
+                    onCompleted: () => {
+                      toast.show('報告しました');
+                    },
+                  });
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+            },
+          ]
+        );
+        break;
     }
   };
 
@@ -229,7 +249,7 @@ export const PostCard = ({
   };
 
   return (
-    <Pressable style={styles.body} onPress={onBodyPress} hitSlop={10}>
+    <Pressable style={styles.body}>
       <View style={styles.mainContents}>
         <Pressable onPress={onProfileImagePress} style={{ height: IMAGE_SIZE }}>
           <ProfileImage

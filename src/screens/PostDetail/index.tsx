@@ -46,7 +46,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
   const renderPosts = useCallback(
     ({ item }: { item: Item }) => {
       const onDeletePost = async () => {
-        await deletePost(item.id, item.replyToPost?.id);
+        await deletePost(item.id);
       };
 
       return <PostCard postData={item} onDelete={onDeletePost} />;
@@ -61,7 +61,7 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
   const { replyToPost } = data.post;
 
   const deleteHeaderPost = async () => {
-    await deletePost(data.post.id, replyToPost?.id);
+    await deletePost(data.post.id);
     navigation.goBack();
   };
 

@@ -2,10 +2,9 @@ import { useReactiveVar } from '@apollo/client';
 import { useCallback } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 import {
-  ActivityPostsDocument,
-  ActivityPostsQuery,
   CreatePostInput,
-  PostDetailScreenDataDocument,
+  TimelineScreenDataDocument,
+  TimelineScreenDataQuery,
   useCreatePostMutation,
   useDeletePostMutation,
 } from 'src/generated/graphql';
@@ -54,34 +53,32 @@ export const useCreatePost = () => {
             input,
           },
           update: (cache, { data: responseData }) => {
-            if (!responseData) {
-              return;
-            }
-
-            const cachedActivityPostsQuery =
-              cache.readQuery<ActivityPostsQuery>({
-                query: ActivityPostsDocument,
-              });
-
-            if (cachedActivityPostsQuery) {
-              const newEdge = {
-                node: responseData.createPost,
-                cursor: '',
-              };
-              const newEdges = [
-                newEdge,
-                ...cachedActivityPostsQuery.posts.edges,
-              ];
-              cache.writeQuery({
-                query: ActivityPostsDocument,
-                data: {
-                  posts: {
-                    ...cachedActivityPostsQuery.posts,
-                    edges: newEdges,
-                  },
-                },
-              });
-            }
+            // if (!responseData) {
+            //   return;
+            // }
+            // const cachedActivityPostsQuery =
+            //   cache.readQuery<ActivityPostsQuery>({
+            //     query: ActivityPostsDocument,
+            //   });
+            // if (cachedActivityPostsQuery) {
+            //   const newEdge = {
+            //     node: responseData.createPost,
+            //     cursor: '',
+            //   };
+            //   const newEdges = [
+            //     newEdge,
+            //     ...cachedActivityPostsQuery.posts.edges,
+            //   ];
+            //   cache.writeQuery({
+            //     query: ActivityPostsDocument,
+            //     data: {
+            //       posts: {
+            //         ...cachedActivityPostsQuery.posts,
+            //         edges: newEdges,
+            //       },
+            //     },
+            //   });
+            // }
           },
           onCompleted,
         });
@@ -101,50 +98,40 @@ export const useDeletePost = () => {
   const [deletePostMutation] = useDeletePostMutation();
   const toast = useToast();
 
-  const deletePost = async (id: number, replyToPostId?: number) => {
+  const deletePost = async (id: number) => {
     await deletePostMutation({
       variables: {
         id,
-      },
-      refetchQueries: () => {
-        if (replyToPostId) {
-          return [
-            {
-              query: PostDetailScreenDataDocument,
-              variables: {
-                id: replyToPostId,
-              },
-            },
-          ];
-        }
       },
       update: (cache, { data: responseData }) => {
         if (!responseData || !responseData?.deletePost.id) {
           return;
         }
 
-        const activityPostsQuery = cache.readQuery<ActivityPostsQuery>({
-          query: ActivityPostsDocument,
-        });
+        const timelineScreenDataQuery =
+          cache.readQuery<TimelineScreenDataQuery>({
+            query: TimelineScreenDataDocument,
+          });
 
-        if (activityPostsQuery) {
-          const newEdges = activityPostsQuery.posts.edges.filter(
+        if (timelineScreenDataQuery) {
+          const newEdges = timelineScreenDataQuery.posts.edges.filter(
             (edge) => edge.node.id !== responseData.deletePost.id
           );
           cache.writeQuery({
-            query: ActivityPostsDocument,
+            query: TimelineScreenDataDocument,
             data: {
               posts: {
-                ...activityPostsQuery.posts,
+                ...timelineScreenDataQuery.posts,
                 edges: newEdges,
               },
             },
           });
         }
       },
+      onCompleted: () => {
+        toast.show('削除しました');
+      },
     });
-
-    toast.show('削除しました', { type: 'success' });
   };
 
   return {

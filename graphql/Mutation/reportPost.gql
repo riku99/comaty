@@ -1,0 +1,5 @@
+mutation ReportPost($id: Int!) {
+  reportPost(id: $id) {
+    id
+  }
+}

@@ -110,6 +110,7 @@ export const HomeScreen = ({ navigation }: Props) => {
       });
     }
   };
+
   return (
     <View style={styles.container}>
       <InfiniteFlatList
@@ -118,7 +119,8 @@ export const HomeScreen = ({ navigation }: Props) => {
         keyExtractor={(_, index) => index.toString()}
         numColumns={2}
         columnWrapperStyle={{
-          justifyContent: 'space-around',
+          justifyContent: 'space-between',
+          paddingHorizontal: 8,
         }}
         ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
         infiniteLoad={infiniteLoadUsers}

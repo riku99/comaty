@@ -28,6 +28,7 @@ import {
   useUploadProfileImageMutation,
 } from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
+import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
 import { getHeightList } from 'src/utils';
 import { PreviewImage } from './PreviewImage';
@@ -55,10 +56,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const [deleteTargetImageId, setDeleteTargetImageId] = useState<null | number>(
     null
   );
+  const myId = useMyId();
 
   useEffect(() => {
     if (data?.me) {
-      const { profileImages, nickname, bio } = data.me;
+      const { profileImages } = data.me;
       const _images = profileImages.map((img) => ({
         uri: img.url,
         id: img.id,
@@ -321,6 +323,20 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             width: '100%',
             position: 'absolute',
             bottom: safeAreaBottom,
+          }}
+          onPress={() => {
+            if (!myId) {
+              return;
+            }
+
+            navigation.navigate('UserProfile', {
+              id: myId,
+              previewData: {
+                nickname,
+                bio,
+                height,
+              },
+            });
           }}
         />
 

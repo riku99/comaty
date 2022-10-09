@@ -5,14 +5,19 @@ import { StyleSheet, View } from 'react-native';
 import { Tag } from 'src/components/ui/Tag';
 import { BottomSheetContentInUserProfileFragment } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { UserPreviewData } from 'src/types';
 
 type Props = {
   data: BottomSheetContentInUserProfileFragment;
+  previewData?: UserPreviewData;
 };
 
-export const BottomSheetContent = React.memo(({ data }: Props) => {
-  const { nickname, bio, age, myTags, height, blocking, blocked } = data;
+export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
+  const { age, blocking, blocked, myTags } = data;
   const blockingOrBlocked = blocking || blocked;
+  const nickname = previewData ? previewData.nickname : data.nickname;
+  const bio = previewData ? previewData.bio : data.bio;
+  const height = previewData ? previewData.height : data.height;
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>

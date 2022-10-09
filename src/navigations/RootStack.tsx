@@ -14,6 +14,7 @@ import { StoriesScreen } from 'src/screens/Stories';
 import { StoryViewersScreen } from 'src/screens/StoryViewers';
 import { TakeStoryScreen } from 'src/screens/TakeStory';
 import { UserProfileScreen } from 'src/screens/UserProfile';
+import { UserPreviewData } from 'src/types';
 import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
 import { EditProfileStack } from './EditProfileStack';
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   SignUpCompletion: undefined;
   UserProfile: {
     id: string;
+    previewData?: UserPreviewData;
   };
   EditProfileStack: undefined;
   TakeStory: undefined;
@@ -103,6 +105,11 @@ export const RootStack = () => {
           <Stack.Screen name="UserProfile" component={UserProfileScreen} />
           <Stack.Screen name="PostDetail" component={PostDetailScreen} />
           <Stack.Screen name="Stories" component={StoriesScreen} />
+          <Stack.Screen
+            name="EditProfileStack"
+            component={EditProfileStack}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
 
           <Stack.Group
             screenOptions={{
@@ -130,11 +137,6 @@ export const RootStack = () => {
             <Stack.Screen
               name="QuestionReplyCreation"
               component={QuestionReplyCreationScreen}
-            />
-            <Stack.Screen
-              name="EditProfileStack"
-              component={EditProfileStack}
-              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="TakeStory"

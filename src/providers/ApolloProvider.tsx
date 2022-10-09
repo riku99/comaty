@@ -124,6 +124,13 @@ export const ApolloProvider = ({ children }: Props) => {
             },
           },
         },
+        User: {
+          fields: {
+            profileImages: {
+              merge: (_, incoming) => incoming,
+            },
+          },
+        },
         Story: {
           fields: {
             seenList: relayStylePagination(),

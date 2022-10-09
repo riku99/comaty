@@ -27,6 +27,7 @@ import {
   useUnblockUserMutation,
   useUserProfileScreenDataQuery,
 } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
 import { getGraphQLError } from 'src/utils';
 import { BottomButtonGroup } from './BottomButtonGroup';
@@ -37,7 +38,7 @@ import { ProfileImages } from './ProfileImages';
 type Props = RootNavigationScreenProp<'UserProfile'>;
 
 export const UserProfileScreen = ({ navigation, route }: Props) => {
-  const { id } = route.params;
+  const { id, previewData } = route.params;
   const { data, loading } = useUserProfileScreenDataQuery({
     variables: {
       id,
@@ -57,6 +58,9 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
       }
     },
   });
+
+  const myId = useMyId();
+  const isMe = myId === id;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -85,7 +89,19 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
     }
   }, [data, navigation]);
 
+  const onDotsPress = () => {
+    if (isMe) {
+      return;
+    }
+
+    setModalVisible(true);
+  };
+
   const onBlockPress = () => {
+    if (isMe) {
+      return;
+    }
+
     Alert.alert('ブロックしますか？', '', [
       {
         text: 'キャンセル',
@@ -118,6 +134,10 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
   };
 
   const onUnblockPress = () => {
+    if (isMe) {
+      return;
+    }
+
     Alert.alert('解除してよろしいですか？', '', [
       {
         text: 'キャンセル',
@@ -167,18 +187,11 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
       <View style={styles.topContainer}>
         <BackButton />
 
-        <Pressable
-          style={styles.topButton}
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
+        <Pressable style={styles.topButton} onPress={onDotsPress}>
           <ThreeDots
             dotsSize={22}
             dotsColor={theme.secondary}
-            onPress={() => {
-              setModalVisible(true);
-            }}
+            onPress={onDotsPress}
           />
         </Pressable>
       </View>
@@ -189,6 +202,7 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
             BottomSheetContentInUserProfileFragmentDoc,
             data.user
           )}
+          previewData={previewData}
         />
       </BottomSheet>
 

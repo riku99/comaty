@@ -15,6 +15,7 @@ export const EditProfileStack = () => {
       screenOptions={{
         headerBackTitleVisible: false,
         headerShadowVisible: false,
+        gestureEnabled: false,
       }}
     >
       <Stack.Screen name="EditProfile" component={EditProfileScreen} />

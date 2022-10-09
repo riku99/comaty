@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
-import { useCallback, useLayoutEffect } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -25,7 +25,9 @@ type Props = RootNavigationScreenProp<'HomeMain'>;
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const { data, fetchMore } = useHomeScreenDataQuery();
+  const { data, fetchMore, refetch } = useHomeScreenDataQuery();
+
+  const [refreshing, setRefreshing] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -76,6 +78,17 @@ export const HomeScreen = ({ navigation }: Props) => {
     },
     []
   );
+
+  const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetch();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   if (!data) {
     return <Loading />;
@@ -132,6 +145,9 @@ export const HomeScreen = ({ navigation }: Props) => {
         }
         ListHeaderComponentStyle={styles.listHeader}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );

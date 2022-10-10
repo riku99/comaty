@@ -4,8 +4,8 @@ import React from 'react';
 import { Pressable } from 'react-native';
 import { ContentCreationButton } from 'src/components/ui/ContentCreationButton';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
-import { ChatList } from 'src/screens/ChatList';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
+import { MessageListScreen } from 'src/screens/MessageList';
 import { TimelineScreen } from 'src/screens/Timeline';
 import { theme } from 'src/styles';
 import { HomeStack } from './HomeStack';
@@ -15,7 +15,7 @@ export type TabParamList = {
   Home: undefined;
   Timeline: undefined;
   CreateStory: undefined;
-  ChatList: undefined;
+  MessageList: undefined;
   MyPage: undefined;
 };
 
@@ -86,8 +86,8 @@ export const BottomTab = React.memo(() => {
         }}
       />
       <Tab.Screen
-        name="ChatList"
-        component={ChatList}
+        name="MessageList"
+        component={MessageListScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <Ionicons

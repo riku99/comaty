@@ -1,4 +1,5 @@
 type AllStackParamList = import('../navigations/RootStack').RootStackParamList &
+  import('../navigations/BottomTab').TabParamList &
   import('../navigations/AuthStack').AuthStackParamList &
   import('../navigations/MyPageStack').MyPageStackParamList &
   import('../navigations/QuestionCreationStack').QuestionCreationStackParamList &

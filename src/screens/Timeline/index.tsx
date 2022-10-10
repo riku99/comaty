@@ -11,7 +11,7 @@ import {
 } from 'src/generated/graphql';
 import { useDeletePost } from 'src/hooks/post';
 
-type Props = RootNavigationScreenProp<'BottomTab'>;
+type Props = RootNavigationScreenProp<'Timeline'>;
 
 type PostItem = TimelineScreenDataQuery['posts']['edges'][number];
 

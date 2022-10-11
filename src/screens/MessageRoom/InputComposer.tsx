@@ -19,7 +19,7 @@ export const InputComposer = ({
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={[styles.input]}
           placeholder="メッセージを入力..."
           multiline
           value={inputValue}
@@ -45,7 +45,7 @@ export const InputComposer = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 60,
+    paddingVertical: 10,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -53,20 +53,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   inputContainer: {
-    height: 38,
     width: '94%',
     backgroundColor: '#EFEFEF',
     borderRadius: 18,
     paddingHorizontal: 16,
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 2,
+    alignItems: 'flex-end',
+    paddingTop: 10,
+    paddingBottom: 12,
     flexDirection: 'row',
   },
   input: {
     width: '80%',
-    height: '100%',
     fontSize: 16,
+    maxHeight: 88,
   },
   sendButton: {
     fontSize: 18,

@@ -1,4 +1,5 @@
 import { Text } from '@rneui/themed';
+import { MotiView } from 'moti';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { MessageBubbleDataInMessageRoomFragment } from 'src/generated/graphql';
@@ -56,7 +57,7 @@ export const MessageBubble = ({
     !isMyMseeage && (bubbleType === 'bottomChunk' || bubbleType === 'notChunk');
 
   return (
-    <View style={styles.container}>
+    <MotiView style={styles.container}>
       {showUserImage && (
         <ProfileImage
           imageData={sender.firstProfileImage}
@@ -86,12 +87,13 @@ export const MessageBubble = ({
         <Text
           style={{
             color: isMyMseeage ? '#fff' : undefined,
+            fontSize: 16,
           }}
         >
           {text}
         </Text>
       </View>
-    </View>
+    </MotiView>
   );
 };
 

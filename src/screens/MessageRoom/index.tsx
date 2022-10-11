@@ -55,6 +55,9 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [inputText, setInputText] = useState('');
   const [sendMessageMutation] = useSendMessageMutation();
+  const [inputComposerContainerHeight, setInputComposerContainerHeight] =
+    useState(68);
+  const [inputFocused, setInputFocused] = useState(false);
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -63,12 +66,20 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     };
   });
 
-  const listHeaderHeight = useSharedValue(60 + keyboardHeight);
+  const listHeaderHeight = useSharedValue(
+    inputComposerContainerHeight + keyboardHeight
+  );
   const listHeaderStyle = useAnimatedStyle(() => {
     return {
       height: listHeaderHeight.value,
     };
   });
+
+  useEffect(() => {
+    // listHeaderHeight.value = withTiming(
+    //   keyboardHeight + inputComposerContainerHeight - safeAreaBottom
+    // );
+  }, [inputComposerContainerHeight, safeAreaBottom, keyboardHeight]);
 
   useEffect(() => {
     if (data?.messageRoom.messages) {
@@ -83,7 +94,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       });
 
       listHeaderHeight.value = withTiming(
-        e.endCoordinates.height + 60 - safeAreaBottom,
+        e.endCoordinates.height + inputComposerContainerHeight - safeAreaBottom,
         {
           duration: e.duration,
         }
@@ -209,6 +220,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     }
   };
 
+  const [isMoreHeight, setIsMoreHeight] = useState(false);
+
   if (!data?.messageRoom) {
     return <Loading />;
   }
@@ -225,7 +238,22 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         contentContainerStyle={styles.contentContainer}
       />
 
-      <Animated.View style={[styles.inputContainer, composerStyle]}>
+      <Animated.View
+        style={[styles.inputContainer, composerStyle]}
+        onLayout={(e) => {
+          if (e.nativeEvent.layout.height > 68) {
+            setIsMoreHeight(true);
+          } else {
+            setIsMoreHeight(false);
+          }
+
+          if (e.nativeEvent.layout.height > 68 || isMoreHeight) {
+            listHeaderHeight.value = withTiming(
+              keyboardHeight + e.nativeEvent.layout.height - safeAreaBottom
+            );
+          }
+        }}
+      >
         <InputComposer
           inputValue={inputText}
           onChangeText={setInputText}

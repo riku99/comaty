@@ -1,3 +1,33 @@
+query MessageRoomScreenData(
+  $id: Int!
+  $messagesAfter: String
+  $messagesFirst: Int
+) {
+  messageRoom(id: $id) {
+    id
+    messages(after: $messagesAfter, first: $messagesFirst) {
+      edges {
+        node {
+          id
+          text
+          createdAt
+          sender {
+            id
+            nickname
+            firstProfileImage {
+              ...ProfileImage
+            }
+          }
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+
 query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
   user(id: $id) {
     id

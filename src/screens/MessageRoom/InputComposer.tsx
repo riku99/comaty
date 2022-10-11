@@ -5,9 +5,16 @@ import { theme } from 'src/styles';
 type Props = {
   inputValue: string;
   onChangeText: (text: string) => void;
+  onSendPress: () => void;
 };
 
-export const InputComposer = ({ inputValue, onChangeText }: Props) => {
+export const InputComposer = ({
+  inputValue,
+  onChangeText,
+  onSendPress,
+}: Props) => {
+  const sendDisabled = !inputValue;
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -19,8 +26,17 @@ export const InputComposer = ({ inputValue, onChangeText }: Props) => {
           onChangeText={onChangeText}
         />
 
-        <Pressable>
-          <Text style={styles.sendButton}>送信</Text>
+        <Pressable onPress={onSendPress} disabled={sendDisabled}>
+          <Text
+            style={[
+              styles.sendButton,
+              {
+                color: sendDisabled ? '#737373' : theme.primary,
+              },
+            ]}
+          >
+            送信
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -55,6 +71,5 @@ const styles = StyleSheet.create({
   sendButton: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme.primary,
   },
 });

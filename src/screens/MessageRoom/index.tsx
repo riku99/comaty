@@ -12,28 +12,32 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { range } from 'src/utils';
+import { Loading } from 'src/components/ui/Loading';
+import {
+  MessageRoomScreenDataQuery,
+  useMessageRoomScreenDataQuery,
+  useSendMessageMutation,
+} from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me';
 import { HeaderLeft } from './HeaderLeft';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
 import { BubbleType } from './types';
 
-const l = [...range(0, 22)].reverse();
-const ms = l.map((m, i) => {
-  return {
-    id: i,
-    text: 'Hello message' + m,
-    userId: (m > 10 && m !== 20) || m === 21 ? 0 : 1,
-    createdAt: new Date('2022-10-11T12:13:03'),
-  };
-});
-
-const myId = 0;
-
 type Props = RootNavigationScreenProp<'MessageRoom'>;
+
+type MessageItem =
+  MessageRoomScreenDataQuery['messageRoom']['messages']['edges'][number];
 
 export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const { userId, roomId } = route.params;
+  const myId = useMyId();
+
+  const { data } = useMessageRoomScreenDataQuery({
+    variables: {
+      id: roomId,
+    },
+  });
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -42,10 +46,11 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     });
   }, [userId, navigation]);
 
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<MessageItem[]>([]);
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [inputText, setInputText] = useState('');
+  const [sendMessageMutation] = useSendMessageMutation();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -60,6 +65,12 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       height: listHeaderHeight.value,
     };
   });
+
+  useEffect(() => {
+    if (data?.messageRoom.messages) {
+      setMessages(data?.messageRoom.messages.edges);
+    }
+  }, [data?.messageRoom.messages]);
 
   useEffect(() => {
     const subscription = Keyboard.addListener('keyboardWillShow', (e) => {
@@ -83,33 +94,37 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   }, [safeAreaBottom]);
 
   const renderMessageItem = useCallback(
-    ({ item, index }: { item: typeof ms[number]; index: number }) => {
-      const isMyMessage = item.userId === myId;
+    ({ item, index }: { item: MessageItem; index: number }) => {
+      const { sender, text } = item.node;
+      const isMyMessage = sender.id === myId;
 
-      const previousData = ms[index - 1];
-      const latorData = ms[index + 1];
+      const previousData = messages[index - 1];
+      const latorData = messages[index + 1];
+
+      const previousDataSender = previousData?.node?.sender;
+      const latorDataSender = latorData?.node?.sender;
 
       let bubbleType: BubbleType = 'notChunk';
 
-      if (item.userId === myId) {
-        if (previousData?.userId === myId && latorData?.userId === myId) {
+      if (isMyMessage) {
+        if (previousDataSender?.id === myId && latorDataSender?.id === myId) {
           bubbleType = 'middleChunk';
-        } else if (latorData?.userId === myId) {
+        } else if (latorDataSender?.id === myId) {
           bubbleType = 'bottomChunk';
-        } else if (previousData?.userId === myId) {
+        } else if (previousDataSender?.id === myId) {
           bubbleType = 'topChunk';
         }
       } else {
         if (
           previousData &&
-          previousData?.userId !== myId &&
+          previousDataSender?.id !== myId &&
           latorData &&
-          latorData?.userId !== myId
+          latorDataSender?.id !== myId
         ) {
           bubbleType = 'middleChunk';
-        } else if (latorData && latorData?.userId !== myId) {
+        } else if (latorData && latorDataSender?.id !== myId) {
           bubbleType = 'bottomChunk';
-        } else if (previousData && previousData?.userId !== myId) {
+        } else if (previousData && previousDataSender?.id !== myId) {
           bubbleType = 'topChunk';
         }
       }
@@ -134,14 +149,38 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         >
           <MessageBubble
             isMyMseeage={isMyMessage}
-            text={item.text}
+            text={text}
             bubbleType={bubbleType}
           />
         </View>
       );
     },
-    []
+    [messages]
   );
+
+  const onSendPress = async () => {
+    try {
+      setInputText('');
+      await sendMessageMutation({
+        variables: {
+          roomId,
+          input: {
+            text: inputText,
+          },
+        },
+        onCompleted: (response) => {
+          console.log(response);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+    }
+  };
+
+  if (!data?.messageRoom) {
+    return <Loading />;
+  }
 
   return (
     <View
@@ -152,20 +191,22 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       <SafeAreaView>
         <FlatList
           renderItem={renderMessageItem}
-          data={ms}
-          keyExtractor={(item) => item.id.toString()}
+          data={messages}
+          keyExtractor={(item) => item.node.id.toString()}
           keyboardShouldPersistTaps="always"
           ListHeaderComponent={() => (
             <Animated.View style={[listHeaderStyle]} />
           )}
           inverted
-          contentContainerStyle={{
-            paddingHorizontal: 8,
-          }}
+          contentContainerStyle={styles.contentContainer}
         />
 
         <Animated.View style={[styles.inputContainer, composerStyle]}>
-          <InputComposer inputValue={inputText} onChangeText={setInputText} />
+          <InputComposer
+            inputValue={inputText}
+            onChangeText={setInputText}
+            onSendPress={onSendPress}
+          />
         </Animated.View>
       </SafeAreaView>
     </View>
@@ -175,6 +216,12 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
+    paddingHorizontal: 8,
+    height: '100%',
+    justifyContent: 'flex-end',
+    paddingBottom: 4,
   },
   inputContainer: {
     position: 'absolute',

@@ -85,6 +85,10 @@ export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
 }
 
+export enum GetMessageRoomError {
+  NotFound = 'NOT_FOUND'
+}
+
 export enum GetPostError {
   NotFound = 'NOT_FOUND'
 }
@@ -137,13 +141,32 @@ export type Message = {
   text: Scalars['String'];
 };
 
+export type MessageConnection = {
+  __typename?: 'MessageConnection';
+  edges: Array<Maybe<MessageEdge>>;
+  pageInfo: PageInfo;
+};
+
+export type MessageEdge = {
+  __typename?: 'MessageEdge';
+  cursor: Scalars['String'];
+  node: Message;
+};
+
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
+  messages?: Maybe<MessageConnection>;
   recipient?: Maybe<User>;
   sender?: Maybe<User>;
   updatedAt: Scalars['String'];
+};
+
+
+export type MessageRoomMessagesArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -337,6 +360,7 @@ export type PostEdge = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Me>;
+  messageRoom: MessageRoom;
   nearbyUsers: UserConnection;
   post: Post;
   posts: PostConnection;
@@ -347,6 +371,11 @@ export type Query = {
   story: Story;
   storyUsers: UserConnection;
   user: User;
+};
+
+
+export type QueryMessageRoomArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -618,6 +647,14 @@ export type BlockUserMutationVariables = Exact<{
 
 export type BlockUserMutation = { __typename?: 'Mutation', blockUser?: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null } | null };
 
+export type SendMessageMutationVariables = Exact<{
+  roomId: Scalars['Int'];
+  input: CreateMessageInput;
+}>;
+
+
+export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string } };
+
 export type CreateMessageRoomMutationVariables = Exact<{
   recipientId: Scalars['ID'];
 }>;
@@ -853,6 +890,15 @@ export type HomeStoriesQuery = { __typename?: 'Query', me?: { __typename?: 'Me',
 export type HomeNearByUsersFragment = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', cursor: string, node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
 export type HomeStoriesFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null, storyUsers: { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
+
+export type MessageRoomScreenDataQueryVariables = Exact<{
+  id: Scalars['Int'];
+  messagesAfter?: InputMaybe<Scalars['String']>;
+  messagesFirst?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
 
 export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1197,6 +1243,42 @@ export function useBlockUserMutation(baseOptions?: Apollo.MutationHookOptions<Bl
 export type BlockUserMutationHookResult = ReturnType<typeof useBlockUserMutation>;
 export type BlockUserMutationResult = Apollo.MutationResult<BlockUserMutation>;
 export type BlockUserMutationOptions = Apollo.BaseMutationOptions<BlockUserMutation, BlockUserMutationVariables>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($roomId: Int!, $input: CreateMessageInput!) {
+  createMessage(roomId: $roomId, input: $input) {
+    id
+    text
+    createdAt
+  }
+}
+    `;
+export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const CreateMessageRoomDocument = gql`
     mutation CreateMessageRoom($recipientId: ID!) {
   createMessageRoom(recipientId: $recipientId) {
@@ -2311,6 +2393,64 @@ export function useHomeStoriesLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type HomeStoriesQueryHookResult = ReturnType<typeof useHomeStoriesQuery>;
 export type HomeStoriesLazyQueryHookResult = ReturnType<typeof useHomeStoriesLazyQuery>;
 export type HomeStoriesQueryResult = Apollo.QueryResult<HomeStoriesQuery, HomeStoriesQueryVariables>;
+export const MessageRoomScreenDataDocument = gql`
+    query MessageRoomScreenData($id: Int!, $messagesAfter: String, $messagesFirst: Int) {
+  messageRoom(id: $id) {
+    id
+    messages(after: $messagesAfter, first: $messagesFirst) {
+      edges {
+        node {
+          id
+          text
+          createdAt
+          sender {
+            id
+            nickname
+            firstProfileImage {
+              ...ProfileImage
+            }
+          }
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useMessageRoomScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomScreenDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      messagesAfter: // value for 'messagesAfter'
+ *      messagesFirst: // value for 'messagesFirst'
+ *   },
+ * });
+ */
+export function useMessageRoomScreenDataQuery(baseOptions: Apollo.QueryHookOptions<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>(MessageRoomScreenDataDocument, options);
+      }
+export function useMessageRoomScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>(MessageRoomScreenDataDocument, options);
+        }
+export type MessageRoomScreenDataQueryHookResult = ReturnType<typeof useMessageRoomScreenDataQuery>;
+export type MessageRoomScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomScreenDataLazyQuery>;
+export type MessageRoomScreenDataQueryResult = Apollo.QueryResult<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>;
 export const NicknameAndProfileImageInMessageRoomScreenDocument = gql`
     query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
   user(id: $id) {

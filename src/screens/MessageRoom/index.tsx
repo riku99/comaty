@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import {
   FlatList,
   Keyboard,
@@ -12,7 +12,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNicknameAndProfileImageInMessageRoomScreenQuery } from 'src/generated/graphql';
 import { range } from 'src/utils';
+import { HeaderLeft } from './HeaderLeft';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
 import { BubbleType } from './types';
@@ -29,7 +31,25 @@ const ms = l.map((m, i) => {
 
 const myId = 0;
 
-export const MessageRoomScreen = () => {
+type Props = RootNavigationScreenProp<'MessageRoom'>;
+
+export const MessageRoomScreen = ({ navigation, route }: Props) => {
+  const { userId } = route.params;
+  const { data: nickNameAndImageData } =
+    useNicknameAndProfileImageInMessageRoomScreenQuery({
+      variables: {
+        id: userId,
+      },
+      fetchPolicy: 'cache-only',
+    });
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: '',
+      headerLeft: () => <HeaderLeft userId={userId} />,
+    });
+  }, [userId, navigation]);
+
   const [messages, setMessages] = useState([]);
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [keyboardHeight, setKeyboardHeight] = useState(0);

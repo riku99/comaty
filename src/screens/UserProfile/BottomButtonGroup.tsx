@@ -21,7 +21,9 @@ export const BottomButtonGroup = ({ data }: Props) => {
   };
 
   const onSendPress = async () => {
-    navigation.navigate('MessageRoom');
+    navigation.navigate('MessageRoom', {
+      userId: data.id,
+    });
   };
 
   return (

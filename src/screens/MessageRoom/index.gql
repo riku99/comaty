@@ -1,0 +1,9 @@
+query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
+  user(id: $id) {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}

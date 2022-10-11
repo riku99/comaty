@@ -48,7 +48,9 @@ export type RootStackParamList = {
   PostDetail: {
     id: number;
   };
-  MessageRoom: undefined;
+  MessageRoom: {
+    userId: string;
+  };
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {

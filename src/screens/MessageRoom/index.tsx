@@ -243,6 +243,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 8,
     paddingBottom: 4,
+    justifyContent: 'flex-end',
   },
   inputContainer: {
     position: 'absolute',

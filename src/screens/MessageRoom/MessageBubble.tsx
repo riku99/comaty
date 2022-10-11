@@ -1,5 +1,5 @@
 import { Text } from '@rneui/themed';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ViewStyle } from 'react-native';
 import { BubbleType } from './types';
 
 type Props = {
@@ -9,6 +9,41 @@ type Props = {
 };
 
 export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
+  const getBorderRadiusStyle = (): ViewStyle => {
+    let borderBottomRightRadius = undefined;
+    let borderTopRightRadius = undefined;
+    let borderTopLeftRadius = undefined;
+    let borderBottomLeftRadius = undefined;
+
+    if (isMyMseeage) {
+      borderBottomRightRadius =
+        bubbleType === 'topChunk' || bubbleType === 'middleChunk'
+          ? 3
+          : undefined;
+      borderTopRightRadius =
+        bubbleType === 'middleChunk' || bubbleType === 'bottomChunk'
+          ? 3
+          : undefined;
+    } else {
+      borderTopLeftRadius =
+        bubbleType === 'bottomChunk' || bubbleType === 'middleChunk'
+          ? 3
+          : undefined;
+      borderBottomLeftRadius =
+        bubbleType === 'middleChunk' || bubbleType === 'topChunk'
+          ? 3
+          : undefined;
+    }
+
+    return {
+      borderRadius: 14,
+      borderBottomRightRadius,
+      borderTopRightRadius,
+      borderTopLeftRadius,
+      borderBottomLeftRadius,
+    };
+  };
+
   return (
     <View style={styles.container}>
       {!isMyMseeage && (
@@ -26,18 +61,10 @@ export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
       <View
         style={[
           styles.bubble,
+          getBorderRadiusStyle(),
           {
             backgroundColor: isMyMseeage ? '#6778FF' : '#ECECEC',
             marginLeft: isMyMseeage ? 0 : 4,
-            borderRadius: 14,
-            borderBottomRightRadius:
-              bubbleType === 'topChunk' || bubbleType === 'middleChunk'
-                ? 3
-                : undefined,
-            borderTopRightRadius:
-              bubbleType === 'middleChunk' || bubbleType === 'bottomChunk'
-                ? 3
-                : undefined,
           },
         ]}
       >

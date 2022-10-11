@@ -78,13 +78,38 @@ export const MessageRoomScreen = () => {
 
       let bubbleType: BubbleType = 'notChunk';
 
-      if (previousData?.userId === myId && latorData?.userId === myId) {
-        bubbleType = 'middleChunk';
-      } else if (latorData?.userId === myId) {
-        bubbleType = 'bottomChunk';
-      } else if (previousData?.userId === myId) {
-        bubbleType = 'topChunk';
+      if (item.userId === myId) {
+        if (previousData?.userId === myId && latorData?.userId === myId) {
+          bubbleType = 'middleChunk';
+        } else if (latorData?.userId === myId) {
+          bubbleType = 'bottomChunk';
+        } else if (previousData?.userId === myId) {
+          bubbleType = 'topChunk';
+        }
+      } else {
+        if (
+          previousData &&
+          previousData?.userId !== myId &&
+          latorData &&
+          latorData?.userId !== myId
+        ) {
+          bubbleType = 'middleChunk';
+        } else if (latorData && latorData?.userId !== myId) {
+          bubbleType = 'bottomChunk';
+        } else if (previousData && previousData?.userId !== myId) {
+          bubbleType = 'topChunk';
+        }
       }
+
+      // if (index === 19) {
+      //   console.log('item');
+      //   console.log(item);
+      //   console.log('previous');
+      //   console.log(previousData);
+      //   console.log('lator');
+      //   console.log(latorData);
+      //   console.log(bubbleType);
+      // }
 
       return (
         <View

@@ -214,33 +214,25 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
-      <SafeAreaView>
-        <FlatList
-          renderItem={renderMessageItem}
-          data={messages}
-          keyExtractor={(item) => item.node.id.toString()}
-          keyboardShouldPersistTaps="always"
-          ListHeaderComponent={() => (
-            <Animated.View style={[listHeaderStyle]} />
-          )}
-          inverted
-          contentContainerStyle={styles.contentContainer}
-        />
+    <SafeAreaView style={[styles.container]}>
+      <FlatList
+        renderItem={renderMessageItem}
+        data={messages}
+        keyExtractor={(item) => item.node.id.toString()}
+        keyboardShouldPersistTaps="always"
+        ListHeaderComponent={() => <Animated.View style={[listHeaderStyle]} />}
+        inverted
+        contentContainerStyle={styles.contentContainer}
+      />
 
-        <Animated.View style={[styles.inputContainer, composerStyle]}>
-          <InputComposer
-            inputValue={inputText}
-            onChangeText={setInputText}
-            onSendPress={onSendPress}
-          />
-        </Animated.View>
-      </SafeAreaView>
-    </View>
+      <Animated.View style={[styles.inputContainer, composerStyle]}>
+        <InputComposer
+          inputValue={inputText}
+          onChangeText={setInputText}
+          onSendPress={onSendPress}
+        />
+      </Animated.View>
+    </SafeAreaView>
   );
 };
 
@@ -250,8 +242,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 8,
-    height: '100%',
-    justifyContent: 'flex-end',
     paddingBottom: 4,
   },
   inputContainer: {

@@ -15,6 +15,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { range } from 'src/utils';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
+import { BubbleType } from './types';
 
 const l = [...range(0, 20)].reverse();
 const ms = l.map((m, i) => {
@@ -22,7 +23,7 @@ const ms = l.map((m, i) => {
     id: i,
     text: 'Hello message' + m,
     userId: m > 10 ? 0 : 1,
-    createdAt: new Date(),
+    createdAt: new Date('2022-10-11T12:13:03'),
   };
 });
 
@@ -69,16 +70,35 @@ export const MessageRoomScreen = () => {
   }, [safeAreaBottom]);
 
   const renderMessageItem = useCallback(
-    ({ item }: { item: typeof ms[number] }) => {
+    ({ item, index }: { item: typeof ms[number]; index: number }) => {
       const isMyMessage = item.userId === myId;
+
+      const previousData = ms[index - 1];
+      const latorData = ms[index + 1];
+
+      let bubbleType: BubbleType = 'notChunk';
+
+      if (previousData?.userId === myId && latorData?.userId === myId) {
+        bubbleType = 'middleChunk';
+      } else if (latorData?.userId === myId) {
+        bubbleType = 'bottomChunk';
+      } else if (previousData?.userId === myId) {
+        bubbleType = 'topChunk';
+      }
+
       return (
         <View
           style={{
             flexDirection: 'row',
             justifyContent: isMyMessage ? 'flex-end' : 'flex-start',
+            marginTop: 2,
           }}
         >
-          <MessageBubble isMyMseeage={isMyMessage} text={item.text} />
+          <MessageBubble
+            isMyMseeage={isMyMessage}
+            text={item.text}
+            bubbleType={bubbleType}
+          />
         </View>
       );
     },
@@ -97,7 +117,6 @@ export const MessageRoomScreen = () => {
           data={ms}
           keyExtractor={(item) => item.id.toString()}
           keyboardShouldPersistTaps="always"
-          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
           ListHeaderComponent={() => (
             <Animated.View style={[listHeaderStyle]} />
           )}

@@ -20,12 +20,16 @@ export const BottomButtonGroup = ({ data }: Props) => {
     });
   };
 
+  const onSendPress = async () => {
+    navigation.navigate('MessageRoom');
+  };
+
   return (
     <HStack style={styles.content} space={50}>
       <Pressable style={styles.showGroupButton}>
         <MaterialIcons name="group" size={ICON_SIZE} color={theme.secondary} />
       </Pressable>
-      <Pressable style={styles.sendMessageButton}>
+      <Pressable style={styles.sendMessageButton} onPress={onSendPress}>
         <Feather name="send" size={ICON_SIZE} color="white" />
       </Pressable>
       {!!data.stories.length && (

@@ -898,7 +898,7 @@ export type MessageRoomScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
+export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
 
 export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -906,6 +906,8 @@ export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
 
 
 export type NicknameAndProfileImageInMessageRoomScreenQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+
+export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', id: number, text: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
 
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1154,6 +1156,18 @@ export const HomeStoriesFragmentDoc = gql`
 }
     ${StoryUserCircleFragmentDoc}
 ${PageInfoFragmentDoc}`;
+export const MessageBubbleDataInMessageRoomFragmentDoc = gql`
+    fragment MessageBubbleDataInMessageRoom on Message {
+  id
+  text
+  sender {
+    id
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -2405,11 +2419,8 @@ export const MessageRoomScreenDataDocument = gql`
           createdAt
           sender {
             id
-            nickname
-            firstProfileImage {
-              ...ProfileImage
-            }
           }
+          ...MessageBubbleDataInMessageRoom
         }
         cursor
       }
@@ -2419,7 +2430,7 @@ export const MessageRoomScreenDataDocument = gql`
     }
   }
 }
-    ${ProfileImageFragmentDoc}
+    ${MessageBubbleDataInMessageRoomFragmentDoc}
 ${PageInfoFragmentDoc}`;
 
 /**

@@ -1,14 +1,22 @@
 import { Text } from '@rneui/themed';
 import { StyleSheet, View, ViewStyle } from 'react-native';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { MessageBubbleDataInMessageRoomFragment } from 'src/generated/graphql';
 import { BubbleType } from './types';
 
 type Props = {
-  text: string;
   isMyMseeage: boolean;
   bubbleType: BubbleType;
+  fragmentData: MessageBubbleDataInMessageRoomFragment;
 };
 
-export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
+export const MessageBubble = ({
+  isMyMseeage,
+  bubbleType,
+  fragmentData,
+}: Props) => {
+  const { sender, text } = fragmentData;
+
   const getBorderRadiusStyle = (): ViewStyle => {
     let borderBottomRightRadius = undefined;
     let borderTopRightRadius = undefined;
@@ -50,12 +58,12 @@ export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
   return (
     <View style={styles.container}>
       {showUserImage && (
-        <View
+        <ProfileImage
+          imageData={sender.firstProfileImage}
           style={{
             height: IMAGE_SIZE,
             width: IMAGE_SIZE,
             borderRadius: IMAGE_SIZE,
-            backgroundColor: 'pink',
             marginTop: 8,
           }}
         />

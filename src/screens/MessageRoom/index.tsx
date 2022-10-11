@@ -1,3 +1,4 @@
+import { filter } from 'graphql-anywhere';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import {
   FlatList,
@@ -14,6 +15,8 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Loading } from 'src/components/ui/Loading';
 import {
+  MessageBubbleDataInMessageRoomFragment,
+  MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomScreenDataQuery,
   useMessageRoomScreenDataQuery,
   useSendMessageMutation,
@@ -95,7 +98,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
 
   const renderMessageItem = useCallback(
     ({ item, index }: { item: MessageItem; index: number }) => {
-      const { sender, text } = item.node;
+      const { sender } = item.node;
       const isMyMessage = sender.id === myId;
 
       const previousData = messages[index - 1];
@@ -129,16 +132,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         }
       }
 
-      // if (index === 19) {
-      //   console.log('item');
-      //   console.log(item);
-      //   console.log('previous');
-      //   console.log(previousData);
-      //   console.log('lator');
-      //   console.log(latorData);
-      //   console.log(bubbleType);
-      // }
-
       return (
         <View
           style={{
@@ -149,8 +142,11 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         >
           <MessageBubble
             isMyMseeage={isMyMessage}
-            text={text}
             bubbleType={bubbleType}
+            fragmentData={filter<MessageBubbleDataInMessageRoomFragment>(
+              MessageBubbleDataInMessageRoomFragmentDoc,
+              item.node
+            )}
           />
         </View>
       );

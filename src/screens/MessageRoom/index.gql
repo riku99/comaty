@@ -13,11 +13,8 @@ query MessageRoomScreenData(
           createdAt
           sender {
             id
-            nickname
-            firstProfileImage {
-              ...ProfileImage
-            }
           }
+          ...MessageBubbleDataInMessageRoom
         }
         cursor
       }
@@ -32,6 +29,17 @@ query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
   user(id: $id) {
     id
     nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}
+
+fragment MessageBubbleDataInMessageRoom on Message {
+  id
+  text
+  sender {
+    id
     firstProfileImage {
       ...ProfileImage
     }

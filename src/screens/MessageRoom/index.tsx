@@ -12,7 +12,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNicknameAndProfileImageInMessageRoomScreenQuery } from 'src/generated/graphql';
 import { range } from 'src/utils';
 import { HeaderLeft } from './HeaderLeft';
 import { InputComposer } from './InputComposer';
@@ -34,14 +33,7 @@ const myId = 0;
 type Props = RootNavigationScreenProp<'MessageRoom'>;
 
 export const MessageRoomScreen = ({ navigation, route }: Props) => {
-  const { userId } = route.params;
-  const { data: nickNameAndImageData } =
-    useNicknameAndProfileImageInMessageRoomScreenQuery({
-      variables: {
-        id: userId,
-      },
-      fetchPolicy: 'cache-only',
-    });
+  const { userId, roomId } = route.params;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -53,6 +45,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const [messages, setMessages] = useState([]);
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [inputText, setInputText] = useState('');
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -172,7 +165,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         />
 
         <Animated.View style={[styles.inputContainer, composerStyle]}>
-          <InputComposer />
+          <InputComposer inputValue={inputText} onChangeText={setInputText} />
         </Animated.View>
       </SafeAreaView>
     </View>

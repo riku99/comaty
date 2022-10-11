@@ -2,7 +2,12 @@ import { Text } from '@rneui/themed';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { theme } from 'src/styles';
 
-export const InputComposer = () => {
+type Props = {
+  inputValue: string;
+  onChangeText: (text: string) => void;
+};
+
+export const InputComposer = ({ inputValue, onChangeText }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -10,6 +15,8 @@ export const InputComposer = () => {
           style={styles.input}
           placeholder="メッセージを入力..."
           multiline
+          value={inputValue}
+          onChangeText={onChangeText}
         />
 
         <Pressable>

@@ -1,0 +1,5 @@
+mutation CreateMessageRoom($recipientId: ID!) {
+  createMessageRoom(recipientId: $recipientId) {
+    id
+  }
+}

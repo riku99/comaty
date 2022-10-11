@@ -50,6 +50,7 @@ export type RootStackParamList = {
   };
   MessageRoom: {
     userId: string;
+    roomId: number;
   };
   QuestionCreationStack: undefined;
   QuestionReplyCreation:

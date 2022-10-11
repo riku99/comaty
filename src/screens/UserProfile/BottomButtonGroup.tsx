@@ -1,10 +1,14 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import { SkypeIndicator } from 'react-native-indicators';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { HStack } from 'src/components/ui/HStack';
-import { BottomButtonGroupInUserProfileFragment } from 'src/generated/graphql';
+import {
+  BottomButtonGroupInUserProfileFragment,
+  useCreateMessageRoomMutation,
+} from 'src/generated/graphql';
 import { theme } from 'src/styles';
 
 type Props = {
@@ -13,6 +17,9 @@ type Props = {
 
 export const BottomButtonGroup = ({ data }: Props) => {
   const navigation = useNavigation<RootNavigationProp<'UserProfile'>>();
+  const [createMessageRoomMutation] = useCreateMessageRoomMutation();
+  const [creatingMessageRoom, setCreatingMessageRoom] = useState(false);
+
   const onStoryUserPress = () => {
     navigation.push('Stories', {
       startingIndex: 0,
@@ -21,9 +28,23 @@ export const BottomButtonGroup = ({ data }: Props) => {
   };
 
   const onSendPress = async () => {
-    navigation.navigate('MessageRoom', {
-      userId: data.id,
-    });
+    try {
+      setCreatingMessageRoom(true);
+      await createMessageRoomMutation({
+        variables: {
+          recipientId: data.id,
+        },
+        onCompleted: (response) => {
+          navigation.navigate('MessageRoom', {
+            userId: data.id,
+            roomId: response.createMessageRoom.id,
+          });
+        },
+      });
+    } catch (e) {
+    } finally {
+      setCreatingMessageRoom(false);
+    }
   };
 
   return (
@@ -31,9 +52,19 @@ export const BottomButtonGroup = ({ data }: Props) => {
       <Pressable style={styles.showGroupButton}>
         <MaterialIcons name="group" size={ICON_SIZE} color={theme.secondary} />
       </Pressable>
-      <Pressable style={styles.sendMessageButton} onPress={onSendPress}>
-        <Feather name="send" size={ICON_SIZE} color="white" />
+
+      <Pressable
+        style={styles.sendMessageButton}
+        onPress={onSendPress}
+        disabled={creatingMessageRoom}
+      >
+        {creatingMessageRoom ? (
+          <SkypeIndicator color="#fff" size={24} />
+        ) : (
+          <Feather name="send" size={ICON_SIZE} color="white" />
+        )}
       </Pressable>
+
       {!!data.stories.length && (
         <StoryUserCircle
           storyUserData={data}

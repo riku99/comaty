@@ -5,7 +5,6 @@ import {
   Keyboard,
   SafeAreaView,
   StyleSheet,
-  TextInput,
   View,
 } from 'react-native';
 import Animated, {
@@ -15,10 +14,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { range } from 'src/utils';
+import { InputComposer } from './InputComposer';
 
 const l = [...range(0, 20)];
-
-const AnimatedFlastList = Animated.createAnimatedComponent<any>(FlatList);
 
 export const MessageRoomScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -90,26 +88,13 @@ export const MessageRoomScreen = () => {
             <Animated.View style={[listHeaderStyle]} />
           )}
           inverted
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+          }}
         />
 
-        <Animated.View
-          style={[
-            {
-              backgroundColor: 'pink',
-              height: 60,
-              position: 'absolute',
-              width: '100%',
-            },
-            composerStyle,
-          ]}
-        >
-          <TextInput
-            style={{
-              height: 30,
-              width: '100%',
-              backgroundColor: 'red',
-            }}
-          />
+        <Animated.View style={[styles.inputContainer, composerStyle]}>
+          <InputComposer />
         </Animated.View>
       </SafeAreaView>
     </View>
@@ -119,5 +104,9 @@ export const MessageRoomScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  inputContainer: {
+    position: 'absolute',
+    width: '100%',
   },
 });

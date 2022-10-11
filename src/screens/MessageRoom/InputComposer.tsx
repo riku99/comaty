@@ -6,7 +6,11 @@ export const InputComposer = () => {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} placeholder="メッセージを入力..." />
+        <TextInput
+          style={styles.input}
+          placeholder="メッセージを入力..."
+          multiline
+        />
 
         <Pressable>
           <Text style={styles.sendButton}>送信</Text>

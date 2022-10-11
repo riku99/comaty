@@ -1,4 +1,3 @@
-import { Text } from '@rneui/themed';
 import { useCallback, useEffect, useState } from 'react';
 import {
   FlatList,
@@ -15,8 +14,19 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { range } from 'src/utils';
 import { InputComposer } from './InputComposer';
+import { MessageBubble } from './MessageBubble';
 
-const l = [...range(0, 20)];
+const l = [...range(0, 20)].reverse();
+const ms = l.map((m, i) => {
+  return {
+    id: i,
+    text: 'Hello message' + m,
+    userId: m > 10 ? 0 : 1,
+    createdAt: new Date(),
+  };
+});
+
+const myId = 0;
 
 export const MessageRoomScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -58,18 +68,22 @@ export const MessageRoomScreen = () => {
     };
   }, [safeAreaBottom]);
 
-  const renderMessageItem = useCallback(({ item }: { item: number }) => {
-    return (
-      <View
-        style={{
-          height: 40,
-          backgroundColor: 'gray',
-        }}
-      >
-        <Text>{item}</Text>
-      </View>
-    );
-  }, []);
+  const renderMessageItem = useCallback(
+    ({ item }: { item: typeof ms[number] }) => {
+      const isMyMessage = item.userId === myId;
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: isMyMessage ? 'flex-end' : 'flex-start',
+          }}
+        >
+          <MessageBubble isMyMseeage={isMyMessage} text={item.text} />
+        </View>
+      );
+    },
+    []
+  );
 
   return (
     <View
@@ -80,8 +94,8 @@ export const MessageRoomScreen = () => {
       <SafeAreaView>
         <FlatList
           renderItem={renderMessageItem}
-          data={l}
-          keyExtractor={(item) => item.toString()}
+          data={ms}
+          keyExtractor={(item) => item.id.toString()}
           keyboardShouldPersistTaps="always"
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
           ListHeaderComponent={() => (

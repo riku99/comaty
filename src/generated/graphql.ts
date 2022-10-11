@@ -647,14 +647,6 @@ export type BlockUserMutationVariables = Exact<{
 
 export type BlockUserMutation = { __typename?: 'Mutation', blockUser?: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null } | null };
 
-export type SendMessageMutationVariables = Exact<{
-  roomId: Scalars['Int'];
-  input: CreateMessageInput;
-}>;
-
-
-export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string } };
-
 export type CreateMessageRoomMutationVariables = Exact<{
   recipientId: Scalars['ID'];
 }>;
@@ -759,6 +751,14 @@ export type ReportStoryMutationVariables = Exact<{
 
 
 export type ReportStoryMutation = { __typename?: 'Mutation', reportStory?: { __typename?: 'Story', id: number } | null };
+
+export type SendMessageMutationVariables = Exact<{
+  roomId: Scalars['Int'];
+  input: CreateMessageInput;
+}>;
+
+
+export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } };
 
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
@@ -907,7 +907,7 @@ export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
 
 export type NicknameAndProfileImageInMessageRoomScreenQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
-export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', id: number, text: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
 
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1160,6 +1160,7 @@ export const MessageBubbleDataInMessageRoomFragmentDoc = gql`
     fragment MessageBubbleDataInMessageRoom on Message {
   id
   text
+  createdAt
   sender {
     id
     firstProfileImage {
@@ -1257,42 +1258,6 @@ export function useBlockUserMutation(baseOptions?: Apollo.MutationHookOptions<Bl
 export type BlockUserMutationHookResult = ReturnType<typeof useBlockUserMutation>;
 export type BlockUserMutationResult = Apollo.MutationResult<BlockUserMutation>;
 export type BlockUserMutationOptions = Apollo.BaseMutationOptions<BlockUserMutation, BlockUserMutationVariables>;
-export const SendMessageDocument = gql`
-    mutation SendMessage($roomId: Int!, $input: CreateMessageInput!) {
-  createMessage(roomId: $roomId, input: $input) {
-    id
-    text
-    createdAt
-  }
-}
-    `;
-export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
-
-/**
- * __useSendMessageMutation__
- *
- * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSendMessageMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
- *   variables: {
- *      roomId: // value for 'roomId'
- *      input: // value for 'input'
- *   },
- * });
- */
-export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
-      }
-export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
-export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
-export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const CreateMessageRoomDocument = gql`
     mutation CreateMessageRoom($recipientId: ID!) {
   createMessageRoom(recipientId: $recipientId) {
@@ -1808,6 +1773,41 @@ export function useReportStoryMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ReportStoryMutationHookResult = ReturnType<typeof useReportStoryMutation>;
 export type ReportStoryMutationResult = Apollo.MutationResult<ReportStoryMutation>;
 export type ReportStoryMutationOptions = Apollo.BaseMutationOptions<ReportStoryMutation, ReportStoryMutationVariables>;
+export const SendMessageDocument = gql`
+    mutation SendMessage($roomId: Int!, $input: CreateMessageInput!) {
+  createMessage(roomId: $roomId, input: $input) {
+    id
+    ...MessageBubbleDataInMessageRoom
+  }
+}
+    ${MessageBubbleDataInMessageRoomFragmentDoc}`;
+export type SendMessageMutationFn = Apollo.MutationFunction<SendMessageMutation, SendMessageMutationVariables>;
+
+/**
+ * __useSendMessageMutation__
+ *
+ * To run a mutation, you first call `useSendMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendMessageMutation, { data, loading, error }] = useSendMessageMutation({
+ *   variables: {
+ *      roomId: // value for 'roomId'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<SendMessageMutation, SendMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendMessageMutation, SendMessageMutationVariables>(SendMessageDocument, options);
+      }
+export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
+export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
+export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($input: CreateUserInput!) {
   createUser(input: $input) {

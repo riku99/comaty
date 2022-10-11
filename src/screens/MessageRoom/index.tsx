@@ -17,6 +17,7 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
+  MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   useMessageRoomScreenDataQuery,
   useSendMessageMutation,
@@ -164,8 +165,42 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
             text: inputText,
           },
         },
-        onCompleted: (response) => {
-          console.log(response);
+        update: (cache, { data: responseData }) => {
+          if (!responseData) {
+            return;
+          }
+
+          const cachedMessageRoomScreenDataQuery =
+            cache.readQuery<MessageRoomScreenDataQuery>({
+              query: MessageRoomScreenDataDocument,
+              variables: {
+                id: roomId,
+              },
+            });
+
+          if (cachedMessageRoomScreenDataQuery) {
+            const newEdge = {
+              node: responseData.createMessage,
+              cursor: '',
+            };
+            const newEdges = [
+              newEdge,
+              ...cachedMessageRoomScreenDataQuery.messageRoom.messages.edges,
+            ];
+
+            cache.writeQuery({
+              query: MessageRoomScreenDataDocument,
+              data: {
+                messageRoom: {
+                  ...cachedMessageRoomScreenDataQuery.messageRoom,
+                  messages: {
+                    ...cachedMessageRoomScreenDataQuery.messageRoom.messages,
+                    edges: newEdges,
+                  },
+                },
+              },
+            });
+          }
         },
       });
     } catch (e) {

@@ -1,7 +1,7 @@
 import { HeaderBackButton } from '@react-navigation/elements';
 import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { useNicknameAndProfileImageInMessageRoomScreenQuery } from 'src/generated/graphql';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const HeaderLeft = ({ userId }: Props) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<RootNavigationProp<'MessageRoom'>>();
 
   const { data: nickNameAndImageData } =
     useNicknameAndProfileImageInMessageRoomScreenQuery({
@@ -28,7 +28,14 @@ export const HeaderLeft = ({ userId }: Props) => {
         }}
       />
       {nickNameAndImageData && (
-        <View style={styles.nameAndImage}>
+        <Pressable
+          style={styles.nameAndImage}
+          onPress={() => {
+            navigation.push('UserProfile', {
+              id: userId,
+            });
+          }}
+        >
           <ProfileImage
             imageData={nickNameAndImageData.user.firstProfileImage}
             style={styles.image}
@@ -37,7 +44,7 @@ export const HeaderLeft = ({ userId }: Props) => {
           <Text style={styles.nickname}>
             {nickNameAndImageData.user.nickname}
           </Text>
-        </View>
+        </Pressable>
       )}
     </View>
   );

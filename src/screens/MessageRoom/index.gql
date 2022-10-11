@@ -38,6 +38,7 @@ query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
 fragment MessageBubbleDataInMessageRoom on Message {
   id
   text
+  createdAt
   sender {
     id
     firstProfileImage {

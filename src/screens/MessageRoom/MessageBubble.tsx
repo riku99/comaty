@@ -26,20 +26,20 @@ export const MessageBubble = ({
     if (isMyMseeage) {
       borderBottomRightRadius =
         bubbleType === 'topChunk' || bubbleType === 'middleChunk'
-          ? 3
+          ? BUBBLE_BORDER_RADIUS
           : undefined;
       borderTopRightRadius =
         bubbleType === 'middleChunk' || bubbleType === 'bottomChunk'
-          ? 3
+          ? BUBBLE_BORDER_RADIUS
           : undefined;
     } else {
       borderTopLeftRadius =
         bubbleType === 'bottomChunk' || bubbleType === 'middleChunk'
-          ? 3
+          ? BUBBLE_BORDER_RADIUS
           : undefined;
       borderBottomLeftRadius =
         bubbleType === 'middleChunk' || bubbleType === 'topChunk'
-          ? 3
+          ? BUBBLE_BORDER_RADIUS
           : undefined;
     }
 
@@ -75,7 +75,11 @@ export const MessageBubble = ({
           getBorderRadiusStyle(),
           {
             backgroundColor: isMyMseeage ? '#6778FF' : '#ECECEC',
-            marginLeft: isMyMseeage ? 0 : showUserImage ? 4 : IMAGE_SIZE + 4,
+            marginLeft: isMyMseeage
+              ? 0
+              : showUserImage
+              ? BUBBLE_MARGIN_LEFT
+              : IMAGE_SIZE + BUBBLE_MARGIN_LEFT,
           },
         ]}
       >
@@ -92,6 +96,8 @@ export const MessageBubble = ({
 };
 
 const IMAGE_SIZE = 30;
+const BUBBLE_BORDER_RADIUS = 3;
+const BUBBLE_MARGIN_LEFT = 4;
 
 const styles = StyleSheet.create({
   container: {

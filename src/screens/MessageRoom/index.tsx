@@ -17,12 +17,12 @@ import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
 import { BubbleType } from './types';
 
-const l = [...range(0, 20)].reverse();
+const l = [...range(0, 22)].reverse();
 const ms = l.map((m, i) => {
   return {
     id: i,
     text: 'Hello message' + m,
-    userId: m > 10 ? 0 : 1,
+    userId: (m > 10 && m !== 20) || m === 21 ? 0 : 1,
     createdAt: new Date('2022-10-11T12:13:03'),
   };
 });

@@ -44,9 +44,12 @@ export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
     };
   };
 
+  const showUserImage =
+    !isMyMseeage && (bubbleType === 'bottomChunk' || bubbleType === 'notChunk');
+
   return (
     <View style={styles.container}>
-      {!isMyMseeage && (
+      {showUserImage && (
         <View
           style={{
             height: IMAGE_SIZE,
@@ -64,7 +67,7 @@ export const MessageBubble = ({ text, isMyMseeage, bubbleType }: Props) => {
           getBorderRadiusStyle(),
           {
             backgroundColor: isMyMseeage ? '#6778FF' : '#ECECEC',
-            marginLeft: isMyMseeage ? 0 : 4,
+            marginLeft: isMyMseeage ? 0 : showUserImage ? 4 : IMAGE_SIZE + 4,
           },
         ]}
       >

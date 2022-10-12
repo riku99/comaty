@@ -1,7 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
+import * as Clipboard from 'expo-clipboard';
 import { MotiView } from 'moti';
-import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
+import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { MessageBubbleDataInMessageRoomFragment } from 'src/generated/graphql';
 import { BubbleType } from './types';
@@ -19,6 +21,7 @@ export const MessageBubble = ({
 }: Props) => {
   const { sender, text } = fragmentData;
   const navigation = useNavigation<RootNavigationProp<'MessageRoom'>>();
+  const toast = useToast();
 
   const getBorderRadiusStyle = (): ViewStyle => {
     let borderBottomRightRadius = undefined;
@@ -58,6 +61,13 @@ export const MessageBubble = ({
   const showUserImage =
     !isMyMseeage && (bubbleType === 'bottomChunk' || bubbleType === 'notChunk');
 
+  const onBubbleLongPress = async () => {
+    await Clipboard.setStringAsync(fragmentData.text);
+    toast.show('クリップボードにコピーしました', {
+      duration: 800,
+    });
+  };
+
   return (
     <MotiView style={styles.container}>
       {showUserImage && (
@@ -80,7 +90,8 @@ export const MessageBubble = ({
         </Pressable>
       )}
 
-      <View
+      <Pressable
+        onLongPress={onBubbleLongPress}
         style={[
           styles.bubble,
           getBorderRadiusStyle(),
@@ -102,7 +113,7 @@ export const MessageBubble = ({
         >
           {text}
         </Text>
-      </View>
+      </Pressable>
     </MotiView>
   );
 };
@@ -110,6 +121,8 @@ export const MessageBubble = ({
 const IMAGE_SIZE = 30;
 const BUBBLE_BORDER_RADIUS = 3;
 const BUBBLE_MARGIN_LEFT = 4;
+
+const { height: screenHeight } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {

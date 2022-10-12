@@ -2415,11 +2415,6 @@ export const MessageRoomScreenDataDocument = gql`
       edges {
         node {
           id
-          text
-          createdAt
-          sender {
-            id
-          }
           ...MessageBubbleDataInMessageRoom
         }
         cursor

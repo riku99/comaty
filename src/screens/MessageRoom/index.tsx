@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useToast } from 'react-native-toast-notifications';
 import { Loading } from 'src/components/ui/Loading';
 import {
   MessageBubbleDataInMessageRoomFragment,
@@ -59,6 +60,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     higherThandefaultInputComposerHeight,
     setHigherThandefaultInputComposerHeight,
   ] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const toast = useToast();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -166,6 +169,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const onSendPress = async () => {
     try {
       setInputText('');
+      setIsSending(true);
       await sendMessageMutation({
         variables: {
           roomId,
@@ -213,7 +217,9 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       });
     } catch (e) {
       console.log(e);
+      toast.show('送信に失敗しました');
     } finally {
+      setIsSending(false);
     }
   };
 
@@ -256,6 +262,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
           inputValue={inputText}
           onChangeText={setInputText}
           onSendPress={onSendPress}
+          isSending={isSending}
         />
       </Animated.View>
     </SafeAreaView>

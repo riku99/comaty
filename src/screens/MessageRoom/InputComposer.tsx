@@ -1,19 +1,27 @@
 import { Text } from '@rneui/themed';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { theme } from 'src/styles';
 
 type Props = {
   inputValue: string;
   onChangeText: (text: string) => void;
   onSendPress: () => void;
+  isSending: boolean;
 };
 
 export const InputComposer = ({
   inputValue,
   onChangeText,
   onSendPress,
+  isSending,
 }: Props) => {
-  const sendDisabled = !inputValue;
+  const sendDisabled = !inputValue || isSending;
 
   return (
     <View style={styles.container}>
@@ -27,16 +35,20 @@ export const InputComposer = ({
         />
 
         <Pressable onPress={onSendPress} disabled={sendDisabled}>
-          <Text
-            style={[
-              styles.sendButton,
-              {
-                color: sendDisabled ? '#737373' : theme.primary,
-              },
-            ]}
-          >
-            送信
-          </Text>
+          {isSending ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              style={[
+                styles.sendButton,
+                {
+                  color: sendDisabled ? '#737373' : theme.primary,
+                },
+              ]}
+            >
+              送信
+            </Text>
+          )}
         </Pressable>
       </View>
     </View>

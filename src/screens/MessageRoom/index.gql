@@ -9,11 +9,6 @@ query MessageRoomScreenData(
       edges {
         node {
           id
-          text
-          createdAt
-          sender {
-            id
-          }
           ...MessageBubbleDataInMessageRoom
         }
         cursor

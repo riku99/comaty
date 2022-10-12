@@ -1,0 +1,41 @@
+query MessageRoomListScreenData {
+  ...MessageRoomListFromMySelf
+}
+
+query MessageRoomListFromMySelfScreenData {
+  ...MessageRoomListFromMySelf
+}
+
+fragment RoomListItemInMessageRoomListScreen on MessageRoom {
+  id
+  partner {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+  messages(first: 1) {
+    edges {
+      node {
+        id
+        text
+      }
+    }
+  }
+}
+
+fragment MessageRoomListFromMySelf on Query {
+  me {
+    id
+    messageRoomsFromMySelf {
+      ...RoomListItemInMessageRoomListScreen
+    }
+  }
+}
+
+fragment MessageRoomListFromOtherParty on Query {
+  me {
+    id
+  }
+}

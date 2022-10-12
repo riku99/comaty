@@ -124,9 +124,11 @@ export type Me = UserEntity & {
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
+  messageRoomsFromMySelf?: Maybe<Array<Maybe<MessageRoom>>>;
+  messageRoomsFromOtherParty?: Maybe<Array<Maybe<MessageRoom>>>;
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
-  profileImages: Array<Maybe<UserProfileImage>>;
+  profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
   stories?: Maybe<Array<Maybe<Story>>>;
@@ -158,6 +160,7 @@ export type MessageRoom = {
   createdAt: Scalars['String'];
   id: Scalars['Int'];
   messages?: Maybe<MessageConnection>;
+  partner?: Maybe<User>;
   recipient?: Maybe<User>;
   sender?: Maybe<User>;
   updatedAt: Scalars['String'];
@@ -793,7 +796,7 @@ export type UpdateMeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
 export type UploadProfileImageMutationVariables = Exact<{
   input: UploadProfileImageInput;
@@ -805,7 +808,7 @@ export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfil
 export type MyProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyProfileImagesQuery = { __typename?: 'Query', me?: { __typename?: 'Me', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+export type MyProfileImagesQuery = { __typename?: 'Query', me?: { __typename?: 'Me', profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
 
 export type MyBasicInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -820,7 +823,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -832,7 +835,7 @@ export type GetInitialStatusCompletionQueryVariables = Exact<{ [key: string]: ne
 
 export type GetInitialStatusCompletionQuery = { __typename?: 'Query', me?: { __typename?: 'Me', initialStatusCompletion: boolean } | null };
 
-export type MyProfileFragment = { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
+export type MyProfileFragment = { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
@@ -859,7 +862,7 @@ export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null>, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type HomeScreenDataQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
@@ -918,10 +921,26 @@ export type NicknameAndProfileImageInMessageRoomScreenQuery = { __typename?: 'Qu
 
 export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
 
+export type MessageRoomListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
+
+export type MessageRoomListFromMySelfScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessageRoomListFromMySelfScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
+
+export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null };
+
+export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
+
+export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string } | null };
+
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
 
 export type MyTagSelectionScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1178,6 +1197,43 @@ export const MessageBubbleDataInMessageRoomFragmentDoc = gql`
   }
 }
     ${ProfileImageFragmentDoc}`;
+export const RoomListItemInMessageRoomListScreenFragmentDoc = gql`
+    fragment RoomListItemInMessageRoomListScreen on MessageRoom {
+  id
+  partner {
+    id
+    nickname
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+  messages(first: 1) {
+    edges {
+      node {
+        id
+        text
+      }
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+export const MessageRoomListFromMySelfFragmentDoc = gql`
+    fragment MessageRoomListFromMySelf on Query {
+  me {
+    id
+    messageRoomsFromMySelf {
+      ...RoomListItemInMessageRoomListScreen
+    }
+  }
+}
+    ${RoomListItemInMessageRoomListScreenFragmentDoc}`;
+export const MessageRoomListFromOtherPartyFragmentDoc = gql`
+    fragment MessageRoomListFromOtherParty on Query {
+  me {
+    id
+  }
+}
+    `;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -2555,6 +2611,70 @@ export function useNicknameAndProfileImageInMessageRoomScreenLazyQuery(baseOptio
 export type NicknameAndProfileImageInMessageRoomScreenQueryHookResult = ReturnType<typeof useNicknameAndProfileImageInMessageRoomScreenQuery>;
 export type NicknameAndProfileImageInMessageRoomScreenLazyQueryHookResult = ReturnType<typeof useNicknameAndProfileImageInMessageRoomScreenLazyQuery>;
 export type NicknameAndProfileImageInMessageRoomScreenQueryResult = Apollo.QueryResult<NicknameAndProfileImageInMessageRoomScreenQuery, NicknameAndProfileImageInMessageRoomScreenQueryVariables>;
+export const MessageRoomListScreenDataDocument = gql`
+    query MessageRoomListScreenData {
+  ...MessageRoomListFromMySelf
+}
+    ${MessageRoomListFromMySelfFragmentDoc}`;
+
+/**
+ * __useMessageRoomListScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomListScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomListScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomListScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMessageRoomListScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MessageRoomListScreenDataQuery, MessageRoomListScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomListScreenDataQuery, MessageRoomListScreenDataQueryVariables>(MessageRoomListScreenDataDocument, options);
+      }
+export function useMessageRoomListScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomListScreenDataQuery, MessageRoomListScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomListScreenDataQuery, MessageRoomListScreenDataQueryVariables>(MessageRoomListScreenDataDocument, options);
+        }
+export type MessageRoomListScreenDataQueryHookResult = ReturnType<typeof useMessageRoomListScreenDataQuery>;
+export type MessageRoomListScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomListScreenDataLazyQuery>;
+export type MessageRoomListScreenDataQueryResult = Apollo.QueryResult<MessageRoomListScreenDataQuery, MessageRoomListScreenDataQueryVariables>;
+export const MessageRoomListFromMySelfScreenDataDocument = gql`
+    query MessageRoomListFromMySelfScreenData {
+  ...MessageRoomListFromMySelf
+}
+    ${MessageRoomListFromMySelfFragmentDoc}`;
+
+/**
+ * __useMessageRoomListFromMySelfScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomListFromMySelfScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomListFromMySelfScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomListFromMySelfScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMessageRoomListFromMySelfScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>(MessageRoomListFromMySelfScreenDataDocument, options);
+      }
+export function useMessageRoomListFromMySelfScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>(MessageRoomListFromMySelfScreenDataDocument, options);
+        }
+export type MessageRoomListFromMySelfScreenDataQueryHookResult = ReturnType<typeof useMessageRoomListFromMySelfScreenDataQuery>;
+export type MessageRoomListFromMySelfScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomListFromMySelfScreenDataLazyQuery>;
+export type MessageRoomListFromMySelfScreenDataQueryResult = Apollo.QueryResult<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>;
 export const MyPageScreenDataDocument = gql`
     query MyPageScreenData {
   me {

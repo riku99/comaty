@@ -2,11 +2,12 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import React, { useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
+import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { MessagesFromOtherParty } from './MesagesFromOtherParty';
 import { MessagesFromMySelf } from './MessagesFromMySelf';
 
-type Props = RootNavigationScreenProp<'MessageList'>;
+type Props = RootNavigationScreenProp<'MessageRoomList'>;
 
 type TopTabParamList = {
   FromMySelf: undefined;
@@ -15,7 +16,9 @@ type TopTabParamList = {
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
-export const MessageListScreen = React.memo(({ navigation }: Props) => {
+export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
+  const { data } = useMessageRoomListScreenDataQuery();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (

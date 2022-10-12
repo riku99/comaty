@@ -55,9 +55,10 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [inputText, setInputText] = useState('');
   const [sendMessageMutation] = useSendMessageMutation();
-  const [inputComposerContainerHeight, setInputComposerContainerHeight] =
-    useState(68);
-  const [inputFocused, setInputFocused] = useState(false);
+  const [
+    higherThandefaultInputComposerHeight,
+    setHigherThandefaultInputComposerHeight,
+  ] = useState(false);
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -67,19 +68,13 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   });
 
   const listHeaderHeight = useSharedValue(
-    inputComposerContainerHeight + keyboardHeight
+    DEFAULT_INPUT_COMPOSER_HEIGHT + keyboardHeight
   );
   const listHeaderStyle = useAnimatedStyle(() => {
     return {
       height: listHeaderHeight.value,
     };
   });
-
-  useEffect(() => {
-    // listHeaderHeight.value = withTiming(
-    //   keyboardHeight + inputComposerContainerHeight - safeAreaBottom
-    // );
-  }, [inputComposerContainerHeight, safeAreaBottom, keyboardHeight]);
 
   useEffect(() => {
     if (data?.messageRoom.messages) {
@@ -94,7 +89,9 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       });
 
       listHeaderHeight.value = withTiming(
-        e.endCoordinates.height + inputComposerContainerHeight - safeAreaBottom,
+        e.endCoordinates.height +
+          DEFAULT_INPUT_COMPOSER_HEIGHT -
+          safeAreaBottom,
         {
           duration: e.duration,
         }
@@ -220,8 +217,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     }
   };
 
-  const [isMoreHeight, setIsMoreHeight] = useState(false);
-
   if (!data?.messageRoom) {
     return <Loading />;
   }
@@ -241,13 +236,16 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       <Animated.View
         style={[styles.inputContainer, composerStyle]}
         onLayout={(e) => {
-          if (e.nativeEvent.layout.height > 68) {
-            setIsMoreHeight(true);
+          if (e.nativeEvent.layout.height > DEFAULT_INPUT_COMPOSER_HEIGHT) {
+            setHigherThandefaultInputComposerHeight(true);
           } else {
-            setIsMoreHeight(false);
+            setHigherThandefaultInputComposerHeight(false);
           }
 
-          if (e.nativeEvent.layout.height > 68 || isMoreHeight) {
+          if (
+            e.nativeEvent.layout.height > DEFAULT_INPUT_COMPOSER_HEIGHT ||
+            higherThandefaultInputComposerHeight
+          ) {
             listHeaderHeight.value = withTiming(
               keyboardHeight + e.nativeEvent.layout.height - safeAreaBottom
             );
@@ -263,6 +261,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     </SafeAreaView>
   );
 };
+
+const DEFAULT_INPUT_COMPOSER_HEIGHT = 68;
 
 const styles = StyleSheet.create({
   container: {

@@ -33,7 +33,9 @@ export const RoomListItem = ({ fragmentData }: Props) => {
 
       <View style={styles.nameAndMessage}>
         <Text style={styles.name}>{partner.nickname}</Text>
-        <Text style={styles.text}>{message.replace(/\r?\n/g, '')}</Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          {message.replace(/\r?\n/g, '')}
+        </Text>
       </View>
     </Pressable>
   );
@@ -46,9 +48,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 8,
     alignItems: 'center',
+    width: '100%',
   },
   nameAndMessage: {
     marginLeft: 8,
+    width: '100%',
   },
   name: {
     fontWeight: 'bold',
@@ -56,5 +60,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 4,
+    width: '80%',
   },
 });

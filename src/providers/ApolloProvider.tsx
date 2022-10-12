@@ -112,6 +112,15 @@ export const ApolloProvider = ({ children }: Props) => {
                 }
               },
             },
+            user: {
+              read: (_, { args, toReference }) => {
+                if (args)
+                  return toReference({
+                    __typename: 'User',
+                    id: args.id as string,
+                  });
+              },
+            },
           },
         },
         Me: {

@@ -1,12 +1,7 @@
 import { filter } from 'graphql-anywhere';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import {
-  FlatList,
-  Keyboard,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native';
+import { btoa } from 'react-native-quick-base64';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,12 +9,14 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
+import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
 import {
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
+  RoomMessagesInMessageRoomScreenDocument,
   useMessageRoomScreenDataQuery,
   useSendMessageMutation,
 } from 'src/generated/graphql';
@@ -38,7 +35,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const { userId, roomId } = route.params;
   const myId = useMyId();
 
-  const { data } = useMessageRoomScreenDataQuery({
+  const { data, fetchMore } = useMessageRoomScreenDataQuery({
     variables: {
       id: roomId,
     },
@@ -149,7 +146,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
           style={{
             flexDirection: 'row',
             justifyContent: isMyMessage ? 'flex-end' : 'flex-start',
-            marginTop: 2,
+            marginTop: 4,
           }}
         >
           <MessageBubble
@@ -227,9 +224,25 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     return <Loading />;
   }
 
+  const infiniteLoad = async () => {
+    const { pageInfo } = data.messageRoom.messages;
+
+    if (pageInfo.hasNextPage) {
+      const { endCursor } = pageInfo;
+      await fetchMore({
+        variables: {
+          messagesAfter: endCursor ? btoa(endCursor) : undefined,
+          messagesFirst: 20,
+          id: roomId,
+        },
+        query: RoomMessagesInMessageRoomScreenDocument,
+      });
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
-      <FlatList
+      <InfiniteFlatList
         renderItem={renderMessageItem}
         data={messages}
         keyExtractor={(item) => item.node.id.toString()}
@@ -237,6 +250,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         ListHeaderComponent={() => <Animated.View style={[listHeaderStyle]} />}
         inverted
         contentContainerStyle={styles.contentContainer}
+        infiniteLoad={infiniteLoad}
       />
 
       <Animated.View

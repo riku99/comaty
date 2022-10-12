@@ -1,6 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import { MotiView } from 'moti';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, View, ViewStyle } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { MessageBubbleDataInMessageRoomFragment } from 'src/generated/graphql';
 import { BubbleType } from './types';
@@ -17,6 +18,7 @@ export const MessageBubble = ({
   fragmentData,
 }: Props) => {
   const { sender, text } = fragmentData;
+  const navigation = useNavigation<RootNavigationProp<'MessageRoom'>>();
 
   const getBorderRadiusStyle = (): ViewStyle => {
     let borderBottomRightRadius = undefined;
@@ -59,15 +61,23 @@ export const MessageBubble = ({
   return (
     <MotiView style={styles.container}>
       {showUserImage && (
-        <ProfileImage
-          imageData={sender.firstProfileImage}
-          style={{
-            height: IMAGE_SIZE,
-            width: IMAGE_SIZE,
-            borderRadius: IMAGE_SIZE,
-            marginTop: 8,
+        <Pressable
+          onPress={() => {
+            navigation.navigate('UserProfile', {
+              id: sender.id,
+            });
           }}
-        />
+        >
+          <ProfileImage
+            imageData={sender.firstProfileImage}
+            style={{
+              height: IMAGE_SIZE,
+              width: IMAGE_SIZE,
+              borderRadius: IMAGE_SIZE,
+              marginTop: 8,
+            }}
+          />
+        </Pressable>
       )}
 
       <View

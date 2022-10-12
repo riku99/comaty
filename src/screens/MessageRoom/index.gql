@@ -20,6 +20,28 @@ query MessageRoomScreenData(
   }
 }
 
+query RoomMessagesInMessageRoomScreen(
+  $id: Int!
+  $messagesAfter: String
+  $messagesFirst: Int
+) {
+  messageRoom(id: $id) {
+    id
+    messages(after: $messagesAfter, first: $messagesFirst) {
+      edges {
+        node {
+          id
+          ...MessageBubbleDataInMessageRoom
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+
 query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
   user(id: $id) {
     id

@@ -900,6 +900,15 @@ export type MessageRoomScreenDataQueryVariables = Exact<{
 
 export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
 
+export type RoomMessagesInMessageRoomScreenQueryVariables = Exact<{
+  id: Scalars['Int'];
+  messagesAfter?: InputMaybe<Scalars['String']>;
+  messagesFirst?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type RoomMessagesInMessageRoomScreenQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
+
 export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -2457,6 +2466,56 @@ export function useMessageRoomScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type MessageRoomScreenDataQueryHookResult = ReturnType<typeof useMessageRoomScreenDataQuery>;
 export type MessageRoomScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomScreenDataLazyQuery>;
 export type MessageRoomScreenDataQueryResult = Apollo.QueryResult<MessageRoomScreenDataQuery, MessageRoomScreenDataQueryVariables>;
+export const RoomMessagesInMessageRoomScreenDocument = gql`
+    query RoomMessagesInMessageRoomScreen($id: Int!, $messagesAfter: String, $messagesFirst: Int) {
+  messageRoom(id: $id) {
+    id
+    messages(after: $messagesAfter, first: $messagesFirst) {
+      edges {
+        node {
+          id
+          ...MessageBubbleDataInMessageRoom
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+    ${MessageBubbleDataInMessageRoomFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useRoomMessagesInMessageRoomScreenQuery__
+ *
+ * To run a query within a React component, call `useRoomMessagesInMessageRoomScreenQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRoomMessagesInMessageRoomScreenQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRoomMessagesInMessageRoomScreenQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      messagesAfter: // value for 'messagesAfter'
+ *      messagesFirst: // value for 'messagesFirst'
+ *   },
+ * });
+ */
+export function useRoomMessagesInMessageRoomScreenQuery(baseOptions: Apollo.QueryHookOptions<RoomMessagesInMessageRoomScreenQuery, RoomMessagesInMessageRoomScreenQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RoomMessagesInMessageRoomScreenQuery, RoomMessagesInMessageRoomScreenQueryVariables>(RoomMessagesInMessageRoomScreenDocument, options);
+      }
+export function useRoomMessagesInMessageRoomScreenLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RoomMessagesInMessageRoomScreenQuery, RoomMessagesInMessageRoomScreenQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RoomMessagesInMessageRoomScreenQuery, RoomMessagesInMessageRoomScreenQueryVariables>(RoomMessagesInMessageRoomScreenDocument, options);
+        }
+export type RoomMessagesInMessageRoomScreenQueryHookResult = ReturnType<typeof useRoomMessagesInMessageRoomScreenQuery>;
+export type RoomMessagesInMessageRoomScreenLazyQueryHookResult = ReturnType<typeof useRoomMessagesInMessageRoomScreenLazyQuery>;
+export type RoomMessagesInMessageRoomScreenQueryResult = Apollo.QueryResult<RoomMessagesInMessageRoomScreenQuery, RoomMessagesInMessageRoomScreenQueryVariables>;
 export const NicknameAndProfileImageInMessageRoomScreenDocument = gql`
     query NicknameAndProfileImageInMessageRoomScreen($id: ID!) {
   user(id: $id) {

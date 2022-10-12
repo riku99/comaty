@@ -31,7 +31,7 @@ export const HeaderLeft = ({ userId }: Props) => {
         <Pressable
           style={styles.nameAndImage}
           onPress={() => {
-            navigation.push('UserProfile', {
+            navigation.navigate('UserProfile', {
               id: userId,
             });
           }}

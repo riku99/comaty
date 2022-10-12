@@ -136,6 +136,11 @@ export const ApolloProvider = ({ children }: Props) => {
             seenList: relayStylePagination(),
           },
         },
+        MessageRoom: {
+          fields: {
+            messages: relayStylePagination(),
+          },
+        },
       },
       possibleTypes: {
         UserEntity: ['Me', 'User'],

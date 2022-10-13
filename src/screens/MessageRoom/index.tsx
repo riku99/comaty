@@ -13,6 +13,7 @@ import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
 import {
   CreateMessageError,
+  GetMessageRoomError,
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomListScreenDataDocument,
@@ -38,10 +39,31 @@ type MessageItem =
 export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const { userId, roomId } = route.params;
   const myId = useMyId();
+  const messageRoomListLazyQuery = useCustomLazyQuery(
+    MessageRoomListScreenDataDocument
+  );
 
   const { data, fetchMore } = useMessageRoomScreenDataQuery({
     variables: {
       id: roomId,
+    },
+    onError: (e) => {
+      const glError = getGraphQLError(e, 0);
+      if (glError?.code === GetMessageRoomError.NotFound) {
+        Alert.alert('トークルームが見つかりません', '', [
+          {
+            text: 'OK',
+            onPress: async () => {
+              navigation.goBack();
+              try {
+                await messageRoomListLazyQuery();
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+        ]);
+      }
     },
   });
 
@@ -63,9 +85,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   ] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const toast = useToast();
-  const messageRoomListLazyQuery = useCustomLazyQuery(
-    MessageRoomListScreenDataDocument
-  );
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {

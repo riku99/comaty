@@ -84,7 +84,7 @@ export const MessageBubble = ({
               height: IMAGE_SIZE,
               width: IMAGE_SIZE,
               borderRadius: IMAGE_SIZE,
-              marginTop: 8,
+              marginTop: 4,
             }}
           />
         </Pressable>

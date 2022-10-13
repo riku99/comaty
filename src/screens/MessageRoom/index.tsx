@@ -1,6 +1,6 @@
 import { filter } from 'graphql-anywhere';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { Keyboard, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, Keyboard, SafeAreaView, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import Animated, {
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import { useToast } from 'react-native-toast-notifications';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
 import {
+  CreateMessageError,
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomListScreenDataDocument,
@@ -21,7 +22,9 @@ import {
   useMessageRoomScreenDataQuery,
   useSendMessageMutation,
 } from 'src/generated/graphql';
+import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { useMyId } from 'src/hooks/me';
+import { getGraphQLError } from 'src/utils';
 import { HeaderLeft } from './HeaderLeft';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
@@ -60,6 +63,9 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   ] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const toast = useToast();
+  const messageRoomListLazyQuery = useCustomLazyQuery(
+    MessageRoomListScreenDataDocument
+  );
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -222,8 +228,25 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         ],
       });
     } catch (e) {
-      console.log(e);
-      toast.show('送信に失敗しました');
+      const glError = getGraphQLError(e, 0);
+      if (glError.code === CreateMessageError.NotFoundMessageRoom) {
+        Alert.alert('トークルームが見つかりません', '', [
+          {
+            text: 'OK',
+            onPress: async () => {
+              navigation.goBack();
+              try {
+                await messageRoomListLazyQuery();
+              } catch (e) {
+                console.log(e);
+              }
+            },
+          },
+        ]);
+      } else {
+        console.log(e);
+        toast.show('送信に失敗しました');
+      }
     } finally {
       setIsSending(false);
     }

@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
+    "@apollo/client": "3.7.0",
     "@gorhom/bottom-sheet": "^4",
     "@invertase/react-native-apple-authentication": "^2.2.1",
     "@react-native-camera-roll/camera-roll": "^5.0.2",
@@ -85,7 +85,7 @@
     "@graphql-codegen/cli": "^2.7.0",
     "@graphql-codegen/typescript": "^2.6.0",
     "@graphql-codegen/typescript-operations": "^2.4.3",
-    "@graphql-codegen/typescript-react-apollo": "^3.2.17",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.4",
     "@react-native-community/eslint-config": "^3.0.3",
     "@types/apollo-upload-client": "^17.0.1",
     "@types/lodash.debounce": "^4.0.7",

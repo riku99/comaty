@@ -1,5 +1,6 @@
 query MessageRoomListScreenData {
   ...MessageRoomListFromMySelf
+  ...MessageRoomListFromOtherParty
 }
 
 query MessageRoomListFromMySelfScreenData {

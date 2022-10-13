@@ -26,6 +26,10 @@ export enum BlockUserError {
   AlreadyBlockedUser = 'ALREADY_BLOCKED_USER'
 }
 
+export enum CreateMessageError {
+  NotFoundMessageRoom = 'NOT_FOUND_MESSAGE_ROOM'
+}
+
 export type CreateMessageInput = {
   text: Scalars['String'];
 };
@@ -941,7 +945,7 @@ export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', i
 export type MessageRoomListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
+export type MessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
 
 export type MessageRoomListFromMySelfScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2672,8 +2676,10 @@ export type NicknameAndProfileImageInMessageRoomScreenQueryResult = Apollo.Query
 export const MessageRoomListScreenDataDocument = gql`
     query MessageRoomListScreenData {
   ...MessageRoomListFromMySelf
+  ...MessageRoomListFromOtherParty
 }
-    ${MessageRoomListFromMySelfFragmentDoc}`;
+    ${MessageRoomListFromMySelfFragmentDoc}
+${MessageRoomListFromOtherPartyFragmentDoc}`;
 
 /**
  * __useMessageRoomListScreenDataQuery__

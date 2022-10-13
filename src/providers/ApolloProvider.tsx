@@ -3,7 +3,7 @@ import {
   ApolloLink,
   ApolloProvider as ApolloProviderBase,
   from,
-  InMemoryCache,
+  InMemoryCache
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -131,6 +131,12 @@ export const ApolloProvider = ({ children }: Props) => {
             myTags: {
               merge: (_, incoming) => incoming,
             },
+            messageRoomsFromOtherParty: {
+              merge: (_, incoming) => incoming,
+            },
+            messageRoomsFromMySelf: {
+              merge: (_, incoming) => incoming
+            }
           },
         },
         User: {

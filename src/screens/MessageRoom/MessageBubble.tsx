@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
 import * as Clipboard from 'expo-clipboard';
 import { MotiView } from 'moti';
-import { Dimensions, Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, ViewStyle } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { MessageBubbleDataInMessageRoomFragment } from 'src/generated/graphql';
@@ -24,10 +24,10 @@ export const MessageBubble = ({
   const toast = useToast();
 
   const getBorderRadiusStyle = (): ViewStyle => {
-    let borderBottomRightRadius = undefined;
-    let borderTopRightRadius = undefined;
-    let borderTopLeftRadius = undefined;
-    let borderBottomLeftRadius = undefined;
+    let borderBottomRightRadius;
+    let borderTopRightRadius;
+    let borderTopLeftRadius;
+    let borderBottomLeftRadius;
 
     if (isMyMseeage) {
       borderBottomRightRadius =
@@ -121,8 +121,6 @@ export const MessageBubble = ({
 const IMAGE_SIZE = 30;
 const BUBBLE_BORDER_RADIUS = 3;
 const BUBBLE_MARGIN_LEFT = 4;
-
-const { height: screenHeight } = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
   container: {

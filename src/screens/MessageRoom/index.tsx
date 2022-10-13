@@ -5,7 +5,7 @@ import { btoa } from 'react-native-quick-base64';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withTiming
+  withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
@@ -18,7 +18,7 @@ import {
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
   useMessageRoomScreenDataQuery,
-  useSendMessageMutation
+  useSendMessageMutation,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me';
 import { HeaderLeft } from './HeaderLeft';
@@ -103,7 +103,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     return () => {
       subscription.remove();
     };
-  }, [safeAreaBottom]);
+  }, [safeAreaBottom, composerBottom, listHeaderHeight]);
 
   const renderMessageItem = useCallback(
     ({ item, index }: { item: MessageItem; index: number }) => {
@@ -160,7 +160,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         </View>
       );
     },
-    [messages]
+    [messages, myId]
   );
 
   const onSendPress = async () => {

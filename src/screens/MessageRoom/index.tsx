@@ -14,6 +14,7 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
+  MessageRoomListScreenDataDocument,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
@@ -211,6 +212,14 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
             });
           }
         },
+        refetchQueries: [
+          {
+            query:
+              messages.length === 0
+                ? MessageRoomListScreenDataDocument
+                : undefined,
+          },
+        ],
       });
     } catch (e) {
       console.log(e);

@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import React, { useCallback, useState } from 'react';
-import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
 import {
@@ -13,6 +13,7 @@ import {
   useMessageRoomListFromMySelfScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { deleteRoomWithAlert } from './helpers';
 import { RoomListItem } from './RoomListItem';
 
 type RoomItem =
@@ -61,37 +62,27 @@ export const MessagesFromMySelf = React.memo(() => {
       return;
     }
 
-    Alert.alert('削除してよろしいですか？', '元に戻すことはできません', [
-      {
-        text: 'キャンセル',
-        style: 'cancel',
-      },
-      {
-        text: '削除',
-        style: 'destructive',
-        onPress: async () => {
-          try {
-            await deleteMessageRoomMutation({
-              variables: {
-                id: longPressedItemId,
-              },
-              onCompleted: () => {
-                toast.show('削除しました');
-              },
-              refetchQueries: [
-                {
-                  query: MessageRoomListFromMySelfScreenDataDocument,
-                },
-              ],
-            });
-          } catch (e) {
-            console.log(e);
-          } finally {
-            setLongPressedItemId(null);
-          }
-        },
-      },
-    ]);
+    deleteRoomWithAlert(async () => {
+      try {
+        await deleteMessageRoomMutation({
+          variables: {
+            id: longPressedItemId,
+          },
+          onCompleted: () => {
+            toast.show('削除しました');
+          },
+          refetchQueries: [
+            {
+              query: MessageRoomListFromMySelfScreenDataDocument,
+            },
+          ],
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLongPressedItemId(null);
+      }
+    });
   };
 
   if (!data?.me) {
@@ -136,5 +127,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 16,
+    paddingTop: 4,
   },
 });

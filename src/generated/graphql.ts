@@ -73,6 +73,10 @@ export type CreateUserTagInput = {
   text: Scalars['String'];
 };
 
+export enum DeleteMessageRoomError {
+  NotFound = 'NOT_FOUND'
+}
+
 export enum DeleteProfileImageError {
   UnexpectedError = 'UNEXPECTED_ERROR'
 }
@@ -184,6 +188,7 @@ export type Mutation = {
   createStorySeen?: Maybe<StorySeen>;
   createUser: Me;
   createUserTag: UserTag;
+  deleteMessageRoom?: Maybe<MessageRoom>;
   deletePost?: Maybe<Post>;
   deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
@@ -250,6 +255,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationCreateUserTagArgs = {
   input: CreateUserTagInput;
+};
+
+
+export type MutationDeleteMessageRoomArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -643,6 +653,13 @@ export type UserTag = {
   user?: Maybe<User>;
 };
 
+export type DeleteMessageRoomMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteMessageRoomMutation = { __typename?: 'Mutation', deleteMessageRoom?: { __typename?: 'MessageRoom', id: number } | null };
+
 export type BlockUserMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -931,11 +948,16 @@ export type MessageRoomListFromMySelfScreenDataQueryVariables = Exact<{ [key: st
 
 export type MessageRoomListFromMySelfScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
 
+export type MessageRoomListFromOtherPartyScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MessageRoomListFromOtherPartyScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
+
 export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null };
 
 export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
 
-export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string } | null };
+export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string } } | null> } | null } | null> | null } | null };
 
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1231,9 +1253,12 @@ export const MessageRoomListFromOtherPartyFragmentDoc = gql`
     fragment MessageRoomListFromOtherParty on Query {
   me {
     id
+    messageRoomsFromOtherParty {
+      ...RoomListItemInMessageRoomListScreen
+    }
   }
 }
-    `;
+    ${RoomListItemInMessageRoomListScreenFragmentDoc}`;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -1288,6 +1313,39 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
   ...StoryUserCircle
 }
     ${StoryUserCircleFragmentDoc}`;
+export const DeleteMessageRoomDocument = gql`
+    mutation DeleteMessageRoom($id: Int!) {
+  deleteMessageRoom(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteMessageRoomMutationFn = Apollo.MutationFunction<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>;
+
+/**
+ * __useDeleteMessageRoomMutation__
+ *
+ * To run a mutation, you first call `useDeleteMessageRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMessageRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMessageRoomMutation, { data, loading, error }] = useDeleteMessageRoomMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteMessageRoomMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>(DeleteMessageRoomDocument, options);
+      }
+export type DeleteMessageRoomMutationHookResult = ReturnType<typeof useDeleteMessageRoomMutation>;
+export type DeleteMessageRoomMutationResult = Apollo.MutationResult<DeleteMessageRoomMutation>;
+export type DeleteMessageRoomMutationOptions = Apollo.BaseMutationOptions<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>;
 export const BlockUserDocument = gql`
     mutation BlockUser($id: ID!) {
   blockUser(id: $id) {
@@ -2675,6 +2733,38 @@ export function useMessageRoomListFromMySelfScreenDataLazyQuery(baseOptions?: Ap
 export type MessageRoomListFromMySelfScreenDataQueryHookResult = ReturnType<typeof useMessageRoomListFromMySelfScreenDataQuery>;
 export type MessageRoomListFromMySelfScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomListFromMySelfScreenDataLazyQuery>;
 export type MessageRoomListFromMySelfScreenDataQueryResult = Apollo.QueryResult<MessageRoomListFromMySelfScreenDataQuery, MessageRoomListFromMySelfScreenDataQueryVariables>;
+export const MessageRoomListFromOtherPartyScreenDataDocument = gql`
+    query MessageRoomListFromOtherPartyScreenData {
+  ...MessageRoomListFromOtherParty
+}
+    ${MessageRoomListFromOtherPartyFragmentDoc}`;
+
+/**
+ * __useMessageRoomListFromOtherPartyScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMessageRoomListFromOtherPartyScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMessageRoomListFromOtherPartyScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMessageRoomListFromOtherPartyScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMessageRoomListFromOtherPartyScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>(MessageRoomListFromOtherPartyScreenDataDocument, options);
+      }
+export function useMessageRoomListFromOtherPartyScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>(MessageRoomListFromOtherPartyScreenDataDocument, options);
+        }
+export type MessageRoomListFromOtherPartyScreenDataQueryHookResult = ReturnType<typeof useMessageRoomListFromOtherPartyScreenDataQuery>;
+export type MessageRoomListFromOtherPartyScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomListFromOtherPartyScreenDataLazyQuery>;
+export type MessageRoomListFromOtherPartyScreenDataQueryResult = Apollo.QueryResult<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>;
 export const MyPageScreenDataDocument = gql`
     query MyPageScreenData {
   me {

@@ -6,6 +6,10 @@ query MessageRoomListFromMySelfScreenData {
   ...MessageRoomListFromMySelf
 }
 
+query MessageRoomListFromOtherPartyScreenData {
+  ...MessageRoomListFromOtherParty
+}
+
 fragment RoomListItemInMessageRoomListScreen on MessageRoom {
   id
   partner {
@@ -37,5 +41,8 @@ fragment MessageRoomListFromMySelf on Query {
 fragment MessageRoomListFromOtherParty on Query {
   me {
     id
+    messageRoomsFromOtherParty {
+      ...RoomListItemInMessageRoomListScreen
+    }
   }
 }

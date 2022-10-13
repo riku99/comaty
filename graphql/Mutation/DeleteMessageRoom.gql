@@ -1,0 +1,5 @@
+mutation DeleteMessageRoom($id: Int!) {
+  deleteMessageRoom(id: $id) {
+    id
+  }
+}

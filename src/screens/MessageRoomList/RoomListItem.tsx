@@ -1,42 +1,45 @@
-import { useNavigation } from '@react-navigation/native';
 import { Text } from '@rneui/themed';
+import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { RoomListItemInMessageRoomListScreenFragment } from 'src/generated/graphql';
 
 type Props = {
   fragmentData: RoomListItemInMessageRoomListScreenFragment;
-};
+} & ComponentProps<typeof Pressable>;
 
-export const RoomListItem = ({ fragmentData }: Props) => {
+export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   const { partner, messages, id } = fragmentData;
   const message = messages.edges[0]?.node.text;
-  const navigation = useNavigation<RootNavigationProp<'MessageRoomList'>>();
-
-  const onBodyPress = () => {
-    navigation.navigate('MessageRoom', {
-      roomId: id,
-      userId: partner.id,
-    });
-  };
 
   return (
-    <Pressable style={styles.container} onPress={onBodyPress}>
-      <ProfileImage
-        imageData={partner.firstProfileImage}
-        style={{
-          height: IMAGE_SIZE,
-          width: IMAGE_SIZE,
-          borderRadius: IMAGE_SIZE,
-        }}
-      />
+    <Pressable {...pressableProps}>
+      {({ pressed }) => (
+        <View
+          style={[
+            styles.container,
+            {
+              backgroundColor: pressed ? '#F6F6F6' : undefined,
+            },
+          ]}
+        >
+          <ProfileImage
+            imageData={partner.firstProfileImage}
+            style={{
+              height: IMAGE_SIZE,
+              width: IMAGE_SIZE,
+              borderRadius: IMAGE_SIZE,
+            }}
+          />
 
-      <View style={styles.nameAndMessage}>
-        <Text style={styles.name}>{partner.nickname}</Text>
-        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-          {message.replace(/\r?\n/g, '')}
-        </Text>
-      </View>
+          <View style={styles.nameAndMessage}>
+            <Text style={styles.name}>{partner.nickname}</Text>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+              {message.replace(/\r?\n/g, '')}
+            </Text>
+          </View>
+        </View>
+      )}
     </Pressable>
   );
 };
@@ -49,6 +52,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     alignItems: 'center',
     width: '100%',
+    backgroundColor: '#fff',
   },
   nameAndMessage: {
     marginLeft: 8,
@@ -59,7 +63,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   text: {
-    marginTop: 4,
+    marginTop: 6,
     width: '80%',
   },
 });

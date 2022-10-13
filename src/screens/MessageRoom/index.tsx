@@ -21,6 +21,7 @@ import {
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
   useMessageRoomScreenDataQuery,
+  useReadMessageMutation,
   useSendMessageMutation,
 } from 'src/generated/graphql';
 import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
@@ -85,6 +86,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   ] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const toast = useToast();
+  const [readMessageMutation] = useReadMessageMutation();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -130,6 +132,25 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       subscription.remove();
     };
   }, [safeAreaBottom, composerBottom, listHeaderHeight]);
+
+  useEffect(() => {
+    (async () => {
+      const ms = data?.messageRoom.messages;
+      if (ms?.edges.length) {
+        const lastMessage = ms.edges[0].node;
+        if (lastMessage.sender.id !== myId) {
+          await readMessageMutation({
+            variables: {
+              messageId: lastMessage.id,
+            },
+            onCompleted: (e) => {
+              console.log(e);
+            },
+          });
+        }
+      }
+    })();
+  }, [data?.messageRoom.messages, myId, readMessageMutation]);
 
   const renderMessageItem = useCallback(
     ({ item, index }: { item: MessageItem; index: number }) => {

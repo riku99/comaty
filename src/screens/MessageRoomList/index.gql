@@ -25,6 +25,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
       node {
         id
         text
+        read
       }
     }
   }

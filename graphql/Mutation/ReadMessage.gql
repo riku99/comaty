@@ -1,0 +1,6 @@
+mutation ReadMessage($messageId: Int!) {
+  createMessageRead(messageId: $messageId) {
+    id
+    read
+  }
+}

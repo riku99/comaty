@@ -35,6 +35,7 @@ fragment MessageRoomListFromMySelf on Query {
     id
     messageRoomsFromMySelf {
       ...RoomListItemInMessageRoomListScreen
+      updatedAt
     }
   }
 }
@@ -44,6 +45,7 @@ fragment MessageRoomListFromOtherParty on Query {
     id
     messageRoomsFromOtherParty {
       ...RoomListItemInMessageRoomListScreen
+      updatedAt
     }
   }
 }

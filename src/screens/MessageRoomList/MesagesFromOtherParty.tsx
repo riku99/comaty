@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
@@ -24,6 +24,28 @@ export const MessagesFromOtherParty = () => {
   );
   const toast = useToast();
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
+
+  const sortedList = useMemo(() => {
+    if (!data?.me) {
+      return [];
+    }
+
+    const c = [...data.me.messageRoomsFromOtherParty];
+
+    c.sort((a, b) => {
+      const ad = new Date(Number(a.updatedAt));
+      const bd = new Date(Number(b.updatedAt));
+      if (ad > bd) {
+        return -1;
+      } else if (bd > ad) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return c;
+  }, [data]);
 
   const renderRoomItem = useCallback(
     ({ item }: { item: RoomItem }) => {
@@ -86,7 +108,7 @@ export const MessagesFromOtherParty = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data.me.messageRoomsFromOtherParty}
+        data={sortedList}
         renderItem={renderRoomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.contentContainer}

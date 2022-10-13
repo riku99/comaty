@@ -9,7 +9,7 @@ type Props = {
 } & ComponentProps<typeof Pressable>;
 
 export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
-  const { partner, messages, id } = fragmentData;
+  const { partner, messages } = fragmentData;
   const message = messages.edges[0]?.node.text;
 
   return (

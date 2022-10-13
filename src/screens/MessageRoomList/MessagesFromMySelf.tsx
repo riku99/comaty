@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
@@ -27,6 +27,28 @@ export const MessagesFromMySelf = React.memo(() => {
   );
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
   const toast = useToast();
+
+  const sortedList = useMemo(() => {
+    if (!data?.me) {
+      return [];
+    }
+
+    const c = [...data.me.messageRoomsFromMySelf];
+
+    c.sort((a, b) => {
+      const ad = new Date(Number(a.updatedAt));
+      const bd = new Date(Number(b.updatedAt));
+      if (ad > bd) {
+        return -1;
+      } else if (bd > ad) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
+    return c;
+  }, [data]);
 
   const renderRoomItem = useCallback(
     ({ item }: { item: RoomItem }) => {
@@ -92,7 +114,7 @@ export const MessagesFromMySelf = React.memo(() => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data?.me.messageRoomsFromMySelf}
+        data={sortedList}
         renderItem={renderRoomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.contentContainer}

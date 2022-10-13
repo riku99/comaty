@@ -17,7 +17,7 @@ type TopTabParamList = {
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
-  const { data } = useMessageRoomListScreenDataQuery();
+  const {} = useMessageRoomListScreenDataQuery();
 
   useLayoutEffect(() => {
     navigation.setOptions({

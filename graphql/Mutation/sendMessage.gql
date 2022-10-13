@@ -2,5 +2,9 @@ mutation SendMessage($roomId: Int!, $input: CreateMessageInput!) {
   createMessage(roomId: $roomId, input: $input) {
     id
     ...MessageBubbleDataInMessageRoom
+    room {
+      id
+      updatedAt
+    }
   }
 }

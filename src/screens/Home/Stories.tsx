@@ -24,17 +24,33 @@ export const Stories = React.memo(
     const { creatingStory } = useCreatingStory();
     const navigation = useNavigation<RootNavigationProp<'HomeMain'>>();
 
-    const storyUsers = storiesData.storyUsers.edges.map((e) => ({
-      userId: e.node.id,
-    }));
+    const storyUsers = storiesData.storyUsers.edges
+      .filter((edge) => edge.node.stories.some((s) => !s.seen))
+      .map((e) => ({
+        userId: e.node.id,
+      }));
 
     const renderItem = useCallback(
       ({ item, index }: { item: Item; index: number }) => {
         const onPress = () => {
-          navigation.navigate('Stories', {
-            storyUsers,
-            startingIndex: index,
-          });
+          const notSeenStory = item.node.stories.some((story) => !story.seen);
+
+          if (notSeenStory) {
+            const i = storyUsers.findIndex((s) => s.userId === item.node.id);
+            navigation.navigate('Stories', {
+              storyUsers,
+              startingIndex: i,
+            });
+          } else {
+            navigation.navigate('Stories', {
+              storyUsers: [
+                {
+                  userId: item.node.id,
+                },
+              ],
+              startingIndex: 0,
+            });
+          }
         };
 
         return (

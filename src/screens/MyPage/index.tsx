@@ -3,12 +3,11 @@ import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { Loading } from 'src/components/ui/Loading';
-import { ProfileStoryOuter } from 'src/components/ui/ProfileStoryOuter';
 import {
-  ProfileImageFragment,
-  ProfileImageFragmentDoc,
+  StoryUserCircleFragment,
+  StoryUserCircleFragmentDoc,
   useMyPageScreenDataQuery,
 } from 'src/generated/graphql';
 import { ActionButton } from './ActionButton';
@@ -33,15 +32,27 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <ProfileStoryOuter imageSize={PROFILE_IMAGE_SIZE}>
-        <ProfileImage
-          imageData={filter<ProfileImageFragment>(
-            ProfileImageFragmentDoc,
-            data.me.firstProfileImage
-          )}
-          style={styles.profileImage}
-        />
-      </ProfileStoryOuter>
+      <StoryUserCircle
+        imageSize={PROFILE_IMAGE_SIZE}
+        storyUserData={filter<StoryUserCircleFragment>(
+          StoryUserCircleFragmentDoc,
+          data.me
+        )}
+        onPress={() => {
+          if (!me?.id) {
+            return;
+          }
+
+          navigation.navigate('Stories', {
+            startingIndex: 0,
+            storyUsers: [
+              {
+                userId: me.id,
+              },
+            ],
+          });
+        }}
+      />
 
       <View style={styles.nameContainer}>
         <Text style={styles.name}>

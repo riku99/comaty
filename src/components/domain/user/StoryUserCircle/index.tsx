@@ -7,6 +7,7 @@ import {
   ProfileImageFragmentDoc,
   StoryUserCircleFragment,
 } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me/useMyId';
 
 type Props = {
   storyUserData: StoryUserCircleFragment;
@@ -22,12 +23,27 @@ export const StoryUserCircle = ({
   creatingStory = false,
 }: Props) => {
   const allSeen = storyUserData.stories.every((s) => s.seen);
+  const myId = useMyId();
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={() => {
+        if (!storyUserData.stories?.length) {
+          return;
+        }
+
+        onPress();
+      }}
+    >
       <ProfileStoryOuter
         imageSize={imageSize}
-        type={allSeen ? 'silver' : 'gradient'}
+        type={
+          !storyUserData.stories?.length
+            ? 'none'
+            : myId !== storyUserData.id && allSeen
+            ? 'silver'
+            : 'gradient'
+        }
       >
         <ProfileImage
           imageData={filter<ProfileImageFragment>(

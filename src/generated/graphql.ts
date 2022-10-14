@@ -980,7 +980,7 @@ export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?:
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
 
 export type MyTagSelectionScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2843,9 +2843,11 @@ export const MyPageScreenDataDocument = gql`
     firstProfileImage {
       ...ProfileImage
     }
+    ...StoryUserCircle
   }
 }
-    ${ProfileImageFragmentDoc}`;
+    ${ProfileImageFragmentDoc}
+${StoryUserCircleFragmentDoc}`;
 
 /**
  * __useMyPageScreenDataQuery__

@@ -1,4 +1,4 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
@@ -88,6 +88,21 @@ export const MyPageScreen = ({ navigation }: Props) => {
           title="通知"
           onPress={() => {
             navigation.navigate('EditProfileStack');
+          }}
+          buttonSize={60}
+        />
+
+        <ActionButton
+          icon={
+            <MaterialCommunityIcons
+              name="card-text"
+              size={24}
+              color={'#666666'}
+            />
+          }
+          title="マイ投稿"
+          onPress={() => {
+            navigation.navigate('MyPosts');
           }}
           buttonSize={60}
         />

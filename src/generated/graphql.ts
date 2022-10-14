@@ -136,10 +136,17 @@ export type Me = UserEntity & {
   messageRoomsFromOtherParty?: Maybe<Array<Maybe<MessageRoom>>>;
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
+  posts?: Maybe<PostConnection>;
   profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
   stories?: Maybe<Array<Maybe<Story>>>;
+};
+
+
+export type MePostsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
 };
 
 export type Message = {
@@ -981,6 +988,14 @@ export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
+
+export type MyPostsScreenDataQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type MyPostsScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, posts?: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', cursor: string, node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } | null };
 
 export type MyTagSelectionScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2875,6 +2890,54 @@ export function useMyPageScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type MyPageScreenDataQueryHookResult = ReturnType<typeof useMyPageScreenDataQuery>;
 export type MyPageScreenDataLazyQueryHookResult = ReturnType<typeof useMyPageScreenDataLazyQuery>;
 export type MyPageScreenDataQueryResult = Apollo.QueryResult<MyPageScreenDataQuery, MyPageScreenDataQueryVariables>;
+export const MyPostsScreenDataDocument = gql`
+    query MyPostsScreenData($after: String, $first: Int) {
+  me {
+    id
+    posts(after: $after, first: $first) {
+      edges {
+        node {
+          ...PostCard
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+    ${PostCardFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __useMyPostsScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMyPostsScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyPostsScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyPostsScreenDataQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function useMyPostsScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MyPostsScreenDataQuery, MyPostsScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyPostsScreenDataQuery, MyPostsScreenDataQueryVariables>(MyPostsScreenDataDocument, options);
+      }
+export function useMyPostsScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyPostsScreenDataQuery, MyPostsScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyPostsScreenDataQuery, MyPostsScreenDataQueryVariables>(MyPostsScreenDataDocument, options);
+        }
+export type MyPostsScreenDataQueryHookResult = ReturnType<typeof useMyPostsScreenDataQuery>;
+export type MyPostsScreenDataLazyQueryHookResult = ReturnType<typeof useMyPostsScreenDataLazyQuery>;
+export type MyPostsScreenDataQueryResult = Apollo.QueryResult<MyPostsScreenDataQuery, MyPostsScreenDataQueryVariables>;
 export const MyTagSelectionScreenDataDocument = gql`
     query MyTagSelectionScreenData {
   me {

@@ -70,18 +70,16 @@ export const MyPageScreen = ({ navigation }: Props) => {
           buttonSize={60}
         />
 
-        <View style={styles.editButton}>
-          <ActionButton
-            icon={<MaterialIcons name="edit" size={28} color="#666666" />}
-            title="プロフィール編集"
-            onPress={() => {
-              navigation.navigate('EditProfileStack');
-            }}
-            buttonSize={66}
-          />
-        </View>
-
         <ActionButton
+          icon={<MaterialIcons name="edit" size={24} color="#666666" />}
+          title="プロフィール編集"
+          onPress={() => {
+            navigation.navigate('EditProfileStack');
+          }}
+          buttonSize={60}
+        />
+
+        {/* <ActionButton
           icon={
             <MaterialIcons name="notifications" size={24} color="#666666" />
           }
@@ -90,7 +88,7 @@ export const MyPageScreen = ({ navigation }: Props) => {
             navigation.navigate('EditProfileStack');
           }}
           buttonSize={60}
-        />
+        /> */}
 
         <ActionButton
           icon={
@@ -105,6 +103,15 @@ export const MyPageScreen = ({ navigation }: Props) => {
             navigation.navigate('MyPosts');
           }}
           buttonSize={60}
+        />
+
+        <ActionButton
+          icon={<MaterialIcons name="group" size={24} color={'#666666'} />}
+          buttonSize={60}
+          onPress={() => {
+            navigation.navigate('MyGroup');
+          }}
+          title="グループ"
         />
       </View>
     </View>
@@ -143,6 +150,6 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   editButton: {
-    transform: [{ translateY: 18 }],
+    // transform: [{ translateY: 18 }],
   },
 });

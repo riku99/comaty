@@ -1,0 +1,29 @@
+query MyGroupScreenData {
+  me {
+    group {
+      id
+      owner {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+      members {
+        id
+        user {
+          id
+          ...UserCard
+        }
+      }
+      ...BottomButtonsInMyGroupScreen
+    }
+  }
+}
+
+fragment BottomButtonsInMyGroupScreen on Query {
+  id
+  owner {
+    id
+  }
+}

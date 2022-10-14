@@ -113,6 +113,22 @@ export enum GetStoryError {
   NotFound = 'NOT_FOUND'
 }
 
+export type Group = {
+  __typename?: 'Group';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  members?: Maybe<Array<Maybe<GroupMember>>>;
+  owner?: Maybe<User>;
+};
+
+export type GroupMember = {
+  __typename?: 'GroupMember';
+  createdAt: Scalars['String'];
+  group?: Maybe<Group>;
+  id: Scalars['Int'];
+  user?: Maybe<User>;
+};
+
 export type Image = {
   __typename?: 'Image';
   height?: Maybe<Scalars['Int']>;
@@ -129,6 +145,7 @@ export type Me = UserEntity & {
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  group?: Maybe<Group>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   initialStatusCompletion: Scalars['Boolean'];
@@ -191,6 +208,7 @@ export type MessageRoomMessagesArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   blockUser?: Maybe<User>;
+  createGroup: Group;
   createMessage: Message;
   createMessageRead?: Maybe<Message>;
   createMessageRoom: MessageRoom;
@@ -671,6 +689,11 @@ export type UserTag = {
   user?: Maybe<User>;
 };
 
+export type CreateGroupMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null } };
+
 export type DeleteMessageRoomMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -983,6 +1006,13 @@ export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'Messag
 export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
 
 export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
+
+export type MyGroupScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyGroupScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', group?: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, members?: Array<{ __typename?: 'GroupMember', id: number, user?: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } | null } | null> | null } | null } | null };
+
+export type BottomButtonsInMyGroupScreenFragment = { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null };
 
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1298,6 +1328,14 @@ export const MessageRoomListFromOtherPartyFragmentDoc = gql`
   }
 }
     ${RoomListItemInMessageRoomListScreenFragmentDoc}`;
+export const BottomButtonsInMyGroupScreenFragmentDoc = gql`
+    fragment BottomButtonsInMyGroupScreen on Group {
+  id
+  owner {
+    id
+  }
+}
+    `;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -1352,6 +1390,41 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
   ...StoryUserCircle
 }
     ${StoryUserCircleFragmentDoc}`;
+export const CreateGroupDocument = gql`
+    mutation CreateGroup {
+  createGroup {
+    id
+    owner {
+      id
+    }
+  }
+}
+    `;
+export type CreateGroupMutationFn = Apollo.MutationFunction<CreateGroupMutation, CreateGroupMutationVariables>;
+
+/**
+ * __useCreateGroupMutation__
+ *
+ * To run a mutation, you first call `useCreateGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createGroupMutation, { data, loading, error }] = useCreateGroupMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateGroupMutation(baseOptions?: Apollo.MutationHookOptions<CreateGroupMutation, CreateGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateGroupMutation, CreateGroupMutationVariables>(CreateGroupDocument, options);
+      }
+export type CreateGroupMutationHookResult = ReturnType<typeof useCreateGroupMutation>;
+export type CreateGroupMutationResult = Apollo.MutationResult<CreateGroupMutation>;
+export type CreateGroupMutationOptions = Apollo.BaseMutationOptions<CreateGroupMutation, CreateGroupMutationVariables>;
 export const DeleteMessageRoomDocument = gql`
     mutation DeleteMessageRoom($id: Int!) {
   deleteMessageRoom(id: $id) {
@@ -2844,6 +2917,59 @@ export function useMessageRoomListFromOtherPartyScreenDataLazyQuery(baseOptions?
 export type MessageRoomListFromOtherPartyScreenDataQueryHookResult = ReturnType<typeof useMessageRoomListFromOtherPartyScreenDataQuery>;
 export type MessageRoomListFromOtherPartyScreenDataLazyQueryHookResult = ReturnType<typeof useMessageRoomListFromOtherPartyScreenDataLazyQuery>;
 export type MessageRoomListFromOtherPartyScreenDataQueryResult = Apollo.QueryResult<MessageRoomListFromOtherPartyScreenDataQuery, MessageRoomListFromOtherPartyScreenDataQueryVariables>;
+export const MyGroupScreenDataDocument = gql`
+    query MyGroupScreenData {
+  me {
+    group {
+      id
+      owner {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+      members {
+        id
+        user {
+          id
+          ...UserCard
+        }
+      }
+      ...BottomButtonsInMyGroupScreen
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}
+${UserCardFragmentDoc}
+${BottomButtonsInMyGroupScreenFragmentDoc}`;
+
+/**
+ * __useMyGroupScreenDataQuery__
+ *
+ * To run a query within a React component, call `useMyGroupScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyGroupScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyGroupScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyGroupScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<MyGroupScreenDataQuery, MyGroupScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyGroupScreenDataQuery, MyGroupScreenDataQueryVariables>(MyGroupScreenDataDocument, options);
+      }
+export function useMyGroupScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyGroupScreenDataQuery, MyGroupScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyGroupScreenDataQuery, MyGroupScreenDataQueryVariables>(MyGroupScreenDataDocument, options);
+        }
+export type MyGroupScreenDataQueryHookResult = ReturnType<typeof useMyGroupScreenDataQuery>;
+export type MyGroupScreenDataLazyQueryHookResult = ReturnType<typeof useMyGroupScreenDataLazyQuery>;
+export type MyGroupScreenDataQueryResult = Apollo.QueryResult<MyGroupScreenDataQuery, MyGroupScreenDataQueryVariables>;
 export const MyPageScreenDataDocument = gql`
     query MyPageScreenData {
   me {

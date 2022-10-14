@@ -1,7 +1,7 @@
 import {
   createTheme,
   CreateThemeOptions,
-  ThemeProvider as ThemeProviderBase
+  ThemeProvider as ThemeProviderBase,
 } from '@rneui/themed';
 import { theme as themeColor } from 'src/styles';
 
@@ -14,7 +14,7 @@ const theme: CreateThemeOptions = createTheme({
     Button: {
       buttonStyle: {
         backgroundColor: themeColor.primary,
-        height: 54,
+        height: 48,
         borderRadius: 6,
       },
       titleStyle: {
@@ -39,7 +39,7 @@ const theme: CreateThemeOptions = createTheme({
         fontSize: 26,
       },
     },
-  }
+  },
 });
 
 export const ThemeProvider = ({ children }: Props) => {

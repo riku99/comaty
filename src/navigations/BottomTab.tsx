@@ -105,7 +105,7 @@ export const BottomTab = React.memo(() => {
                 color={theme.black}
               />
 
-              {true && (
+              {(mySelfBadgeVisible || otherPartyBadgeVisible) && (
                 <View style={styles.badge}>
                   <Badge size={6} />
                 </View>

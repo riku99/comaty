@@ -2,7 +2,9 @@ import { Text } from '@rneui/themed';
 import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { Badge } from 'src/components/ui/Badge';
 import { RoomListItemInMessageRoomListScreenFragment } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me/useMyId';
 
 type Props = {
   fragmentData: RoomListItemInMessageRoomListScreenFragment;
@@ -10,7 +12,10 @@ type Props = {
 
 export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   const { partner, messages } = fragmentData;
-  const message = messages.edges[0]?.node.text;
+  const message = messages.edges[0]?.node;
+  const text = message.text;
+  const myId = useMyId();
+  const badgeVisible = !message.read && message.sender.id !== myId;
 
   return (
     <Pressable {...pressableProps}>
@@ -23,21 +28,30 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
             },
           ]}
         >
-          <ProfileImage
-            imageData={partner.firstProfileImage}
+          <View
             style={{
-              height: IMAGE_SIZE,
-              width: IMAGE_SIZE,
-              borderRadius: IMAGE_SIZE,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}
-          />
+          >
+            <ProfileImage
+              imageData={partner.firstProfileImage}
+              style={{
+                height: IMAGE_SIZE,
+                width: IMAGE_SIZE,
+                borderRadius: IMAGE_SIZE,
+              }}
+            />
 
-          <View style={styles.nameAndMessage}>
-            <Text style={styles.name}>{partner.nickname}</Text>
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {message.replace(/\r?\n/g, '')}
-            </Text>
+            <View style={styles.nameAndMessage}>
+              <Text style={styles.name}>{partner.nickname}</Text>
+              <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+                {text.replace(/\r?\n/g, '')}
+              </Text>
+            </View>
           </View>
+
+          {badgeVisible && <Badge size={12} />}
         </View>
       )}
     </Pressable>
@@ -53,10 +67,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     backgroundColor: '#fff',
+    justifyContent: 'space-between',
   },
   nameAndMessage: {
     marginLeft: 8,
-    width: '100%',
+    width: '60%',
   },
   name: {
     fontWeight: 'bold',
@@ -64,6 +79,6 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 6,
-    width: '80%',
+    width: '100%',
   },
 });

@@ -1,8 +1,10 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React, { useLayoutEffect } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
+import { Badge } from 'src/components/ui/Badge';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
 import { MessagesFromOtherParty } from './MesagesFromOtherParty';
 import { MessagesFromMySelf } from './MessagesFromMySelf';
@@ -17,7 +19,22 @@ type TopTabParamList = {
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
-  const {} = useMessageRoomListScreenDataQuery();
+  const { data } = useMessageRoomListScreenDataQuery();
+  const myId = useMyId();
+  const mySelfBadgeVisible = data?.me.messageRoomsFromMySelf.some((room) => {
+    return (
+      !room.messages.edges[0]?.node.read &&
+      room.messages.edges[0]?.node.sender.id !== myId
+    );
+  });
+  const otherPartyBadgeVisible = data?.me.messageRoomsFromOtherParty.some(
+    (room) => {
+      return (
+        !room.messages.edges[0]?.node.read &&
+        room.messages.edges[0]?.node.sender.id !== myId
+      );
+    }
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -62,6 +79,15 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
           component={MessagesFromOtherParty}
           options={{
             tabBarLabel: '相手から',
+            tabBarBadge: () => (
+              <>
+                {otherPartyBadgeVisible && (
+                  <View style={styles.badgeContainer}>
+                    <Badge size={8} />
+                  </View>
+                )}
+              </>
+            ),
           }}
         />
         <TopTab.Screen
@@ -69,6 +95,15 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
           component={MessagesFromMySelf}
           options={{
             tabBarLabel: '自分から',
+            tabBarBadge: () => (
+              <>
+                {mySelfBadgeVisible && (
+                  <View style={styles.badgeContainer}>
+                    <Badge size={8} />
+                  </View>
+                )}
+              </>
+            ),
           }}
         />
       </TopTab.Navigator>
@@ -81,5 +116,10 @@ const { width: screenWidth } = Dimensions.get('screen');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: 8,
+    right: 36,
   },
 });

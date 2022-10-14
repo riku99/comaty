@@ -143,9 +143,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
             variables: {
               messageId: lastMessage.id,
             },
-            onCompleted: (e) => {
-              console.log(e);
-            },
           });
         }
       }

@@ -8,6 +8,7 @@ import {
   MyGroupScreenDataDocument,
   useCreateGroupMutation,
   useDeleteGroupMutation,
+  useExitFromGroupMutation,
   useMyGroupScreenDataQuery,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
@@ -22,6 +23,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
   const myId = useMyId();
   const [menuModalVisible, setMenuModalVisibe] = useState(false);
   const [deleteGroupMutation] = useDeleteGroupMutation();
+  const [exitFromGroupMutation] = useExitFromGroupMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -96,6 +98,41 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     );
   };
 
+  const onExitGroupPress = async () => {
+    if (!data?.me.group) {
+      return;
+    }
+
+    Alert.alert('グループから抜けてもよろしいですか？', '', [
+      {
+        text: 'キャンセル',
+        style: 'cancel',
+      },
+      {
+        text: '抜ける',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await exitFromGroupMutation({
+              onCompleted: (d) => {
+                console.log(d);
+              },
+              refetchQueries: [
+                {
+                  query: MyGroupScreenDataDocument,
+                },
+              ],
+            });
+          } catch (e) {
+            console.log(e);
+          } finally {
+            setMenuModalVisibe(false);
+          }
+        },
+      },
+    ]);
+  };
+
   const hideModal = () => {
     setMenuModalVisibe(false);
   };
@@ -135,7 +172,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
         {
           title: 'グループから抜ける',
           titleColor: theme.red,
-          onPress: () => {},
+          onPress: onExitGroupPress,
         },
       ];
 

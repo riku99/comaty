@@ -51,7 +51,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
             </View>
           </View>
 
-          {badgeVisible && <Badge size={12} />}
+          {badgeVisible && <Badge size={10} />}
         </View>
       )}
     </Pressable>

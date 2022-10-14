@@ -1,9 +1,11 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { Badge } from 'src/components/ui/Badge';
 import { ContentCreationButton } from 'src/components/ui/ContentCreationButton';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
+import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { CreateStoryScreen } from 'src/screens/CreateStory';
 import { MessageRoomListScreen } from 'src/screens/MessageRoomList';
 import { TimelineScreen } from 'src/screens/Timeline';
@@ -23,6 +25,8 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 export const BottomTab = React.memo(() => {
   const { setContentsCreationModalVisible } = useContentsCreationVisible();
+  const { mySelfBadgeVisible, otherPartyBadgeVisible } =
+    useMessageRoomBadgeVisible();
 
   return (
     <Tab.Navigator
@@ -90,13 +94,23 @@ export const BottomTab = React.memo(() => {
         component={MessageRoomListScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Ionicons
-              name={
-                focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'
-              }
-              size={ICON_SIZE}
-              color={theme.black}
-            />
+            <View>
+              <Ionicons
+                name={
+                  focused
+                    ? 'chatbubble-ellipses'
+                    : 'chatbubble-ellipses-outline'
+                }
+                size={ICON_SIZE}
+                color={theme.black}
+              />
+
+              {true && (
+                <View style={styles.badge}>
+                  <Badge size={6} />
+                </View>
+              )}
+            </View>
           ),
         }}
       />
@@ -106,7 +120,7 @@ export const BottomTab = React.memo(() => {
         options={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
               name={focused ? 'account' : 'account-outline'}
               size={ICON_SIZE}
@@ -120,3 +134,11 @@ export const BottomTab = React.memo(() => {
 });
 
 const ICON_SIZE = 24;
+
+const styles = StyleSheet.create({
+  badge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+  },
+});

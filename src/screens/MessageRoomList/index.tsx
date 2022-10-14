@@ -4,7 +4,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { Badge } from 'src/components/ui/Badge';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
-import { useMyId } from 'src/hooks/me/useMyId';
+import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { theme } from 'src/styles';
 import { MessagesFromOtherParty } from './MesagesFromOtherParty';
 import { MessagesFromMySelf } from './MessagesFromMySelf';
@@ -19,22 +19,9 @@ type TopTabParamList = {
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
-  const { data } = useMessageRoomListScreenDataQuery();
-  const myId = useMyId();
-  const mySelfBadgeVisible = data?.me.messageRoomsFromMySelf.some((room) => {
-    return (
-      !room.messages.edges[0]?.node.read &&
-      room.messages.edges[0]?.node.sender.id !== myId
-    );
-  });
-  const otherPartyBadgeVisible = data?.me.messageRoomsFromOtherParty.some(
-    (room) => {
-      return (
-        !room.messages.edges[0]?.node.read &&
-        room.messages.edges[0]?.node.sender.id !== myId
-      );
-    }
-  );
+  useMessageRoomListScreenDataQuery();
+  const { mySelfBadgeVisible, otherPartyBadgeVisible } =
+    useMessageRoomBadgeVisible();
 
   useLayoutEffect(() => {
     navigation.setOptions({

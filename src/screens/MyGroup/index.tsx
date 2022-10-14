@@ -1,13 +1,17 @@
 import { Button, Text } from '@rneui/themed';
-import { useLayoutEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useLayoutEffect, useState } from 'react';
+import { Alert, StyleSheet, View } from 'react-native';
 import { Loading } from 'src/components/ui/Loading';
+import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
+import { ThreeDots } from 'src/components/ui/ThreeDots';
 import {
   MyGroupScreenDataDocument,
   useCreateGroupMutation,
+  useDeleteGroupMutation,
   useMyGroupScreenDataQuery,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
+import { theme } from 'src/styles';
 import { ReadQRCodeButton } from './ReadQRCodeButton';
 
 type Props = RootNavigationScreenProp<'MyGroup'>;
@@ -16,12 +20,22 @@ export const MyGroupScreen = ({ navigation }: Props) => {
   const { data, loading } = useMyGroupScreenDataQuery();
   const [createGroupMutation] = useCreateGroupMutation();
   const myId = useMyId();
+  const [menuModalVisible, setMenuModalVisibe] = useState(false);
+  const [deleteGroupMutation] = useDeleteGroupMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'グループ',
+      headerRight: () => (
+        <ThreeDots
+          dotsSize={22}
+          onPress={() => {
+            setMenuModalVisibe(true);
+          }}
+        />
+      ),
     });
-  }, [navigation]);
+  }, [navigation, setMenuModalVisibe]);
 
   const onCreateButtonPress = async () => {
     try {
@@ -38,6 +52,52 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const onDissolveGroupPress = async () => {
+    if (!data?.me.group) {
+      return;
+    }
+
+    Alert.alert(
+      'グループを解散してよろしいですか？',
+      '他のメンバーも全てグループから削除されます。',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '解散',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteGroupMutation({
+                variables: {
+                  id: data.me.group.id,
+                },
+                onCompleted: (d) => {
+                  console.log(d);
+                },
+                refetchQueries: [
+                  {
+                    query: MyGroupScreenDataDocument,
+                  },
+                ],
+              });
+            } catch (e) {
+              console.log(e);
+            } finally {
+              setMenuModalVisibe(false);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+  const hideModal = () => {
+    setMenuModalVisibe(false);
   };
 
   if (loading) {
@@ -62,6 +122,22 @@ export const MyGroupScreen = ({ navigation }: Props) => {
   }
 
   const { group } = data.me;
+  const isOwner = group.owner.id === myId;
+  const modalItems: ModalItem[] = isOwner
+    ? [
+        {
+          title: 'グループを解散',
+          titleColor: theme.red,
+          onPress: onDissolveGroupPress,
+        },
+      ]
+    : [
+        {
+          title: 'グループから抜ける',
+          titleColor: theme.red,
+          onPress: () => {},
+        },
+      ];
 
   return (
     <View style={styles.container}>
@@ -80,6 +156,13 @@ export const MyGroupScreen = ({ navigation }: Props) => {
           <Button title="グループQRコードを表示" />
         </View>
       )}
+
+      <OverlayModal
+        isVisible={menuModalVisible}
+        items={modalItems}
+        onCancel={hideModal}
+        onBackdropPress={hideModal}
+      />
     </View>
   );
 };

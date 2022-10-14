@@ -16,14 +16,6 @@ query MyGroupScreenData {
           ...UserCard
         }
       }
-      ...BottomButtonsInMyGroupScreen
     }
-  }
-}
-
-fragment BottomButtonsInMyGroupScreen on Query {
-  id
-  owner {
-    id
   }
 }

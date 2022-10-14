@@ -219,6 +219,7 @@ export type Mutation = {
   createStorySeen?: Maybe<StorySeen>;
   createUser: Me;
   createUserTag: UserTag;
+  deleteGroup?: Maybe<Group>;
   deleteMessageRoom?: Maybe<MessageRoom>;
   deletePost?: Maybe<Post>;
   deleteProfileImage?: Maybe<UserProfileImage>;
@@ -291,6 +292,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationCreateUserTagArgs = {
   input: CreateUserTagInput;
+};
+
+
+export type MutationDeleteGroupArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -694,6 +700,13 @@ export type CreateGroupMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type CreateGroupMutation = { __typename?: 'Mutation', createGroup: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null } };
 
+export type DeleteGroupMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteGroupMutation = { __typename?: 'Mutation', deleteGroup?: { __typename?: 'Group', id: number } | null };
+
 export type DeleteMessageRoomMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -1012,8 +1025,6 @@ export type MyGroupScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MyGroupScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', group?: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, members?: Array<{ __typename?: 'GroupMember', id: number, user?: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } | null } | null> | null } | null } | null };
 
-export type BottomButtonsInMyGroupScreenFragment = { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null };
-
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1328,14 +1339,6 @@ export const MessageRoomListFromOtherPartyFragmentDoc = gql`
   }
 }
     ${RoomListItemInMessageRoomListScreenFragmentDoc}`;
-export const BottomButtonsInMyGroupScreenFragmentDoc = gql`
-    fragment BottomButtonsInMyGroupScreen on Group {
-  id
-  owner {
-    id
-  }
-}
-    `;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -1425,6 +1428,39 @@ export function useCreateGroupMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateGroupMutationHookResult = ReturnType<typeof useCreateGroupMutation>;
 export type CreateGroupMutationResult = Apollo.MutationResult<CreateGroupMutation>;
 export type CreateGroupMutationOptions = Apollo.BaseMutationOptions<CreateGroupMutation, CreateGroupMutationVariables>;
+export const DeleteGroupDocument = gql`
+    mutation DeleteGroup($id: Int!) {
+  deleteGroup(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteGroupMutationFn = Apollo.MutationFunction<DeleteGroupMutation, DeleteGroupMutationVariables>;
+
+/**
+ * __useDeleteGroupMutation__
+ *
+ * To run a mutation, you first call `useDeleteGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteGroupMutation, { data, loading, error }] = useDeleteGroupMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteGroupMutation(baseOptions?: Apollo.MutationHookOptions<DeleteGroupMutation, DeleteGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteGroupMutation, DeleteGroupMutationVariables>(DeleteGroupDocument, options);
+      }
+export type DeleteGroupMutationHookResult = ReturnType<typeof useDeleteGroupMutation>;
+export type DeleteGroupMutationResult = Apollo.MutationResult<DeleteGroupMutation>;
+export type DeleteGroupMutationOptions = Apollo.BaseMutationOptions<DeleteGroupMutation, DeleteGroupMutationVariables>;
 export const DeleteMessageRoomDocument = gql`
     mutation DeleteMessageRoom($id: Int!) {
   deleteMessageRoom(id: $id) {
@@ -2936,13 +2972,11 @@ export const MyGroupScreenDataDocument = gql`
           ...UserCard
         }
       }
-      ...BottomButtonsInMyGroupScreen
     }
   }
 }
     ${ProfileImageFragmentDoc}
-${UserCardFragmentDoc}
-${BottomButtonsInMyGroupScreenFragmentDoc}`;
+${UserCardFragmentDoc}`;
 
 /**
  * __useMyGroupScreenDataQuery__

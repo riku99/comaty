@@ -26,6 +26,10 @@ export enum BlockUserError {
   AlreadyBlockedUser = 'ALREADY_BLOCKED_USER'
 }
 
+export enum CreateGroupMemberError {
+  InvalidGroup = 'INVALID_GROUP'
+}
+
 export enum CreateMessageError {
   NotFoundMessageRoom = 'NOT_FOUND_MESSAGE_ROOM'
 }
@@ -209,6 +213,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   blockUser?: Maybe<User>;
   createGroup: Group;
+  createGroupMember: GroupMember;
   createMessage: Message;
   createMessageRead?: Maybe<Message>;
   createMessageRoom: MessageRoom;
@@ -242,6 +247,12 @@ export type Mutation = {
 
 export type MutationBlockUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCreateGroupMemberArgs = {
+  groupId: Scalars['Int'];
+  ownerId: Scalars['ID'];
 };
 
 
@@ -947,6 +958,11 @@ export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; 
 
 
 export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+
+export type GroupQrCodeScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GroupQrCodeScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, group?: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null } | null } | null };
 
 export type HomeScreenDataQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
@@ -2648,6 +2664,46 @@ export function useEditProfileScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type EditProfileScreenDataQueryHookResult = ReturnType<typeof useEditProfileScreenDataQuery>;
 export type EditProfileScreenDataLazyQueryHookResult = ReturnType<typeof useEditProfileScreenDataLazyQuery>;
 export type EditProfileScreenDataQueryResult = Apollo.QueryResult<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>;
+export const GroupQrCodeScreenDataDocument = gql`
+    query GroupQRCodeScreenData {
+  me {
+    id
+    group {
+      id
+      owner {
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGroupQrCodeScreenDataQuery__
+ *
+ * To run a query within a React component, call `useGroupQrCodeScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupQrCodeScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupQrCodeScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGroupQrCodeScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>(GroupQrCodeScreenDataDocument, options);
+      }
+export function useGroupQrCodeScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>(GroupQrCodeScreenDataDocument, options);
+        }
+export type GroupQrCodeScreenDataQueryHookResult = ReturnType<typeof useGroupQrCodeScreenDataQuery>;
+export type GroupQrCodeScreenDataLazyQueryHookResult = ReturnType<typeof useGroupQrCodeScreenDataLazyQuery>;
+export type GroupQrCodeScreenDataQueryResult = Apollo.QueryResult<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>;
 export const HomeScreenDataDocument = gql`
     query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String) {
   ...HomeNearByUsers

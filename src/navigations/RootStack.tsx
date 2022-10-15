@@ -3,6 +3,7 @@ import React from 'react';
 import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
+import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
 import { MessageRoomScreen } from 'src/screens/MessageRoom';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { PostCreationScreen } from 'src/screens/PostCreation';
@@ -52,6 +53,7 @@ export type RootStackParamList = {
     userId: string;
     roomId: number;
   };
+  GroupQRCode: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -123,6 +125,7 @@ export const RootStack = () => {
             }}
           >
             <Stack.Screen name="StoryViewers" component={StoryViewersScreen} />
+            <Stack.Screen name="GroupQRCode" component={GroupQLCodeScreen} />
           </Stack.Group>
 
           <Stack.Group

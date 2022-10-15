@@ -1,0 +1,11 @@
+query GroupQRCodeScreenData {
+  me {
+    id
+    group {
+      id
+      owner {
+        id
+      }
+    }
+  }
+}

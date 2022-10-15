@@ -133,6 +133,10 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     ]);
   };
 
+  const onDisplayingQLCodeButtonPress = () => {
+    navigation.navigate('GroupQRCode');
+  };
+
   const hideModal = () => {
     setMenuModalVisibe(false);
   };
@@ -176,8 +180,6 @@ export const MyGroupScreen = ({ navigation }: Props) => {
         },
       ];
 
-  console.log(myId);
-
   return (
     <View style={styles.container}>
       <Text>グループメンバー</Text>
@@ -192,7 +194,10 @@ export const MyGroupScreen = ({ navigation }: Props) => {
           >
             あなたはグループのオーナーです
           </Text>
-          <Button title="グループQRコードを表示" />
+          <Button
+            title="グループQRコードを表示"
+            onPress={onDisplayingQLCodeButtonPress}
+          />
         </View>
       )}
 

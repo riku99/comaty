@@ -14,7 +14,7 @@ const theme: CreateThemeOptions = createTheme({
     Button: {
       buttonStyle: {
         backgroundColor: themeColor.primary,
-        height: 48,
+        height: 52,
         borderRadius: 6,
       },
       titleStyle: {

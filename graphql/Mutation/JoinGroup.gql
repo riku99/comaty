@@ -1,0 +1,5 @@
+mutation JoinGroup($groupId: Int!, $ownerId: ID!) {
+  createGroupMember(groupId: $groupId, ownerId: $ownerId) {
+    id
+  }
+}

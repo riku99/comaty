@@ -1,11 +1,13 @@
 import { Button, Text } from '@rneui/themed';
-import { useLayoutEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import { UserCard } from 'src/components/domain/user/UserCard';
 import { Loading } from 'src/components/ui/Loading';
 import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
 import { ThreeDots } from 'src/components/ui/ThreeDots';
 import {
   MyGroupScreenDataDocument,
+  MyGroupScreenDataQuery,
   useCreateGroupMutation,
   useDeleteGroupMutation,
   useExitFromGroupMutation,
@@ -16,8 +18,12 @@ import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'MyGroup'>;
 
+type UserItem = MyGroupScreenDataQuery['me']['group']['members'][number];
+
 export const MyGroupScreen = ({ navigation }: Props) => {
-  const { data, loading } = useMyGroupScreenDataQuery();
+  const { data, loading } = useMyGroupScreenDataQuery({
+    fetchPolicy: 'cache-and-network',
+  });
   const [createGroupMutation] = useCreateGroupMutation();
   const myId = useMyId();
   const [menuModalVisible, setMenuModalVisibe] = useState(false);
@@ -27,6 +33,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'グループ',
+      headerShadowVisible: false,
       headerRight: () => (
         <ThreeDots
           dotsSize={22}
@@ -144,6 +151,17 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     setMenuModalVisibe(false);
   };
 
+  const renderUserItem = useCallback(({ item }: { item: UserItem }) => {
+    return (
+      <UserCard
+        userCardData={item.user}
+        onPress={(id: string) => {
+          navigation.navigate('UserProfile', { id });
+        }}
+      />
+    );
+  }, []);
+
   if (loading) {
     return <Loading />;
   }
@@ -157,7 +175,15 @@ export const MyGroupScreen = ({ navigation }: Props) => {
           }
         </Text>
 
-        <View style={styles.buttomButtonsContainer}>
+        <View
+          style={[
+            styles.buttomButtonsContainer,
+            {
+              position: 'absolute',
+              bottom: 12,
+            },
+          ]}
+        >
           <Button title="グループを作成" onPress={onCreateButtonPress} />
           <Button
             title="グループQRコード読み取り"
@@ -197,7 +223,17 @@ export const MyGroupScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <Text>グループメンバー</Text>
+      <FlatList
+        data={data.me.group.members}
+        renderItem={renderUserItem}
+        keyExtractor={(item) => item.id.toString()}
+        columnWrapperStyle={{
+          justifyContent: 'space-between',
+          paddingHorizontal: 8,
+        }}
+        numColumns={2}
+        contentContainerStyle={styles.memberContaienr}
+      />
 
       {myId === group.owner.id && (
         <View style={styles.buttomButtonsContainer}>
@@ -229,7 +265,6 @@ export const MyGroupScreen = ({ navigation }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   groupText: {
     fontWeight: 'bold',
@@ -237,11 +272,16 @@ const styles = StyleSheet.create({
     marginTop: 12,
     color: '#666666',
     lineHeight: 22,
+    paddingHorizontal: 16,
   },
   buttomButtonsContainer: {
-    position: 'absolute',
-    bottom: 12,
     width: '100%',
     alignSelf: 'center',
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+  },
+  memberContaienr: {
+    paddingTop: 12,
+    paddingBottom: 24,
   },
 });

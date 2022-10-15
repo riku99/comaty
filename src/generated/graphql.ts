@@ -731,6 +731,14 @@ export type DeleteMessageRoomMutationVariables = Exact<{
 
 export type DeleteMessageRoomMutation = { __typename?: 'Mutation', deleteMessageRoom?: { __typename?: 'MessageRoom', id: number } | null };
 
+export type JoinGroupMutationVariables = Exact<{
+  groupId: Scalars['Int'];
+  ownerId: Scalars['ID'];
+}>;
+
+
+export type JoinGroupMutation = { __typename?: 'Mutation', createGroupMember: { __typename?: 'GroupMember', id: number } };
+
 export type ReadMessageMutationVariables = Exact<{
   messageId: Scalars['Int'];
 }>;
@@ -1566,6 +1574,40 @@ export function useDeleteMessageRoomMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteMessageRoomMutationHookResult = ReturnType<typeof useDeleteMessageRoomMutation>;
 export type DeleteMessageRoomMutationResult = Apollo.MutationResult<DeleteMessageRoomMutation>;
 export type DeleteMessageRoomMutationOptions = Apollo.BaseMutationOptions<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>;
+export const JoinGroupDocument = gql`
+    mutation JoinGroup($groupId: Int!, $ownerId: ID!) {
+  createGroupMember(groupId: $groupId, ownerId: $ownerId) {
+    id
+  }
+}
+    `;
+export type JoinGroupMutationFn = Apollo.MutationFunction<JoinGroupMutation, JoinGroupMutationVariables>;
+
+/**
+ * __useJoinGroupMutation__
+ *
+ * To run a mutation, you first call `useJoinGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useJoinGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [joinGroupMutation, { data, loading, error }] = useJoinGroupMutation({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      ownerId: // value for 'ownerId'
+ *   },
+ * });
+ */
+export function useJoinGroupMutation(baseOptions?: Apollo.MutationHookOptions<JoinGroupMutation, JoinGroupMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<JoinGroupMutation, JoinGroupMutationVariables>(JoinGroupDocument, options);
+      }
+export type JoinGroupMutationHookResult = ReturnType<typeof useJoinGroupMutation>;
+export type JoinGroupMutationResult = Apollo.MutationResult<JoinGroupMutation>;
+export type JoinGroupMutationOptions = Apollo.BaseMutationOptions<JoinGroupMutation, JoinGroupMutationVariables>;
 export const ReadMessageDocument = gql`
     mutation ReadMessage($messageId: Int!) {
   createMessageRead(messageId: $messageId) {

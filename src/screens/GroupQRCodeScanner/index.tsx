@@ -2,12 +2,15 @@ import { Text } from '@rneui/themed';
 import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Vibration, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import {
   ConfirmGroupOwnerInGroupQrCodeFragment,
   GroupQrCodeOwnerInGroupQrCodeDocument,
   GroupQrCodeOwnerInGroupQrCodeQuery,
+  MyGroupScreenDataDocument,
+  useJoinGroupMutation,
 } from 'src/generated/graphql';
 import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { theme } from 'src/styles';
@@ -26,6 +29,9 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     );
   const [dataForConfirmingOwner, setDataForConfirmingOwner] =
     useState<null | ConfirmGroupOwnerInGroupQrCodeFragment>(null);
+  const toast = useToast();
+  const [joinGroupMutaiton] = useJoinGroupMutation();
+  const [groupId, setGroupId] = useState<null | number>(null);
 
   useEffect(() => {
     const getBarCodeScannerPermission = async () => {
@@ -47,9 +53,11 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
       });
       if (responseData?.user) {
         setDataForConfirmingOwner(responseData.user);
+        setGroupId(codeValue.groupId);
       }
     } catch (e) {
       console.log(e);
+      toast.show('グループが見つかりませんでした');
     } finally {
       setLoadingOverlayVisible(false);
     }
@@ -79,13 +87,36 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     );
   }
 
-  if (dataForConfirmingOwner) {
+  if (dataForConfirmingOwner && groupId) {
     const onCancelPress = () => {
       setDataForConfirmingOwner(null);
       setScanned(false);
     };
 
-    const onMakeMemberPress = async () => {};
+    const onMakeMemberPress = async () => {
+      try {
+        setLoadingOverlayVisible(true);
+        await joinGroupMutaiton({
+          variables: {
+            ownerId: dataForConfirmingOwner.id,
+            groupId,
+          },
+          onCompleted: (d) => {
+            console.log(d);
+            navigation.goBack();
+          },
+          refetchQueries: [
+            {
+              query: MyGroupScreenDataDocument,
+            },
+          ],
+        });
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setLoadingOverlayVisible(false);
+      }
+    };
 
     return (
       <ConfirmGroupOwner

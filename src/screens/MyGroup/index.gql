@@ -1,5 +1,6 @@
 query MyGroupScreenData {
   me {
+    id
     group {
       id
       owner {

@@ -176,6 +176,8 @@ export const MyGroupScreen = ({ navigation }: Props) => {
         },
       ];
 
+  console.log(myId);
+
   return (
     <View style={styles.container}>
       <Text>グループメンバー</Text>

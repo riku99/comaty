@@ -29,28 +29,29 @@ export const MyGroupScreen = ({ navigation }: Props) => {
   const [menuModalVisible, setMenuModalVisibe] = useState(false);
   const [deleteGroupMutation] = useDeleteGroupMutation();
   const [exitFromGroupMutation] = useExitFromGroupMutation();
+  const [creatingGroup, setCreatingGroup] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'グループ',
       headerShadowVisible: false,
-      headerRight: () => (
-        <ThreeDots
-          dotsSize={22}
-          onPress={() => {
-            setMenuModalVisibe(true);
-          }}
-        />
-      ),
+      headerRight: data?.me.group
+        ? () => (
+            <ThreeDots
+              dotsSize={22}
+              onPress={() => {
+                setMenuModalVisibe(true);
+              }}
+            />
+          )
+        : undefined,
     });
-  }, [navigation, setMenuModalVisibe]);
+  }, [navigation, setMenuModalVisibe, data]);
 
   const onCreateButtonPress = async () => {
     try {
+      setCreatingGroup(true);
       await createGroupMutation({
-        onCompleted: (d) => {
-          console.log(d);
-        },
         refetchQueries: [
           {
             query: MyGroupScreenDataDocument,
@@ -59,6 +60,8 @@ export const MyGroupScreen = ({ navigation }: Props) => {
       });
     } catch (e) {
       console.log(e);
+    } finally {
+      setCreatingGroup(false);
     }
   };
 
@@ -151,16 +154,19 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     setMenuModalVisibe(false);
   };
 
-  const renderUserItem = useCallback(({ item }: { item: UserItem }) => {
-    return (
-      <UserCard
-        userCardData={item.user}
-        onPress={(id: string) => {
-          navigation.navigate('UserProfile', { id });
-        }}
-      />
-    );
-  }, []);
+  const renderUserItem = useCallback(
+    ({ item }: { item: UserItem }) => {
+      return (
+        <UserCard
+          userCardData={item.user}
+          onPress={(id: string) => {
+            navigation.navigate('UserProfile', { id });
+          }}
+        />
+      );
+    },
+    [navigation]
+  );
 
   if (loading) {
     return <Loading />;
@@ -184,7 +190,12 @@ export const MyGroupScreen = ({ navigation }: Props) => {
             },
           ]}
         >
-          <Button title="グループを作成" onPress={onCreateButtonPress} />
+          <Button
+            title="グループを作成"
+            onPress={onCreateButtonPress}
+            loading={creatingGroup}
+            disabled={creatingGroup}
+          />
           <Button
             title="グループQRコード読み取り"
             containerStyle={{

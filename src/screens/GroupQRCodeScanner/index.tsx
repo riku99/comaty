@@ -102,7 +102,6 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
             groupId,
           },
           onCompleted: (d) => {
-            console.log(d);
             navigation.goBack();
           },
           refetchQueries: [

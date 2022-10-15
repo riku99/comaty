@@ -3,6 +3,7 @@ import React from 'react';
 import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
+import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
 import { GroupQRCodeScannerScreen } from 'src/screens/GroupQRCodeScanner';
 import { MessageRoomScreen } from 'src/screens/MessageRoom';
@@ -56,6 +57,10 @@ export type RootStackParamList = {
   };
   GroupQRCode: undefined;
   GroupQRCodeScanner: undefined;
+  GroupMembers: {
+    groupId: number;
+    userId: string;
+  };
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -120,6 +125,7 @@ export const RootStack = () => {
             options={{ headerShown: false, gestureEnabled: false }}
           />
           <Stack.Screen name="MessageRoom" component={MessageRoomScreen} />
+          <Stack.Screen name="GroupMembers" component={GroupMembersScreen} />
 
           <Stack.Group
             screenOptions={{

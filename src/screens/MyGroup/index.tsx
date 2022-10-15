@@ -244,6 +244,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
         }}
         numColumns={2}
         contentContainerStyle={styles.memberContaienr}
+        ItemSeparatorComponent={() => <View style={{ height: 26 }} />}
       />
 
       {myId === group.owner.id && (

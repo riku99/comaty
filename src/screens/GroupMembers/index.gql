@@ -1,0 +1,12 @@
+query GroupMembersScreenData($groupId: Int!) {
+  group(id: $groupId) {
+    id
+    members {
+      id
+      user {
+        id
+        ...UserCard
+      }
+    }
+  }
+}

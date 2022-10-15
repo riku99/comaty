@@ -21,6 +21,9 @@ fragment BottomSheetContentInUserProfile on User {
 fragment BottomButtonGroupInUserProfile on User {
   id
   ...StoryUserCircle
+  group {
+    id
+  }
 }
 
 query UserProfileScreenData($id: ID!) {

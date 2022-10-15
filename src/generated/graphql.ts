@@ -97,6 +97,10 @@ export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
 }
 
+export enum GetGroupError {
+  NotFound = 'NOT_FOUND'
+}
+
 export enum GetMessageRoomError {
   NotFound = 'NOT_FOUND'
 }
@@ -426,6 +430,7 @@ export type PostEdge = {
 
 export type Query = {
   __typename?: 'Query';
+  group: Group;
   me?: Maybe<Me>;
   messageRoom: MessageRoom;
   nearbyUsers: UserConnection;
@@ -438,6 +443,11 @@ export type Query = {
   story: Story;
   storyUsers: UserConnection;
   user: User;
+};
+
+
+export type QueryGroupArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -652,6 +662,7 @@ export type User = UserEntity & {
   blocked?: Maybe<Scalars['Boolean']>;
   blocking?: Maybe<Scalars['Boolean']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  group?: Maybe<Group>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   myTags?: Maybe<Array<Maybe<UserTag>>>;
@@ -967,6 +978,13 @@ export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; 
 
 export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
+export type GroupMembersScreenDataQueryVariables = Exact<{
+  groupId: Scalars['Int'];
+}>;
+
+
+export type GroupMembersScreenDataQuery = { __typename?: 'Query', group: { __typename?: 'Group', id: number, members?: Array<{ __typename?: 'GroupMember', id: number, user?: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } | null } | null> | null } };
+
 export type GroupQrCodeScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1154,14 +1172,14 @@ export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileI
 
 export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
-export type BottomButtonGroupInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null };
+export type BottomButtonGroupInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null };
 
 export type UserProfileScreenDataQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } };
 
 export const ProfileImageFragmentDoc = gql`
     fragment ProfileImage on UserProfileImage {
@@ -1439,6 +1457,9 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
     fragment BottomButtonGroupInUserProfile on User {
   id
   ...StoryUserCircle
+  group {
+    id
+  }
 }
     ${StoryUserCircleFragmentDoc}`;
 export const CreateGroupDocument = gql`
@@ -2724,6 +2745,48 @@ export function useEditProfileScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type EditProfileScreenDataQueryHookResult = ReturnType<typeof useEditProfileScreenDataQuery>;
 export type EditProfileScreenDataLazyQueryHookResult = ReturnType<typeof useEditProfileScreenDataLazyQuery>;
 export type EditProfileScreenDataQueryResult = Apollo.QueryResult<EditProfileScreenDataQuery, EditProfileScreenDataQueryVariables>;
+export const GroupMembersScreenDataDocument = gql`
+    query GroupMembersScreenData($groupId: Int!) {
+  group(id: $groupId) {
+    id
+    members {
+      id
+      user {
+        id
+        ...UserCard
+      }
+    }
+  }
+}
+    ${UserCardFragmentDoc}`;
+
+/**
+ * __useGroupMembersScreenDataQuery__
+ *
+ * To run a query within a React component, call `useGroupMembersScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupMembersScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupMembersScreenDataQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGroupMembersScreenDataQuery(baseOptions: Apollo.QueryHookOptions<GroupMembersScreenDataQuery, GroupMembersScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupMembersScreenDataQuery, GroupMembersScreenDataQueryVariables>(GroupMembersScreenDataDocument, options);
+      }
+export function useGroupMembersScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupMembersScreenDataQuery, GroupMembersScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupMembersScreenDataQuery, GroupMembersScreenDataQueryVariables>(GroupMembersScreenDataDocument, options);
+        }
+export type GroupMembersScreenDataQueryHookResult = ReturnType<typeof useGroupMembersScreenDataQuery>;
+export type GroupMembersScreenDataLazyQueryHookResult = ReturnType<typeof useGroupMembersScreenDataLazyQuery>;
+export type GroupMembersScreenDataQueryResult = Apollo.QueryResult<GroupMembersScreenDataQuery, GroupMembersScreenDataQueryVariables>;
 export const GroupQrCodeScreenDataDocument = gql`
     query GroupQRCodeScreenData {
   me {

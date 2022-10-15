@@ -47,11 +47,28 @@ export const BottomButtonGroup = ({ data }: Props) => {
     }
   };
 
+  const onGroupMembersPress = () => {
+    if (!data.group) {
+      return;
+    }
+
+    navigation.push('GroupMembers', {
+      groupId: data.group.id,
+      userId: data.id,
+    });
+  };
+
   return (
     <HStack style={styles.content} space={50}>
-      <Pressable style={styles.showGroupButton}>
-        <MaterialIcons name="group" size={ICON_SIZE} color={theme.secondary} />
-      </Pressable>
+      {!!data.group && (
+        <Pressable style={styles.showGroupButton} onPress={onGroupMembersPress}>
+          <MaterialIcons
+            name="group"
+            size={ICON_SIZE}
+            color={theme.secondary}
+          />
+        </Pressable>
+      )}
 
       <Pressable
         style={styles.sendMessageButton}

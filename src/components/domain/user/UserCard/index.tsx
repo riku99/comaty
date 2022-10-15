@@ -27,7 +27,9 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
     <Pressable
       style={[styles.body, containerStyle]}
       onPress={() => {
-        onPress(id);
+        if (onPress) {
+          onPress(id);
+        }
       }}
     >
       <ProfileImage

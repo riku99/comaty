@@ -6,6 +6,7 @@ import { CloseButton } from 'src/components/ui/CloseButton';
 import { Loading } from 'src/components/ui/Loading';
 import { useGroupQrCodeScreenDataQuery } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { GroupQRCodeValue } from 'src/types';
 
 type Props = RootNavigationScreenProp<'GroupQRCode'>;
 
@@ -27,6 +28,11 @@ export const GroupQLCodeScreen = ({ navigation }: Props) => {
     return null;
   }
 
+  const codeValue: GroupQRCodeValue = {
+    ownerId: data.me.group.owner.id,
+    groupId: data.me.group.id,
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -36,7 +42,7 @@ export const GroupQLCodeScreen = ({ navigation }: Props) => {
         }}
       >
         <QRCode
-          value={`ownerId=${data.me.group.owner.id}&groupId=${data.me.group.id}`}
+          value={JSON.stringify(codeValue)}
           size={150}
           linearGradient={['#9089fa', '#b289fa', '#e389fa']}
           enableLinearGradient

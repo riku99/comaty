@@ -13,3 +13,8 @@ export type UserPreviewData = {
   bio: User['bio'];
   height: User['height'];
 };
+
+export type GroupQRCodeValue = {
+  ownerId: string;
+  groupId: number;
+};

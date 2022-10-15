@@ -20,11 +20,11 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     getBarCodeScannerPermission();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }: BarCodeEvent) => {
+  const handleBarCodeScanned = ({ data }: BarCodeEvent) => {
     setScanned(true);
     Vibration.vibrate();
-    console.log('type is ' + type);
-    console.log('✋ data is ' + data);
+    const codeValue = JSON.parse(data);
+    console.log(codeValue);
   };
 
   if (hasPermission === null) {
@@ -74,6 +74,8 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     </View>
   );
 };
+
+//  ownerId=ca3f3a67-2b03-4007-bcce-ac0cf812bf8c&groupId=8
 
 const styles = StyleSheet.create({
   container: {

@@ -4,6 +4,7 @@ import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
+import { GroupQRCodeScannerScreen } from 'src/screens/GroupQRCodeScanner';
 import { MessageRoomScreen } from 'src/screens/MessageRoom';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { PostCreationScreen } from 'src/screens/PostCreation';
@@ -54,6 +55,7 @@ export type RootStackParamList = {
     roomId: number;
   };
   GroupQRCode: undefined;
+  GroupQRCodeScanner: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -150,6 +152,13 @@ export const RootStack = () => {
             <Stack.Screen
               name="TakeStory"
               component={TakeStoryScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="GroupQRCodeScanner"
+              component={GroupQRCodeScannerScreen}
               options={{
                 headerShown: false,
               }}

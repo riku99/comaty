@@ -3,7 +3,7 @@ import {
   ApolloLink,
   ApolloProvider as ApolloProviderBase,
   from,
-  InMemoryCache
+  InMemoryCache,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -21,7 +21,7 @@ type Props = {
 };
 
 const uploadLink = createUploadLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: 'http://172.20.10.3:4000/graphql',
 });
 
 const customLink = new ApolloLink((operation, forward) => {
@@ -135,8 +135,8 @@ export const ApolloProvider = ({ children }: Props) => {
               merge: (_, incoming) => incoming,
             },
             messageRoomsFromMySelf: {
-              merge: (_, incoming) => incoming
-            }
+              merge: (_, incoming) => incoming,
+            },
           },
         },
         User: {

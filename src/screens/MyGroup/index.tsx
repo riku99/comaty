@@ -13,7 +13,6 @@ import {
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
-import { ReadQRCodeButton } from './ReadQRCodeButton';
 
 type Props = RootNavigationScreenProp<'MyGroup'>;
 
@@ -137,6 +136,10 @@ export const MyGroupScreen = ({ navigation }: Props) => {
     navigation.navigate('GroupQRCode');
   };
 
+  const onReadQRCodeButtonPress = () => {
+    navigation.navigate('GroupQRCodeScanner');
+  };
+
   const hideModal = () => {
     setMenuModalVisibe(false);
   };
@@ -156,7 +159,19 @@ export const MyGroupScreen = ({ navigation }: Props) => {
 
         <View style={styles.buttomButtonsContainer}>
           <Button title="グループを作成" onPress={onCreateButtonPress} />
-          <ReadQRCodeButton />
+          <Button
+            title="グループQRコード読み取り"
+            containerStyle={{
+              marginTop: 12,
+            }}
+            buttonStyle={{
+              backgroundColor: '#fff',
+            }}
+            titleStyle={{
+              color: theme.black,
+            }}
+            onPress={onReadQRCodeButtonPress}
+          />
         </View>
       </View>
     );

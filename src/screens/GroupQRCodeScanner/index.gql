@@ -1,0 +1,14 @@
+query GroupQRCodeOwnerInGroupQRCode($id: ID!) {
+  user(id: $id) {
+    id
+    ...ConfirmGroupOwnerInGroupQRCode
+  }
+}
+
+fragment ConfirmGroupOwnerInGroupQRCode on User {
+  id
+  nickname
+  firstProfileImage {
+    ...ProfileImage
+  }
+}

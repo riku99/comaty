@@ -3,13 +3,29 @@ import { BarCodeEvent, BarCodeScanner } from 'expo-barcode-scanner';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Vibration, View } from 'react-native';
 import { CloseButton } from 'src/components/ui/CloseButton';
+import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
+import {
+  ConfirmGroupOwnerInGroupQrCodeFragment,
+  GroupQrCodeOwnerInGroupQrCodeDocument,
+  GroupQrCodeOwnerInGroupQrCodeQuery,
+} from 'src/generated/graphql';
+import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { theme } from 'src/styles';
+import { GroupQRCodeValue } from 'src/types';
+import { ConfirmGroupOwner } from './ConfimGroupOwner';
 
 type Props = RootNavigationScreenProp<'GroupQRCodeScanner'>;
 
 export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [loadingOverlayVisible, setLoadingOverlayVisible] = useState(false);
+  const groupQRCodeUserLazyQuery =
+    useCustomLazyQuery<GroupQrCodeOwnerInGroupQrCodeQuery>(
+      GroupQrCodeOwnerInGroupQrCodeDocument
+    );
+  const [dataForConfirmingOwner, setDataForConfirmingOwner] =
+    useState<null | ConfirmGroupOwnerInGroupQrCodeFragment>(null);
 
   useEffect(() => {
     const getBarCodeScannerPermission = async () => {
@@ -20,11 +36,23 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     getBarCodeScannerPermission();
   }, []);
 
-  const handleBarCodeScanned = ({ data }: BarCodeEvent) => {
-    setScanned(true);
-    Vibration.vibrate();
-    const codeValue = JSON.parse(data);
-    console.log(codeValue);
+  const handleBarCodeScanned = async ({ data }: BarCodeEvent) => {
+    try {
+      setScanned(true);
+      setLoadingOverlayVisible(true);
+      Vibration.vibrate();
+      const codeValue = JSON.parse(data) as GroupQRCodeValue;
+      const { data: responseData } = await groupQRCodeUserLazyQuery({
+        id: codeValue.ownerId,
+      });
+      if (responseData?.user) {
+        setDataForConfirmingOwner(responseData.user);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoadingOverlayVisible(false);
+    }
   };
 
   if (hasPermission === null) {
@@ -51,6 +79,23 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
     );
   }
 
+  if (dataForConfirmingOwner) {
+    const onCancelPress = () => {
+      setDataForConfirmingOwner(null);
+      setScanned(false);
+    };
+
+    const onMakeMemberPress = async () => {};
+
+    return (
+      <ConfirmGroupOwner
+        fragmentData={dataForConfirmingOwner}
+        onCancelPress={onCancelPress}
+        onMakeMemberPress={onMakeMemberPress}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
       <BarCodeScanner
@@ -71,11 +116,11 @@ export const GroupQRCodeScannerScreen = ({ navigation }: Props) => {
       <View style={styles.closeButton}>
         <CloseButton color={'#fff'} size={36} />
       </View>
+
+      {loadingOverlayVisible && <LoadingOverlay />}
     </View>
   );
 };
-
-//  ownerId=ca3f3a67-2b03-4007-bcce-ac0cf812bf8c&groupId=8
 
 const styles = StyleSheet.create({
   container: {

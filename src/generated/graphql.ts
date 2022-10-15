@@ -964,6 +964,15 @@ export type GroupQrCodeScreenDataQueryVariables = Exact<{ [key: string]: never; 
 
 export type GroupQrCodeScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, group?: { __typename?: 'Group', id: number, owner?: { __typename?: 'User', id: string } | null } | null } | null };
 
+export type GroupQrCodeOwnerInGroupQrCodeQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GroupQrCodeOwnerInGroupQrCodeQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+
+export type ConfirmGroupOwnerInGroupQrCodeFragment = { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null };
+
 export type HomeScreenDataQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
   nearbyUsersAfter?: InputMaybe<Scalars['String']>;
@@ -1242,6 +1251,15 @@ export const UserCardListFragmentDoc = gql`
   }
 }
     ${UserCardFragmentDoc}`;
+export const ConfirmGroupOwnerInGroupQrCodeFragmentDoc = gql`
+    fragment ConfirmGroupOwnerInGroupQRCode on User {
+  id
+  nickname
+  firstProfileImage {
+    ...ProfileImage
+  }
+}
+    ${ProfileImageFragmentDoc}`;
 export const PageInfoFragmentDoc = gql`
     fragment PageInfo on PageInfo {
   hasNextPage
@@ -2704,6 +2722,42 @@ export function useGroupQrCodeScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type GroupQrCodeScreenDataQueryHookResult = ReturnType<typeof useGroupQrCodeScreenDataQuery>;
 export type GroupQrCodeScreenDataLazyQueryHookResult = ReturnType<typeof useGroupQrCodeScreenDataLazyQuery>;
 export type GroupQrCodeScreenDataQueryResult = Apollo.QueryResult<GroupQrCodeScreenDataQuery, GroupQrCodeScreenDataQueryVariables>;
+export const GroupQrCodeOwnerInGroupQrCodeDocument = gql`
+    query GroupQRCodeOwnerInGroupQRCode($id: ID!) {
+  user(id: $id) {
+    id
+    ...ConfirmGroupOwnerInGroupQRCode
+  }
+}
+    ${ConfirmGroupOwnerInGroupQrCodeFragmentDoc}`;
+
+/**
+ * __useGroupQrCodeOwnerInGroupQrCodeQuery__
+ *
+ * To run a query within a React component, call `useGroupQrCodeOwnerInGroupQrCodeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGroupQrCodeOwnerInGroupQrCodeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGroupQrCodeOwnerInGroupQrCodeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGroupQrCodeOwnerInGroupQrCodeQuery(baseOptions: Apollo.QueryHookOptions<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>(GroupQrCodeOwnerInGroupQrCodeDocument, options);
+      }
+export function useGroupQrCodeOwnerInGroupQrCodeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>(GroupQrCodeOwnerInGroupQrCodeDocument, options);
+        }
+export type GroupQrCodeOwnerInGroupQrCodeQueryHookResult = ReturnType<typeof useGroupQrCodeOwnerInGroupQrCodeQuery>;
+export type GroupQrCodeOwnerInGroupQrCodeLazyQueryHookResult = ReturnType<typeof useGroupQrCodeOwnerInGroupQrCodeLazyQuery>;
+export type GroupQrCodeOwnerInGroupQrCodeQueryResult = Apollo.QueryResult<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>;
 export const HomeScreenDataDocument = gql`
     query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String) {
   ...HomeNearByUsers

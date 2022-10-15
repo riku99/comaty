@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    maxWidth: '94%',
   },
   bubble: {
     padding: 10,

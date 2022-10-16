@@ -97,7 +97,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.contents}>
         <Text style={styles.desc}>
-          身長とグループ人数は自動でタグに追加されます
+          身長と一緒にいる人の人数は自動でタグに追加されます
         </Text>
         <View style={styles.inputContainer}>
           <Text style={styles.hash}># </Text>

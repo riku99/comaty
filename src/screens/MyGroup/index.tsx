@@ -177,7 +177,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
       <View style={styles.container}>
         <Text style={styles.groupText}>
           {
-            'グループが作成されていません。\n今一緒にいる人とグループになりましょう！'
+            'グループが作成されていません。\n一緒にいる人とグループになりましょう！\n他のユーザーが、あなたが誰と一緒にいるかわかります👀'
           }
         </Text>
 
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 12,
     color: '#666666',
-    lineHeight: 22,
+    lineHeight: 24,
     paddingHorizontal: 16,
   },
   buttomButtonsContainer: {

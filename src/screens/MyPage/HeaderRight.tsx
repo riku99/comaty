@@ -1,10 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 export const HeaderRight = () => {
+  const navigation = useNavigation<RootNavigationProp<'MyPage'>>();
+
   return (
     <View style={styles.container}>
-      <Ionicons name="settings-outline" size={ICON_SIZE} />
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Setting');
+        }}
+      >
+        <Ionicons name="settings-outline" size={ICON_SIZE} />
+      </Pressable>
       <Ionicons
         name="notifications-outline"
         size={ICON_SIZE}

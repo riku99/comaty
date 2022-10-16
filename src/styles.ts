@@ -14,6 +14,7 @@ export const theme = {
     text: '#575757',
     background: '#fafafa',
     rightIcon: '#A5A5A5',
+    pressed: '#F6F6F6',
   },
   red: '#FF2A2A',
 };

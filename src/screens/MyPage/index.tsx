@@ -204,7 +204,7 @@ const getGroupMemberCountPickerItems = () => {
     ...numberItems,
     {
       value: 10,
-      label: 'それ以上',
+      label: '10人以上',
     },
   ];
 };

@@ -16,6 +16,7 @@ fragment BottomSheetContentInUserProfile on User {
     id
     text
   }
+  numberOfPeopleTogether
 }
 
 fragment BottomButtonGroupInUserProfile on User {

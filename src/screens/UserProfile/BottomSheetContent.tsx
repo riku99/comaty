@@ -13,11 +13,16 @@ type Props = {
 };
 
 export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
-  const { age, blocking, blocked, myTags } = data;
+  const { age, blocking, blocked, myTags, numberOfPeopleTogether } = data;
   const blockingOrBlocked = blocking || blocked;
   const nickname = previewData ? previewData.nickname : data.nickname;
   const bio = previewData ? previewData.bio : data.bio;
   const height = previewData ? previewData.height : data.height;
+
+  const numberOfPeopleTogetherTag =
+    numberOfPeopleTogether > 9
+      ? '10人以上でいます!'
+      : `${numberOfPeopleTogether}人でいます!`;
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
@@ -29,6 +34,13 @@ export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
         {!blockingOrBlocked && (
           <>
             <View style={styles.tagsContainer}>
+              {!!numberOfPeopleTogether && (
+                <View>
+                  <View style={[styles.tag]}>
+                    <Tag text={numberOfPeopleTogetherTag} />
+                  </View>
+                </View>
+              )}
               {height && (
                 <View style={[styles.tag]}>
                   <Tag text={`${height}㌢`} />

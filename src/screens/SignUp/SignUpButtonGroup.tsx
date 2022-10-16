@@ -5,15 +5,16 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import GoogleIcon from 'src/assets/svg/google.svg';
 import { VStack } from 'src/components/ui/VStack';
-import { useSignUpWithApple, useSignUpWithGoogle } from 'src/hooks/auth';
-import { useLoadingVisible } from 'src/hooks/loadingOverlay';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
+import { useSignUpWithApple } from 'src/hooks/auth';
+import { useSignUpWithGoogle } from 'src/hooks/auth/useSignUpWithGoogle';
 import { theme } from 'src/styles';
 
 export const SignUpButtonGroup = () => {
-  const { setLoadingVisible } = useLoadingVisible();
   const { signUpWithApple } = useSignUpWithApple();
   const { signUpWithGoogle } = useSignUpWithGoogle();
   const navigation = useNavigation<RootNavigationProp<'SignUp'>>();
+  const { setLoadingVisible } = useLoadingOverlayVisible();
 
   const onEmailLoginPress = () => {
     navigation.navigate('EmailSignUp');

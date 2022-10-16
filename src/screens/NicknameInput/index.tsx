@@ -3,8 +3,8 @@ import React, { useLayoutEffect, useState } from 'react';
 import { Alert, StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 import { useUpdateInitialStatusMutation } from 'src/generated/graphql';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useDateOfBirth, useNickname, useSex } from 'src/hooks/initialStatus';
-import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'NicknameInput'>;
@@ -21,8 +21,8 @@ export const NicknameInputScreen = ({ navigation }: Props) => {
   const { nickname, setNickname } = useNickname();
   const { sex } = useSex();
   const { birthDay, birthMonth, birthYear } = useDateOfBirth();
-  const { setLoadingVisible } = useLoadingVisible();
   const [updateInitialStatus] = useUpdateInitialStatusMutation();
+  const { setLoadingVisible } = useLoadingOverlayVisible();
 
   const completionDisabled = !nickname || nickname.length > 8;
 

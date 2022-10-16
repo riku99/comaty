@@ -7,13 +7,13 @@ import Geocoder from 'react-native-geocoding';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import { useGetInitialDataQuery } from 'src/generated/graphql';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { useLoggedIn } from 'src/hooks/auth';
-import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 import { RootStack } from 'src/navigations/RootStack';
 
 export const Root = () => {
-  const { loadingVisible } = useLoadingVisible();
+  const { loadingVisible } = useLoadingOverlayVisible();
   const { data: initialData } = useGetInitialDataQuery();
   const { setLoggedIn } = useLoggedIn();
   const { contentsCreationModalVisible, setContentsCreationModalVisible } =

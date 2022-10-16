@@ -2,8 +2,8 @@ import React, { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 import { EmailForm } from 'src/components/ui/EmailForm';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useSignUpWithEmail } from 'src/hooks/auth';
-import { useLoadingVisible } from 'src/hooks/loadingOverlay';
 
 type Props = RootNavigationScreenProp<'EmailSignUp'>;
 
@@ -19,7 +19,7 @@ export const EmailSignUpScreen = ({ navigation }: Props) => {
 
   const disabeld = !email || !password || password.length < 8;
 
-  const { setLoadingVisible } = useLoadingVisible();
+  const { setLoadingVisible } = useLoadingOverlayVisible();
   const { signUpWithEmail } = useSignUpWithEmail();
 
   const onSignUpPress = async () => {

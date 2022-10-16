@@ -1,10 +1,13 @@
 import { useLayoutEffect } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SimpleListItem } from 'src/components/ui/SimpleListItem';
+import { useLogout } from 'src/hooks/auth/useLogout';
 
 type Props = RootNavigationScreenProp<'AccountSetting'>;
 
 export const AccountSettingScreen = ({ navigation }: Props) => {
+  const { logout } = useLogout();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'アカウント設定',
@@ -20,6 +23,9 @@ export const AccountSettingScreen = ({ navigation }: Props) => {
       {
         text: 'ログアウト',
         style: 'destructive',
+        onPress: async () => {
+          await logout();
+        },
       },
     ]);
   };

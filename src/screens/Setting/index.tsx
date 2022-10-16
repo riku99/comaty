@@ -1,8 +1,8 @@
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
+import { SimpleListItem } from 'src/components/ui/SimpleListItem';
 import { theme } from 'src/styles';
-import { ListItem } from './ListItem';
 
 type Props = RootNavigationScreenProp<'Setting'>;
 
@@ -16,7 +16,7 @@ export const SettingScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <ListItem
+        <SimpleListItem
           title="アカウント"
           icon={
             <MaterialCommunityIcons
@@ -25,9 +25,12 @@ export const SettingScreen = ({ navigation }: Props) => {
               color={theme.black}
             />
           }
+          onPress={() => {
+            navigation.navigate('AccountSetting');
+          }}
         />
 
-        <ListItem
+        <SimpleListItem
           title="プッシュ通知"
           icon={<Entypo name="notification" size={24} color={theme.black} />}
         />

@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { AccountSettingScreen } from 'src/screens/AccountSetting';
 import { MyGroupScreen } from 'src/screens/MyGroup';
 import { MyPageScreen } from 'src/screens/MyPage';
 import { MyPostsScreen } from 'src/screens/MyPosts';
@@ -10,6 +11,7 @@ export type MyPageStackParamList = {
   MyPosts: undefined;
   MyGroup: undefined;
   Setting: undefined;
+  AccountSetting: undefined;
 };
 
 const Stack = createNativeStackNavigator<MyPageStackParamList>();
@@ -25,6 +27,7 @@ export const MyPageStack = () => {
       <Stack.Screen name="MyPosts" component={MyPostsScreen} />
       <Stack.Screen name="MyGroup" component={MyGroupScreen} />
       <Stack.Screen name="Setting" component={SettingScreen} />
+      <Stack.Screen name="AccountSetting" component={AccountSettingScreen} />
     </Stack.Navigator>
   );
 };

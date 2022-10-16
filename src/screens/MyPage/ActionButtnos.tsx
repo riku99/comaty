@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 22,
+    marginTop: 18,
   },
   editButton: {
     transform: [{ translateY: 18 }],

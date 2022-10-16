@@ -3,6 +3,7 @@ import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
+import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { Loading } from 'src/components/ui/Loading';
 import {
   StoryUserCircleFragment,
@@ -11,6 +12,7 @@ import {
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { ActionButtons } from './ActionButtnos';
+import { HeaderRight } from './HeaderRight';
 
 type Props = RootNavigationScreenProp<'MyPageMain'>;
 
@@ -19,8 +21,10 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: 'マイページ',
+      title: '',
       headerShadowVisible: false,
+      headerRight: () => <HeaderRight />,
+      headerLeft: () => <HeaderLeftTitle title="マイページ" />,
     });
   }, [navigation]);
 

@@ -166,6 +166,7 @@ export type Me = UserEntity & {
   messageRoomsFromOtherParty?: Maybe<Array<Maybe<MessageRoom>>>;
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
+  numberOfPeopleTogether?: Maybe<Scalars['Int']>;
   posts?: Maybe<PostConnection>;
   profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
   sex?: Maybe<Sex>;
@@ -250,6 +251,7 @@ export type Mutation = {
   unlikePost?: Maybe<Post>;
   updateInitialStatus: Me;
   updateMe: Me;
+  updateNumberOfPeopleTogether: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
 };
@@ -394,6 +396,11 @@ export type MutationUpdateInitialStatusArgs = {
 
 export type MutationUpdateMeArgs = {
   input: UpdateMeInput;
+};
+
+
+export type MutationUpdateNumberOfPeopleTogetherArgs = {
+  input: UpdateNumberOfPeopleTogetherInput;
 };
 
 
@@ -657,6 +664,10 @@ export type UpdateMeInput = {
   statusMessage: Scalars['String'];
 };
 
+export type UpdateNumberOfPeopleTogetherInput = {
+  numebr?: InputMaybe<Scalars['Int']>;
+};
+
 export type UpdateUserProfileInput = {
   bio?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
@@ -678,6 +689,7 @@ export type User = UserEntity & {
   id: Scalars['ID'];
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
+  numberOfPeopleTogether?: Maybe<Scalars['Int']>;
   profileImages: Array<Maybe<UserProfileImage>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
@@ -704,6 +716,7 @@ export type UserEntity = {
   id: Scalars['ID'];
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
+  numberOfPeopleTogether?: Maybe<Scalars['Int']>;
   profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
   sex?: Maybe<Sex>;
   statusMessage?: Maybe<Scalars['String']>;
@@ -782,6 +795,13 @@ export type SendMessageMutationVariables = Exact<{
 
 
 export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string, room?: { __typename?: 'MessageRoom', id: number, updatedAt: string } | null, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } };
+
+export type UpdateNumberOfPeopleTogetherMutationVariables = Exact<{
+  input: UpdateNumberOfPeopleTogetherInput;
+}>;
+
+
+export type UpdateNumberOfPeopleTogetherMutation = { __typename?: 'Mutation', updateNumberOfPeopleTogether: { __typename?: 'Me', id: string, numberOfPeopleTogether?: number | null } };
 
 export type BlockUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -1103,7 +1123,7 @@ export type MyGroupScreenDataQuery = { __typename?: 'Query', me?: { __typename?:
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, active: boolean, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
+export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, active: boolean, numberOfPeopleTogether?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
 
 export type MyPostsScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -1754,6 +1774,40 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const UpdateNumberOfPeopleTogetherDocument = gql`
+    mutation UpdateNumberOfPeopleTogether($input: UpdateNumberOfPeopleTogetherInput!) {
+  updateNumberOfPeopleTogether(input: $input) {
+    id
+    numberOfPeopleTogether
+  }
+}
+    `;
+export type UpdateNumberOfPeopleTogetherMutationFn = Apollo.MutationFunction<UpdateNumberOfPeopleTogetherMutation, UpdateNumberOfPeopleTogetherMutationVariables>;
+
+/**
+ * __useUpdateNumberOfPeopleTogetherMutation__
+ *
+ * To run a mutation, you first call `useUpdateNumberOfPeopleTogetherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNumberOfPeopleTogetherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNumberOfPeopleTogetherMutation, { data, loading, error }] = useUpdateNumberOfPeopleTogetherMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateNumberOfPeopleTogetherMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNumberOfPeopleTogetherMutation, UpdateNumberOfPeopleTogetherMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateNumberOfPeopleTogetherMutation, UpdateNumberOfPeopleTogetherMutationVariables>(UpdateNumberOfPeopleTogetherDocument, options);
+      }
+export type UpdateNumberOfPeopleTogetherMutationHookResult = ReturnType<typeof useUpdateNumberOfPeopleTogetherMutation>;
+export type UpdateNumberOfPeopleTogetherMutationResult = Apollo.MutationResult<UpdateNumberOfPeopleTogetherMutation>;
+export type UpdateNumberOfPeopleTogetherMutationOptions = Apollo.BaseMutationOptions<UpdateNumberOfPeopleTogetherMutation, UpdateNumberOfPeopleTogetherMutationVariables>;
 export const BlockUserDocument = gql`
     mutation BlockUser($id: ID!) {
   blockUser(id: $id) {
@@ -3326,6 +3380,7 @@ export const MyPageScreenDataDocument = gql`
     }
     ...StoryUserCircle
     active
+    numberOfPeopleTogether
   }
 }
     ${ProfileImageFragmentDoc}

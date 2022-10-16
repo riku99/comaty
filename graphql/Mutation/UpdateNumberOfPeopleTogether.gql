@@ -1,0 +1,8 @@
+mutation UpdateNumberOfPeopleTogether(
+  $input: UpdateNumberOfPeopleTogetherInput!
+) {
+  updateNumberOfPeopleTogether(input: $input) {
+    id
+    numberOfPeopleTogether
+  }
+}

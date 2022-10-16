@@ -1,15 +1,17 @@
 import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Switch, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { Loading } from 'src/components/ui/Loading';
+import { Picker } from 'src/components/ui/Picker';
 import {
   StoryUserCircleFragment,
   StoryUserCircleFragmentDoc,
   useChangeActiveMutation,
   useMyPageScreenDataQuery,
+  useUpdateNumberOfPeopleTogetherMutation,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { ActionButtons } from './ActionButtnos';
@@ -19,8 +21,15 @@ type Props = RootNavigationScreenProp<'MyPageMain'>;
 
 export const MyPageScreen = ({ navigation }: Props) => {
   const { data, loading } = useMyPageScreenDataQuery();
-  const [active, setActive] = useState(data?.me.active);
   const [changeActiveMutation] = useChangeActiveMutation();
+  const [groupMemberCountPickerVisible, setGroupMemberCountPickerVisible] =
+    useState(false);
+  const [active, setActive] = useState(data?.me.active);
+  const [numberOfPeopleTogether, setNumberOfPeopleTogether] = useState(
+    data?.me.numberOfPeopleTogether
+  );
+  const [updateNumberOfPeopleTogetherMutation] =
+    useUpdateNumberOfPeopleTogetherMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -34,6 +43,11 @@ export const MyPageScreen = ({ navigation }: Props) => {
   useEffect(() => {
     setActive(data?.me.active);
   }, [data?.me.active, setActive]);
+
+  useEffect(() => {
+    console.log(data?.me.numberOfPeopleTogether);
+    setNumberOfPeopleTogether(data?.me.numberOfPeopleTogether);
+  }, [data?.me.numberOfPeopleTogether]);
 
   if (loading) {
     return <Loading />;
@@ -59,6 +73,25 @@ export const MyPageScreen = ({ navigation }: Props) => {
       console.log(e);
       setActive(!value);
     } finally {
+    }
+  };
+
+  const onPickerValueChange = async (value: number | null) => {
+    const previousValue = numberOfPeopleTogether;
+    setNumberOfPeopleTogether(value);
+    try {
+      await updateNumberOfPeopleTogetherMutation({
+        variables: {
+          input: {
+            numebr: value,
+          },
+        },
+        onCompleted: (d) => {
+          console.log(d);
+        },
+      });
+    } catch (e) {
+      setNumberOfPeopleTogether(previousValue);
     }
   };
 
@@ -119,7 +152,10 @@ export const MyPageScreen = ({ navigation }: Props) => {
           }
         </Text>
 
-        <View
+        <Pressable
+          onPress={() => {
+            setGroupMemberCountPickerVisible(true);
+          }}
           style={[
             styles.sectionItem,
             {
@@ -129,16 +165,47 @@ export const MyPageScreen = ({ navigation }: Props) => {
         >
           <Text style={styles.sectionItemTitle}>今何人でいる？</Text>
           <Text>未選択</Text>
-        </View>
+        </Pressable>
         <Text style={styles.sectionItemBottomText}>
           今一緒にいる人の人数を選択しましょう！
         </Text>
       </ScrollView>
+
+      <View style={styles.pickerContainer}>
+        <Picker
+          isVisible={groupMemberCountPickerVisible}
+          items={getGroupMemberCountPickerItems()}
+          hidePicker={() => {
+            setGroupMemberCountPickerVisible(false);
+          }}
+          selectedValue={numberOfPeopleTogether}
+          onValueChange={onPickerValueChange}
+        />
+      </View>
     </View>
   );
 };
 
 const PROFILE_IMAGE_SIZE = 80;
+
+const getGroupMemberCountPickerItems = () => {
+  const numebrs = [];
+  for (let i = 1; i <= 10; i++) {
+    numebrs.push(i);
+  }
+  const numberItems = numebrs.map((n) => ({ value: n, label: `${n}人` }));
+  return [
+    {
+      value: null,
+      label: '未選択',
+    },
+    ...numberItems,
+    {
+      value: 11,
+      label: 'それ以上',
+    },
+  ];
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -188,5 +255,10 @@ const styles = StyleSheet.create({
     marginLeft: 18,
     fontSize: 13,
     marginTop: 6,
+  },
+  pickerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
   },
 });

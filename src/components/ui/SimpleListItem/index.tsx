@@ -1,6 +1,6 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, TextStyle, View } from 'react-native';
 import { theme } from 'src/styles';
 
 type Props = {
@@ -8,12 +8,14 @@ type Props = {
   icon?: JSX.Element;
   onPress?: () => void;
   rightIconVisible?: boolean;
+  titleStyle?: TextStyle;
 };
 
 export const SimpleListItem = ({
   title,
   icon,
   onPress,
+  titleStyle,
   rightIconVisible = true,
 }: Props) => {
   return (
@@ -27,7 +29,7 @@ export const SimpleListItem = ({
             },
           ]}
         >
-          <View style={styles.iconAndTitle}>
+          <View style={[styles.iconAndTitle]}>
             {icon}
             <Text
               style={[
@@ -35,6 +37,7 @@ export const SimpleListItem = ({
                 {
                   marginLeft: icon ? 8 : 0,
                 },
+                titleStyle,
               ]}
             >
               {title}

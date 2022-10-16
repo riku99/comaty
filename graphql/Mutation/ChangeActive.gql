@@ -1,0 +1,6 @@
+mutation ChangeActive($input: ChangeActiveInput!) {
+  changeActive(input: $input) {
+    id
+    active
+  }
+}

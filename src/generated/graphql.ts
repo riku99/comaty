@@ -26,6 +26,10 @@ export enum BlockUserError {
   AlreadyBlockedUser = 'ALREADY_BLOCKED_USER'
 }
 
+export type ChangeActiveInput = {
+  value: Scalars['Boolean'];
+};
+
 export enum CreateGroupMemberError {
   InvalidGroup = 'INVALID_GROUP'
 }
@@ -147,6 +151,7 @@ export type Image = {
 
 export type Me = UserEntity & {
   __typename?: 'Me';
+  active: Scalars['Boolean'];
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   birthDay?: Maybe<Scalars['Int']>;
@@ -216,6 +221,7 @@ export type MessageRoomMessagesArgs = {
 export type Mutation = {
   __typename?: 'Mutation';
   blockUser?: Maybe<User>;
+  changeActive: Me;
   createGroup: Group;
   createGroupMember: GroupMember;
   createMessage: Message;
@@ -251,6 +257,11 @@ export type Mutation = {
 
 export type MutationBlockUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationChangeActiveArgs = {
+  input: ChangeActiveInput;
 };
 
 
@@ -718,6 +729,13 @@ export type UserTag = {
   user?: Maybe<User>;
 };
 
+export type ChangeActiveMutationVariables = Exact<{
+  input: ChangeActiveInput;
+}>;
+
+
+export type ChangeActiveMutation = { __typename?: 'Mutation', changeActive: { __typename?: 'Me', id: string, active: boolean } };
+
 export type CreateGroupMutationVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1085,7 +1103,7 @@ export type MyGroupScreenDataQuery = { __typename?: 'Query', me?: { __typename?:
 export type MyPageScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
+export type MyPageScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, bio?: string | null, active: boolean, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
 
 export type MyPostsScreenDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
@@ -1462,6 +1480,40 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
   }
 }
     ${StoryUserCircleFragmentDoc}`;
+export const ChangeActiveDocument = gql`
+    mutation ChangeActive($input: ChangeActiveInput!) {
+  changeActive(input: $input) {
+    id
+    active
+  }
+}
+    `;
+export type ChangeActiveMutationFn = Apollo.MutationFunction<ChangeActiveMutation, ChangeActiveMutationVariables>;
+
+/**
+ * __useChangeActiveMutation__
+ *
+ * To run a mutation, you first call `useChangeActiveMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeActiveMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeActiveMutation, { data, loading, error }] = useChangeActiveMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useChangeActiveMutation(baseOptions?: Apollo.MutationHookOptions<ChangeActiveMutation, ChangeActiveMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeActiveMutation, ChangeActiveMutationVariables>(ChangeActiveDocument, options);
+      }
+export type ChangeActiveMutationHookResult = ReturnType<typeof useChangeActiveMutation>;
+export type ChangeActiveMutationResult = Apollo.MutationResult<ChangeActiveMutation>;
+export type ChangeActiveMutationOptions = Apollo.BaseMutationOptions<ChangeActiveMutation, ChangeActiveMutationVariables>;
 export const CreateGroupDocument = gql`
     mutation CreateGroup {
   createGroup {
@@ -3273,6 +3325,7 @@ export const MyPageScreenDataDocument = gql`
       ...ProfileImage
     }
     ...StoryUserCircle
+    active
   }
 }
     ${ProfileImageFragmentDoc}

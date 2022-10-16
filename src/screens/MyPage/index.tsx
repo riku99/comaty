@@ -1,6 +1,6 @@
 import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -8,6 +8,7 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   StoryUserCircleFragment,
   StoryUserCircleFragmentDoc,
+  useChangeActiveMutation,
   useMyPageScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
@@ -17,7 +18,9 @@ import { HeaderRight } from './HeaderRight';
 type Props = RootNavigationScreenProp<'MyPageMain'>;
 
 export const MyPageScreen = ({ navigation }: Props) => {
-  const { data } = useMyPageScreenDataQuery();
+  const { data, loading } = useMyPageScreenDataQuery();
+  const [active, setActive] = useState(data?.me.active);
+  const [changeActiveMutation] = useChangeActiveMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,11 +31,36 @@ export const MyPageScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
-  if (!data) {
+  useEffect(() => {
+    setActive(data?.me.active);
+  }, [data?.me.active, setActive]);
+
+  if (loading) {
     return <Loading />;
   }
 
+  if (!data?.me) {
+    return null;
+  }
+
   const { me } = data;
+
+  const onChangeActiveSwitch = async (value: boolean) => {
+    try {
+      setActive(value);
+      await changeActiveMutation({
+        variables: {
+          input: {
+            value,
+          },
+        },
+      });
+    } catch (e) {
+      console.log(e);
+      setActive(!value);
+    } finally {
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -80,7 +108,8 @@ export const MyPageScreen = ({ navigation }: Props) => {
             trackColor={{
               true: theme.primary,
             }}
-            value={true}
+            value={active}
+            onValueChange={onChangeActiveSwitch}
           />
         </View>
 

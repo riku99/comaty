@@ -1,7 +1,7 @@
 import { Text } from '@rneui/themed';
 import { filter } from 'graphql-anywhere';
 import React, { useLayoutEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { Loading } from 'src/components/ui/Loading';
 import {
@@ -9,6 +9,7 @@ import {
   StoryUserCircleFragmentDoc,
   useMyPageScreenDataQuery,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 import { ActionButtons } from './ActionButtnos';
 
 type Props = RootNavigationScreenProp<'MyPageMain'>;
@@ -62,7 +63,43 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
         <ActionButtons />
 
-        <View></View>
+        <View
+          style={[
+            styles.sectionItem,
+            {
+              marginTop: 48,
+            },
+          ]}
+        >
+          <Text style={styles.sectionItemTitle}>アクティブ</Text>
+          <Switch
+            trackColor={{
+              true: theme.primary,
+            }}
+            value={true}
+          />
+        </View>
+
+        <Text style={styles.sectionItemBottomText}>
+          {
+            '今日この後会えるかも...という場合にONにしてください！\nOFFの場合他のユーザーに表示されません。'
+          }
+        </Text>
+
+        <View
+          style={[
+            styles.sectionItem,
+            {
+              marginTop: 24,
+            },
+          ]}
+        >
+          <Text style={styles.sectionItemTitle}>今何人でいる？</Text>
+          <Text>未選択</Text>
+        </View>
+        <Text style={styles.sectionItemBottomText}>
+          今一緒にいる人の人数を選択しましょう！
+        </Text>
       </ScrollView>
     </View>
   );
@@ -92,5 +129,31 @@ const styles = StyleSheet.create({
   },
   age: {
     fontSize: 18,
+  },
+  sectionItem: {
+    height: 52,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    width: '92%',
+    paddingHorizontal: 16,
+    borderRadius: 24,
+    shadowColor: 'rgba(100, 100, 111, 0.6)',
+    shadowOffset: {
+      width: 2,
+      height: 7,
+    },
+    shadowOpacity: 0.6,
+    shadowRadius: 24,
+  },
+  sectionItemTitle: {
+    fontWeight: 'bold',
+  },
+  sectionItemBottomText: {
+    alignSelf: 'flex-start',
+    marginLeft: 18,
+    fontSize: 13,
+    marginTop: 6,
   },
 });

@@ -45,7 +45,6 @@ export const MyPageScreen = ({ navigation }: Props) => {
   }, [data?.me.active, setActive]);
 
   useEffect(() => {
-    console.log(data?.me.numberOfPeopleTogether);
     setNumberOfPeopleTogether(data?.me.numberOfPeopleTogether);
   }, [data?.me.numberOfPeopleTogether]);
 
@@ -85,9 +84,6 @@ export const MyPageScreen = ({ navigation }: Props) => {
           input: {
             numebr: value,
           },
-        },
-        onCompleted: (d) => {
-          console.log(d);
         },
       });
     } catch (e) {
@@ -164,7 +160,13 @@ export const MyPageScreen = ({ navigation }: Props) => {
           ]}
         >
           <Text style={styles.sectionItemTitle}>今何人でいる？</Text>
-          <Text>未選択</Text>
+          <Text>
+            {!!numberOfPeopleTogether && numberOfPeopleTogether < 10
+              ? `${numberOfPeopleTogether}人`
+              : numberOfPeopleTogether > 9
+              ? '10人以上'
+              : '未選択'}
+          </Text>
         </Pressable>
         <Text style={styles.sectionItemBottomText}>
           今一緒にいる人の人数を選択しましょう！
@@ -190,7 +192,7 @@ const PROFILE_IMAGE_SIZE = 80;
 
 const getGroupMemberCountPickerItems = () => {
   const numebrs = [];
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 9; i++) {
     numebrs.push(i);
   }
   const numberItems = numebrs.map((n) => ({ value: n, label: `${n}人` }));
@@ -201,7 +203,7 @@ const getGroupMemberCountPickerItems = () => {
     },
     ...numberItems,
     {
-      value: 11,
+      value: 10,
       label: 'それ以上',
     },
   ];

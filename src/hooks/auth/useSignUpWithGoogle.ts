@@ -3,10 +3,12 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useCallback } from 'react';
 import { loginProviders } from 'src/constants';
 import {
+  GetMeQuery,
   useCreateUserMutation,
   useGetInitialDataLazyQuery,
   useGetMeLazyQuery,
 } from 'src/generated/graphql';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { useLoggedIn } from './useLoggedIn';
 
@@ -15,6 +17,7 @@ export const useSignUpWithGoogle = () => {
   const [createUser] = useCreateUserMutation();
   const { setLoggedIn } = useLoggedIn();
   const [getInitialData] = useGetInitialDataLazyQuery();
+  const { setLoadingVisible } = useLoadingOverlayVisible();
 
   const signUpWithGoogle = useCallback(async () => {
     try {
@@ -27,7 +30,7 @@ export const useSignUpWithGoogle = () => {
 
       await meQuery({
         fetchPolicy: 'no-cache',
-        onCompleted: async (meData) => {
+        onCompleted: async (meData: GetMeQuery) => {
           if (!meData?.me) {
             try {
               await createUser({
@@ -43,6 +46,7 @@ export const useSignUpWithGoogle = () => {
                     mmkvStorageKeys.loginProviders,
                     loginProviders.google
                   );
+                  setLoadingVisible(false); // lazyQueryのバグでPromiseが返されない場合があるので、このhooks内でもローディング閉じる処理書く
                 },
               });
             } catch (e) {
@@ -58,6 +62,7 @@ export const useSignUpWithGoogle = () => {
                     mmkvStorageKeys.loginProviders,
                     loginProviders.google
                   );
+                  setLoadingVisible(false);
                 },
               });
             } catch (e) {

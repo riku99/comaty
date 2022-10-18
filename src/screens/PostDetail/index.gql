@@ -1,14 +1,5 @@
 query PostDetailScreenData($id: Int!) {
   post(id: $id) {
-    replyToPost {
-      ...PostCard
-    }
     ...PostCard
-    replys {
-      replyToPost {
-        ...PostCard
-      }
-      ...PostCard
-    }
   }
 }

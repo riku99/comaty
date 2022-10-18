@@ -1,36 +1,62 @@
 import { useLayoutEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { Loading } from 'src/components/ui/Loading';
-import { usePostDetailScreenDataQuery } from 'src/generated/graphql';
-import { useDeletePost } from 'src/hooks/post';
+import {
+  GetPostError,
+  useDeletePostMutation,
+  usePostDetailScreenDataQuery,
+} from 'src/generated/graphql';
+import { getGraphQLError } from 'src/utils';
 
 type Props = RootNavigationScreenProp<'PostDetail'>;
 
 export const PostDetailScreen = ({ navigation, route }: Props) => {
   const { id } = route.params;
-  const { data } = usePostDetailScreenDataQuery({
+  const { data, loading } = usePostDetailScreenDataQuery({
     variables: {
       id,
     },
     fetchPolicy: 'cache-and-network',
+    onError: (e) => {
+      const gqError = getGraphQLError(e, 0);
+      if (gqError && gqError.code === GetPostError.NotFound) {
+        Alert.alert('投稿が見つかりません', '', [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.goBack();
+            },
+          },
+        ]);
+      }
+    },
   });
-  const { deletePost } = useDeletePost();
+
+  const [deletePostMutation] = useDeletePostMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '投稿・返信',
+      title: '投稿',
       headerShadowVisible: false,
     });
   }, [navigation]);
 
-  if (!data) {
+  if (loading) {
     return <Loading />;
   }
 
   const deleteHeaderPost = async () => {
-    await deletePost(data.post.id);
-    navigation.goBack();
+    try {
+      await deletePostMutation({
+        variables: {
+          id: data.post.id,
+        },
+        onCompleted: () => navigation.goBack(),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -41,28 +67,3 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    paddingBottom: 30,
-  },
-  replyToMessage: {
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  quoteLine: {
-    width: 6,
-    backgroundColor: '#cccccc',
-    height: '100%',
-    borderRadius: 4,
-  },
-  quoteText: {
-    marginLeft: 6,
-    fontWeight: 'bold',
-  },
-});

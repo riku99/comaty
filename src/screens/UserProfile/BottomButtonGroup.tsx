@@ -3,14 +3,17 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import { SkypeIndicator } from 'react-native-indicators';
+import { useToast } from 'react-native-toast-notifications';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { HStack } from 'src/components/ui/HStack';
 import {
   BottomButtonGroupInUserProfileFragment,
+  CreateMessageRoomError,
   useCreateMessageRoomMutation,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
+import { getGraphQLError } from 'src/utils';
 
 type Props = {
   data: BottomButtonGroupInUserProfileFragment;
@@ -21,6 +24,7 @@ export const BottomButtonGroup = ({ data }: Props) => {
   const [createMessageRoomMutation] = useCreateMessageRoomMutation();
   const [creatingMessageRoom, setCreatingMessageRoom] = useState(false);
   const myId = useMyId();
+  const toast = useToast();
 
   const onStoryUserPress = () => {
     navigation.push('Stories', {
@@ -48,6 +52,14 @@ export const BottomButtonGroup = ({ data }: Props) => {
         },
       });
     } catch (e) {
+      console.log(e);
+      const gqlError = getGraphQLError(e, 0);
+      if (gqlError) {
+        if (gqlError.code === CreateMessageRoomError.Blocked) {
+          toast.show('トークルームを作成できませんでした');
+          return;
+        }
+      }
     } finally {
       setCreatingMessageRoom(false);
     }

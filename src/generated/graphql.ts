@@ -35,12 +35,18 @@ export enum CreateGroupMemberError {
 }
 
 export enum CreateMessageError {
+  Blocked = 'BLOCKED',
+  Blocking = 'BLOCKING',
   NotFoundMessageRoom = 'NOT_FOUND_MESSAGE_ROOM'
 }
 
 export type CreateMessageInput = {
   text: Scalars['String'];
 };
+
+export enum CreateMessageRoomError {
+  Blocked = 'BLOCKED'
+}
 
 export type CreatePostInput = {
   images?: InputMaybe<Array<Scalars['Upload']>>;

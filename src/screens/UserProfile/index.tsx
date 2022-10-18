@@ -20,6 +20,7 @@ import {
   BottomButtonGroupInUserProfileFragmentDoc,
   BottomSheetContentInUserProfileFragment,
   BottomSheetContentInUserProfileFragmentDoc,
+  MessageRoomListScreenDataDocument,
   ProfileImagesInUserProfileFragment,
   ProfileImagesInUserProfileFragmentDoc,
   useBlockUserMutation,
@@ -121,6 +122,11 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
               onCompleted: (d) => {
                 toast.show('ブロックしました');
               },
+              refetchQueries: [
+                {
+                  query: MessageRoomListScreenDataDocument,
+                },
+              ],
             });
           } catch (e) {
             const { code } = getGraphQLError(e, 0);

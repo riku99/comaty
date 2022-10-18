@@ -1,4 +1,4 @@
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SimpleListItem } from 'src/components/ui/SimpleListItem';
@@ -33,6 +33,11 @@ export const SettingScreen = ({ navigation }: Props) => {
         <SimpleListItem
           title="プッシュ通知"
           icon={<Entypo name="notification" size={24} color={theme.black} />}
+        />
+
+        <SimpleListItem
+          title="ユーザー"
+          icon={<Feather name="users" size={23} color={theme.black} />}
         />
       </ScrollView>
     </View>

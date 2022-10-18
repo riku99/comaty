@@ -166,6 +166,7 @@ export type Me = UserEntity & {
   messageRoomsFromOtherParty?: Maybe<Array<Maybe<MessageRoom>>>;
   myTags?: Maybe<Array<Maybe<UserTag>>>;
   nickname?: Maybe<Scalars['String']>;
+  notifications?: Maybe<Array<Maybe<Notification>>>;
   numberOfPeopleTogether?: Maybe<Scalars['Int']>;
   posts?: Maybe<PostConnection>;
   profileImages?: Maybe<Array<Maybe<UserProfileImage>>>;
@@ -414,6 +415,21 @@ export type MutationUpdateUserProfileArgs = {
 export type MutationUploadProfileImageArgs = {
   input: UploadProfileImageInput;
 };
+
+export type Notification = {
+  __typename?: 'Notification';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  likedPostId?: Maybe<Scalars['Int']>;
+  performer?: Maybe<User>;
+  read?: Maybe<Scalars['Boolean']>;
+  type: NotificationType;
+  user?: Maybe<User>;
+};
+
+export enum NotificationType {
+  Like = 'LIKE'
+}
 
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -1157,6 +1173,11 @@ export type NearbyUsersScreenDataQueryVariables = Exact<{
 
 
 export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null> } };
+
+export type NotificationScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NotificationScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, notifications?: Array<{ __typename?: 'Notification', id: number, createdAt: string, read?: boolean | null, type: NotificationType, likedPostId?: number | null, performer?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
 
 export type PostDetailScreenDataQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -3615,6 +3636,54 @@ export function useNearbyUsersScreenDataLazyQuery(baseOptions?: Apollo.LazyQuery
 export type NearbyUsersScreenDataQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataQuery>;
 export type NearbyUsersScreenDataLazyQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataLazyQuery>;
 export type NearbyUsersScreenDataQueryResult = Apollo.QueryResult<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>;
+export const NotificationScreenDataDocument = gql`
+    query NotificationScreenData {
+  me {
+    id
+    notifications {
+      id
+      createdAt
+      performer {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+      read
+      type
+      likedPostId
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+
+/**
+ * __useNotificationScreenDataQuery__
+ *
+ * To run a query within a React component, call `useNotificationScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNotificationScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNotificationScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNotificationScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<NotificationScreenDataQuery, NotificationScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NotificationScreenDataQuery, NotificationScreenDataQueryVariables>(NotificationScreenDataDocument, options);
+      }
+export function useNotificationScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NotificationScreenDataQuery, NotificationScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NotificationScreenDataQuery, NotificationScreenDataQueryVariables>(NotificationScreenDataDocument, options);
+        }
+export type NotificationScreenDataQueryHookResult = ReturnType<typeof useNotificationScreenDataQuery>;
+export type NotificationScreenDataLazyQueryHookResult = ReturnType<typeof useNotificationScreenDataLazyQuery>;
+export type NotificationScreenDataQueryResult = Apollo.QueryResult<NotificationScreenDataQuery, NotificationScreenDataQueryVariables>;
 export const PostDetailScreenDataDocument = gql`
     query PostDetailScreenData($id: Int!) {
   post(id: $id) {

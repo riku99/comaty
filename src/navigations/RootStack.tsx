@@ -8,6 +8,7 @@ import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
 import { GroupQRCodeScannerScreen } from 'src/screens/GroupQRCodeScanner';
 import { MessageRoomScreen } from 'src/screens/MessageRoom';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
+import { NotoficationScreen } from 'src/screens/Notification';
 import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
 import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
@@ -61,6 +62,7 @@ export type RootStackParamList = {
     groupId: number;
     userId: string;
   };
+  Notification: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -126,6 +128,7 @@ export const RootStack = () => {
           />
           <Stack.Screen name="MessageRoom" component={MessageRoomScreen} />
           <Stack.Screen name="GroupMembers" component={GroupMembersScreen} />
+          <Stack.Screen name="Notification" component={NotoficationScreen} />
 
           <Stack.Group
             screenOptions={{

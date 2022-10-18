@@ -1,40 +1,21 @@
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { useLayoutEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { PostCard } from 'src/components/domain/post/PostCard';
 import { Loading } from 'src/components/ui/Loading';
-import { ReplyQuote } from 'src/components/ui/ReplyQuote';
-import {
-  PostDetailScreenDataQuery,
-  usePostDetailScreenDataQuery,
-} from 'src/generated/graphql';
+import { usePostDetailScreenDataQuery } from 'src/generated/graphql';
 import { useDeletePost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'PostDetail'>;
 
-type Item = PostDetailScreenDataQuery['post']['replys'][number];
-
 export const PostDetailScreen = ({ navigation, route }: Props) => {
   const { id } = route.params;
-  const { data, refetch } = usePostDetailScreenDataQuery({
+  const { data } = usePostDetailScreenDataQuery({
     variables: {
       id,
     },
     fetchPolicy: 'cache-and-network',
   });
-  const [refreshing, setRefreshing] = useState(false);
-  const listRef = useRef<FlatList>(null);
   const { deletePost } = useDeletePost();
-
-  const onRefresh = async () => {
-    try {
-      setRefreshing(true);
-      await refetch();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setRefreshing(false);
-    }
-  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -43,22 +24,9 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
     });
   }, [navigation]);
 
-  const renderPosts = useCallback(
-    ({ item }: { item: Item }) => {
-      const onDeletePost = async () => {
-        await deletePost(item.id);
-      };
-
-      return <PostCard postData={item} onDelete={onDeletePost} />;
-    },
-    [deletePost]
-  );
-
   if (!data) {
     return <Loading />;
   }
-
-  const { replyToPost } = data.post;
 
   const deleteHeaderPost = async () => {
     await deletePost(data.post.id);
@@ -66,28 +34,11 @@ export const PostDetailScreen = ({ navigation, route }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        ref={listRef}
-        data={data.post.replys}
-        renderItem={renderPosts}
-        ListHeaderComponent={
-          <View>
-            {replyToPost && <ReplyQuote text={replyToPost.text} />}
-            <PostCard
-              postData={data.post}
-              disableDetailNavigation
-              onDelete={deleteHeaderPost}
-            />
-          </View>
-        }
-        keyExtractor={(item) => item.id.toString()}
-        ListHeaderComponentStyle={styles.header}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
-    </View>
+    <PostCard
+      postData={data.post}
+      disableDetailNavigation
+      onDelete={deleteHeaderPost}
+    />
   );
 };
 

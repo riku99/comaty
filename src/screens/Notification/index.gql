@@ -1,0 +1,19 @@
+query NotificationScreenData {
+  me {
+    id
+    notifications {
+      id
+      createdAt
+      performer {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+      read
+      type
+      likedPostId
+    }
+  }
+}

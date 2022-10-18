@@ -1,33 +1,120 @@
-import auth from '@react-native-firebase/auth';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Text } from '@rneui/themed';
+import { useCallback, useLayoutEffect } from 'react';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { ProfileImage } from 'src/components/domain/user/ProfileImage';
+import { Loading } from 'src/components/ui/Loading';
+import {
+  NotificationScreenDataQuery,
+  NotificationType,
+  useNotificationScreenDataQuery,
+} from 'src/generated/graphql';
+import { theme } from 'src/styles';
 
-export const NotoficationScreen = React.memo(() => {
+type Props = RootNavigationScreenProp<'Notification'>;
+
+type NotificationItem =
+  NotificationScreenDataQuery['me']['notifications'][number];
+
+export const NotoficationScreen = ({ navigation }: Props) => {
+  const { data, loading } = useNotificationScreenDataQuery({
+    fetchPolicy: 'cache-and-network',
+  });
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'お知らせ',
+      headerShadowVisible: false,
+    });
+  }, [navigation]);
+
+  const renderNotificationItem = useCallback(
+    ({ item }: { item: NotificationItem }) => {
+      const { performer } = item;
+
+      if (!performer) {
+        return null;
+      }
+
+      const onPerformerPress = () => {
+        navigation.navigate('UserProfile', {
+          id: performer.id,
+        });
+      };
+
+      let text = '';
+      let onBodyPress = () => {};
+      switch (item.type) {
+        case NotificationType.Like:
+          text = `${performer.nickname}さんがいいねしました。`;
+          onBodyPress = () => {
+            if (!item.likedPostId) {
+              return;
+            }
+
+            navigation.navigate('PostDetail', {
+              id: item.likedPostId,
+            });
+          };
+      }
+
+      return (
+        <Pressable onPress={onBodyPress}>
+          {({ pressed }) => (
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                backgroundColor: pressed ? theme.gray.pressed : undefined,
+              }}
+            >
+              <Pressable onPress={onPerformerPress}>
+                <ProfileImage
+                  imageData={performer.firstProfileImage}
+                  style={{
+                    width: IMAGE_SIZE,
+                    height: IMAGE_SIZE,
+                    borderRadius: IMAGE_SIZE,
+                  }}
+                />
+              </Pressable>
+              <Text
+                style={{
+                  marginLeft: 8,
+                  fontSize: 16,
+                }}
+              >
+                {text}
+              </Text>
+            </View>
+          )}
+        </Pressable>
+      );
+    },
+    []
+  );
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!data?.me?.notifications) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <Pressable
-        onPress={async () => {
-          await auth().signOut();
-        }}
-        style={{
-          width: '100%',
-          height: 54,
-          backgroundColor: '#526eff',
-          borderRadius: 6,
-          position: 'absolute',
-          bottom: 64,
-          alignSelf: 'center',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Text style={{ fontWeight: 'bold', color: 'white', fontSize: 18 }}>
-          サインアウト
-        </Text>
-      </Pressable>
+      <FlatList
+        data={data.me.notifications}
+        renderItem={renderNotificationItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
     </View>
   );
-});
+};
+
+const IMAGE_SIZE = 44;
 
 const styles = StyleSheet.create({
   container: {

@@ -14,13 +14,20 @@ export const HeaderRight = () => {
       >
         <Ionicons name="settings-outline" size={ICON_SIZE} />
       </Pressable>
-      <Ionicons
-        name="notifications-outline"
-        size={ICON_SIZE}
-        style={{
-          marginLeft: 16,
+
+      <Pressable
+        onPress={() => {
+          navigation.navigate('Notification');
         }}
-      />
+      >
+        <Ionicons
+          name="notifications-outline"
+          size={ICON_SIZE}
+          style={{
+            marginLeft: 22,
+          }}
+        />
+      </Pressable>
     </View>
   );
 };

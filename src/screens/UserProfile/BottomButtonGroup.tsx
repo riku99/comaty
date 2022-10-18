@@ -9,6 +9,7 @@ import {
   BottomButtonGroupInUserProfileFragment,
   useCreateMessageRoomMutation,
 } from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
 
 type Props = {
@@ -19,6 +20,7 @@ export const BottomButtonGroup = ({ data }: Props) => {
   const navigation = useNavigation<RootNavigationProp<'UserProfile'>>();
   const [createMessageRoomMutation] = useCreateMessageRoomMutation();
   const [creatingMessageRoom, setCreatingMessageRoom] = useState(false);
+  const myId = useMyId();
 
   const onStoryUserPress = () => {
     navigation.push('Stories', {
@@ -28,6 +30,10 @@ export const BottomButtonGroup = ({ data }: Props) => {
   };
 
   const onSendPress = async () => {
+    if (myId === data.id) {
+      return;
+    }
+
     try {
       setCreatingMessageRoom(true);
       await createMessageRoomMutation({

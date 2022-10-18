@@ -61,13 +61,10 @@ export const NotoficationScreen = ({ navigation }: Props) => {
         <Pressable onPress={onBodyPress}>
           {({ pressed }) => (
             <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 8,
-                paddingHorizontal: 16,
-                backgroundColor: pressed ? theme.gray.pressed : undefined,
-              }}
+              style={[
+                styles.item,
+                { backgroundColor: pressed ? theme.gray.pressed : undefined },
+              ]}
             >
               <Pressable onPress={onPerformerPress}>
                 <ProfileImage
@@ -119,5 +116,11 @@ const IMAGE_SIZE = 44;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
   },
 });

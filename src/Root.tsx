@@ -67,7 +67,7 @@ export const Root = () => {
 
       BackgroundGeolocation.ready({
         desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-        distanceFilter: 20,
+        distanceFilter: 500,
         stopTimeout: 1,
         debug: true,
         stopOnTerminate: false,

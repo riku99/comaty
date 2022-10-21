@@ -144,7 +144,7 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
         <Text style={styles.sectionItemBottomText}>
           {
-            '今日この後会えるかも...という場合にONにしてください！\nOFFの場合他のユーザーに表示されません。'
+            '今日この後会えるかも...という場合にONにしてください✋\nOFFの場合、他のユーザーに表示されません。'
           }
         </Text>
 

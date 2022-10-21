@@ -163,6 +163,7 @@ export type Me = UserEntity & {
   birthDay?: Maybe<Scalars['Int']>;
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
+  blocks?: Maybe<Array<Maybe<UserBlock>>>;
   firstProfileImage?: Maybe<UserProfileImage>;
   group?: Maybe<Group>;
   height?: Maybe<Scalars['Int']>;
@@ -720,6 +721,13 @@ export type User = UserEntity & {
   stories?: Maybe<Array<Maybe<Story>>>;
 };
 
+export type UserBlock = {
+  __typename?: 'UserBlock';
+  blockBy?: Maybe<User>;
+  blockTo?: Maybe<User>;
+  id: Scalars['Int'];
+};
+
 export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<Maybe<UserEdge>>;
@@ -1044,6 +1052,11 @@ export type StoryUserCircleFragment = StoryUserCircle_Me_Fragment | StoryUserCir
 export type UserCardFragment = { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null> };
+
+export type BlockListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BlockListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, blocks?: Array<{ __typename?: 'UserBlock', id: number, blockTo?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
 
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2909,6 +2922,50 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const BlockListScreenDataDocument = gql`
+    query BlockListScreenData {
+  me {
+    id
+    blocks {
+      id
+      blockTo {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+
+/**
+ * __useBlockListScreenDataQuery__
+ *
+ * To run a query within a React component, call `useBlockListScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBlockListScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBlockListScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBlockListScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>(BlockListScreenDataDocument, options);
+      }
+export function useBlockListScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>(BlockListScreenDataDocument, options);
+        }
+export type BlockListScreenDataQueryHookResult = ReturnType<typeof useBlockListScreenDataQuery>;
+export type BlockListScreenDataLazyQueryHookResult = ReturnType<typeof useBlockListScreenDataLazyQuery>;
+export type BlockListScreenDataQueryResult = Apollo.QueryResult<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>;
 export const EditProfileScreenDataDocument = gql`
     query EditProfileScreenData {
   me {

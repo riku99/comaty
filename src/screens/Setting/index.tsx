@@ -38,6 +38,9 @@ export const SettingScreen = ({ navigation }: Props) => {
         <SimpleListItem
           title="ユーザー"
           icon={<Feather name="users" size={23} color={theme.black} />}
+          onPress={() => {
+            navigation.navigate('UserSetting');
+          }}
         />
       </ScrollView>
     </View>

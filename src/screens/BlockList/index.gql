@@ -1,0 +1,15 @@
+query BlockListScreenData {
+  me {
+    id
+    blocks {
+      id
+      blockTo {
+        id
+        nickname
+        firstProfileImage {
+          ...ProfileImage
+        }
+      }
+    }
+  }
+}

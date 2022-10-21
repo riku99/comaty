@@ -1,7 +1,10 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { View } from 'react-native-animatable';
+import BackgroundGeolocation, {
+  Subscription,
+} from 'react-native-background-geolocation';
 import Config from 'react-native-config';
 import Geocoder from 'react-native-geocoding';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
@@ -15,11 +18,12 @@ import { RootStack } from 'src/navigations/RootStack';
 export const Root = () => {
   const { loadingVisible } = useLoadingOverlayVisible();
   const { data: initialData } = useGetInitialDataQuery();
-  const { setLoggedIn } = useLoggedIn();
+  const { setLoggedIn, loggedIn } = useLoggedIn();
   const { contentsCreationModalVisible, setContentsCreationModalVisible } =
     useContentsCreationVisible();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['24%'], []);
+  const [locationEnabled, setLocationEnabled] = useState(false);
 
   useEffect(() => {
     if (initialData?.me) {
@@ -36,6 +40,70 @@ export const Root = () => {
   useEffect(() => {
     Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
   }, []);
+
+  console.log(loggedIn);
+
+  useEffect(() => {
+    let onLocation: Subscription;
+
+    if (loggedIn) {
+      onLocation = BackgroundGeolocation.onLocation((location) => {
+        console.log('[onLocation]', location);
+      });
+
+      BackgroundGeolocation.ready({
+        desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
+        distanceFilter: 20,
+        stopTimeout: 1,
+        debug: true,
+        stopOnTerminate: false,
+        startOnBoot: true,
+        disableLocationAuthorizationAlert: true,
+        logLevel: BackgroundGeolocation.LOG_LEVEL_OFF,
+      }).then(async () => {
+        try {
+          const status = await BackgroundGeolocation.requestPermission();
+          console.log('Permission status is ' + status);
+          if (status === BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS) {
+            setLocationEnabled(true);
+          } else {
+            setLocationEnabled(false);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      });
+    }
+
+    return () => {
+      if (onLocation) {
+        onLocation.remove();
+      }
+    };
+  }, [loggedIn]);
+
+  useEffect(() => {
+    if (locationEnabled) {
+      console.log('background location start');
+      BackgroundGeolocation.start();
+    } else {
+      console.log('background location stop');
+      BackgroundGeolocation.stop();
+    }
+  }, [locationEnabled]);
+
+  // useEffect(() => {
+  //   const requestPosition = async () => {
+  //     const status = await BackgroundGeolocation.requestPermission();
+  //     if (status === BackgroundGeolocation.AUTHORIZATION_STATUS_WHEN_IN_USE) {
+  //       console.log('Get Position');
+  //       const result = await BackgroundGeolocation.getCurrentPosition({});
+  //       console.log(result.coords);
+  //     }
+  //   };
+
+  //   requestPosition();
+  // }, []);
 
   return (
     <>

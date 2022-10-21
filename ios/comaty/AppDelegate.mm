@@ -10,6 +10,8 @@
 
 #import <Firebase.h>
 
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
+
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -34,6 +36,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
+
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
   
   RCTAppSetupPrepareApp(application);
 

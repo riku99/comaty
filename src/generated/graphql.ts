@@ -262,6 +262,7 @@ export type Mutation = {
   updateInitialStatus: Me;
   updateMe: Me;
   updateNumberOfPeopleTogether: Me;
+  updatePosition: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
 };
@@ -411,6 +412,11 @@ export type MutationUpdateMeArgs = {
 
 export type MutationUpdateNumberOfPeopleTogetherArgs = {
   input: UpdateNumberOfPeopleTogetherInput;
+};
+
+
+export type MutationUpdatePositionArgs = {
+  input: UpdatePositionInput;
 };
 
 
@@ -693,6 +699,11 @@ export type UpdateNumberOfPeopleTogetherInput = {
   numebr?: InputMaybe<Scalars['Int']>;
 };
 
+export type UpdatePositionInput = {
+  latitude: Scalars['Float'];
+  longitude: Scalars['Float'];
+};
+
 export type UpdateUserProfileInput = {
   bio?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
@@ -844,6 +855,13 @@ export type UpdateNumberOfPeopleTogetherMutationVariables = Exact<{
 
 
 export type UpdateNumberOfPeopleTogetherMutation = { __typename?: 'Mutation', updateNumberOfPeopleTogether: { __typename?: 'Me', id: string, numberOfPeopleTogether?: number | null } };
+
+export type UpdatePositionMutationVariables = Exact<{
+  input: UpdatePositionInput;
+}>;
+
+
+export type UpdatePositionMutation = { __typename?: 'Mutation', updatePosition: { __typename?: 'Me', id: string } };
 
 export type BlockUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -1925,6 +1943,39 @@ export function useUpdateNumberOfPeopleTogetherMutation(baseOptions?: Apollo.Mut
 export type UpdateNumberOfPeopleTogetherMutationHookResult = ReturnType<typeof useUpdateNumberOfPeopleTogetherMutation>;
 export type UpdateNumberOfPeopleTogetherMutationResult = Apollo.MutationResult<UpdateNumberOfPeopleTogetherMutation>;
 export type UpdateNumberOfPeopleTogetherMutationOptions = Apollo.BaseMutationOptions<UpdateNumberOfPeopleTogetherMutation, UpdateNumberOfPeopleTogetherMutationVariables>;
+export const UpdatePositionDocument = gql`
+    mutation UpdatePosition($input: UpdatePositionInput!) {
+  updatePosition(input: $input) {
+    id
+  }
+}
+    `;
+export type UpdatePositionMutationFn = Apollo.MutationFunction<UpdatePositionMutation, UpdatePositionMutationVariables>;
+
+/**
+ * __useUpdatePositionMutation__
+ *
+ * To run a mutation, you first call `useUpdatePositionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePositionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePositionMutation, { data, loading, error }] = useUpdatePositionMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePositionMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePositionMutation, UpdatePositionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePositionMutation, UpdatePositionMutationVariables>(UpdatePositionDocument, options);
+      }
+export type UpdatePositionMutationHookResult = ReturnType<typeof useUpdatePositionMutation>;
+export type UpdatePositionMutationResult = Apollo.MutationResult<UpdatePositionMutation>;
+export type UpdatePositionMutationOptions = Apollo.BaseMutationOptions<UpdatePositionMutation, UpdatePositionMutationVariables>;
 export const BlockUserDocument = gql`
     mutation BlockUser($id: ID!) {
   blockUser(id: $id) {

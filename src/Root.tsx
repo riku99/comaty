@@ -9,7 +9,10 @@ import Config from 'react-native-config';
 import Geocoder from 'react-native-geocoding';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
-import { useGetInitialDataQuery } from 'src/generated/graphql';
+import {
+  useGetInitialDataQuery,
+  useUpdatePositionMutation,
+} from 'src/generated/graphql';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { useLoggedIn } from 'src/hooks/auth';
@@ -24,6 +27,7 @@ export const Root = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['24%'], []);
   const [locationEnabled, setLocationEnabled] = useState(false);
+  const [updatePositionMutation] = useUpdatePositionMutation();
 
   useEffect(() => {
     if (initialData?.me) {
@@ -41,14 +45,24 @@ export const Root = () => {
     Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
   }, []);
 
-  console.log(loggedIn);
-
   useEffect(() => {
     let onLocation: Subscription;
 
     if (loggedIn) {
-      onLocation = BackgroundGeolocation.onLocation((location) => {
-        console.log('[onLocation]', location);
+      onLocation = BackgroundGeolocation.onLocation(async (location) => {
+        const { latitude, longitude } = location.coords;
+
+        await updatePositionMutation({
+          variables: {
+            input: {
+              latitude,
+              longitude,
+            },
+          },
+          onCompleted: () => {
+            console.log('🚩 Update position with ' + latitude, +longitude);
+          },
+        });
       });
 
       BackgroundGeolocation.ready({
@@ -63,7 +77,6 @@ export const Root = () => {
       }).then(async () => {
         try {
           const status = await BackgroundGeolocation.requestPermission();
-          console.log('Permission status is ' + status);
           if (status === BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS) {
             setLocationEnabled(true);
           } else {

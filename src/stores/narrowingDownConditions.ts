@@ -1,12 +1,7 @@
 import { makeVar } from '@apollo/client';
-import { ApproximateRange, Sex } from 'src/generated/graphql';
+import { ApproximateRange, NarrowingDownInput } from 'src/generated/graphql';
 
-export type NarrowingDownConditionsData = {
-  sex?: Sex;
-  range: ApproximateRange;
-  minAge: number;
-  maxAge: number;
-};
+export type NarrowingDownConditionsData = NarrowingDownInput;
 
 export const narrowingDownConditionsVar = makeVar<NarrowingDownConditionsData>({
   range: ApproximateRange.Normal,

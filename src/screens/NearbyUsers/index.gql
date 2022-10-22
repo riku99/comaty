@@ -1,8 +1,0 @@
-query NearbyUsersScreenData($after: String, $first: Int) {
-  nearbyUsers(after: $after, first: $first) {
-    ...UserCardList
-    pageInfo {
-      ...PageInfo
-    }
-  }
-}

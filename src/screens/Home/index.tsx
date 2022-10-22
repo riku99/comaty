@@ -1,7 +1,13 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import { UserCard } from 'src/components/domain/user/UserCard';
@@ -17,6 +23,7 @@ import {
   UserCardFragment,
   UserCardFragmentDoc,
 } from 'src/generated/graphql';
+import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { theme } from 'src/styles';
 import { Stories } from './Stories';
 
@@ -25,9 +32,18 @@ type Props = RootNavigationScreenProp<'HomeMain'>;
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const { data, fetchMore, refetch } = useHomeScreenDataQuery();
-
+  const { narrowingDownCinditions } = useNarrowingDownConditions();
+  const { data, fetchMore, refetch, loading } = useHomeScreenDataQuery({
+    variables: {
+      narrowingDownInput: narrowingDownCinditions,
+    },
+  });
+  const isFirstRender = useRef(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [
+    loadingByChanfingNarrowingDownInput,
+    setLoadingByChanfingNarrowingDownInput,
+  ] = useState(false);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -49,6 +65,25 @@ export const HomeScreen = ({ navigation }: Props) => {
       headerTitle: '',
     });
   }, [navigation]);
+
+  useEffect(() => {
+    (async () => {
+      if (!isFirstRender.current) {
+        try {
+          setLoadingByChanfingNarrowingDownInput(true);
+          await refetch({
+            narrowingDownInput: narrowingDownCinditions,
+          });
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setLoadingByChanfingNarrowingDownInput(false);
+        }
+      } else {
+        isFirstRender.current = false;
+      }
+    })();
+  }, [narrowingDownCinditions]);
 
   const renderUser = useCallback(
     ({ item, index }: { item: UserListItem; index: number }) => {
@@ -94,7 +129,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
-  if (!data) {
+  if (loading || loadingByChanfingNarrowingDownInput) {
     return <Loading />;
   }
 

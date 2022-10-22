@@ -18,8 +18,7 @@ export type Scalars = {
 
 export enum ApproximateRange {
   Near = 'NEAR',
-  Normal = 'NORMAL',
-  Wide = 'WIDE'
+  Normal = 'NORMAL'
 }
 
 export enum BlockUserError {
@@ -429,6 +428,18 @@ export type MutationUploadProfileImageArgs = {
   input: UploadProfileImageInput;
 };
 
+export type NarrowingDownInput = {
+  maxAge: Scalars['Int'];
+  minAge: Scalars['Int'];
+  range: ApproximateRange;
+  sex?: InputMaybe<NarrowingDownSex>;
+};
+
+export enum NarrowingDownSex {
+  Female = 'FEMALE',
+  Male = 'MALE'
+}
+
 export type Notification = {
   __typename?: 'Notification';
   createdAt: Scalars['String'];
@@ -508,6 +519,7 @@ export type QueryMessageRoomArgs = {
 export type QueryNearbyUsersArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+  input: NarrowingDownInput;
 };
 
 
@@ -1107,6 +1119,7 @@ export type HomeScreenDataQueryVariables = Exact<{
   nearbyUsersAfter?: InputMaybe<Scalars['String']>;
   storiesFirst?: InputMaybe<Scalars['Int']>;
   storiesAfter?: InputMaybe<Scalars['String']>;
+  narrowingDownInput: NarrowingDownInput;
 }>;
 
 
@@ -1115,6 +1128,7 @@ export type HomeScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typen
 export type HomeNearByUsersQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
   nearbyUsersAfter?: InputMaybe<Scalars['String']>;
+  narrowingDownInput: NarrowingDownInput;
 }>;
 
 
@@ -1202,14 +1216,6 @@ export type MyTagSelectionScreenDataQueryVariables = Exact<{ [key: string]: neve
 
 
 export type MyTagSelectionScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
-
-export type NearbyUsersScreenDataQueryVariables = Exact<{
-  after?: InputMaybe<Scalars['String']>;
-  first?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type NearbyUsersScreenDataQuery = { __typename?: 'Query', nearbyUsers: { __typename?: 'UserConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null> } };
 
 export type NotificationScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1404,7 +1410,11 @@ export const PageInfoFragmentDoc = gql`
     `;
 export const HomeNearByUsersFragmentDoc = gql`
     fragment HomeNearByUsers on Query {
-  nearbyUsers(first: $nearbyUsersFirst, after: $nearbyUsersAfter) {
+  nearbyUsers(
+    first: $nearbyUsersFirst
+    after: $nearbyUsersAfter
+    input: $narrowingDownInput
+  ) {
     edges {
       node {
         ...UserCard
@@ -3182,7 +3192,7 @@ export type GroupQrCodeOwnerInGroupQrCodeQueryHookResult = ReturnType<typeof use
 export type GroupQrCodeOwnerInGroupQrCodeLazyQueryHookResult = ReturnType<typeof useGroupQrCodeOwnerInGroupQrCodeLazyQuery>;
 export type GroupQrCodeOwnerInGroupQrCodeQueryResult = Apollo.QueryResult<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>;
 export const HomeScreenDataDocument = gql`
-    query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String) {
+    query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String, $narrowingDownInput: NarrowingDownInput!) {
   ...HomeNearByUsers
   ...HomeStories
 }
@@ -3205,10 +3215,11 @@ ${HomeStoriesFragmentDoc}`;
  *      nearbyUsersAfter: // value for 'nearbyUsersAfter'
  *      storiesFirst: // value for 'storiesFirst'
  *      storiesAfter: // value for 'storiesAfter'
+ *      narrowingDownInput: // value for 'narrowingDownInput'
  *   },
  * });
  */
-export function useHomeScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<HomeScreenDataQuery, HomeScreenDataQueryVariables>) {
+export function useHomeScreenDataQuery(baseOptions: Apollo.QueryHookOptions<HomeScreenDataQuery, HomeScreenDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<HomeScreenDataQuery, HomeScreenDataQueryVariables>(HomeScreenDataDocument, options);
       }
@@ -3220,7 +3231,7 @@ export type HomeScreenDataQueryHookResult = ReturnType<typeof useHomeScreenDataQ
 export type HomeScreenDataLazyQueryHookResult = ReturnType<typeof useHomeScreenDataLazyQuery>;
 export type HomeScreenDataQueryResult = Apollo.QueryResult<HomeScreenDataQuery, HomeScreenDataQueryVariables>;
 export const HomeNearByUsersDocument = gql`
-    query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String) {
+    query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $narrowingDownInput: NarrowingDownInput!) {
   ...HomeNearByUsers
 }
     ${HomeNearByUsersFragmentDoc}`;
@@ -3239,10 +3250,11 @@ export const HomeNearByUsersDocument = gql`
  *   variables: {
  *      nearbyUsersFirst: // value for 'nearbyUsersFirst'
  *      nearbyUsersAfter: // value for 'nearbyUsersAfter'
+ *      narrowingDownInput: // value for 'narrowingDownInput'
  *   },
  * });
  */
-export function useHomeNearByUsersQuery(baseOptions?: Apollo.QueryHookOptions<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>) {
+export function useHomeNearByUsersQuery(baseOptions: Apollo.QueryHookOptions<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>(HomeNearByUsersDocument, options);
       }
@@ -3710,46 +3722,6 @@ export function useMyTagSelectionScreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type MyTagSelectionScreenDataQueryHookResult = ReturnType<typeof useMyTagSelectionScreenDataQuery>;
 export type MyTagSelectionScreenDataLazyQueryHookResult = ReturnType<typeof useMyTagSelectionScreenDataLazyQuery>;
 export type MyTagSelectionScreenDataQueryResult = Apollo.QueryResult<MyTagSelectionScreenDataQuery, MyTagSelectionScreenDataQueryVariables>;
-export const NearbyUsersScreenDataDocument = gql`
-    query NearbyUsersScreenData($after: String, $first: Int) {
-  nearbyUsers(after: $after, first: $first) {
-    ...UserCardList
-    pageInfo {
-      ...PageInfo
-    }
-  }
-}
-    ${UserCardListFragmentDoc}
-${PageInfoFragmentDoc}`;
-
-/**
- * __useNearbyUsersScreenDataQuery__
- *
- * To run a query within a React component, call `useNearbyUsersScreenDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useNearbyUsersScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useNearbyUsersScreenDataQuery({
- *   variables: {
- *      after: // value for 'after'
- *      first: // value for 'first'
- *   },
- * });
- */
-export function useNearbyUsersScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>(NearbyUsersScreenDataDocument, options);
-      }
-export function useNearbyUsersScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>(NearbyUsersScreenDataDocument, options);
-        }
-export type NearbyUsersScreenDataQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataQuery>;
-export type NearbyUsersScreenDataLazyQueryHookResult = ReturnType<typeof useNearbyUsersScreenDataLazyQuery>;
-export type NearbyUsersScreenDataQueryResult = Apollo.QueryResult<NearbyUsersScreenDataQuery, NearbyUsersScreenDataQueryVariables>;
 export const NotificationScreenDataDocument = gql`
     query NotificationScreenData {
   me {

@@ -3,12 +3,17 @@ query HomeScreenData(
   $nearbyUsersAfter: String
   $storiesFirst: Int
   $storiesAfter: String
+  $narrowingDownInput: NarrowingDownInput!
 ) {
   ...HomeNearByUsers
   ...HomeStories
 }
 
-query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String) {
+query HomeNearByUsers(
+  $nearbyUsersFirst: Int
+  $nearbyUsersAfter: String
+  $narrowingDownInput: NarrowingDownInput!
+) {
   ...HomeNearByUsers
 }
 
@@ -17,7 +22,11 @@ query HomeStories($storiesFirst: Int, $storiesAfter: String) {
 }
 
 fragment HomeNearByUsers on Query {
-  nearbyUsers(first: $nearbyUsersFirst, after: $nearbyUsersAfter) {
+  nearbyUsers(
+    first: $nearbyUsersFirst
+    after: $nearbyUsersAfter
+    input: $narrowingDownInput
+  ) {
     edges {
       node {
         ...UserCard

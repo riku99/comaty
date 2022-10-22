@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton } from 'src/components/ui/RadioButton';
-import { ApproximateRange, Sex } from 'src/generated/graphql';
+import { ApproximateRange, NarrowingDownSex } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { theme } from 'src/styles';
 
@@ -34,6 +34,16 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
       title: '絞り込み条件',
     });
   }, [navigation]);
+
+  const onApplyButtonPress = async () => {
+    setNarrowingDownConditions({
+      sex,
+      range,
+      minAge,
+      maxAge,
+    });
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -92,11 +102,14 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
           <Pressable
             style={styles.sexItemContainer}
             onPress={() => {
-              setSex(Sex.Female);
+              setSex(NarrowingDownSex.Female);
             }}
           >
             <Text style={styles.sexTitle}>女性</Text>
-            <RadioButton isSelected={sex === Sex.Female} size={24} />
+            <RadioButton
+              isSelected={sex === NarrowingDownSex.Female}
+              size={24}
+            />
           </Pressable>
 
           <View style={styles.sexItemBorder} />
@@ -104,11 +117,11 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
           <Pressable
             style={styles.sexItemContainer}
             onPress={() => {
-              setSex(Sex.Male);
+              setSex(NarrowingDownSex.Male);
             }}
           >
             <Text style={styles.sexTitle}>男性</Text>
-            <RadioButton isSelected={sex === Sex.Male} size={24} />
+            <RadioButton isSelected={sex === NarrowingDownSex.Male} size={24} />
           </Pressable>
         </View>
 
@@ -168,6 +181,7 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
           backgroundColor: '#fff',
           bottom: safeAreaBottom > 0 ? 0 : 12,
         }}
+        onPress={onApplyButtonPress}
       />
     </SafeAreaView>
   );

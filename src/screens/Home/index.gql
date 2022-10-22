@@ -17,7 +17,11 @@ query HomeNearByUsers(
   ...HomeNearByUsers
 }
 
-query HomeStories($storiesFirst: Int, $storiesAfter: String) {
+query HomeStories(
+  $storiesFirst: Int
+  $storiesAfter: String
+  $narrowingDownInput: NarrowingDownInput!
+) {
   ...HomeStories
 }
 
@@ -43,7 +47,11 @@ fragment HomeStories on Query {
   me {
     ...StoryUserCircle
   }
-  storyUsers(first: $storiesFirst, after: $storiesAfter) {
+  storyUsers(
+    first: $storiesFirst
+    after: $storiesAfter
+    input: $narrowingDownInput
+  ) {
     edges {
       node {
         ...StoryUserCircle

@@ -564,6 +564,7 @@ export type QueryStoryArgs = {
 export type QueryStoryUsersArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+  input: NarrowingDownInput;
 };
 
 
@@ -1137,6 +1138,7 @@ export type HomeNearByUsersQuery = { __typename?: 'Query', nearbyUsers: { __type
 export type HomeStoriesQueryVariables = Exact<{
   storiesFirst?: InputMaybe<Scalars['Int']>;
   storiesAfter?: InputMaybe<Scalars['String']>;
+  narrowingDownInput: NarrowingDownInput;
 }>;
 
 
@@ -1451,7 +1453,11 @@ export const HomeStoriesFragmentDoc = gql`
   me {
     ...StoryUserCircle
   }
-  storyUsers(first: $storiesFirst, after: $storiesAfter) {
+  storyUsers(
+    first: $storiesFirst
+    after: $storiesAfter
+    input: $narrowingDownInput
+  ) {
     edges {
       node {
         ...StoryUserCircle
@@ -3266,7 +3272,7 @@ export type HomeNearByUsersQueryHookResult = ReturnType<typeof useHomeNearByUser
 export type HomeNearByUsersLazyQueryHookResult = ReturnType<typeof useHomeNearByUsersLazyQuery>;
 export type HomeNearByUsersQueryResult = Apollo.QueryResult<HomeNearByUsersQuery, HomeNearByUsersQueryVariables>;
 export const HomeStoriesDocument = gql`
-    query HomeStories($storiesFirst: Int, $storiesAfter: String) {
+    query HomeStories($storiesFirst: Int, $storiesAfter: String, $narrowingDownInput: NarrowingDownInput!) {
   ...HomeStories
 }
     ${HomeStoriesFragmentDoc}`;
@@ -3285,10 +3291,11 @@ export const HomeStoriesDocument = gql`
  *   variables: {
  *      storiesFirst: // value for 'storiesFirst'
  *      storiesAfter: // value for 'storiesAfter'
+ *      narrowingDownInput: // value for 'narrowingDownInput'
  *   },
  * });
  */
-export function useHomeStoriesQuery(baseOptions?: Apollo.QueryHookOptions<HomeStoriesQuery, HomeStoriesQueryVariables>) {
+export function useHomeStoriesQuery(baseOptions: Apollo.QueryHookOptions<HomeStoriesQuery, HomeStoriesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<HomeStoriesQuery, HomeStoriesQueryVariables>(HomeStoriesDocument, options);
       }

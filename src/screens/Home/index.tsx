@@ -34,7 +34,11 @@ export const HomeScreen = ({ navigation }: Props) => {
       headerShadowVisible: false,
       headerLeft: () => <HeaderLeftTitle title="ホーム🦄" />,
       headerRight: () => (
-        <Pressable>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('NarrowingDown');
+          }}
+        >
           <MaterialCommunityIcons
             name="text-search"
             size={24}

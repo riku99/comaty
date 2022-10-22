@@ -2244,6 +2244,11 @@
     tslib "^2.4.0"
     webcrypto-core "^1.7.4"
 
+"@ptomasroos/react-native-multi-slider@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-2.2.2.tgz#35a97fb8c355627c6a2ded010b360ac5728b44ad"
+  integrity sha512-HWyCnRD3Z3SbHK2FLWYmBBqd1B4iXipeKv1+AK0FoY/CElEDTEixHE8hN60TsqxalPrznn798LE2Q4tHuCiyaA==
+
 "@reach/auto-id@^0.17.0":
   version "0.17.0"
   resolved "https://registry.yarnpkg.com/@reach/auto-id/-/auto-id-0.17.0.tgz#60cce65eb7a0d6de605820727f00dfe2b03b5f17"

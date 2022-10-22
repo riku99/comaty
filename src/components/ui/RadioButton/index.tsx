@@ -5,7 +5,7 @@ import { theme } from 'src/styles';
 type Props = {
   size: number;
   isSelected: boolean;
-  label: string;
+  label?: string;
   labelStyle?: TextProps['style'];
   onPress?: () => void;
 };

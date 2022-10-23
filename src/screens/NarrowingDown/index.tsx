@@ -57,7 +57,7 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
               setRange(ApproximateRange.Near);
             }}
           >
-            <Text style={styles.sexTitle}>近く</Text>
+            <Text style={styles.sexTitle}>すぐ近く</Text>
             <RadioButton
               isSelected={range === ApproximateRange.Near}
               size={24}

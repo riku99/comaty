@@ -44,6 +44,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     loadingByChanfingNarrowingDownInput,
     setLoadingByChanfingNarrowingDownInput,
   ] = useState(false);
+  const [] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -133,18 +134,27 @@ export const HomeScreen = ({ navigation }: Props) => {
     return <Loading />;
   }
 
+  if (!data?.me) {
+    return null;
+  }
+
   const infiniteLoadUsers = async () => {
     const { pageInfo } = data.nearbyUsers;
 
     if (pageInfo.hasNextPage) {
       const { endCursor } = pageInfo;
-      await fetchMore({
-        variables: {
-          nearbyUsersAfter: endCursor ? btoa(endCursor) : undefined,
-          nearbyUsersFirst: TAKE_USER_COUNT,
-        },
-        query: HomeNearByUsersDocument,
-      });
+      try {
+        await fetchMore({
+          variables: {
+            nearbyUsersAfter: endCursor ? btoa(endCursor) : undefined,
+            nearbyUsersFirst: TAKE_USER_COUNT,
+            narrowingDownInput: narrowingDownCinditions,
+          },
+          query: HomeNearByUsersDocument,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -157,6 +167,7 @@ export const HomeScreen = ({ navigation }: Props) => {
         variables: {
           storiesAfter: endCursor ? btoa(endCursor) : undefined,
           storiesFirst: TAKE_USER_COUNT,
+          narrowingDownInput: narrowingDownCinditions,
         },
         query: HomeStoriesDocument,
       });

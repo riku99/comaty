@@ -322,7 +322,7 @@ export const EditProfileScreen = ({ navigation }: Props) => {
             paddingHorizontal: 16,
             width: '100%',
             position: 'absolute',
-            bottom: safeAreaBottom,
+            bottom: safeAreaBottom > 0 ? safeAreaBottom : 12,
           }}
           onPress={() => {
             if (!myId) {

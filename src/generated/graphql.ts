@@ -18,7 +18,8 @@ export type Scalars = {
 
 export enum ApproximateRange {
   Near = 'NEAR',
-  Normal = 'NORMAL'
+  Normal = 'NORMAL',
+  Wide = 'WIDE'
 }
 
 export enum BlockUserError {
@@ -429,6 +430,8 @@ export type MutationUploadProfileImageArgs = {
 };
 
 export type NarrowingDownInput = {
+  latitude?: InputMaybe<Scalars['Float']>;
+  longitude?: InputMaybe<Scalars['Float']>;
   maxAge: Scalars['Int'];
   minAge: Scalars['Int'];
   range: ApproximateRange;
@@ -531,6 +534,7 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
+  input: NarrowingDownInput;
 };
 
 
@@ -1279,6 +1283,7 @@ export type AfterCreateingStoryQuery = { __typename?: 'Query', me?: { __typename
 export type TimelineScreenDataQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']>;
   after?: InputMaybe<Scalars['String']>;
+  input: NarrowingDownInput;
 }>;
 
 
@@ -4067,8 +4072,8 @@ export type AfterCreateingStoryQueryHookResult = ReturnType<typeof useAfterCreat
 export type AfterCreateingStoryLazyQueryHookResult = ReturnType<typeof useAfterCreateingStoryLazyQuery>;
 export type AfterCreateingStoryQueryResult = Apollo.QueryResult<AfterCreateingStoryQuery, AfterCreateingStoryQueryVariables>;
 export const TimelineScreenDataDocument = gql`
-    query TimelineScreenData($first: Int, $after: String) {
-  posts(first: $first, after: $after) {
+    query TimelineScreenData($first: Int, $after: String, $input: NarrowingDownInput!) {
+  posts(first: $first, after: $after, input: $input) {
     edges {
       node {
         ...PostCard
@@ -4097,10 +4102,11 @@ ${PageInfoFragmentDoc}`;
  *   variables: {
  *      first: // value for 'first'
  *      after: // value for 'after'
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useTimelineScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<TimelineScreenDataQuery, TimelineScreenDataQueryVariables>) {
+export function useTimelineScreenDataQuery(baseOptions: Apollo.QueryHookOptions<TimelineScreenDataQuery, TimelineScreenDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TimelineScreenDataQuery, TimelineScreenDataQueryVariables>(TimelineScreenDataDocument, options);
       }

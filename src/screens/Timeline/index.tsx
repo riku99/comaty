@@ -9,6 +9,7 @@ import {
   TimelineScreenDataQuery,
   useTimelineScreenDataQuery,
 } from 'src/generated/graphql';
+import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useDeletePost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'Timeline'>;
@@ -16,7 +17,12 @@ type Props = RootNavigationScreenProp<'Timeline'>;
 type PostItem = TimelineScreenDataQuery['posts']['edges'][number];
 
 export const TimelineScreen = ({ navigation }: Props) => {
-  const { data, fetchMore, refetch } = useTimelineScreenDataQuery();
+  const { narrowingDownCinditions } = useNarrowingDownConditions();
+  const { data, fetchMore, refetch } = useTimelineScreenDataQuery({
+    variables: {
+      input: narrowingDownCinditions,
+    },
+  });
 
   const [refreshing, setRefreshing] = useState(false);
   const { deletePost } = useDeletePost();
@@ -51,7 +57,9 @@ export const TimelineScreen = ({ navigation }: Props) => {
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await refetch();
+      await refetch({
+        input: narrowingDownCinditions,
+      });
     } catch (e) {
     } finally {
       setRefreshing(false);

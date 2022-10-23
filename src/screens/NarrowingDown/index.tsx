@@ -78,6 +78,19 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
               size={24}
             />
           </Pressable>
+
+          <Pressable
+            style={styles.sexItemContainer}
+            onPress={() => {
+              setRange(ApproximateRange.Wide);
+            }}
+          >
+            <Text style={styles.sexTitle}>広め</Text>
+            <RadioButton
+              isSelected={range === ApproximateRange.Wide}
+              size={24}
+            />
+          </Pressable>
         </View>
 
         <View

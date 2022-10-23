@@ -1,5 +1,9 @@
-query TimelineScreenData($first: Int, $after: String) {
-  posts(first: $first, after: $after) {
+query TimelineScreenData(
+  $first: Int
+  $after: String
+  $input: NarrowingDownInput!
+) {
+  posts(first: $first, after: $after, input: $input) {
     edges {
       node {
         ...PostCard

@@ -14,9 +14,11 @@ import {
   useUpdatePositionMutation,
 } from 'src/generated/graphql';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
+import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { useLoggedIn } from 'src/hooks/auth';
 import { RootStack } from 'src/navigations/RootStack';
+import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 
 export const Root = () => {
   const { loadingVisible } = useLoadingOverlayVisible();
@@ -28,6 +30,7 @@ export const Root = () => {
   const snapPoints = useMemo(() => ['24%'], []);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [updatePositionMutation] = useUpdatePositionMutation();
+  const { setNarrowingDownConditions } = useNarrowingDownConditions();
 
   useEffect(() => {
     if (initialData?.me) {
@@ -41,6 +44,7 @@ export const Root = () => {
     }
   }, [contentsCreationModalVisible]);
 
+  // 後に消す
   useEffect(() => {
     Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
   }, []);
@@ -104,6 +108,17 @@ export const Root = () => {
       BackgroundGeolocation.stop();
     }
   }, [locationEnabled]);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const conditions = storage.getString(
+        mmkvStorageKeys.narrowingDownConditions
+      );
+      if (conditions) {
+        setNarrowingDownConditions(JSON.parse(conditions));
+      }
+    }
+  }, [loggedIn, setNarrowingDownConditions]);
 
   // useEffect(() => {
   //   const requestPosition = async () => {

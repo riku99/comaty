@@ -17,6 +17,7 @@ fragment BottomSheetContentInUserProfile on User {
     text
   }
   numberOfPeopleTogether
+  distance
 }
 
 fragment BottomButtonGroupInUserProfile on User {

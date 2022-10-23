@@ -177,7 +177,7 @@ export const MyGroupScreen = ({ navigation }: Props) => {
       <View style={styles.container}>
         <Text style={styles.groupText}>
           {
-            'グループが作成されていません。\n一緒にいる人とグループになりましょう！\n他のユーザーが、あなたが誰と一緒にいるかわかります👀'
+            '一緒にいる人とグループになりましょう！\n他のユーザーが、あなたが誰と一緒にいるかわかります👀'
           }
         </Text>
 

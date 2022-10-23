@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Text } from '@rneui/themed';
 import React from 'react';
@@ -13,7 +14,8 @@ type Props = {
 };
 
 export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
-  const { age, blocking, blocked, myTags, numberOfPeopleTogether } = data;
+  const { age, blocking, blocked, myTags, numberOfPeopleTogether, distance } =
+    data;
   const blockingOrBlocked = blocking || blocked;
   const nickname = previewData ? previewData.nickname : data.nickname;
   const bio = previewData ? previewData.bio : data.bio;
@@ -21,15 +23,45 @@ export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
 
   const numberOfPeopleTogetherTag =
     numberOfPeopleTogether > 9
-      ? '10人以上でいます!'
-      : `${numberOfPeopleTogether}人でいます!`;
+      ? '今10人以上でいます!'
+      : `今${numberOfPeopleTogether}人でいます!`;
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
       <View>
-        <Text style={styles.name}>
-          {nickname}, <Text style={styles.age}>{age}</Text>
-        </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Text style={styles.name}>
+            {nickname}, <Text style={styles.age}>{age}</Text>
+          </Text>
+          {!!distance && (
+            <View
+              style={{
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}
+            >
+              <MaterialCommunityIcons
+                name="map-marker-outline"
+                size={22}
+                color={theme.black}
+              />
+              <Text
+                style={{
+                  marginRight: 4,
+                  fontSize: 16,
+                }}
+              >
+                {distance}km先
+              </Text>
+            </View>
+          )}
+        </View>
 
         {!blockingOrBlocked && (
           <>

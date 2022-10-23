@@ -1292,7 +1292,7 @@ export type TimelineScreenDataQuery = { __typename?: 'Query', posts: { __typenam
 
 export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
 
-export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, numberOfPeopleTogether?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
+export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
 
 export type BottomButtonGroupInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null };
 
@@ -1301,7 +1301,7 @@ export type UserProfileScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, numberOfPeopleTogether?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } };
+export type UserProfileScreenDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } };
 
 export const ProfileImageFragmentDoc = gql`
     fragment ProfileImage on UserProfileImage {
@@ -1583,6 +1583,7 @@ export const BottomSheetContentInUserProfileFragmentDoc = gql`
     text
   }
   numberOfPeopleTogether
+  distance
 }
     `;
 export const BottomButtonGroupInUserProfileFragmentDoc = gql`

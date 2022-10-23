@@ -159,12 +159,7 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
               {`${minAge}-${maxAge}`}
             </Text>
           </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              marginTop: 12,
-            }}
-          >
+          <View style={styles.sliderContainer}>
             <MultiSlider
               onValuesChangeStart={() => {
                 setScrollEnabled(false);
@@ -208,7 +203,6 @@ const styles = StyleSheet.create({
   },
   contentContaienr: {
     paddingHorizontal: 16,
-    paddingBottom: 24,
   },
   sectionTitle: {
     color: theme.gray.text,
@@ -225,5 +219,10 @@ const styles = StyleSheet.create({
   sexItemBorder: {
     height: 0.5,
     backgroundColor: theme.gray.boarder,
+  },
+  sliderContainer: {
+    alignSelf: 'center',
+    marginTop: 12,
+    height: 120,
   },
 });

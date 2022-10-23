@@ -47,8 +47,8 @@ export const SexSelectionScreen = ({ navigation }: Props) => {
           />
           <SexItem
             title="無回答"
-            isSelected={sex === Sex.NotSelected}
-            onPress={() => setSex(Sex.NotSelected)}
+            isSelected={sex == null}
+            onPress={() => setSex(null)}
           />
         </VStack>
       </View>

@@ -11,7 +11,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton } from 'src/components/ui/RadioButton';
-import { ApproximateRange, NarrowingDownSex } from 'src/generated/graphql';
+import {
+  ApproximateRange,
+  Sex,
+  useUpdateDisplayTargetSexMutation,
+} from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { theme } from 'src/styles';
 
@@ -22,6 +26,7 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
   const [scrollEnabeld, setScrollEnabled] = useState(true);
   const { narrowingDownCinditions, setNarrowingDownConditions } =
     useNarrowingDownConditions();
+  const [updateDisplayTargetSexMutation] = useUpdateDisplayTargetSexMutation();
 
   const [sex, setSex] = useState(narrowingDownCinditions.sex);
   const [range, setRange] = useState(narrowingDownCinditions.range);
@@ -43,6 +48,13 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
       maxAge,
     });
     navigation.goBack();
+    await updateDisplayTargetSexMutation({
+      variables: {
+        input: {
+          sex: sex ?? null,
+        },
+      },
+    });
   };
 
   return (
@@ -115,14 +127,11 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
           <Pressable
             style={styles.sexItemContainer}
             onPress={() => {
-              setSex(NarrowingDownSex.Female);
+              setSex(Sex.Female);
             }}
           >
             <Text style={styles.sexTitle}>女性</Text>
-            <RadioButton
-              isSelected={sex === NarrowingDownSex.Female}
-              size={24}
-            />
+            <RadioButton isSelected={sex === Sex.Female} size={24} />
           </Pressable>
 
           <View style={styles.sexItemBorder} />
@@ -130,12 +139,22 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
           <Pressable
             style={styles.sexItemContainer}
             onPress={() => {
-              setSex(NarrowingDownSex.Male);
+              setSex(Sex.Male);
             }}
           >
             <Text style={styles.sexTitle}>男性</Text>
-            <RadioButton isSelected={sex === NarrowingDownSex.Male} size={24} />
+            <RadioButton isSelected={sex === Sex.Male} size={24} />
           </Pressable>
+
+          <Text
+            style={{
+              fontSize: 12,
+              color: theme.gray.text,
+              marginTop: 6,
+            }}
+          >
+            あなたも選択した性別のユーザーだけに表示されるようになります。
+          </Text>
         </View>
 
         <View

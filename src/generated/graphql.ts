@@ -259,6 +259,7 @@ export type Mutation = {
   reportStory?: Maybe<Story>;
   unblockUser?: Maybe<User>;
   unlikePost?: Maybe<Post>;
+  updateDisplayTargetSex: Me;
   updateInitialStatus: Me;
   updateMe: Me;
   updateNumberOfPeopleTogether: Me;
@@ -400,6 +401,11 @@ export type MutationUnlikePostArgs = {
 };
 
 
+export type MutationUpdateDisplayTargetSexArgs = {
+  input: UpdateDisplayTargetSexInput;
+};
+
+
 export type MutationUpdateInitialStatusArgs = {
   input: UpdateInitialStatusInput;
 };
@@ -435,13 +441,8 @@ export type NarrowingDownInput = {
   maxAge: Scalars['Int'];
   minAge: Scalars['Int'];
   range: ApproximateRange;
-  sex?: InputMaybe<NarrowingDownSex>;
+  sex?: InputMaybe<Sex>;
 };
-
-export enum NarrowingDownSex {
-  Female = 'FEMALE',
-  Male = 'MALE'
-}
 
 export type Notification = {
   __typename?: 'Notification';
@@ -635,8 +636,7 @@ export type QuestionReply = QuestionEntity & {
 
 export enum Sex {
   Female = 'FEMALE',
-  Male = 'MALE',
-  NotSelected = 'NOT_SELECTED'
+  Male = 'MALE'
 }
 
 export type Story = {
@@ -696,6 +696,10 @@ export enum StoryType {
   Photo = 'PHOTO',
   Video = 'VIDEO'
 }
+
+export type UpdateDisplayTargetSexInput = {
+  sex?: InputMaybe<Sex>;
+};
 
 export type UpdateInitialStatusInput = {
   birthDay: Scalars['Int'];
@@ -866,6 +870,13 @@ export type SendMessageMutationVariables = Exact<{
 
 
 export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string, room?: { __typename?: 'MessageRoom', id: number, updatedAt: string } | null, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } };
+
+export type UpdateDisplayTargetSexMutationVariables = Exact<{
+  input: UpdateDisplayTargetSexInput;
+}>;
+
+
+export type UpdateDisplayTargetSexMutation = { __typename?: 'Mutation', updateDisplayTargetSex: { __typename?: 'Me', id: string } };
 
 export type UpdateNumberOfPeopleTogetherMutationVariables = Exact<{
   input: UpdateNumberOfPeopleTogetherInput;
@@ -1933,6 +1944,39 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const UpdateDisplayTargetSexDocument = gql`
+    mutation UpdateDisplayTargetSex($input: UpdateDisplayTargetSexInput!) {
+  updateDisplayTargetSex(input: $input) {
+    id
+  }
+}
+    `;
+export type UpdateDisplayTargetSexMutationFn = Apollo.MutationFunction<UpdateDisplayTargetSexMutation, UpdateDisplayTargetSexMutationVariables>;
+
+/**
+ * __useUpdateDisplayTargetSexMutation__
+ *
+ * To run a mutation, you first call `useUpdateDisplayTargetSexMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateDisplayTargetSexMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateDisplayTargetSexMutation, { data, loading, error }] = useUpdateDisplayTargetSexMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateDisplayTargetSexMutation(baseOptions?: Apollo.MutationHookOptions<UpdateDisplayTargetSexMutation, UpdateDisplayTargetSexMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateDisplayTargetSexMutation, UpdateDisplayTargetSexMutationVariables>(UpdateDisplayTargetSexDocument, options);
+      }
+export type UpdateDisplayTargetSexMutationHookResult = ReturnType<typeof useUpdateDisplayTargetSexMutation>;
+export type UpdateDisplayTargetSexMutationResult = Apollo.MutationResult<UpdateDisplayTargetSexMutation>;
+export type UpdateDisplayTargetSexMutationOptions = Apollo.BaseMutationOptions<UpdateDisplayTargetSexMutation, UpdateDisplayTargetSexMutationVariables>;
 export const UpdateNumberOfPeopleTogetherDocument = gql`
     mutation UpdateNumberOfPeopleTogether($input: UpdateNumberOfPeopleTogetherInput!) {
   updateNumberOfPeopleTogether(input: $input) {

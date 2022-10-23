@@ -1,0 +1,5 @@
+mutation UpdateDisplayTargetSex($input: UpdateDisplayTargetSexInput!) {
+  updateDisplayTargetSex(input: $input) {
+    id
+  }
+}

@@ -6,4 +6,5 @@ fragment UserCard on User {
   profileImages {
     ...ProfileImage
   }
+  distance
 }

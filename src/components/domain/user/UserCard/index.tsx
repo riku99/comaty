@@ -22,7 +22,7 @@ type Props = {
 };
 
 export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
-  const { nickname, statusMessage, id, age } = userCardData;
+  const { nickname, statusMessage, id, age, distance } = userCardData;
   return (
     <Pressable
       style={[styles.body, containerStyle]}
@@ -45,7 +45,9 @@ export const UserCard = ({ containerStyle, onPress, userCardData }: Props) => {
       >
         <View style={styles.distanceContainer}>
           <BlurView intensity={40} style={styles.blurView}>
-            <Text style={styles.distance}>400m先</Text>
+            <Text style={styles.distance}>
+              {!!distance ? `${distance}km先` : '--'}
+            </Text>
           </BlurView>
         </View>
       </ProfileImage>

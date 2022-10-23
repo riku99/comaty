@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import { btoa } from 'react-native-quick-base64';
 import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -32,11 +33,13 @@ type Props = RootNavigationScreenProp<'HomeMain'>;
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
 
 export const HomeScreen = ({ navigation }: Props) => {
+  const [gotInitialPosition, setGotInitialPosition] = useState(true);
   const { narrowingDownCinditions } = useNarrowingDownConditions();
   const { data, fetchMore, refetch, loading } = useHomeScreenDataQuery({
     variables: {
       narrowingDownInput: narrowingDownCinditions,
     },
+    skip: !gotInitialPosition,
   });
   const isFirstRender = useRef(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -44,7 +47,6 @@ export const HomeScreen = ({ navigation }: Props) => {
     loadingByChanfingNarrowingDownInput,
     setLoadingByChanfingNarrowingDownInput,
   ] = useState(false);
-  const [] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,6 +68,33 @@ export const HomeScreen = ({ navigation }: Props) => {
       headerTitle: '',
     });
   }, [navigation]);
+
+  useEffect(() => {
+    (async () => {
+      const currentPermission = await Geolocation.requestAuthorization(
+        'whenInUse'
+      );
+      if (
+        currentPermission === 'granted' ||
+        currentPermission === 'restricted'
+      ) {
+        Geolocation.getCurrentPosition(
+          (position) => {
+            console.log(position);
+            setGotInitialPosition(true);
+          },
+          (error) => {
+            console.log(error);
+            // 位置情報許可のグローバルステートをfalseにする
+            setGotInitialPosition(true);
+          }
+        );
+      } else {
+        // 位置情報許可のグローバルステートをfalseにする
+        setGotInitialPosition(true);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -130,7 +159,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
-  if (loading || loadingByChanfingNarrowingDownInput) {
+  if (loading || loadingByChanfingNarrowingDownInput || !gotInitialPosition) {
     return <Loading />;
   }
 

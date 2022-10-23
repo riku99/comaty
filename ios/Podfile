@@ -85,7 +85,7 @@ end
 
 pre_install do |installer|
   installer.pod_targets.each do |pod|
-    if pod.name.eql?('VisionCamera') || pod.name.eql?('react-native-mmkv') || pod.name.eql?('react-native-quick-base64') || pod.name.eql?('react-native-menu') || pod.name.eql?('react-native-heic-converter')
+    if pod.name.eql?('VisionCamera') || pod.name.eql?('react-native-mmkv') || pod.name.eql?('react-native-quick-base64') || pod.name.eql?('react-native-menu') || pod.name.eql?('react-native-heic-converter') || pod.name.eql?("react-native-geolocation-service")
       def pod.build_type;
         Pod::BuildType.static_library
       end

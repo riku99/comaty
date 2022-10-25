@@ -33,13 +33,20 @@ type Props = RootNavigationScreenProp<'HomeMain'>;
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
 
 export const HomeScreen = ({ navigation }: Props) => {
-  const [gotInitialPosition, setGotInitialPosition] = useState(true);
+  const [initialPosition, setInitialPosition] = useState<{
+    latitude: number;
+    longitude: number;
+  }>(null);
   const { narrowingDownCinditions } = useNarrowingDownConditions();
   const { data, fetchMore, refetch, loading } = useHomeScreenDataQuery({
     variables: {
-      narrowingDownInput: narrowingDownCinditions,
+      narrowingDownInput: {
+        ...narrowingDownCinditions,
+        latitude: initialPosition?.latitude ?? undefined,
+        longitude: initialPosition?.longitude ?? undefined,
+      },
     },
-    skip: !gotInitialPosition,
+    skip: !initialPosition,
   });
   const isFirstRender = useRef(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -81,17 +88,18 @@ export const HomeScreen = ({ navigation }: Props) => {
         Geolocation.getCurrentPosition(
           (position) => {
             console.log(position);
-            setGotInitialPosition(true);
+            setInitialPosition({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
           },
           (error) => {
             console.log(error);
             // 位置情報許可のグローバルステートをfalseにする
-            setGotInitialPosition(true);
           }
         );
       } else {
         // 位置情報許可のグローバルステートをfalseにする
-        setGotInitialPosition(true);
       }
     })();
   }, []);
@@ -159,7 +167,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
-  if (loading || loadingByChanfingNarrowingDownInput || !gotInitialPosition) {
+  if (loading || loadingByChanfingNarrowingDownInput || !initialPosition) {
     return <Loading />;
   }
 

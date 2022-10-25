@@ -89,6 +89,7 @@ export const HomeScreen = ({ navigation }: Props) => {
         currentPermission === 'granted' ||
         currentPermission === 'restricted'
       ) {
+        setGeolocationPermitted(true);
         Geolocation.getCurrentPosition(
           (position) => {
             console.log(position);

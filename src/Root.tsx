@@ -1,19 +1,24 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useMemo, useRef } from 'react';
+import {
+  AppState,
+  AppStateStatus,
+  NativeEventSubscription,
+  StyleSheet,
+} from 'react-native';
 import { View } from 'react-native-animatable';
-import Config from 'react-native-config';
-import Geocoder from 'react-native-geocoding';
+import Geolocation from 'react-native-geolocation-service';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import {
   useGetInitialDataQuery,
-  useUpdatePositionMutation
+  useUpdatePositionMutation,
 } from 'src/generated/graphql';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
 import { useLoggedIn } from 'src/hooks/auth';
+import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
 import { RootStack } from 'src/navigations/RootStack';
 import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 
@@ -25,9 +30,9 @@ export const Root = () => {
     useContentsCreationVisible();
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['24%'], []);
-  const [locationEnabled, setLocationEnabled] = useState(false);
   const [updatePositionMutation] = useUpdatePositionMutation();
   const { setNarrowingDownConditions } = useNarrowingDownConditions();
+  const { setGeolocationPermitted } = useGeolocationPermitted();
 
   useEffect(() => {
     if (initialData?.me) {
@@ -42,69 +47,9 @@ export const Root = () => {
   }, [contentsCreationModalVisible]);
 
   // 後に消す
-  useEffect(() => {
-    Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
-  }, []);
-
   // useEffect(() => {
-  //   let onLocation: Subscription;
-
-  //   if (loggedIn) {
-  //     onLocation = BackgroundGeolocation.onLocation(async (location) => {
-  //       const { latitude, longitude } = location.coords;
-
-  //       await updatePositionMutation({
-  //         variables: {
-  //           input: {
-  //             latitude,
-  //             longitude,
-  //           },
-  //         },
-  //         onCompleted: () => {
-  //           console.log('🚩 Update position with ' + latitude, +longitude);
-  //         },
-  //       });
-  //     });
-
-  //     BackgroundGeolocation.ready({
-  //       desiredAccuracy: BackgroundGeolocation.DESIRED_ACCURACY_HIGH,
-  //       distanceFilter: 500,
-  //       stopTimeout: 1,
-  //       debug: true,
-  //       stopOnTerminate: false,
-  //       startOnBoot: true,
-  //       disableLocationAuthorizationAlert: true,
-  //       logLevel: BackgroundGeolocation.LOG_LEVEL_OFF,
-  //     }).then(async () => {
-  //       try {
-  //         const status = await BackgroundGeolocation.requestPermission();
-  //         if (status === BackgroundGeolocation.AUTHORIZATION_STATUS_ALWAYS) {
-  //           setLocationEnabled(true);
-  //         } else {
-  //           setLocationEnabled(false);
-  //         }
-  //       } catch (e) {
-  //         console.log(e);
-  //       }
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (onLocation) {
-  //       onLocation.remove();
-  //     }
-  //   };
-  // }, [loggedIn]);
-
-  // useEffect(() => {
-  //   if (locationEnabled) {
-  //     console.log('background location start');
-  //     BackgroundGeolocation.start();
-  //   } else {
-  //     console.log('background location stop');
-  //     BackgroundGeolocation.stop();
-  //   }
-  // }, [locationEnabled]);
+  //   Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
+  // }, []);
 
   useEffect(() => {
     if (loggedIn) {
@@ -117,6 +62,60 @@ export const Root = () => {
     }
   }, [loggedIn, setNarrowingDownConditions]);
 
+  useEffect(() => {
+    let subscription: NativeEventSubscription;
+
+    if (loggedIn) {
+      const onChange = async (nextState: AppStateStatus) => {
+        if (nextState === 'active') {
+          const currentPermission = await Geolocation.requestAuthorization(
+            'whenInUse'
+          );
+          if (
+            currentPermission === 'granted' ||
+            currentPermission === 'restricted'
+          ) {
+            setGeolocationPermitted(true);
+            Geolocation.getCurrentPosition(
+              async (position) => {
+                try {
+                  await updatePositionMutation({
+                    variables: {
+                      input: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                      },
+                    },
+                    onCompleted: (d) => {
+                      console.log(
+                        '🚩 Updated position ' +
+                          position.coords.latitude +
+                          ' ' +
+                          position.coords.longitude
+                      );
+                    },
+                  });
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+              (error) => {}
+            );
+          } else {
+            setGeolocationPermitted(false);
+          }
+        }
+      };
+
+      subscription = AppState.addEventListener('change', onChange);
+    }
+
+    return () => {
+      if (subscription) {
+        subscription.remove();
+      }
+    };
+  }, [loggedIn]);
 
   return (
     <>

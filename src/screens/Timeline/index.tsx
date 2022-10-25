@@ -5,11 +5,13 @@ import { PostCard } from 'src/components/domain/post/PostCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
+import { NoGeolocationPermission } from 'src/components/ui/NoGeolocationPermission';
 import {
   TimelineScreenDataQuery,
   useTimelineScreenDataQuery,
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
+import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
 import { useDeletePost } from 'src/hooks/post';
 
 type Props = RootNavigationScreenProp<'Timeline'>;
@@ -23,9 +25,9 @@ export const TimelineScreen = ({ navigation }: Props) => {
       input: narrowingDownCinditions,
     },
   });
-
   const [refreshing, setRefreshing] = useState(false);
   const { deletePost } = useDeletePost();
+  const { geolocationPermitted } = useGeolocationPermitted();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -65,6 +67,10 @@ export const TimelineScreen = ({ navigation }: Props) => {
       setRefreshing(false);
     }
   };
+
+  if (geolocationPermitted == false) {
+    return <NoGeolocationPermission />;
+  }
 
   if (!data?.posts) {
     return <Loading />;

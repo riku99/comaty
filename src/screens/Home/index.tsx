@@ -15,6 +15,7 @@ import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
+import { NoGeolocationPermission } from 'src/components/ui/NoGeolocationPermission';
 import {
   HomeNearByUsersDocument,
   HomeScreenDataQuery,
@@ -25,6 +26,7 @@ import {
   UserCardFragmentDoc,
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
+import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
 import { theme } from 'src/styles';
 import { Stories } from './Stories';
 
@@ -54,6 +56,8 @@ export const HomeScreen = ({ navigation }: Props) => {
     loadingByChanfingNarrowingDownInput,
     setLoadingByChanfingNarrowingDownInput,
   ] = useState(false);
+  const { setGeolocationPermitted, geolocationPermitted } =
+    useGeolocationPermitted();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -95,11 +99,11 @@ export const HomeScreen = ({ navigation }: Props) => {
           },
           (error) => {
             console.log(error);
-            // 位置情報許可のグローバルステートをfalseにする
+            setGeolocationPermitted(false);
           }
         );
       } else {
-        // 位置情報許可のグローバルステートをfalseにする
+        setGeolocationPermitted(false);
       }
     })();
   }, []);
@@ -166,6 +170,10 @@ export const HomeScreen = ({ navigation }: Props) => {
       setRefreshing(false);
     }
   };
+
+  if (geolocationPermitted == false) {
+    return <NoGeolocationPermission />;
+  }
 
   if (loading || loadingByChanfingNarrowingDownInput || !initialPosition) {
     return <Loading />;

@@ -6,15 +6,15 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { btoa } from 'react-native-quick-base64';
+import { LoadingWithMyProfileImage } from 'src/components/domain/me/LoadingWithMyProfileImage';
 import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
-import { Loading } from 'src/components/ui/Loading';
 import { NoGeolocationPermission } from 'src/components/ui/NoGeolocationPermission';
 import {
   HomeNearByUsersDocument,
@@ -23,7 +23,7 @@ import {
   HomeStoriesFragment,
   useHomeScreenDataQuery,
   UserCardFragment,
-  UserCardFragmentDoc,
+  UserCardFragmentDoc
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
@@ -177,7 +177,7 @@ export const HomeScreen = ({ navigation }: Props) => {
   }
 
   if (loading || loadingByChanfingNarrowingDownInput || !initialPosition) {
-    return <Loading />;
+    return <LoadingWithMyProfileImage />;
   }
 
   if (!data?.me) {

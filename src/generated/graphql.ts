@@ -1081,6 +1081,11 @@ export type MyProfileFragment = { __typename?: 'Me', id: string, nickname?: stri
 
 export type PageInfoFragment = { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null };
 
+export type LoadingWithMyProfileImageDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LoadingWithMyProfileImageDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+
 export type PostCardFragment = { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null };
 
 type QuestionCard_Question_Fragment = { __typename?: 'Question', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null };
@@ -3042,6 +3047,42 @@ export function useGetInitialStatusCompletionLazyQuery(baseOptions?: Apollo.Lazy
 export type GetInitialStatusCompletionQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionQuery>;
 export type GetInitialStatusCompletionLazyQueryHookResult = ReturnType<typeof useGetInitialStatusCompletionLazyQuery>;
 export type GetInitialStatusCompletionQueryResult = Apollo.QueryResult<GetInitialStatusCompletionQuery, GetInitialStatusCompletionQueryVariables>;
+export const LoadingWithMyProfileImageDataDocument = gql`
+    query LoadingWithMyProfileImageData {
+  me {
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+
+/**
+ * __useLoadingWithMyProfileImageDataQuery__
+ *
+ * To run a query within a React component, call `useLoadingWithMyProfileImageDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLoadingWithMyProfileImageDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLoadingWithMyProfileImageDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLoadingWithMyProfileImageDataQuery(baseOptions?: Apollo.QueryHookOptions<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>(LoadingWithMyProfileImageDataDocument, options);
+      }
+export function useLoadingWithMyProfileImageDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>(LoadingWithMyProfileImageDataDocument, options);
+        }
+export type LoadingWithMyProfileImageDataQueryHookResult = ReturnType<typeof useLoadingWithMyProfileImageDataQuery>;
+export type LoadingWithMyProfileImageDataLazyQueryHookResult = ReturnType<typeof useLoadingWithMyProfileImageDataLazyQuery>;
+export type LoadingWithMyProfileImageDataQueryResult = Apollo.QueryResult<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>;
 export const BlockListScreenDataDocument = gql`
     query BlockListScreenData {
   me {

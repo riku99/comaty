@@ -1,0 +1,7 @@
+query LoadingWithMyProfileImageData {
+  me {
+    firstProfileImage {
+      ...ProfileImage
+    }
+  }
+}

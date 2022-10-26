@@ -440,6 +440,7 @@ export type NarrowingDownInput = {
   longitude?: InputMaybe<Scalars['Float']>;
   maxAge: Scalars['Int'];
   minAge: Scalars['Int'];
+  numberOfPeopleTogethers?: InputMaybe<Array<Scalars['Int']>>;
   range: ApproximateRange;
   sex?: InputMaybe<Sex>;
 };

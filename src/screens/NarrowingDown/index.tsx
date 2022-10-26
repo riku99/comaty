@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CheckBox } from 'src/components/ui/CheckBox';
@@ -15,7 +15,7 @@ import { RadioButton } from 'src/components/ui/RadioButton';
 import {
   ApproximateRange,
   Sex,
-  useUpdateDisplayTargetSexMutation
+  useUpdateDisplayTargetSexMutation,
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { theme } from 'src/styles';
@@ -33,6 +33,9 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
   const [range, setRange] = useState(narrowingDownCinditions.range);
   const [minAge, setMinAge] = useState(narrowingDownCinditions.minAge);
   const [maxAge, setMaxAge] = useState(narrowingDownCinditions.maxAge);
+  const [numberOfPeopleTogethers, setNumberOfPeopleTogethers] = useState(
+    narrowingDownCinditions.numberOfPeopleTogethers
+  );
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,6 +50,9 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
       range,
       minAge,
       maxAge,
+      numberOfPeopleTogethers: numberOfPeopleTogethers?.length
+        ? numberOfPeopleTogethers
+        : undefined,
     });
     navigation.goBack();
     await updateDisplayTargetSexMutation({
@@ -56,6 +62,19 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
         },
       },
     });
+  };
+
+  const onNumberOfPeopleTogethersPress = (targetNumber: number) => {
+    if (numberOfPeopleTogethers?.includes(targetNumber)) {
+      setNumberOfPeopleTogethers(
+        [...numberOfPeopleTogethers].filter((n) => n !== targetNumber)
+      );
+    } else {
+      const d = numberOfPeopleTogethers
+        ? [...numberOfPeopleTogethers, targetNumber]
+        : [targetNumber];
+      setNumberOfPeopleTogethers(d);
+    }
   };
 
   return (
@@ -160,44 +179,62 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
 
         <View
           style={{
-            marginTop: 38,
+            marginTop: 40,
           }}
         >
-          <Text style={styles.sectionTitle}>
-            一緒にいる人の人数(複数選択可能)
-          </Text>
+          <Text style={styles.sectionTitle}>一緒にいる人の人数</Text>
           <Pressable
             style={[styles.sexItemContainer, styles.checkBoxItem]}
             onPress={() => {
-              console.log('One');
+              onNumberOfPeopleTogethersPress(1);
             }}
           >
             <Text style={styles.sexTitle}>1人</Text>
-            <CheckBox isChecked={true} size={24} pointerEvents="none" />
+            <CheckBox
+              isChecked={numberOfPeopleTogethers?.includes(1)}
+              size={24}
+              pointerEvents="none"
+            />
           </Pressable>
 
           <Pressable
             style={[styles.sexItemContainer, styles.checkBoxItem]}
-            onPress={() => {}}
+            onPress={() => {
+              onNumberOfPeopleTogethersPress(2);
+            }}
           >
             <Text style={styles.sexTitle}>2人</Text>
-            <CheckBox isChecked={true} size={24} />
+            <CheckBox
+              isChecked={numberOfPeopleTogethers?.includes(2)}
+              size={24}
+              pointerEvents="none"
+            />
           </Pressable>
 
           <Pressable
             style={[styles.sexItemContainer, styles.checkBoxItem]}
-            onPress={() => {}}
+            onPress={() => {
+              onNumberOfPeopleTogethersPress(3);
+            }}
           >
             <Text style={styles.sexTitle}>3人</Text>
-            <CheckBox isChecked={false} size={24} />
+            <CheckBox
+              isChecked={numberOfPeopleTogethers?.includes(3)}
+              size={24}
+            />
           </Pressable>
 
           <Pressable
             style={[styles.sexItemContainer, styles.checkBoxItem]}
-            onPress={() => {}}
+            onPress={() => {
+              onNumberOfPeopleTogethersPress(4);
+            }}
           >
             <Text style={styles.sexTitle}>4人以上</Text>
-            <CheckBox isChecked={false} size={24} />
+            <CheckBox
+              isChecked={numberOfPeopleTogethers?.includes(4)}
+              size={24}
+            />
           </Pressable>
         </View>
 

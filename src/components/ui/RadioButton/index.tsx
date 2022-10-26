@@ -28,7 +28,7 @@ export const RadioButton = ({
             height: size,
             borderRadius: size,
             borderWidth: 2,
-            borderColor: isSelected ? theme.primary : '#6B6B6B',
+            borderColor: isSelected ? theme.primary : theme.gray.formBorder,
           },
         ]}
       >

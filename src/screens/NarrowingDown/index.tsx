@@ -7,14 +7,15 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CheckBox } from 'src/components/ui/CheckBox';
 import { RadioButton } from 'src/components/ui/RadioButton';
 import {
   ApproximateRange,
   Sex,
-  useUpdateDisplayTargetSexMutation,
+  useUpdateDisplayTargetSexMutation
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { theme } from 'src/styles';
@@ -162,6 +163,49 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
             marginTop: 38,
           }}
         >
+          <Text style={styles.sectionTitle}>
+            一緒にいる人の人数(複数選択可能)
+          </Text>
+          <Pressable
+            style={[styles.sexItemContainer, styles.checkBoxItem]}
+            onPress={() => {
+              console.log('One');
+            }}
+          >
+            <Text style={styles.sexTitle}>1人</Text>
+            <CheckBox isChecked={true} size={24} pointerEvents="none" />
+          </Pressable>
+
+          <Pressable
+            style={[styles.sexItemContainer, styles.checkBoxItem]}
+            onPress={() => {}}
+          >
+            <Text style={styles.sexTitle}>2人</Text>
+            <CheckBox isChecked={true} size={24} />
+          </Pressable>
+
+          <Pressable
+            style={[styles.sexItemContainer, styles.checkBoxItem]}
+            onPress={() => {}}
+          >
+            <Text style={styles.sexTitle}>3人</Text>
+            <CheckBox isChecked={false} size={24} />
+          </Pressable>
+
+          <Pressable
+            style={[styles.sexItemContainer, styles.checkBoxItem]}
+            onPress={() => {}}
+          >
+            <Text style={styles.sexTitle}>4人以上</Text>
+            <CheckBox isChecked={false} size={24} />
+          </Pressable>
+        </View>
+
+        <View
+          style={{
+            marginTop: 38,
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -221,7 +265,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContaienr: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
     color: theme.gray.text,
@@ -232,6 +276,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     justifyContent: 'space-between',
   },
+  checkBoxItem: { paddingRight: 4 },
   sexTitle: {
     fontSize: 18,
   },

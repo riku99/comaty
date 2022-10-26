@@ -6,7 +6,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState
+  useState,
 } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -23,7 +23,7 @@ import {
   HomeStoriesFragment,
   useHomeScreenDataQuery,
   UserCardFragment,
-  UserCardFragmentDoc
+  UserCardFragmentDoc,
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';

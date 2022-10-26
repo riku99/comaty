@@ -32,7 +32,7 @@ export const LoadingWithMyProfileImage = () => {
             key={index}
             style={styles.wave}
             from={{
-              scale: 0,
+              scale: 0.25,
               opacity: 0.9,
             }}
             animate={{

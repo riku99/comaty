@@ -86,7 +86,7 @@ export const Root = () => {
                         longitude: position.coords.longitude,
                       },
                     },
-                    onCompleted: (d) => {
+                    onCompleted: () => {
                       console.log(
                         '🚩 Updated position ' +
                           position.coords.latitude +

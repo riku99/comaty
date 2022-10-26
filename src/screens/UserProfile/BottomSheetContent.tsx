@@ -49,12 +49,13 @@ export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
               <MaterialCommunityIcons
                 name="map-marker-outline"
                 size={22}
-                color={theme.black}
+                color={theme.gray.text}
               />
               <Text
                 style={{
                   marginRight: 4,
                   fontSize: 16,
+                  color: theme.gray.text,
                 }}
               >
                 {distance}km先

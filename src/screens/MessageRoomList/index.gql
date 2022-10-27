@@ -30,6 +30,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
         sender {
           id
         }
+        createdAt
       }
     }
   }

@@ -1,4 +1,5 @@
 import { Text } from '@rneui/themed';
+import { differenceInMinutes } from 'date-fns';
 import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
@@ -17,6 +18,11 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   const text = message.text;
   const myId = useMyId();
   const badgeVisible = !message.read && message.sender.id !== myId;
+  const remainingTime =
+    message?.sender.id !== myId
+      ? 20 -
+        differenceInMinutes(new Date(), new Date(Number(message.createdAt)))
+      : null;
 
   return (
     <Pressable {...pressableProps}>
@@ -59,7 +65,18 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
           </View>
 
           <View style={styles.timeAndDistance}>
-            <Text style={styles.timeAndDistanceText}>あと15分</Text>
+            <View>
+              {!!remainingTime && (
+                <Text
+                  style={[
+                    styles.timeAndDistanceText,
+                    {
+                      color: remainingTime > 5 ? theme.gray.text : theme.red,
+                    },
+                  ]}
+                >{`あと${remainingTime}分`}</Text>
+              )}
+            </View>
             {!!partner.distance && (
               <Text style={styles.timeAndDistanceText}>
                 {`${partner.distance}km先`}

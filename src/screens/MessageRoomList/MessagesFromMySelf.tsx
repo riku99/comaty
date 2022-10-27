@@ -10,7 +10,7 @@ import {
   RoomListItemInMessageRoomListScreenFragment,
   RoomListItemInMessageRoomListScreenFragmentDoc,
   useDeleteMessageRoomMutation,
-  useMessageRoomListFromMySelfScreenDataQuery
+  useMessageRoomListFromMySelfScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { deleteRoomWithAlert } from './helpers';
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 16,
     paddingTop: 4,
   },
 });

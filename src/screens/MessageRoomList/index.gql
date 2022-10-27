@@ -19,6 +19,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
     firstProfileImage {
       ...ProfileImage
     }
+    distance
   }
   messages(first: 1) {
     edges {

@@ -1,6 +1,6 @@
 import { MotiView } from 'moti';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Easing } from 'react-native-reanimated';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { useLoadingWithMyProfileImageDataQuery } from 'src/generated/graphql';
@@ -44,9 +44,7 @@ export const LoadingWithMyProfileImage = () => {
               type: 'timing',
               easing: Easing.linear,
             }}
-          >
-            <Text>{n}</Text>
-          </MotiView>
+          />
         );
       })}
 

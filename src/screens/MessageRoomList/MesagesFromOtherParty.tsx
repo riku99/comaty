@@ -142,7 +142,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    paddingHorizontal: 16,
     paddingTop: 4,
   },
 });

@@ -6,6 +6,7 @@ import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
 import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { theme } from 'src/styles';
+import { KeptMessageRooms } from './KeptMessageRooms';
 import { MessagesFromOtherParty } from './MesagesFromOtherParty';
 import { MessagesFromMySelf } from './MessagesFromMySelf';
 
@@ -14,6 +15,7 @@ type Props = RootNavigationScreenProp<'MessageRoomList'>;
 type TopTabParamList = {
   FromMySelf: undefined;
   FromOtherParty: undefined;
+  Kept: undefined;
 };
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
@@ -56,11 +58,27 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
             height: 1.5,
           },
           tabBarIndicatorContainerStyle: {
-            marginLeft: screenWidth / 4,
+            marginLeft: screenWidth / 6,
             transform: [{ translateX: -50 }],
           },
         }}
       >
+        <TopTab.Screen
+          name="Kept"
+          component={KeptMessageRooms}
+          options={{
+            tabBarLabel: 'キープ中',
+            tabBarBadge: () => (
+              <>
+                {otherPartyBadgeVisible && (
+                  <View style={styles.badgeContainer}>
+                    <Badge size={8} />
+                  </View>
+                )}
+              </>
+            ),
+          }}
+        />
         <TopTab.Screen
           name="FromOtherParty"
           component={MessagesFromOtherParty}

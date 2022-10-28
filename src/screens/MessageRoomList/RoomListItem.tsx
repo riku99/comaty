@@ -66,7 +66,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
 
           <View style={styles.timeAndDistance}>
             <View>
-              {!!remainingTime && (
+              {remainingTime !== undefined && remainingTime !== null && (
                 <Text
                   style={[
                     styles.timeAndDistanceText,
@@ -74,7 +74,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
                       color: remainingTime > 5 ? theme.gray.text : theme.red,
                     },
                   ]}
-                >{`あと${remainingTime}分`}</Text>
+                >{`あと${remainingTime > 0 ? remainingTime : 0}分`}</Text>
               )}
             </View>
             {!!partner.distance && (

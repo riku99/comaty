@@ -20,6 +20,7 @@ import {
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
+  useKeepRequestMutation,
   useMessageRoomScreenDataQuery,
   useReadMessageMutation,
   useSendMessageMutation,
@@ -87,6 +88,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const [isSending, setIsSending] = useState(false);
   const toast = useToast();
   const [readMessageMutation] = useReadMessageMutation();
+  const [keepRequestMutation] = useKeepRequestMutation();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -309,6 +311,36 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     }
   };
 
+  const onKeepRequestPress = () => {
+    Alert.alert(
+      'キープリクエストしますか？',
+      'キープリクエストが承認された場合、30分の返信制限時間がなくなります。',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: 'リクエスト',
+          onPress: async () => {
+            try {
+              await keepRequestMutation({
+                variables: {
+                  messageRoomId: roomId,
+                },
+                onCompleted: (d) => {
+                  console.log(d);
+                },
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
       <InfiniteFlatList
@@ -346,6 +378,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
           onChangeText={setInputText}
           onSendPress={onSendPress}
           isSending={isSending}
+          onKeepRequestPress={onKeepRequestPress}
         />
       </Animated.View>
     </SafeAreaView>

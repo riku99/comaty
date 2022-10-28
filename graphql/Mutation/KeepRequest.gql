@@ -1,0 +1,14 @@
+mutation KeepRequest($messageRoomId: Int!) {
+  createMessageKeepingRequest(messageRoomId: $messageRoomId) {
+    id
+    messageRoom {
+      id
+      keepingRequest {
+        id
+        requestUser {
+          id
+        }
+      }
+    }
+  }
+}

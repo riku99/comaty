@@ -1,6 +1,7 @@
 import { Text } from '@rneui/themed';
 import {
   ActivityIndicator,
+  InputAccessoryView,
   Pressable,
   StyleSheet,
   TextInput,
@@ -13,6 +14,7 @@ type Props = {
   onChangeText: (text: string) => void;
   onSendPress: () => void;
   isSending: boolean;
+  onKeepRequestPress: () => void;
 };
 
 export const InputComposer = ({
@@ -20,8 +22,10 @@ export const InputComposer = ({
   onChangeText,
   onSendPress,
   isSending,
+  onKeepRequestPress,
 }: Props) => {
   const sendDisabled = !inputValue || isSending;
+  const textInputId = 'textInput';
 
   return (
     <View style={styles.container}>
@@ -32,7 +36,16 @@ export const InputComposer = ({
           multiline
           value={inputValue}
           onChangeText={onChangeText}
+          inputAccessoryViewID={textInputId}
         />
+
+        <InputAccessoryView nativeID={textInputId}>
+          <View style={styles.accessoryContainer}>
+            <Pressable onPress={onKeepRequestPress}>
+              <Text style={styles.keepRequest}>キープリクエスト</Text>
+            </Pressable>
+          </View>
+        </InputAccessoryView>
 
         <Pressable onPress={onSendPress} disabled={sendDisabled}>
           {isSending ? (
@@ -83,5 +96,17 @@ const styles = StyleSheet.create({
   sendButton: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  accessoryContainer: {
+    height: 40,
+    justifyContent: 'center',
+    paddingLeft: 16,
+    borderTopColor: theme.gray.boarder,
+    borderTopWidth: 0.5,
+    backgroundColor: '#fff',
+  },
+  keepRequest: {
+    fontWeight: 'bold',
+    color: theme.primary,
   },
 });

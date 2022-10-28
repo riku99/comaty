@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -43,6 +43,10 @@ export enum CreateMessageError {
 export type CreateMessageInput = {
   text: Scalars['String'];
 };
+
+export enum CreateMessageKeepingRequestError {
+  NotFound = 'NOT_FOUND'
+}
 
 export enum CreateMessageRoomError {
   Blocked = 'BLOCKED'
@@ -210,10 +214,20 @@ export type MessageEdge = {
   node: Message;
 };
 
+export type MessageKeepingRequest = {
+  __typename?: 'MessageKeepingRequest';
+  createdAt: Scalars['String'];
+  id: Scalars['Int'];
+  messageRoom?: Maybe<MessageRoom>;
+  requestUser?: Maybe<User>;
+  targetUser?: Maybe<User>;
+};
+
 export type MessageRoom = {
   __typename?: 'MessageRoom';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
+  keepingRequest?: Maybe<MessageKeepingRequest>;
   messages?: Maybe<MessageConnection>;
   partner?: Maybe<User>;
   recipient?: Maybe<User>;
@@ -234,6 +248,7 @@ export type Mutation = {
   createGroup: Group;
   createGroupMember: GroupMember;
   createMessage: Message;
+  createMessageKeepingRequest?: Maybe<MessageKeepingRequest>;
   createMessageRead?: Maybe<Message>;
   createMessageRoom: MessageRoom;
   createPost: Post;
@@ -288,6 +303,11 @@ export type MutationCreateGroupMemberArgs = {
 export type MutationCreateMessageArgs = {
   input: CreateMessageInput;
   roomId: Scalars['Int'];
+};
+
+
+export type MutationCreateMessageKeepingRequestArgs = {
+  messageRoomId: Scalars['Int'];
 };
 
 
@@ -851,6 +871,13 @@ export type JoinGroupMutationVariables = Exact<{
 
 
 export type JoinGroupMutation = { __typename?: 'Mutation', createGroupMember: { __typename?: 'GroupMember', id: number } };
+
+export type KeepRequestMutationVariables = Exact<{
+  messageRoomId: Scalars['Int'];
+}>;
+
+
+export type KeepRequestMutation = { __typename?: 'Mutation', createMessageKeepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, messageRoom?: { __typename?: 'MessageRoom', id: number, keepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, requestUser?: { __typename?: 'User', id: string } | null } | null } | null } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1847,6 +1874,48 @@ export function useJoinGroupMutation(baseOptions?: Apollo.MutationHookOptions<Jo
 export type JoinGroupMutationHookResult = ReturnType<typeof useJoinGroupMutation>;
 export type JoinGroupMutationResult = Apollo.MutationResult<JoinGroupMutation>;
 export type JoinGroupMutationOptions = Apollo.BaseMutationOptions<JoinGroupMutation, JoinGroupMutationVariables>;
+export const KeepRequestDocument = gql`
+    mutation KeepRequest($messageRoomId: Int!) {
+  createMessageKeepingRequest(messageRoomId: $messageRoomId) {
+    id
+    messageRoom {
+      id
+      keepingRequest {
+        id
+        requestUser {
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+export type KeepRequestMutationFn = Apollo.MutationFunction<KeepRequestMutation, KeepRequestMutationVariables>;
+
+/**
+ * __useKeepRequestMutation__
+ *
+ * To run a mutation, you first call `useKeepRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useKeepRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [keepRequestMutation, { data, loading, error }] = useKeepRequestMutation({
+ *   variables: {
+ *      messageRoomId: // value for 'messageRoomId'
+ *   },
+ * });
+ */
+export function useKeepRequestMutation(baseOptions?: Apollo.MutationHookOptions<KeepRequestMutation, KeepRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<KeepRequestMutation, KeepRequestMutationVariables>(KeepRequestDocument, options);
+      }
+export type KeepRequestMutationHookResult = ReturnType<typeof useKeepRequestMutation>;
+export type KeepRequestMutationResult = Apollo.MutationResult<KeepRequestMutation>;
+export type KeepRequestMutationOptions = Apollo.BaseMutationOptions<KeepRequestMutation, KeepRequestMutationVariables>;
 export const LogoutDocument = gql`
     mutation Logout {
   logout {

@@ -1,5 +1,5 @@
-import * as Apollo from '@apollo/client';
 import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -15,6 +15,10 @@ export type Scalars = {
   Float: number;
   Upload: any;
 };
+
+export enum AcceptMessageKeepingRequestError {
+  NotFound = 'NOT_FOUND'
+}
 
 export enum ApproximateRange {
   Near = 'NEAR',
@@ -228,6 +232,7 @@ export type MessageRoom = {
   createdAt: Scalars['String'];
   id: Scalars['Int'];
   keepingRequest?: Maybe<MessageKeepingRequest>;
+  kept: Scalars['Boolean'];
   messages?: Maybe<MessageConnection>;
   partner?: Maybe<User>;
   recipient?: Maybe<User>;
@@ -243,6 +248,7 @@ export type MessageRoomMessagesArgs = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  acceptMessageKeepingRequest: MessageRoom;
   blockUser?: Maybe<User>;
   changeActive: Me;
   createGroup: Group;
@@ -281,6 +287,11 @@ export type Mutation = {
   updatePosition: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
+};
+
+
+export type MutationAcceptMessageKeepingRequestArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -828,6 +839,13 @@ export type UserTag = {
   user?: Maybe<User>;
 };
 
+export type AcceptKeepingRequestMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type AcceptKeepingRequestMutation = { __typename?: 'Mutation', acceptMessageKeepingRequest: { __typename?: 'MessageRoom', id: number, kept: boolean } };
+
 export type ChangeActiveMutationVariables = Exact<{
   input: ChangeActiveInput;
 }>;
@@ -1204,7 +1222,7 @@ export type MessageRoomScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } };
+export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, kept: boolean, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null, keepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, requestUser?: { __typename?: 'User', id: string } | null } | null } };
 
 export type RoomMessagesInMessageRoomScreenQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -1223,6 +1241,8 @@ export type NicknameAndProfileImageInMessageRoomScreenQueryVariables = Exact<{
 export type NicknameAndProfileImageInMessageRoomScreenQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
 export type MessageBubbleDataInMessageRoomFragment = { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null };
+
+export type InputComposerDataInMessageRoomScreenFragment = { __typename?: 'MessageRoom', id: number, kept: boolean, keepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, requestUser?: { __typename?: 'User', id: string } | null } | null };
 
 export type MessageRoomListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1534,6 +1554,18 @@ export const MessageBubbleDataInMessageRoomFragmentDoc = gql`
   }
 }
     ${ProfileImageFragmentDoc}`;
+export const InputComposerDataInMessageRoomScreenFragmentDoc = gql`
+    fragment InputComposerDataInMessageRoomScreen on MessageRoom {
+  id
+  kept
+  keepingRequest {
+    id
+    requestUser {
+      id
+    }
+  }
+}
+    `;
 export const RoomListItemInMessageRoomListScreenFragmentDoc = gql`
     fragment RoomListItemInMessageRoomListScreen on MessageRoom {
   id
@@ -1641,6 +1673,40 @@ export const BottomButtonGroupInUserProfileFragmentDoc = gql`
   }
 }
     ${StoryUserCircleFragmentDoc}`;
+export const AcceptKeepingRequestDocument = gql`
+    mutation AcceptKeepingRequest($id: Int!) {
+  acceptMessageKeepingRequest(id: $id) {
+    id
+    kept
+  }
+}
+    `;
+export type AcceptKeepingRequestMutationFn = Apollo.MutationFunction<AcceptKeepingRequestMutation, AcceptKeepingRequestMutationVariables>;
+
+/**
+ * __useAcceptKeepingRequestMutation__
+ *
+ * To run a mutation, you first call `useAcceptKeepingRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAcceptKeepingRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [acceptKeepingRequestMutation, { data, loading, error }] = useAcceptKeepingRequestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAcceptKeepingRequestMutation(baseOptions?: Apollo.MutationHookOptions<AcceptKeepingRequestMutation, AcceptKeepingRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AcceptKeepingRequestMutation, AcceptKeepingRequestMutationVariables>(AcceptKeepingRequestDocument, options);
+      }
+export type AcceptKeepingRequestMutationHookResult = ReturnType<typeof useAcceptKeepingRequestMutation>;
+export type AcceptKeepingRequestMutationResult = Apollo.MutationResult<AcceptKeepingRequestMutation>;
+export type AcceptKeepingRequestMutationOptions = Apollo.BaseMutationOptions<AcceptKeepingRequestMutation, AcceptKeepingRequestMutationVariables>;
 export const ChangeActiveDocument = gql`
     mutation ChangeActive($input: ChangeActiveInput!) {
   changeActive(input: $input) {
@@ -3487,10 +3553,15 @@ export const MessageRoomScreenDataDocument = gql`
         ...PageInfo
       }
     }
+    keepingRequest {
+      id
+    }
+    ...InputComposerDataInMessageRoomScreen
   }
 }
     ${MessageBubbleDataInMessageRoomFragmentDoc}
-${PageInfoFragmentDoc}`;
+${PageInfoFragmentDoc}
+${InputComposerDataInMessageRoomScreenFragmentDoc}`;
 
 /**
  * __useMessageRoomScreenDataQuery__

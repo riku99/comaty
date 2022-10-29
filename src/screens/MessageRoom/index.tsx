@@ -14,12 +14,15 @@ import { Loading } from 'src/components/ui/Loading';
 import {
   CreateMessageError,
   GetMessageRoomError,
+  InputComposerDataInMessageRoomScreenFragment,
+  InputComposerDataInMessageRoomScreenFragmentDoc,
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomListScreenDataDocument,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
+  useAcceptKeepingRequestMutation,
   useKeepRequestMutation,
   useMessageRoomScreenDataQuery,
   useReadMessageMutation,
@@ -89,6 +92,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const toast = useToast();
   const [readMessageMutation] = useReadMessageMutation();
   const [keepRequestMutation] = useKeepRequestMutation();
+  const [acceptKeepingRequestMutation] = useAcceptKeepingRequestMutation();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -341,6 +345,37 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     );
   };
 
+  const onAcceptRequestPress = () => {
+    if (!data.messageRoom.keepingRequest) {
+      return;
+    }
+
+    Alert.alert(
+      'リクエストを承認しますか？',
+      'キープリクエストが承認された場合、30分の返信制限時間がなくなります。',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '承認',
+          onPress: async () => {
+            try {
+              await acceptKeepingRequestMutation({
+                variables: {
+                  id: data.messageRoom.keepingRequest.id,
+                },
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={[styles.container]}>
       <InfiniteFlatList
@@ -379,6 +414,11 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
           onSendPress={onSendPress}
           isSending={isSending}
           onKeepRequestPress={onKeepRequestPress}
+          fragmentData={filter<InputComposerDataInMessageRoomScreenFragment>(
+            InputComposerDataInMessageRoomScreenFragmentDoc,
+            data.messageRoom
+          )}
+          onAcceptRequestPress={onAcceptRequestPress}
         />
       </Animated.View>
     </SafeAreaView>

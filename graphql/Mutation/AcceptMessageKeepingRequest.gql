@@ -1,0 +1,6 @@
+mutation AcceptKeepingRequest($id: Int!) {
+  acceptMessageKeepingRequest(id: $id) {
+    id
+    kept
+  }
+}

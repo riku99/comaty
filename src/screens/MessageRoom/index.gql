@@ -17,6 +17,10 @@ query MessageRoomScreenData(
         ...PageInfo
       }
     }
+    keepingRequest {
+      id
+    }
+    ...InputComposerDataInMessageRoomScreen
   }
 }
 
@@ -60,6 +64,17 @@ fragment MessageBubbleDataInMessageRoom on Message {
     id
     firstProfileImage {
       ...ProfileImage
+    }
+  }
+}
+
+fragment InputComposerDataInMessageRoomScreen on MessageRoom {
+  id
+  kept
+  keepingRequest {
+    id
+    requestUser {
+      id
     }
   }
 }

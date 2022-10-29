@@ -1,12 +1,15 @@
 import { Text } from '@rneui/themed';
 import {
-  ActivityIndicator,
-  InputAccessoryView,
+  ActivityIndicator, InputAccessoryView,
   Pressable,
   StyleSheet,
   TextInput,
-  View,
+  View
 } from 'react-native';
+import {
+  InputComposerDataInMessageRoomScreenFragment
+} from 'src/generated/graphql';
+import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
 
 type Props = {
@@ -15,6 +18,8 @@ type Props = {
   onSendPress: () => void;
   isSending: boolean;
   onKeepRequestPress: () => void;
+  fragmentData: InputComposerDataInMessageRoomScreenFragment;
+  onAcceptRequestPress: () => void
 };
 
 export const InputComposer = ({
@@ -23,9 +28,56 @@ export const InputComposer = ({
   onSendPress,
   isSending,
   onKeepRequestPress,
+  fragmentData,
+  onAcceptRequestPress
 }: Props) => {
   const sendDisabled = !inputValue || isSending;
   const textInputId = 'textInput';
+  const myId = useMyId();
+
+  const renderKeepingRequest = () => {
+    if (fragmentData.kept) {
+      return (
+        <Text
+          style={[
+            styles.keepRequest,
+            {
+              color: '#C2C2C2',
+            },
+          ]}
+        >
+          キープ中
+        </Text>
+      );
+    } else {
+      return !!fragmentData?.keepingRequest ? (
+        fragmentData.keepingRequest?.requestUser.id === myId ? (
+          <View>
+            <Text
+              style={[
+                styles.keepRequest,
+                {
+                  color: '#C2C2C2',
+                },
+              ]}
+            >
+              リクエスト済み
+            </Text>
+          </View>
+        ) : (
+          <Pressable onPress={onAcceptRequestPress}>
+            <Text style={styles.keepRequest}>
+              キープリクエストが届いています
+            </Text>
+          </Pressable>
+        )
+      ) : (
+        <Pressable onPress={onKeepRequestPress}>
+          <Text style={styles.keepRequest}>キープリクエスト</Text>
+        </Pressable>
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -41,9 +93,7 @@ export const InputComposer = ({
 
         <InputAccessoryView nativeID={textInputId}>
           <View style={styles.accessoryContainer}>
-            <Pressable onPress={onKeepRequestPress}>
-              <Text style={styles.keepRequest}>キープリクエスト</Text>
-            </Pressable>
+            {renderKeepingRequest()}
           </View>
         </InputAccessoryView>
 

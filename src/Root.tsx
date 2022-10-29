@@ -14,6 +14,7 @@ import {
   useGetInitialDataQuery,
   useUpdatePositionMutation,
 } from 'src/generated/graphql';
+import { useGetDataOnActive } from 'src/hooks/app/useGetDataOnActive';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useContentsCreationVisible } from 'src/hooks/appVisible';
@@ -46,11 +47,6 @@ export const Root = () => {
     }
   }, [contentsCreationModalVisible]);
 
-  // 後に消す
-  // useEffect(() => {
-  //   Geocoder.init(Config.GOOGLE_GEOCOODING_API_KEY);
-  // }, []);
-
   useEffect(() => {
     if (loggedIn) {
       const conditions = storage.getString(
@@ -61,6 +57,8 @@ export const Root = () => {
       }
     }
   }, [loggedIn, setNarrowingDownConditions]);
+
+  useGetDataOnActive();
 
   useEffect(() => {
     let subscription: NativeEventSubscription;

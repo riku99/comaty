@@ -1093,6 +1093,11 @@ export type UploadProfileImageMutationVariables = Exact<{
 
 export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfileImage: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } };
 
+export type GetOnActiveDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOnActiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
+
 export type MyProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1266,6 +1271,8 @@ export type KeptMessageRoomListScreenDataQueryVariables = Exact<{ [key: string]:
 export type KeptMessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
 
 export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'MessageRoom', id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null };
+
+export type MessageRoomListScreenDataFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
 
 export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
 
@@ -1633,6 +1640,15 @@ export const KeptMessageRoomListFragmentDoc = gql`
   }
 }
     ${RoomListItemInMessageRoomListScreenFragmentDoc}`;
+export const MessageRoomListScreenDataFragmentDoc = gql`
+    fragment MessageRoomListScreenData on Query {
+  ...MessageRoomListFromMySelf
+  ...MessageRoomListFromOtherParty
+  ...KeptMessageRoomList
+}
+    ${MessageRoomListFromMySelfFragmentDoc}
+${MessageRoomListFromOtherPartyFragmentDoc}
+${KeptMessageRoomListFragmentDoc}`;
 export const StoryUserMetaDataFragmentDoc = gql`
     fragment StoryUserMetaData on User {
   id
@@ -2981,6 +2997,38 @@ export function useUploadProfileImageMutation(baseOptions?: Apollo.MutationHookO
 export type UploadProfileImageMutationHookResult = ReturnType<typeof useUploadProfileImageMutation>;
 export type UploadProfileImageMutationResult = Apollo.MutationResult<UploadProfileImageMutation>;
 export type UploadProfileImageMutationOptions = Apollo.BaseMutationOptions<UploadProfileImageMutation, UploadProfileImageMutationVariables>;
+export const GetOnActiveDataDocument = gql`
+    query GetOnActiveData {
+  ...MessageRoomListScreenData
+}
+    ${MessageRoomListScreenDataFragmentDoc}`;
+
+/**
+ * __useGetOnActiveDataQuery__
+ *
+ * To run a query within a React component, call `useGetOnActiveDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOnActiveDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOnActiveDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOnActiveDataQuery(baseOptions?: Apollo.QueryHookOptions<GetOnActiveDataQuery, GetOnActiveDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOnActiveDataQuery, GetOnActiveDataQueryVariables>(GetOnActiveDataDocument, options);
+      }
+export function useGetOnActiveDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOnActiveDataQuery, GetOnActiveDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOnActiveDataQuery, GetOnActiveDataQueryVariables>(GetOnActiveDataDocument, options);
+        }
+export type GetOnActiveDataQueryHookResult = ReturnType<typeof useGetOnActiveDataQuery>;
+export type GetOnActiveDataLazyQueryHookResult = ReturnType<typeof useGetOnActiveDataLazyQuery>;
+export type GetOnActiveDataQueryResult = Apollo.QueryResult<GetOnActiveDataQuery, GetOnActiveDataQueryVariables>;
 export const MyProfileImagesDocument = gql`
     query MyProfileImages {
   me {
@@ -3702,13 +3750,9 @@ export type NicknameAndProfileImageInMessageRoomScreenLazyQueryHookResult = Retu
 export type NicknameAndProfileImageInMessageRoomScreenQueryResult = Apollo.QueryResult<NicknameAndProfileImageInMessageRoomScreenQuery, NicknameAndProfileImageInMessageRoomScreenQueryVariables>;
 export const MessageRoomListScreenDataDocument = gql`
     query MessageRoomListScreenData {
-  ...MessageRoomListFromMySelf
-  ...MessageRoomListFromOtherParty
-  ...KeptMessageRoomList
+  ...MessageRoomListScreenData
 }
-    ${MessageRoomListFromMySelfFragmentDoc}
-${MessageRoomListFromOtherPartyFragmentDoc}
-${KeptMessageRoomListFragmentDoc}`;
+    ${MessageRoomListScreenDataFragmentDoc}`;
 
 /**
  * __useMessageRoomListScreenDataQuery__

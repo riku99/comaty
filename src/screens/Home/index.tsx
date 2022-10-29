@@ -92,7 +92,6 @@ export const HomeScreen = ({ navigation }: Props) => {
         setGeolocationPermitted(true);
         Geolocation.getCurrentPosition(
           (position) => {
-            console.log(position);
             setInitialPosition({
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,

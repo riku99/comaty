@@ -1,7 +1,5 @@
 query MessageRoomListScreenData {
-  ...MessageRoomListFromMySelf
-  ...MessageRoomListFromOtherParty
-  ...KeptMessageRoomList
+  ...MessageRoomListScreenData
 }
 
 query MessageRoomListFromMySelfScreenData {
@@ -39,6 +37,12 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
       }
     }
   }
+}
+
+fragment MessageRoomListScreenData on Query {
+  ...MessageRoomListFromMySelf
+  ...MessageRoomListFromOtherParty
+  ...KeptMessageRoomList
 }
 
 fragment MessageRoomListFromMySelf on Query {

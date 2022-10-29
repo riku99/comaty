@@ -332,9 +332,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
                 variables: {
                   messageRoomId: roomId,
                 },
-                onCompleted: (d) => {
-                  console.log(d);
-                },
               });
             } catch (e) {
               console.log(e);
@@ -366,6 +363,11 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
                 variables: {
                   id: data.messageRoom.keepingRequest.id,
                 },
+                refetchQueries: [
+                  {
+                    query: MessageRoomListScreenDataDocument,
+                  },
+                ],
               });
             } catch (e) {
               console.log(e);

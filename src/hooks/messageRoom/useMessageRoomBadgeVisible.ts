@@ -18,9 +18,16 @@ export const useMessageRoomBadgeVisible = () => {
       );
     }
   );
+  const keptBadgeVisible = data?.me?.keptMessageRooms.some((room) => {
+    return (
+      !room.messages.edges[0]?.node.read &&
+      room.messages.edges[0]?.node.sender.id !== myId
+    );
+  });
 
   return {
     mySelfBadgeVisible,
     otherPartyBadgeVisible,
+    keptBadgeVisible,
   };
 };

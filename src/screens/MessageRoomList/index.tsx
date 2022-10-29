@@ -22,7 +22,7 @@ const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
   useMessageRoomListScreenDataQuery();
-  const { mySelfBadgeVisible, otherPartyBadgeVisible } =
+  const { mySelfBadgeVisible, otherPartyBadgeVisible, keptBadgeVisible } =
     useMessageRoomBadgeVisible();
 
   useLayoutEffect(() => {
@@ -70,9 +70,9 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
             tabBarLabel: 'キープ中',
             tabBarBadge: () => (
               <>
-                {otherPartyBadgeVisible && (
+                {keptBadgeVisible && (
                   <View style={styles.badgeContainer}>
-                    <Badge size={8} />
+                    <Badge size={6} />
                   </View>
                 )}
               </>
@@ -88,7 +88,7 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
               <>
                 {otherPartyBadgeVisible && (
                   <View style={styles.badgeContainer}>
-                    <Badge size={8} />
+                    <Badge size={6} />
                   </View>
                 )}
               </>
@@ -104,7 +104,7 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
               <>
                 {mySelfBadgeVisible && (
                   <View style={styles.badgeContainer}>
-                    <Badge size={8} />
+                    <Badge size={6} />
                   </View>
                 )}
               </>
@@ -125,6 +125,6 @@ const styles = StyleSheet.create({
   badgeContainer: {
     position: 'absolute',
     top: 8,
-    right: 36,
+    right: 32,
   },
 });

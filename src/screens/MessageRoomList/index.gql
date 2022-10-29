@@ -1,6 +1,7 @@
 query MessageRoomListScreenData {
   ...MessageRoomListFromMySelf
   ...MessageRoomListFromOtherParty
+  ...KeptMessageRoomList
 }
 
 query MessageRoomListFromMySelfScreenData {
@@ -9,6 +10,10 @@ query MessageRoomListFromMySelfScreenData {
 
 query MessageRoomListFromOtherPartyScreenData {
   ...MessageRoomListFromOtherParty
+}
+
+query KeptMessageRoomListScreenData {
+  ...KeptMessageRoomList
 }
 
 fragment RoomListItemInMessageRoomListScreen on MessageRoom {
@@ -50,6 +55,16 @@ fragment MessageRoomListFromOtherParty on Query {
   me {
     id
     messageRoomsFromOtherParty {
+      ...RoomListItemInMessageRoomListScreen
+      updatedAt
+    }
+  }
+}
+
+fragment KeptMessageRoomList on Query {
+  me {
+    id
+    keptMessageRooms {
       ...RoomListItemInMessageRoomListScreen
       updatedAt
     }

@@ -1,14 +1,13 @@
 import { Text } from '@rneui/themed';
 import {
-  ActivityIndicator, InputAccessoryView,
+  ActivityIndicator,
+  InputAccessoryView,
   Pressable,
   StyleSheet,
   TextInput,
-  View
+  View,
 } from 'react-native';
-import {
-  InputComposerDataInMessageRoomScreenFragment
-} from 'src/generated/graphql';
+import { InputComposerDataInMessageRoomScreenFragment } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
 
@@ -19,7 +18,7 @@ type Props = {
   isSending: boolean;
   onKeepRequestPress: () => void;
   fragmentData: InputComposerDataInMessageRoomScreenFragment;
-  onAcceptRequestPress: () => void
+  onAcceptRequestPress: () => void;
 };
 
 export const InputComposer = ({
@@ -29,7 +28,7 @@ export const InputComposer = ({
   isSending,
   onKeepRequestPress,
   fragmentData,
-  onAcceptRequestPress
+  onAcceptRequestPress,
 }: Props) => {
   const sendDisabled = !inputValue || isSending;
   const textInputId = 'textInput';
@@ -97,7 +96,13 @@ export const InputComposer = ({
           </View>
         </InputAccessoryView>
 
-        <Pressable onPress={onSendPress} disabled={sendDisabled}>
+        <Pressable
+          onPress={onSendPress}
+          disabled={sendDisabled}
+          style={{
+            justifyContent: 'flex-end',
+          }}
+        >
           {isSending ? (
             <ActivityIndicator />
           ) : (
@@ -133,7 +138,6 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     paddingHorizontal: 16,
     justifyContent: 'space-between',
-    alignItems: 'flex-end',
     paddingTop: 10,
     paddingBottom: 12,
     flexDirection: 'row',
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   accessoryContainer: {
-    height: 40,
+    paddingVertical: 12,
     justifyContent: 'center',
     paddingLeft: 16,
     borderTopColor: theme.gray.boarder,

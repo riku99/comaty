@@ -37,6 +37,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
       }
     }
   }
+  kept
 }
 
 fragment MessageRoomListScreenData on Query {

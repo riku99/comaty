@@ -13,7 +13,7 @@ type Props = {
 } & ComponentProps<typeof Pressable>;
 
 export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
-  const { partner, messages } = fragmentData;
+  const { partner, messages, kept } = fragmentData;
   const message = messages.edges[0]?.node;
   const text = message.text;
   const myId = useMyId();
@@ -66,7 +66,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
 
           <View style={styles.timeAndDistance}>
             <View>
-              {remainingTime !== undefined && remainingTime !== null && (
+              {!kept && remainingTime !== undefined && remainingTime !== null && (
                 <Text
                   style={[
                     styles.timeAndDistanceText,

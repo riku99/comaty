@@ -1,11 +1,16 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import React, { useLayoutEffect, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, StyleSheet, View } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { Badge } from 'src/components/ui/Badge';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
 import { ThreeDots } from 'src/components/ui/ThreeDots';
-import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
+import {
+  MessageRoomListScreenDataDocument,
+  useDeleteTalkRoomsWithoutKeptMutation,
+  useMessageRoomListScreenDataQuery,
+} from 'src/generated/graphql';
 import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { theme } from 'src/styles';
 import { KeptMessageRooms } from './KeptMessageRooms';
@@ -27,9 +32,42 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
   const { mySelfBadgeVisible, otherPartyBadgeVisible, keptBadgeVisible } =
     useMessageRoomBadgeVisible();
   const [modalVisible, setModalVisible] = useState(false);
+  const [deleteTalkRoomsWithoutKeptMutation] =
+    useDeleteTalkRoomsWithoutKeptMutation();
+  const toast = useToast();
 
   const hideModalVisible = () => {
     setModalVisible(false);
+  };
+
+  const onModalDeletePress = () => {
+    Alert.alert(
+      'トークルームを削除',
+      'キープ中以外のトークルームが全て削除されます。削除してよろしいですか？',
+      [
+        {
+          text: 'キャンセル',
+          style: 'cancel',
+        },
+        {
+          text: '削除',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteTalkRoomsWithoutKeptMutation({
+                onCompleted: () => {
+                  setModalVisible(false);
+                  toast.show('削除しました');
+                },
+                refetchQueries: [MessageRoomListScreenDataDocument],
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          },
+        },
+      ]
+    );
   };
 
   useLayoutEffect(() => {
@@ -138,7 +176,7 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
         items={[
           {
             title: 'キープ中以外を全て削除',
-            onPress: () => {},
+            onPress: onModalDeletePress,
             titleColor: theme.red,
           },
         ]}

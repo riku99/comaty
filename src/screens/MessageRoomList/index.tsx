@@ -1,8 +1,10 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { Badge } from 'src/components/ui/Badge';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
+import { OverlayModal } from 'src/components/ui/OverlayModal';
+import { ThreeDots } from 'src/components/ui/ThreeDots';
 import { useMessageRoomListScreenDataQuery } from 'src/generated/graphql';
 import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { theme } from 'src/styles';
@@ -24,6 +26,11 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
   useMessageRoomListScreenDataQuery();
   const { mySelfBadgeVisible, otherPartyBadgeVisible, keptBadgeVisible } =
     useMessageRoomBadgeVisible();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const hideModalVisible = () => {
+    setModalVisible(false);
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -38,6 +45,17 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
       ),
       headerTitle: '',
       title: '',
+      headerRight: () => (
+        <ThreeDots
+          dotsSize={20}
+          style={{
+            marginRight: 16,
+          }}
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
+      ),
     });
   }, [navigation]);
 
@@ -112,6 +130,19 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
           }}
         />
       </TopTab.Navigator>
+
+      <OverlayModal
+        isVisible={modalVisible}
+        onBackdropPress={hideModalVisible}
+        onCancel={hideModalVisible}
+        items={[
+          {
+            title: 'キープ中以外を全て削除',
+            onPress: () => {},
+            titleColor: theme.red,
+          },
+        ]}
+      />
     </View>
   );
 });

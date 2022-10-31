@@ -269,6 +269,7 @@ export type Mutation = {
   deleteGroup?: Maybe<Group>;
   deleteGroupMember?: Maybe<GroupMember>;
   deleteMessageRoom?: Maybe<MessageRoom>;
+  deleteMessageRoomsWithoutKeptMessageRooms?: Maybe<MessageRoom>;
   deletePost?: Maybe<Post>;
   deleteProfileImage?: Maybe<UserProfileImage>;
   deleteQuestion?: Maybe<Question>;
@@ -882,6 +883,11 @@ export type DeleteMessageRoomMutationVariables = Exact<{
 
 
 export type DeleteMessageRoomMutation = { __typename?: 'Mutation', deleteMessageRoom?: { __typename?: 'MessageRoom', id: number } | null };
+
+export type DeleteTalkRoomsWithoutKeptMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteTalkRoomsWithoutKeptMutation = { __typename?: 'Mutation', deleteMessageRoomsWithoutKeptMessageRooms?: { __typename?: 'MessageRoom', id: number } | null };
 
 export type JoinGroupMutationVariables = Exact<{
   groupId: Scalars['Int'];
@@ -1942,6 +1948,38 @@ export function useDeleteMessageRoomMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteMessageRoomMutationHookResult = ReturnType<typeof useDeleteMessageRoomMutation>;
 export type DeleteMessageRoomMutationResult = Apollo.MutationResult<DeleteMessageRoomMutation>;
 export type DeleteMessageRoomMutationOptions = Apollo.BaseMutationOptions<DeleteMessageRoomMutation, DeleteMessageRoomMutationVariables>;
+export const DeleteTalkRoomsWithoutKeptDocument = gql`
+    mutation DeleteTalkRoomsWithoutKept {
+  deleteMessageRoomsWithoutKeptMessageRooms {
+    id
+  }
+}
+    `;
+export type DeleteTalkRoomsWithoutKeptMutationFn = Apollo.MutationFunction<DeleteTalkRoomsWithoutKeptMutation, DeleteTalkRoomsWithoutKeptMutationVariables>;
+
+/**
+ * __useDeleteTalkRoomsWithoutKeptMutation__
+ *
+ * To run a mutation, you first call `useDeleteTalkRoomsWithoutKeptMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTalkRoomsWithoutKeptMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTalkRoomsWithoutKeptMutation, { data, loading, error }] = useDeleteTalkRoomsWithoutKeptMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteTalkRoomsWithoutKeptMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTalkRoomsWithoutKeptMutation, DeleteTalkRoomsWithoutKeptMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTalkRoomsWithoutKeptMutation, DeleteTalkRoomsWithoutKeptMutationVariables>(DeleteTalkRoomsWithoutKeptDocument, options);
+      }
+export type DeleteTalkRoomsWithoutKeptMutationHookResult = ReturnType<typeof useDeleteTalkRoomsWithoutKeptMutation>;
+export type DeleteTalkRoomsWithoutKeptMutationResult = Apollo.MutationResult<DeleteTalkRoomsWithoutKeptMutation>;
+export type DeleteTalkRoomsWithoutKeptMutationOptions = Apollo.BaseMutationOptions<DeleteTalkRoomsWithoutKeptMutation, DeleteTalkRoomsWithoutKeptMutationVariables>;
 export const JoinGroupDocument = gql`
     mutation JoinGroup($groupId: Int!, $ownerId: ID!) {
   createGroupMember(groupId: $groupId, ownerId: $ownerId) {

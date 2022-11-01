@@ -25,12 +25,20 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
       : null;
 
   return (
-    <Pressable {...pressableProps}>
+    <Pressable
+      {...pressableProps}
+      style={{
+        borderBottomWidth: 0.3,
+        borderBottomColor: theme.gray.boarder,
+      }}
+    >
       {({ pressed }) => (
         <View
           style={[
             styles.container,
-            { backgroundColor: pressed ? '#F6F6F6' : undefined },
+            {
+              backgroundColor: pressed ? '#F6F6F6' : undefined,
+            },
           ]}
         >
           <View style={styles.mainContents}>

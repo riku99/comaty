@@ -118,13 +118,6 @@ export const MessagesFromMySelf = React.memo(() => {
         renderItem={renderRoomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.contentContainer}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              height: 10,
-            }}
-          />
-        )}
       />
 
       <OverlayModal
@@ -147,7 +140,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  contentContainer: {
-    paddingTop: 4,
-  },
+  contentContainer: {},
 });

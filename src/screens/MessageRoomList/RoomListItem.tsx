@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
 import { ComponentProps } from 'react';
@@ -87,6 +88,11 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
             </View>
             {!!partner.distance && (
               <Text style={styles.timeAndDistanceText}>
+                <MaterialCommunityIcons
+                  name="map-marker-outline"
+                  size={12}
+                  color={theme.gray.text}
+                />
                 {`${partner.distance}km先`}
               </Text>
             )}

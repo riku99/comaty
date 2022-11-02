@@ -36,3 +36,5 @@ const dimensions = Dimensions.get('screen');
 
 export const IPHONE_X_HEIGHT = 812;
 export const isMoreRecentThanXDevice = dimensions.height >= IPHONE_X_HEIGHT;
+
+export const MESSAGE_REPLY_LIMIT_TIME = 25;

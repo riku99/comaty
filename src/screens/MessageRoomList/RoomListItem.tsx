@@ -5,6 +5,7 @@ import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
+import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
 import { RoomListItemInMessageRoomListScreenFragment } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
@@ -21,7 +22,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   const badgeVisible = !message.read && message.sender.id !== myId;
   const remainingTime =
     message?.sender.id !== myId
-      ? 20 -
+      ? MESSAGE_REPLY_LIMIT_TIME -
         differenceInMinutes(new Date(), new Date(Number(message.createdAt)))
       : null;
 

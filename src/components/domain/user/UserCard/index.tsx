@@ -14,6 +14,7 @@ import {
   ProfileImageFragmentDoc,
   UserCardFragment,
 } from 'src/generated/graphql';
+import { theme } from 'src/styles';
 
 type Props = {
   containerStyle?: ViewStyle;
@@ -82,6 +83,8 @@ const styles = StyleSheet.create({
   },
   singleWord: {
     marginTop: 6,
+    color: theme.gray.text,
+    fontSize: 12,
   },
   distanceContainer: {
     position: 'absolute',

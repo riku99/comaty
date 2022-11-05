@@ -74,3 +74,7 @@ export const getImageOrVideoType = (type: string) => {
     return null;
   }
 };
+
+export const getRandomArrayIndex = (length: number) => {
+  return Math.floor(Math.random() * length);
+};

@@ -30,17 +30,34 @@ import {
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
 import { theme } from 'src/styles';
+import { getRandomArrayIndex } from 'src/utils';
 import { Stories } from './Stories';
 
 type Props = RootNavigationScreenProp<'HomeMain'>;
-
 type UserListItem = HomeScreenDataQuery['nearbyUsers']['edges'][number];
+
+const userCursors = [
+  UserCursor.IncrememtValue,
+  UserCursor.Value1,
+  UserCursor.Value2,
+];
+
+const userOrderList = [Order.Asc, Order.Desc];
 
 export const HomeScreen = ({ navigation }: Props) => {
   const [initialPosition, setInitialPosition] = useState<{
     latitude: number;
     longitude: number;
   }>(null);
+  const [cursor, setCursor] = useState(
+    userCursors[getRandomArrayIndex(userCursors.length)]
+  );
+  // 初回のカーソルが IncrememtValue の場合は新しく作成されたユーザー順に最初は出したい
+  const [order, setOrder] = useState(
+    cursor === UserCursor.IncrememtValue
+      ? Order.Desc
+      : userOrderList[getRandomArrayIndex(userOrderList.length)]
+  );
   const { narrowingDownCinditions } = useNarrowingDownConditions();
   const { data, fetchMore, refetch, loading } = useHomeScreenDataQuery({
     variables: {
@@ -50,8 +67,8 @@ export const HomeScreen = ({ navigation }: Props) => {
         longitude: initialPosition?.longitude ?? undefined,
       },
       cursorInput: {
-        cursor: UserCursor.Value2,
-        order: Order.Desc,
+        cursor,
+        order,
       },
     },
     skip: !initialPosition,
@@ -112,7 +129,7 @@ export const HomeScreen = ({ navigation }: Props) => {
         setGeolocationPermitted(false);
       }
     })();
-  }, []);
+  }, [setGeolocationPermitted]);
 
   useEffect(() => {
     (async () => {
@@ -131,7 +148,7 @@ export const HomeScreen = ({ navigation }: Props) => {
         isFirstRender.current = false;
       }
     })();
-  }, [narrowingDownCinditions]);
+  }, [narrowingDownCinditions, refetch]);
 
   const renderUser = useCallback(
     ({ item, index }: { item: UserListItem; index: number }) => {
@@ -163,13 +180,22 @@ export const HomeScreen = ({ navigation }: Props) => {
         </MotiView>
       );
     },
-    []
+    [navigation]
   );
 
   const onRefresh = async () => {
     try {
       setRefreshing(true);
-      await refetch();
+      const newCursor = userCursors[getRandomArrayIndex(userCursors.length)];
+      const newOrder = userOrderList[getRandomArrayIndex(userOrderList.length)];
+      setCursor(newCursor);
+      setOrder(newOrder);
+      await refetch({
+        cursorInput: {
+          cursor: newCursor,
+          order: newOrder,
+        },
+      });
     } catch (e) {
       console.log(e);
     } finally {
@@ -177,7 +203,7 @@ export const HomeScreen = ({ navigation }: Props) => {
     }
   };
 
-  if (geolocationPermitted == false) {
+  if (geolocationPermitted === false) {
     return <NoGeolocationPermission />;
   }
 
@@ -201,8 +227,8 @@ export const HomeScreen = ({ navigation }: Props) => {
             nearbyUsersFirst: TAKE_USER_COUNT,
             narrowingDownInput: narrowingDownCinditions,
             cursorInput: {
-              cursor: UserCursor.Value2,
-              order: Order.Desc,
+              cursor,
+              order,
             },
           },
           query: HomeNearByUsersDocument,

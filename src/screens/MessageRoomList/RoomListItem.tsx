@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
-import { ComponentProps, useState } from 'react';
+import { ComponentProps, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
@@ -27,23 +27,23 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
       : null
   );
 
-  // useEffect(() => {
-  //   const timerId = setInterval(() => {
-  //     setRemainingTime(
-  //       message?.sender.id !== myId
-  //         ? MESSAGE_REPLY_LIMIT_TIME -
-  //             differenceInMinutes(
-  //               new Date(),
-  //               new Date(Number(message.createdAt))
-  //             )
-  //         : null
-  //     );
-  //   }, 60000);
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setRemainingTime(
+        message?.sender.id !== myId
+          ? MESSAGE_REPLY_LIMIT_TIME -
+              differenceInMinutes(
+                new Date(),
+                new Date(Number(message.createdAt))
+              )
+          : null
+      );
+    }, 60000);
 
-  //   return () => {
-  //     clearInterval(timerId);
-  //   };
-  // }, [message.createdAt, message?.sender.id, myId]);
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [message.createdAt, message?.sender.id, myId]);
 
   return (
     <Pressable
@@ -94,6 +94,17 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
           </View>
 
           <View style={styles.timeAndDistance}>
+            {!!partner.distance && (
+              <Text style={styles.timeAndDistanceText}>
+                <MaterialCommunityIcons
+                  name="map-marker-outline"
+                  size={12}
+                  color={theme.gray.text}
+                />
+                {`${partner.distance}km先`}
+              </Text>
+            )}
+
             <View>
               {!kept && remainingTime !== undefined && remainingTime !== null && (
                 <Text
@@ -106,16 +117,6 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
                 >{`あと${remainingTime > 0 ? remainingTime : 0}分`}</Text>
               )}
             </View>
-            {!!partner.distance && (
-              <Text style={styles.timeAndDistanceText}>
-                <MaterialCommunityIcons
-                  name="map-marker-outline"
-                  size={12}
-                  color={theme.gray.text}
-                />
-                {`${partner.distance}km先`}
-              </Text>
-            )}
           </View>
         </View>
       )}
@@ -153,8 +154,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 2,
-    marginTop: 6,
+    marginTop: 8,
   },
   timeAndDistanceText: {
     fontSize: 11,

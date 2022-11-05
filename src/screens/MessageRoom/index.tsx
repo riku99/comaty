@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
+import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
 import {
   CreateMessageError,
   GetMessageRoomError,
@@ -318,7 +319,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const onKeepRequestPress = () => {
     Alert.alert(
       'キープリクエストしますか？',
-      'キープリクエストが承認された場合、30分の返信制限時間がなくなります。',
+      `キープリクエストが承認された場合、${MESSAGE_REPLY_LIMIT_TIME}分の返信制限時間がなくなります。`,
       [
         {
           text: 'キャンセル',
@@ -349,7 +350,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
 
     Alert.alert(
       'リクエストを承認しますか？',
-      'キープリクエストが承認された場合、30分の返信制限時間がなくなります。',
+      `キープリクエストが承認された場合、${MESSAGE_REPLY_LIMIT_TIME}分の返信制限時間がなくなります。`,
       [
         {
           text: 'キャンセル',

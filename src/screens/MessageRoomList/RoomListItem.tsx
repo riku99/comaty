@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
-import { ComponentProps } from 'react';
+import { ComponentProps, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
@@ -20,11 +20,30 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   const text = message.text;
   const myId = useMyId();
   const badgeVisible = !message.read && message.sender.id !== myId;
-  const remainingTime =
+  const [remainingTime, setRemainingTime] = useState(
     message?.sender.id !== myId
       ? MESSAGE_REPLY_LIMIT_TIME -
-        differenceInMinutes(new Date(), new Date(Number(message.createdAt)))
-      : null;
+          differenceInMinutes(new Date(), new Date(Number(message.createdAt)))
+      : null
+  );
+
+  // useEffect(() => {
+  //   const timerId = setInterval(() => {
+  //     setRemainingTime(
+  //       message?.sender.id !== myId
+  //         ? MESSAGE_REPLY_LIMIT_TIME -
+  //             differenceInMinutes(
+  //               new Date(),
+  //               new Date(Number(message.createdAt))
+  //             )
+  //         : null
+  //     );
+  //   }, 60000);
+
+  //   return () => {
+  //     clearInterval(timerId);
+  //   };
+  // }, [message.createdAt, message?.sender.id, myId]);
 
   return (
     <Pressable

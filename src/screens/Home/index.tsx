@@ -21,9 +21,11 @@ import {
   HomeScreenDataQuery,
   HomeStoriesDocument,
   HomeStoriesFragment,
+  Order,
   useHomeScreenDataQuery,
   UserCardFragment,
   UserCardFragmentDoc,
+  UserCursor,
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
@@ -46,6 +48,10 @@ export const HomeScreen = ({ navigation }: Props) => {
         ...narrowingDownCinditions,
         latitude: initialPosition?.latitude ?? undefined,
         longitude: initialPosition?.longitude ?? undefined,
+      },
+      cursorInput: {
+        cursor: UserCursor.Value2,
+        order: Order.Desc,
       },
     },
     skip: !initialPosition,
@@ -194,6 +200,10 @@ export const HomeScreen = ({ navigation }: Props) => {
             nearbyUsersAfter: endCursor ? btoa(endCursor) : undefined,
             nearbyUsersFirst: TAKE_USER_COUNT,
             narrowingDownInput: narrowingDownCinditions,
+            cursorInput: {
+              cursor: UserCursor.Value2,
+              order: Order.Desc,
+            },
           },
           query: HomeNearByUsersDocument,
         });

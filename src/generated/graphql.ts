@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
+import { gql } from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -493,6 +493,11 @@ export enum NotificationType {
   Like = 'LIKE'
 }
 
+export enum Order {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
@@ -556,6 +561,7 @@ export type QueryMessageRoomArgs = {
 
 export type QueryNearbyUsersArgs = {
   after?: InputMaybe<Scalars['String']>;
+  cursorInput: UserCursorInput;
   first?: InputMaybe<Scalars['Int']>;
   input: NarrowingDownInput;
 };
@@ -799,6 +805,17 @@ export type UserConnection = {
   __typename?: 'UserConnection';
   edges: Array<Maybe<UserEdge>>;
   pageInfo: PageInfo;
+};
+
+export enum UserCursor {
+  IncrememtValue = 'INCREMEMT_VALUE',
+  Value1 = 'VALUE1',
+  Value2 = 'VALUE2'
+}
+
+export type UserCursorInput = {
+  cursor: UserCursor;
+  order: Order;
 };
 
 export type UserEdge = {
@@ -1200,6 +1217,7 @@ export type HomeScreenDataQueryVariables = Exact<{
   storiesFirst?: InputMaybe<Scalars['Int']>;
   storiesAfter?: InputMaybe<Scalars['String']>;
   narrowingDownInput: NarrowingDownInput;
+  cursorInput: UserCursorInput;
 }>;
 
 
@@ -1209,6 +1227,7 @@ export type HomeNearByUsersQueryVariables = Exact<{
   nearbyUsersFirst?: InputMaybe<Scalars['Int']>;
   nearbyUsersAfter?: InputMaybe<Scalars['String']>;
   narrowingDownInput: NarrowingDownInput;
+  cursorInput: UserCursorInput;
 }>;
 
 
@@ -1508,6 +1527,7 @@ export const HomeNearByUsersFragmentDoc = gql`
     first: $nearbyUsersFirst
     after: $nearbyUsersAfter
     input: $narrowingDownInput
+    cursorInput: $cursorInput
   ) {
     edges {
       node {
@@ -3535,7 +3555,7 @@ export type GroupQrCodeOwnerInGroupQrCodeQueryHookResult = ReturnType<typeof use
 export type GroupQrCodeOwnerInGroupQrCodeLazyQueryHookResult = ReturnType<typeof useGroupQrCodeOwnerInGroupQrCodeLazyQuery>;
 export type GroupQrCodeOwnerInGroupQrCodeQueryResult = Apollo.QueryResult<GroupQrCodeOwnerInGroupQrCodeQuery, GroupQrCodeOwnerInGroupQrCodeQueryVariables>;
 export const HomeScreenDataDocument = gql`
-    query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String, $narrowingDownInput: NarrowingDownInput!) {
+    query HomeScreenData($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $storiesFirst: Int, $storiesAfter: String, $narrowingDownInput: NarrowingDownInput!, $cursorInput: UserCursorInput!) {
   ...HomeNearByUsers
   ...HomeStories
 }
@@ -3559,6 +3579,7 @@ ${HomeStoriesFragmentDoc}`;
  *      storiesFirst: // value for 'storiesFirst'
  *      storiesAfter: // value for 'storiesAfter'
  *      narrowingDownInput: // value for 'narrowingDownInput'
+ *      cursorInput: // value for 'cursorInput'
  *   },
  * });
  */
@@ -3574,7 +3595,7 @@ export type HomeScreenDataQueryHookResult = ReturnType<typeof useHomeScreenDataQ
 export type HomeScreenDataLazyQueryHookResult = ReturnType<typeof useHomeScreenDataLazyQuery>;
 export type HomeScreenDataQueryResult = Apollo.QueryResult<HomeScreenDataQuery, HomeScreenDataQueryVariables>;
 export const HomeNearByUsersDocument = gql`
-    query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $narrowingDownInput: NarrowingDownInput!) {
+    query HomeNearByUsers($nearbyUsersFirst: Int, $nearbyUsersAfter: String, $narrowingDownInput: NarrowingDownInput!, $cursorInput: UserCursorInput!) {
   ...HomeNearByUsers
 }
     ${HomeNearByUsersFragmentDoc}`;
@@ -3594,6 +3615,7 @@ export const HomeNearByUsersDocument = gql`
  *      nearbyUsersFirst: // value for 'nearbyUsersFirst'
  *      nearbyUsersAfter: // value for 'nearbyUsersAfter'
  *      narrowingDownInput: // value for 'narrowingDownInput'
+ *      cursorInput: // value for 'cursorInput'
  *   },
  * });
  */

@@ -1,3 +1,4 @@
+import { Text } from '@rneui/themed';
 import React, { useLayoutEffect } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { SignUpButtonGroup } from './SignUpButtonGroup';
@@ -15,6 +16,17 @@ export const SignUpScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <SafeAreaView>
         <SignUpButtonGroup />
+        <Text
+          style={{
+            textAlign: 'center',
+            marginTop: 18,
+          }}
+          onPress={() => {
+            navigation.navigate('EmailSignIn');
+          }}
+        >
+          既にメールアドレスで登録済みの方
+        </Text>
       </SafeAreaView>
     </View>
   );

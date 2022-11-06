@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 import { useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Image, Pressable, StyleSheet, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -14,6 +14,7 @@ import { CloseButton } from 'src/components/ui/CloseButton';
 import { isMoreRecentThanXDevice } from 'src/constants';
 import { useFirstCameraRollPhotoUri } from 'src/hooks/useFirstCameraRollPhotoUri';
 import { CaptureButton } from './CaptureButton';
+import { MAX_VIDEO_DURATION } from './constants';
 
 export type CapturePhotoSuccessData = PhotoFile;
 export type RecordVideoSuccessData = VideoFile;
@@ -81,7 +82,11 @@ export const StoryCamera = ({
         return;
       }
 
-      const { uri, type } = result.assets[0];
+      const { uri, type, duration } = result.assets[0];
+      if (duration && duration > MAX_VIDEO_DURATION) {
+        Alert.alert('', '15秒を超える動画は載せることができません。');
+        return;
+      }
       onSelectDataFromCameraRoll(uri, type);
     } catch (e) {
       console.log(e);

@@ -7,16 +7,19 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { useToast } from 'react-native-toast-notifications';
 import { HeaderRightButton } from 'src/components/ui/HeaderRightButton';
 import { TextInput } from 'src/components/ui/TextInput';
 import { recommendedTags } from 'src/constants';
 import {
+  CreateTagError,
   MyTagSelectionScreenDataDocument,
   useCreateMyTagMutation,
   useDeleteMyTagMutation,
   useMyTagSelectionScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
+import { getGraphQLError } from 'src/utils';
 import { TagWithOption } from './TagWithOption';
 
 type Props = RootNavigationScreenProp<'MyTagSelection'>;
@@ -26,6 +29,7 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
   const [text, setText] = useState('');
   const [createMyTagMutation] = useCreateMyTagMutation();
   const [deleteMyTagMutation] = useDeleteMyTagMutation();
+  const toast = useToast();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -61,9 +65,15 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
           query: MyTagSelectionScreenDataDocument,
         },
       ],
+      onError: (e) => {
+        console.log(e);
+        const gqlError = getGraphQLError(e, 0);
+        if (gqlError.code === CreateTagError.UppeerLimit) {
+          toast.show('タグの上限は10個です');
+        }
+      },
     });
   };
-  1;
 
   const onTagMinusOptionPress = async (id: number) => {
     await deleteMyTagMutation({
@@ -90,6 +100,13 @@ export const MyTagSelectionScreen = ({ navigation }: Props) => {
           query: MyTagSelectionScreenDataDocument,
         },
       ],
+      onError: (e) => {
+        console.log(e);
+        const gqlError = getGraphQLError(e, 0);
+        if (gqlError.code === CreateTagError.UppeerLimit) {
+          toast.show('タグの上限は10個です');
+        }
+      },
     });
   };
 

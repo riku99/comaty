@@ -1,5 +1,5 @@
-import * as Apollo from '@apollo/client';
 import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -85,6 +85,10 @@ export type CreateStoryInput = {
   thumbnailFile?: InputMaybe<Scalars['Upload']>;
   type: StoryType;
 };
+
+export enum CreateTagError {
+  UppeerLimit = 'UPPEER_LIMIT'
+}
 
 export enum CreateUserError {
   AlreadyUserExisting = 'ALREADY_USER_EXISTING'

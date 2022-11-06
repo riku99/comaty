@@ -49,7 +49,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   const [height, setHeight] = useState(data?.me.height);
   const [images, setImages] = useState<{ uri: string; id: number }[]>([]);
   const [uploadIngImageiIndices, setUploadIngIndices] = useState([]);
-  const disableComplete = !nickname;
+  const disableComplete =
+    !nickname ||
+    nickname.length > MAX_NICKNAME_COUNT ||
+    statusMessage.length > STATUS_MESSAGE_MAX_COUNT ||
+    bio.length > BIO_MAX_COUNT;
   const [updateMeMutation] = useUpdateMeMutation();
   const [uploadProfileImageMutation] = useUploadProfileImageMutation();
   const [deleteProfileImageMutation] = useDeleteProfileImageMutation();
@@ -250,6 +254,12 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 value={nickname}
                 onChangeText={setNickName}
               />
+              {!nickname && (
+                <Text style={styles.alert}>ニックネームを入力してください</Text>
+              )}
+              {nickname.length > MAX_NICKNAME_COUNT && (
+                <Text style={styles.alert}>8文字以下で入力してください</Text>
+              )}
             </View>
 
             <View style={styles.statusMessageContainer}>
@@ -259,6 +269,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 value={statusMessage}
                 onChangeText={setStatusMessage}
               />
+              {statusMessage.length > STATUS_MESSAGE_MAX_COUNT && (
+                <Text style={styles.alert}>20文字以下で入力してください</Text>
+              )}
             </View>
 
             <View style={styles.bioContainer}>
@@ -270,6 +283,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 value={bio}
                 onChangeText={setBio}
               />
+              {bio.length > BIO_MAX_COUNT && (
+                <Text style={styles.alert}>500文字以下で入力してください</Text>
+              )}
             </View>
 
             <View style={styles.heightContainer}>
@@ -375,6 +391,10 @@ export const EditProfileScreen = ({ navigation }: Props) => {
 };
 
 const INITIAL_HEIGHT = 165;
+const MAX_NICKNAME_COUNT = 8;
+const STATUS_MESSAGE_MAX_COUNT = 20;
+const BIO_MAX_COUNT = 500;
+
 const arr4 = [1, 2, 3, 4];
 
 const styles = StyleSheet.create({
@@ -461,5 +481,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+  },
+  alert: {
+    marginLeft: 16,
+    fontSize: 11,
+    color: theme.red,
+    marginTop: 2,
   },
 });

@@ -111,7 +111,8 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
             />
           </Pressable>
 
-          <Pressable
+          {/* 広めは一旦なし */}
+          {/* <Pressable
             style={styles.sexItemContainer}
             onPress={() => {
               setRange(ApproximateRange.Wide);
@@ -122,7 +123,7 @@ export const NarrowingDownScreen = ({ navigation }: Props) => {
               isSelected={range === ApproximateRange.Wide}
               size={24}
             />
-          </Pressable>
+          </Pressable> */}
         </View>
 
         <View

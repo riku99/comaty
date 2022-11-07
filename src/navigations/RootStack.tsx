@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
+import { AgeVerificationScreen } from 'src/screens/AgeVerification';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
@@ -65,6 +66,7 @@ export type RootStackParamList = {
   };
   Notification: undefined;
   NarrowingDown: undefined;
+  AgeVerification: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -131,6 +133,10 @@ export const RootStack = () => {
           <Stack.Screen name="MessageRoom" component={MessageRoomScreen} />
           <Stack.Screen name="GroupMembers" component={GroupMembersScreen} />
           <Stack.Screen name="Notification" component={NotoficationScreen} />
+          <Stack.Screen
+            name="AgeVerification"
+            component={AgeVerificationScreen}
+          />
 
           <Stack.Group
             screenOptions={{

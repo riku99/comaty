@@ -42,6 +42,13 @@ export const SettingScreen = ({ navigation }: Props) => {
             navigation.navigate('UserSetting');
           }}
         />
+
+        <SimpleListItem
+          title="年齢確認"
+          onPress={() => {
+            navigation.navigate('AgeVerification');
+          }}
+        />
       </ScrollView>
     </View>
   );

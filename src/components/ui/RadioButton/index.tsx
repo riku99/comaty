@@ -1,4 +1,5 @@
 import { Text, TextProps } from '@rneui/themed';
+import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { theme } from 'src/styles';
 
@@ -7,19 +8,18 @@ type Props = {
   isSelected: boolean;
   label?: string;
   labelStyle?: TextProps['style'];
-  onPress?: () => void;
-};
+} & ComponentProps<typeof Pressable>;
 
 export const RadioButton = ({
   size,
   isSelected,
   label,
   labelStyle,
-  onPress,
+  ...pressableProps
 }: Props) => {
   const innerSize = size - 10;
   return (
-    <Pressable style={styles.container} onPress={onPress}>
+    <Pressable style={styles.container} {...pressableProps}>
       <View
         style={[
           styles.outer,

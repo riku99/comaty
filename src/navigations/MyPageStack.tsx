@@ -5,14 +5,12 @@ import { BlockListScreen } from 'src/screens/BlockList';
 import { MyGroupScreen } from 'src/screens/MyGroup';
 import { MyPageScreen } from 'src/screens/MyPage';
 import { MyPostsScreen } from 'src/screens/MyPosts';
-import { SettingScreen } from 'src/screens/Setting';
 import { UserSettingScreen } from 'src/screens/UserSetting';
 
 export type MyPageStackParamList = {
   MyPageMain: undefined;
   MyPosts: undefined;
   MyGroup: undefined;
-  Setting: undefined;
   AccountSetting: undefined;
   UserSetting: undefined;
   BlockList: undefined;
@@ -30,7 +28,6 @@ export const MyPageStack = () => {
       <Stack.Screen name="MyPageMain" component={MyPageScreen} />
       <Stack.Screen name="MyPosts" component={MyPostsScreen} />
       <Stack.Screen name="MyGroup" component={MyGroupScreen} />
-      <Stack.Screen name="Setting" component={SettingScreen} />
       <Stack.Screen name="AccountSetting" component={AccountSettingScreen} />
       <Stack.Screen name="UserSetting" component={UserSettingScreen} />
       <Stack.Screen name="BlockList" component={BlockListScreen} />

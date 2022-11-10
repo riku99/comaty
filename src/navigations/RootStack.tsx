@@ -15,6 +15,7 @@ import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
 import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
 import { QuestionReplyCreationScreen } from 'src/screens/QuestionReplyCreation';
+import { SettingScreen } from 'src/screens/Setting';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { StoriesScreen } from 'src/screens/Stories';
@@ -67,6 +68,7 @@ export type RootStackParamList = {
   Notification: undefined;
   NarrowingDown: undefined;
   AgeVerification: undefined;
+  Setting: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -137,6 +139,7 @@ export const RootStack = () => {
             name="AgeVerification"
             component={AgeVerificationScreen}
           />
+          <Stack.Screen name="Setting" component={SettingScreen} />
 
           <Stack.Group
             screenOptions={{

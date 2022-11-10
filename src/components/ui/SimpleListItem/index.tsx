@@ -1,25 +1,25 @@
 import { FontAwesome } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
+import { ComponentProps } from 'react';
 import { Pressable, StyleSheet, TextStyle, View } from 'react-native';
 import { theme } from 'src/styles';
 
 type Props = {
   title: string;
   icon?: JSX.Element;
-  onPress?: () => void;
   rightIconVisible?: boolean;
   titleStyle?: TextStyle;
-};
+} & ComponentProps<typeof Pressable>;
 
 export const SimpleListItem = ({
   title,
   icon,
-  onPress,
   titleStyle,
   rightIconVisible = true,
+  ...pressableProps
 }: Props) => {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable {...pressableProps}>
       {({ pressed }) => (
         <View
           style={[

@@ -20,6 +20,22 @@ export enum AcceptMessageKeepingRequestError {
   NotFound = 'NOT_FOUND'
 }
 
+export type AgeVerification = {
+  __typename?: 'AgeVerification';
+  createdAt: Scalars['String'];
+  id: Scalars['ID'];
+  imageUrl: Scalars['String'];
+  type: AgeVerificationDocumentType;
+  user?: Maybe<User>;
+};
+
+export enum AgeVerificationDocumentType {
+  Hokensyo = 'HOKENSYO',
+  Menkyosyo = 'MENKYOSYO',
+  MyNumber = 'MY_NUMBER',
+  Passport = 'PASSPORT'
+}
+
 export enum ApproximateRange {
   Near = 'NEAR',
   Normal = 'NORMAL',
@@ -293,6 +309,7 @@ export type Mutation = {
   updatePosition: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
+  verifyAge?: Maybe<AgeVerification>;
 };
 
 
@@ -470,6 +487,11 @@ export type MutationUpdateUserProfileArgs = {
 
 export type MutationUploadProfileImageArgs = {
   input: UploadProfileImageInput;
+};
+
+
+export type MutationVerifyAgeArgs = {
+  input: VerifyAgeInput;
 };
 
 export type NarrowingDownInput = {
@@ -862,6 +884,11 @@ export type UserTag = {
   user?: Maybe<User>;
 };
 
+export type VerifyAgeInput = {
+  file: Scalars['Upload'];
+  type: AgeVerificationDocumentType;
+};
+
 export type AcceptKeepingRequestMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -965,6 +992,13 @@ export type UpdatePositionMutationVariables = Exact<{
 
 
 export type UpdatePositionMutation = { __typename?: 'Mutation', updatePosition: { __typename?: 'Me', id: string } };
+
+export type VerifyAgeMutationVariables = Exact<{
+  input: VerifyAgeInput;
+}>;
+
+
+export type VerifyAgeMutation = { __typename?: 'Mutation', verifyAge?: { __typename?: 'AgeVerification', id: string } | null };
 
 export type BlockUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2285,6 +2319,39 @@ export function useUpdatePositionMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdatePositionMutationHookResult = ReturnType<typeof useUpdatePositionMutation>;
 export type UpdatePositionMutationResult = Apollo.MutationResult<UpdatePositionMutation>;
 export type UpdatePositionMutationOptions = Apollo.BaseMutationOptions<UpdatePositionMutation, UpdatePositionMutationVariables>;
+export const VerifyAgeDocument = gql`
+    mutation VerifyAge($input: VerifyAgeInput!) {
+  verifyAge(input: $input) {
+    id
+  }
+}
+    `;
+export type VerifyAgeMutationFn = Apollo.MutationFunction<VerifyAgeMutation, VerifyAgeMutationVariables>;
+
+/**
+ * __useVerifyAgeMutation__
+ *
+ * To run a mutation, you first call `useVerifyAgeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyAgeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyAgeMutation, { data, loading, error }] = useVerifyAgeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useVerifyAgeMutation(baseOptions?: Apollo.MutationHookOptions<VerifyAgeMutation, VerifyAgeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyAgeMutation, VerifyAgeMutationVariables>(VerifyAgeDocument, options);
+      }
+export type VerifyAgeMutationHookResult = ReturnType<typeof useVerifyAgeMutation>;
+export type VerifyAgeMutationResult = Apollo.MutationResult<VerifyAgeMutation>;
+export type VerifyAgeMutationOptions = Apollo.BaseMutationOptions<VerifyAgeMutation, VerifyAgeMutationVariables>;
 export const BlockUserDocument = gql`
     mutation BlockUser($id: ID!) {
   blockUser(id: $id) {

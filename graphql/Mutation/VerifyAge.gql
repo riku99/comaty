@@ -1,0 +1,5 @@
+mutation VerifyAge($input: VerifyAgeInput!) {
+  verifyAge(input: $input) {
+    id
+  }
+}

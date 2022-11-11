@@ -4,17 +4,16 @@ import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { View } from 'react-native-animatable';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
+import {
+  AgeVerificationDocumentType,
+  useVerifyAgeMutation,
+} from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
+import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { theme } from 'src/styles';
 import { DocumentItem } from './DocumentItem';
 
 type Props = RootNavigationScreenProp<'AgeVerification'>;
-
-type AgeVerificationDocumentType =
-  | 'MENKYOSYO'
-  | 'HOKENSYO'
-  | 'PASSPORT'
-  | 'MY_NUMBER';
 
 export const AgeVerificationScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
@@ -25,8 +24,12 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
   }, [navigation]);
 
   const [selectedDocumentType, setSelectedDocumentType] =
-    useState<AgeVerificationDocumentType>('MENKYOSYO');
+    useState<AgeVerificationDocumentType>(
+      AgeVerificationDocumentType.Menkyosyo
+    );
   const [photoModalVisible, setPhotoModalVisible] = useState(false);
+  const [verifyAgeMutation] = useVerifyAgeMutation();
+  const { setLoadingVisible } = useLoadingOverlayVisible();
 
   const hidePhotoModal = () => {
     setPhotoModalVisible(false);
@@ -43,10 +46,13 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
       title: 'カメラロールから選択',
       onPress: async () => {
         try {
+          setLoadingVisible(true);
           const result = await launchImageLibrary({
             selectionLimit: 1,
             mediaType: 'photo',
           });
+
+          hidePhotoModal();
 
           if (result.didCancel) {
             return;
@@ -55,9 +61,22 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
           const { uri, type } = result.assets[0];
 
           const file = await processImageForMultipartRequest({ uri, type });
+
+          await verifyAgeMutation({
+            variables: {
+              input: {
+                file,
+                type: selectedDocumentType,
+              },
+            },
+            onCompleted: () => {
+              console.log('Success');
+            },
+          });
         } catch (e) {
         } finally {
           hidePhotoModal();
+          setLoadingVisible(false);
         }
       },
     },
@@ -89,30 +108,38 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
           >
             <DocumentItem
               title="運転免許証"
-              isSelected={selectedDocumentType === 'MENKYOSYO'}
+              isSelected={
+                selectedDocumentType === AgeVerificationDocumentType.Menkyosyo
+              }
               onSelected={() => {
-                setSelectedDocumentType('MENKYOSYO');
+                setSelectedDocumentType(AgeVerificationDocumentType.Menkyosyo);
               }}
             />
             <DocumentItem
               title="健康保険証"
-              isSelected={selectedDocumentType === 'HOKENSYO'}
+              isSelected={
+                selectedDocumentType === AgeVerificationDocumentType.Hokensyo
+              }
               onSelected={() => {
-                setSelectedDocumentType('HOKENSYO');
+                setSelectedDocumentType(AgeVerificationDocumentType.Hokensyo);
               }}
             />
             <DocumentItem
               title="パスポート"
-              isSelected={selectedDocumentType === 'PASSPORT'}
+              isSelected={
+                selectedDocumentType === AgeVerificationDocumentType.Passport
+              }
               onSelected={() => {
-                setSelectedDocumentType('PASSPORT');
+                setSelectedDocumentType(AgeVerificationDocumentType.Passport);
               }}
             />
             <DocumentItem
               title="マイナンバーカード"
-              isSelected={selectedDocumentType === 'MY_NUMBER'}
+              isSelected={
+                selectedDocumentType === AgeVerificationDocumentType.MyNumber
+              }
               onSelected={() => {
-                setSelectedDocumentType('MY_NUMBER');
+                setSelectedDocumentType(AgeVerificationDocumentType.MyNumber);
               }}
             />
             <Text

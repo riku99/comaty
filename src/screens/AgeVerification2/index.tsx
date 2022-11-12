@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
-import { useVerifyAgeMutation } from 'src/generated/graphql';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { theme } from 'src/styles';
 
@@ -29,12 +28,7 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
   }, [navigation]);
 
   const [photoModalVisible, setPhotoModalVisible] = useState(false);
-  const [verifyAgeMutation] = useVerifyAgeMutation();
   const { setLoadingVisible } = useLoadingOverlayVisible();
-  const [imageData, setImageData] = useState<null | {
-    uri: string;
-    type: string;
-  }>(null);
 
   const hidePhotoModal = () => {
     setPhotoModalVisible(false);
@@ -65,29 +59,13 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
 
           const { uri, type } = result.assets[0];
 
-          setImageData({
-            uri,
-            type,
-          });
-
           navigation.navigate('ConfirmAgeVerificationDocumentPhoto', {
             selectedDocumentType,
-            imageData,
+            imageData: {
+              uri,
+              type,
+            },
           });
-
-          // const file = await processImageForMultipartRequest({ uri, type });
-
-          // await verifyAgeMutation({
-          //   variables: {
-          //     input: {
-          //       file,
-          //       type: selectedDocumentType,
-          //     },
-          //   },
-          //   onCompleted: () => {
-          //     console.log('Success');
-          //   },
-          // });
         } catch (e) {
         } finally {
           hidePhotoModal();

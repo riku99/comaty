@@ -33,7 +33,6 @@ export const CheckBox = ({
           },
         ]}
       >
-        {/* {isChecked && <AntDesign name="check" size={iconSize} color="#fff" />} */}
         {isChecked && <Entypo name="check" size={iconSize} color="#fff" />}
       </View>
       {!!label && <Text style={[{ marginLeft: 4 }, labelStyle]}>{label}</Text>}

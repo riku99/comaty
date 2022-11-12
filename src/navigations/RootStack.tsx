@@ -1,8 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { useGetInitialStatusCompletionQuery } from 'src/generated/graphql';
+import {
+  AgeVerificationDocumentType,
+  useGetInitialStatusCompletionQuery,
+} from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth';
 import { AgeVerificationScreen } from 'src/screens/AgeVerification';
+import { AgeVerification2Screen } from 'src/screens/AgeVerification2';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
@@ -68,6 +72,9 @@ export type RootStackParamList = {
   Notification: undefined;
   NarrowingDown: undefined;
   AgeVerification: undefined;
+  AgeVerification2: {
+    selectedDocumentType: AgeVerificationDocumentType;
+  };
   Setting: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
@@ -135,11 +142,15 @@ export const RootStack = () => {
           <Stack.Screen name="MessageRoom" component={MessageRoomScreen} />
           <Stack.Screen name="GroupMembers" component={GroupMembersScreen} />
           <Stack.Screen name="Notification" component={NotoficationScreen} />
+          <Stack.Screen name="Setting" component={SettingScreen} />
           <Stack.Screen
             name="AgeVerification"
             component={AgeVerificationScreen}
           />
-          <Stack.Screen name="Setting" component={SettingScreen} />
+          <Stack.Screen
+            name="AgeVerification2"
+            component={AgeVerification2Screen}
+          />
 
           <Stack.Group
             screenOptions={{

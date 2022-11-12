@@ -2,14 +2,7 @@ import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { View } from 'react-native-animatable';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
-import {
-  AgeVerificationDocumentType,
-  useVerifyAgeMutation,
-} from 'src/generated/graphql';
-import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
-import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
+import { AgeVerificationDocumentType } from 'src/generated/graphql';
 import { theme } from 'src/styles';
 import { DocumentItem } from './DocumentItem';
 
@@ -27,60 +20,6 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
     useState<AgeVerificationDocumentType>(
       AgeVerificationDocumentType.Menkyosyo
     );
-  const [photoModalVisible, setPhotoModalVisible] = useState(false);
-  const [verifyAgeMutation] = useVerifyAgeMutation();
-  const { setLoadingVisible } = useLoadingOverlayVisible();
-
-  const hidePhotoModal = () => {
-    setPhotoModalVisible(false);
-  };
-
-  const photoModalItems: ModalItem[] = [
-    {
-      title: 'カメラで撮る',
-      onPress: () => {
-        hidePhotoModal();
-      },
-    },
-    {
-      title: 'カメラロールから選択',
-      onPress: async () => {
-        try {
-          setLoadingVisible(true);
-          const result = await launchImageLibrary({
-            selectionLimit: 1,
-            mediaType: 'photo',
-          });
-
-          hidePhotoModal();
-
-          if (result.didCancel) {
-            return;
-          }
-
-          const { uri, type } = result.assets[0];
-
-          const file = await processImageForMultipartRequest({ uri, type });
-
-          await verifyAgeMutation({
-            variables: {
-              input: {
-                file,
-                type: selectedDocumentType,
-              },
-            },
-            onCompleted: () => {
-              console.log('Success');
-            },
-          });
-        } catch (e) {
-        } finally {
-          hidePhotoModal();
-          setLoadingVisible(false);
-        }
-      },
-    },
-  ];
 
   return (
     <>
@@ -91,10 +30,6 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
           </Text>
 
           <Text style={styles.text2}>選択した書類を提出してください。</Text>
-
-          <Text style={styles.text2}>
-            ハッキリと書類が写っている写真を提出してください。
-          </Text>
 
           <Text style={styles.text2}>
             提出されたデータは年齢確認完了後、速やかに消去されます。
@@ -161,17 +96,12 @@ export const AgeVerificationScreen = ({ navigation }: Props) => {
           }}
           title="次へ"
           onPress={() => {
-            setPhotoModalVisible(true);
+            navigation.navigate('AgeVerification2', {
+              selectedDocumentType,
+            });
           }}
         />
       </SafeAreaView>
-
-      <OverlayModal
-        isVisible={photoModalVisible}
-        items={photoModalItems}
-        onBackdropPress={hidePhotoModal}
-        onCancel={hidePhotoModal}
-      />
     </>
   );
 };

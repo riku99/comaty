@@ -2,11 +2,27 @@ import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useVerifyAgeMutation } from 'src/generated/graphql';
+import {
+  AgeVerificationDocumentType,
+  useVerifyAgeMutation,
+} from 'src/generated/graphql';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 
 type Props = RootNavigationScreenProp<'ConfirmAgeVerificationDocumentPhoto'>;
+
+const getDocumentTypeName = (type: AgeVerificationDocumentType) => {
+  switch (type) {
+    case AgeVerificationDocumentType.Menkyosyo:
+      return '免許証';
+    case AgeVerificationDocumentType.Hokensyo:
+      return '健康保険証';
+    case AgeVerificationDocumentType.Passport:
+      return 'パスポート';
+    case AgeVerificationDocumentType.MyNumber:
+      return 'マイナンバーカード';
+  }
+};
 
 export const ConfirmAgeVerificationDocumentPhotoScreen = ({
   navigation,
@@ -54,7 +70,9 @@ export const ConfirmAgeVerificationDocumentPhotoScreen = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text1}>提出する書類: 免許証</Text>
+      <Text style={styles.text1}>{`提出する書類: ${getDocumentTypeName(
+        selectedDocumentType
+      )}`}</Text>
       <Image
         source={{ uri: imageData.uri }}
         resizeMode="contain"

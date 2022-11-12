@@ -9,17 +9,18 @@ import {
   View,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import MenkyosyoSample from 'src/assets/image/menkyosyo-sample.png';
 import { ModalItem, OverlayModal } from 'src/components/ui/OverlayModal';
 import { useVerifyAgeMutation } from 'src/generated/graphql';
-import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
 import { theme } from 'src/styles';
+
+const MenkyosyoSample = require('src/assets/image/menkyosyo-sample.png');
 
 type Props = RootNavigationScreenProp<'AgeVerification2'>;
 
 export const AgeVerification2Screen = ({ navigation, route }: Props) => {
   const { selectedDocumentType } = route.params;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '年齢確認2',
@@ -30,6 +31,10 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
   const [photoModalVisible, setPhotoModalVisible] = useState(false);
   const [verifyAgeMutation] = useVerifyAgeMutation();
   const { setLoadingVisible } = useLoadingOverlayVisible();
+  const [imageData, setImageData] = useState<null | {
+    uri: string;
+    type: string;
+  }>(null);
 
   const hidePhotoModal = () => {
     setPhotoModalVisible(false);
@@ -60,19 +65,29 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
 
           const { uri, type } = result.assets[0];
 
-          const file = await processImageForMultipartRequest({ uri, type });
-
-          await verifyAgeMutation({
-            variables: {
-              input: {
-                file,
-                type: selectedDocumentType,
-              },
-            },
-            onCompleted: () => {
-              console.log('Success');
-            },
+          setImageData({
+            uri,
+            type,
           });
+
+          navigation.navigate('ConfirmAgeVerificationDocumentPhoto', {
+            selectedDocumentType,
+            imageData,
+          });
+
+          // const file = await processImageForMultipartRequest({ uri, type });
+
+          // await verifyAgeMutation({
+          //   variables: {
+          //     input: {
+          //       file,
+          //       type: selectedDocumentType,
+          //     },
+          //   },
+          //   onCompleted: () => {
+          //     console.log('Success');
+          //   },
+          // });
         } catch (e) {
         } finally {
           hidePhotoModal();

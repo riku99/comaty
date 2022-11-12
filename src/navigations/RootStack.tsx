@@ -7,6 +7,7 @@ import {
 import { useLoggedIn } from 'src/hooks/auth';
 import { AgeVerificationScreen } from 'src/screens/AgeVerification';
 import { AgeVerification2Screen } from 'src/screens/AgeVerification2';
+import { ConfirmAgeVerificationDocumentPhotoScreen } from 'src/screens/ConfirmAgeVerificationDocumentPhoto';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
 import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
@@ -74,6 +75,13 @@ export type RootStackParamList = {
   AgeVerification: undefined;
   AgeVerification2: {
     selectedDocumentType: AgeVerificationDocumentType;
+  };
+  ConfirmAgeVerificationDocumentPhoto: {
+    selectedDocumentType: AgeVerificationDocumentType;
+    imageData: {
+      uri: string;
+      type: string;
+    };
   };
   Setting: undefined;
   QuestionCreationStack: undefined;
@@ -150,6 +158,10 @@ export const RootStack = () => {
           <Stack.Screen
             name="AgeVerification2"
             component={AgeVerification2Screen}
+          />
+          <Stack.Screen
+            name="ConfirmAgeVerificationDocumentPhoto"
+            component={ConfirmAgeVerificationDocumentPhotoScreen}
           />
 
           <Stack.Group

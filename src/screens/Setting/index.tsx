@@ -77,13 +77,14 @@ export const SettingScreen = ({ navigation }: Props) => {
             marginTop: 70,
           }}
         >
-          <SimpleListItem
-            title="ログアウト"
-            rightIconVisible={false}
-            onPress={onLogoutPress}
-          />
+          <SimpleListItem title="ログアウト" onPress={onLogoutPress} />
           <View style={styles.divider} />
-          <SimpleListItem title="アカウント削除" rightIconVisible={false} />
+          <SimpleListItem
+            title="アカウント削除"
+            onPress={() => {
+              navigation.navigate('DeleteAccountAlert');
+            }}
+          />
         </View>
       </ScrollView>
     </View>

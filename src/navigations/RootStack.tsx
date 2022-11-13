@@ -10,6 +10,7 @@ import { AgeVerification2Screen } from 'src/screens/AgeVerification2';
 import { BlockListScreen } from 'src/screens/BlockList';
 import { ConfirmAgeVerificationDocumentPhotoScreen } from 'src/screens/ConfirmAgeVerificationDocumentPhoto';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
+import { DeleteAccountAlertScreen } from 'src/screens/DeleteAccountAlert';
 import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
 import { GroupQRCodeScannerScreen } from 'src/screens/GroupQRCodeScanner';
@@ -86,6 +87,7 @@ export type RootStackParamList = {
   };
   Setting: undefined;
   BlockList: undefined;
+  DeleteAccountAlert: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -166,6 +168,10 @@ export const RootStack = () => {
             component={ConfirmAgeVerificationDocumentPhotoScreen}
           />
           <Stack.Screen name="BlockList" component={BlockListScreen} />
+          <Stack.Screen
+            name="DeleteAccountAlert"
+            component={DeleteAccountAlertScreen}
+          />
 
           <Stack.Group
             screenOptions={{

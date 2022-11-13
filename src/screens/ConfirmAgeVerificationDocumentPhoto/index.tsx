@@ -1,6 +1,6 @@
 import { Button, Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Alert, Image, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   AgeVerificationDocumentType,
@@ -11,7 +11,7 @@ import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible
 
 type Props = RootNavigationScreenProp<'ConfirmAgeVerificationDocumentPhoto'>;
 
-const getDocumentTypeName = (type: AgeVerificationDocumentType) => {
+const getDocumentTypeLabel = (type: AgeVerificationDocumentType) => {
   switch (type) {
     case AgeVerificationDocumentType.Menkyosyo:
       return '免許証';
@@ -58,7 +58,17 @@ export const ConfirmAgeVerificationDocumentPhotoScreen = ({
           },
         },
         onCompleted: () => {
-          console.log('OK');
+          Alert.alert(
+            '提出しました',
+            '確認が完了するまで少々お待ちください。',
+            [
+              {
+                onPress: () => {
+                  navigation.navigate('MyPage');
+                },
+              },
+            ]
+          );
         },
       });
     } catch (e) {
@@ -70,7 +80,7 @@ export const ConfirmAgeVerificationDocumentPhotoScreen = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text1}>{`提出する書類: ${getDocumentTypeName(
+      <Text style={styles.text1}>{`提出する書類: ${getDocumentTypeLabel(
         selectedDocumentType
       )}`}</Text>
       <Image

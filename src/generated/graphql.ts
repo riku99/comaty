@@ -25,8 +25,8 @@ export type AgeVerification = {
   createdAt: Scalars['String'];
   id: Scalars['ID'];
   imageUrl: Scalars['String'];
+  me?: Maybe<Me>;
   type: AgeVerificationDocumentType;
-  user?: Maybe<User>;
 };
 
 export enum AgeVerificationDocumentType {
@@ -34,6 +34,12 @@ export enum AgeVerificationDocumentType {
   Menkyosyo = 'MENKYOSYO',
   MyNumber = 'MY_NUMBER',
   Passport = 'PASSPORT'
+}
+
+export enum AgeVerificationStatus {
+  Completed = 'COMPLETED',
+  NotPresented = 'NOT_PRESENTED',
+  UnderReview = 'UNDER_REVIEW'
 }
 
 export enum ApproximateRange {
@@ -187,6 +193,7 @@ export type Me = UserEntity & {
   __typename?: 'Me';
   active: Scalars['Boolean'];
   age?: Maybe<Scalars['Int']>;
+  ageVerificationStatus: AgeVerificationStatus;
   bio?: Maybe<Scalars['String']>;
   birthDay?: Maybe<Scalars['Int']>;
   birthMonth?: Maybe<Scalars['Int']>;
@@ -309,7 +316,7 @@ export type Mutation = {
   updatePosition: Me;
   updateUserProfile: Me;
   uploadProfileImage: UserProfileImage;
-  verifyAge?: Maybe<AgeVerification>;
+  verifyAge: AgeVerification;
 };
 
 
@@ -998,7 +1005,7 @@ export type VerifyAgeMutationVariables = Exact<{
 }>;
 
 
-export type VerifyAgeMutation = { __typename?: 'Mutation', verifyAge?: { __typename?: 'AgeVerification', id: string } | null };
+export type VerifyAgeMutation = { __typename?: 'Mutation', verifyAge: { __typename?: 'AgeVerification', id: string, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null } };
 
 export type BlockUserMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2323,6 +2330,10 @@ export const VerifyAgeDocument = gql`
     mutation VerifyAge($input: VerifyAgeInput!) {
   verifyAge(input: $input) {
     id
+    me {
+      id
+      ageVerificationStatus
+    }
   }
 }
     `;

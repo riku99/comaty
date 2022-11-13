@@ -1,5 +1,9 @@
 mutation VerifyAge($input: VerifyAgeInput!) {
   verifyAge(input: $input) {
     id
+    me {
+      id
+      ageVerificationStatus
+    }
   }
 }

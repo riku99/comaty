@@ -1399,6 +1399,11 @@ export type QuestionReplysScreenDataQueryVariables = Exact<{
 
 export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionReply: { __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, replys?: Array<{ __typename?: 'QuestionReply', id: number, text: string, createdAt: string, isAnonymity: boolean, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null, replys?: Array<{ __typename?: 'QuestionReply', id: number } | null> | null } | null> | null, questionReply?: { __typename?: 'QuestionReply', id: number, text: string } | null, question?: { __typename?: 'Question', id: number, text: string } | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string } | null> | null } };
 
+export type SettingScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+
 export type OneUserStoriesQueryVariables = Exact<{
   id: Scalars['ID'];
   viewersFirst?: InputMaybe<Scalars['Int']>;
@@ -4372,6 +4377,41 @@ export function useQuestionReplysScreenDataLazyQuery(baseOptions?: Apollo.LazyQu
 export type QuestionReplysScreenDataQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataQuery>;
 export type QuestionReplysScreenDataLazyQueryHookResult = ReturnType<typeof useQuestionReplysScreenDataLazyQuery>;
 export type QuestionReplysScreenDataQueryResult = Apollo.QueryResult<QuestionReplysScreenDataQuery, QuestionReplysScreenDataQueryVariables>;
+export const SettingScreenDataDocument = gql`
+    query SettingScreenData {
+  me {
+    id
+    ageVerificationStatus
+  }
+}
+    `;
+
+/**
+ * __useSettingScreenDataQuery__
+ *
+ * To run a query within a React component, call `useSettingScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<SettingScreenDataQuery, SettingScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingScreenDataQuery, SettingScreenDataQueryVariables>(SettingScreenDataDocument, options);
+      }
+export function useSettingScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingScreenDataQuery, SettingScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingScreenDataQuery, SettingScreenDataQueryVariables>(SettingScreenDataDocument, options);
+        }
+export type SettingScreenDataQueryHookResult = ReturnType<typeof useSettingScreenDataQuery>;
+export type SettingScreenDataLazyQueryHookResult = ReturnType<typeof useSettingScreenDataLazyQuery>;
+export type SettingScreenDataQueryResult = Apollo.QueryResult<SettingScreenDataQuery, SettingScreenDataQueryVariables>;
 export const OneUserStoriesDocument = gql`
     query OneUserStories($id: ID!, $viewersFirst: Int) {
   user(id: $id) {

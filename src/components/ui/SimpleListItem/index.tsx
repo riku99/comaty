@@ -9,17 +9,24 @@ type Props = {
   icon?: JSX.Element;
   rightIconVisible?: boolean;
   titleStyle?: TextStyle;
+  rightText?: string;
 } & ComponentProps<typeof Pressable>;
 
 export const SimpleListItem = ({
   title,
   icon,
   titleStyle,
+  rightText,
   rightIconVisible = true,
   ...pressableProps
 }: Props) => {
   return (
-    <Pressable {...pressableProps}>
+    <Pressable
+      style={{
+        backgroundColor: '#fff',
+      }}
+      {...pressableProps}
+    >
       {({ pressed }) => (
         <View
           style={[
@@ -44,13 +51,24 @@ export const SimpleListItem = ({
             </Text>
           </View>
 
-          {rightIconVisible && (
-            <FontAwesome
-              name="angle-right"
-              size={24}
-              color={theme.gray.rightIcon}
-            />
-          )}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            {rightText && <Text>{rightText}</Text>}
+            {rightIconVisible && (
+              <FontAwesome
+                name="angle-right"
+                size={24}
+                color={theme.gray.rightIcon}
+                style={{
+                  marginLeft: 10,
+                }}
+              />
+            )}
+          </View>
         </View>
       )}
     </Pressable>

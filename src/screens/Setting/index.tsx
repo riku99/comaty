@@ -1,12 +1,16 @@
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SimpleListItem } from 'src/components/ui/SimpleListItem';
+import { useSettingScreenDataQuery } from 'src/generated/graphql';
+import { useLogout } from 'src/hooks/auth/useLogout';
 import { theme } from 'src/styles';
 
 type Props = RootNavigationScreenProp<'Setting'>;
 
 export const SettingScreen = ({ navigation }: Props) => {
+  const { data } = useSettingScreenDataQuery();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '設定',
@@ -14,40 +18,73 @@ export const SettingScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  const { logout } = useLogout();
+
+  const onLogoutPress = () => {
+    Alert.alert('ログアウトしてよろしいですか？', '', [
+      {
+        text: 'キャンセル',
+        style: 'cancel',
+      },
+      {
+        text: 'ログアウト',
+        onPress: async () => {
+          await logout();
+        },
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <SimpleListItem
-          title="アカウント"
-          icon={
-            <MaterialCommunityIcons
-              name="account-circle-outline"
-              size={26}
-              color={theme.black}
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: 20,
+        }}
+      >
+        <View>
+          <Text style={styles.sectionTitle}>アカウント</Text>
+
+          <View style={styles.sectionItems}>
+            <SimpleListItem
+              title="メールアドレス"
+              rightText={'rrr00@gmail.com'}
             />
-          }
-          onPress={() => {
-            navigation.navigate('AccountSetting');
-          }}
-        />
+            <View style={styles.divider} />
+            <SimpleListItem
+              title="年齢確認"
+              onPress={() => {
+                navigation.navigate('AgeVerification');
+              }}
+            />
+          </View>
+        </View>
 
-        <SimpleListItem
-          title="ユーザー"
-          icon={<Feather name="users" size={23} color={theme.black} />}
-          onPress={() => {
-            navigation.navigate('UserSetting');
-          }}
-        />
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>ユーザー</Text>
+          <View style={styles.sectionItems}>
+            <SimpleListItem
+              title="ブロックリスト"
+              onPress={() => {
+                navigation.navigate('BlockList');
+              }}
+            />
+          </View>
+        </View>
 
-        <SimpleListItem
-          title="年齢確認"
-          onPress={() => {
-            navigation.navigate('AgeVerification');
-          }}
+        <View
           style={{
-            backgroundColor: '#fff',
+            marginTop: 70,
           }}
-        />
+        >
+          <SimpleListItem
+            title="ログアウト"
+            rightIconVisible={false}
+            onPress={onLogoutPress}
+          />
+          <View style={styles.divider} />
+          <SimpleListItem title="アカウント削除" rightIconVisible={false} />
+        </View>
       </ScrollView>
     </View>
   );
@@ -57,5 +94,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F3F3F3',
+  },
+  sectionContainer: {
+    marginTop: 28,
+  },
+  sectionTitle: {
+    marginLeft: 16,
+    color: theme.gray.text,
+  },
+  sectionItems: {
+    marginTop: 8,
+  },
+  divider: {
+    width: '100%',
+    height: 0.5,
+    backgroundColor: theme.gray.boarder,
+    marginLeft: 16,
   },
 });

@@ -1,0 +1,6 @@
+query SettingScreenData {
+  me {
+    id
+    ageVerificationStatus
+  }
+}

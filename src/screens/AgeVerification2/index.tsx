@@ -39,6 +39,9 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
       title: 'カメラで撮る',
       onPress: () => {
         hidePhotoModal();
+        setTimeout(() => {
+          navigation.push('AgeVerificationDocumentCamera');
+        }, 500);
       },
     },
     {

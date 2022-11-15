@@ -6,7 +6,14 @@ import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { CloseButton } from 'src/components/ui/CloseButton';
 import { isMoreRecentThanXDevice } from 'src/constants';
 
-export const AgeVerificationDocumentCameraScreen = () => {
+type Props = RootNavigationScreenProp<'AgeVerificationDocumentCamera'>;
+
+export const AgeVerificationDocumentCameraScreen = ({
+  navigation,
+  route,
+}: Props) => {
+  const { selectedDocumentType } = route.params;
+
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const devices = useCameraDevices();
   const cameraRef = useRef<Camera>(null);
@@ -15,7 +22,14 @@ export const AgeVerificationDocumentCameraScreen = () => {
   const onCaptureButtonPress = async () => {
     try {
       const photo = await cameraRef.current?.takePhoto();
-      console.log(photo);
+      navigation.goBack();
+      navigation.navigate('ConfirmAgeVerificationDocumentPhoto', {
+        selectedDocumentType,
+        imageData: {
+          uri: photo.path,
+          type: 'image/jpeg',
+        },
+      });
     } catch (e) {
       console.log(e);
     }

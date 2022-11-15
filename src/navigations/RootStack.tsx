@@ -79,6 +79,9 @@ export type RootStackParamList = {
   AgeVerification2: {
     selectedDocumentType: AgeVerificationDocumentType;
   };
+  AgeVerificationDocumentCamera: {
+    selectedDocumentType: AgeVerificationDocumentType;
+  };
   ConfirmAgeVerificationDocumentPhoto: {
     selectedDocumentType: AgeVerificationDocumentType;
     imageData: {
@@ -88,7 +91,6 @@ export type RootStackParamList = {
   };
   Setting: undefined;
   BlockList: undefined;
-  AgeVerificationDocumentCamera: undefined;
   DeleteAccountAlert: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:

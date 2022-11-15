@@ -40,7 +40,9 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
       onPress: () => {
         hidePhotoModal();
         setTimeout(() => {
-          navigation.push('AgeVerificationDocumentCamera');
+          navigation.push('AgeVerificationDocumentCamera', {
+            selectedDocumentType,
+          });
         }, 500);
       },
     },

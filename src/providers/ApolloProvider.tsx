@@ -21,8 +21,8 @@ type Props = {
 };
 
 const uploadLink = createUploadLink({
-  uri: 'http://localhost:4000/graphql',
-  // uri: 'http://172.20.10.3:4000/graphql',
+  // uri: 'http://localhost:4000/graphql',
+  uri: 'http://172.20.10.3:4000/graphql',
 });
 
 const customLink = new ApolloLink((operation, forward) => {

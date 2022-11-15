@@ -101,7 +101,7 @@ export const StoryCamera = ({
     <View style={styles.container}>
       {/* <Camera
         style={[
-          styles.camrea,
+          styles.camera,
           { marginTop: isMoreRecentThanXDevice ? safeAreaTop : 0 },
         ]}
         device={device === 'back' ? devices.back : devices.front}
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  camrea: {
+  camera: {
     width: '100%',
     height: undefined,
     aspectRatio: 9 / 16,

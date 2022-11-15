@@ -102,7 +102,7 @@ export const AgeVerification2Screen = ({ navigation, route }: Props) => {
           </View>
 
           <Text style={styles.text2}>
-            上記項目以外の顔写真や住所の部分は隠しても大丈夫です！
+            上記項目以外の顔写真や住所の部分などは隠しても大丈夫です！
           </Text>
 
           <View

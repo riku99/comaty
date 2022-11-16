@@ -2,10 +2,11 @@ import { Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Card from 'src/assets/svg/professional-card.svg';
+import { BottomAnimatedButton } from 'src/components/ui/BottomAnimatedButton';
 
-type Props = RootNavigationScreenProp<'AgeVerificationUnderReview'>;
+type Props = RootNavigationScreenProp<'AgeVerificationRequest'>;
 
-export const AgeVerificationUnderReviewScreen = ({ navigation }: Props) => {
+export const AgeVerificationRequestScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '',
@@ -22,10 +23,16 @@ export const AgeVerificationUnderReviewScreen = ({ navigation }: Props) => {
           alignSelf: 'center',
         }}
       />
-      <Text style={styles.confirmText}>年齢確認中です。</Text>
       <Text style={styles.requestText}>
-        メッセージをするには年齢確認を完了する必要があります。
+        メッセージをするには年齢確認が必要です。
       </Text>
+
+      <BottomAnimatedButton
+        title="年齢確認をする"
+        onPress={() => {
+          navigation.navigate('AgeVerification');
+        }}
+      />
     </View>
   );
 };
@@ -35,14 +42,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
-  confirmText: {
+  requestText: {
     alignSelf: 'center',
     fontWeight: 'bold',
     marginTop: 4,
     fontSize: 20,
-  },
-  requestText: {
-    alignSelf: 'center',
-    marginTop: 10,
   },
 });

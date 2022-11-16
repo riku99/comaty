@@ -7,9 +7,10 @@ import { useToast } from 'react-native-toast-notifications';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { HStack } from 'src/components/ui/HStack';
 import {
+  AgeVerificationStatus,
   BottomButtonGroupInUserProfileFragment,
   CreateMessageRoomError,
-  useCreateMessageRoomMutation,
+  useCreateMessageRoomMutation
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
@@ -29,12 +30,22 @@ export const BottomButtonGroup = ({ data }: Props) => {
   const onStoryUserPress = () => {
     navigation.push('Stories', {
       startingIndex: 0,
-      storyUsers: [{ userId: data.id }],
+      storyUsers: [{ userId: data.user.id }],
     });
   };
 
   const onSendPress = async () => {
-    if (myId === data.id) {
+    if (myId === data.user.id) {
+      return;
+    }
+
+    if (data.me.ageVerificationStatus === AgeVerificationStatus.UnderReview) {
+      navigation.navigate("AgeVerificationUnderReview")
+      return 
+    }
+
+    if (data.me.ageVerificationStatus !== AgeVerificationStatus.Completed) {
+      navigation.navigate('AgeVerificationRequest');
       return;
     }
 
@@ -42,11 +53,11 @@ export const BottomButtonGroup = ({ data }: Props) => {
       setCreatingMessageRoom(true);
       await createMessageRoomMutation({
         variables: {
-          recipientId: data.id,
+          recipientId: data.user.id,
         },
         onCompleted: (response) => {
           navigation.navigate('MessageRoom', {
-            userId: data.id,
+            userId: data.user.id,
             roomId: response.createMessageRoom.id,
           });
         },
@@ -66,19 +77,19 @@ export const BottomButtonGroup = ({ data }: Props) => {
   };
 
   const onGroupMembersPress = () => {
-    if (!data.group) {
+    if (!data.user.group) {
       return;
     }
 
     navigation.push('GroupMembers', {
-      groupId: data.group.id,
-      userId: data.id,
+      groupId: data.user.group.id,
+      userId: data.user.id,
     });
   };
 
   return (
     <HStack style={styles.content} space={50}>
-      {!!data.group && (
+      {!!data.user.group && (
         <Pressable style={styles.showGroupButton} onPress={onGroupMembersPress}>
           <MaterialIcons
             name="group"
@@ -100,9 +111,9 @@ export const BottomButtonGroup = ({ data }: Props) => {
         )}
       </Pressable>
 
-      {!!data.stories.length && (
+      {!!data.user.stories.length && (
         <StoryUserCircle
-          storyUserData={data}
+          storyUserData={data.user}
           imageSize={BUTTON_SIZE - 10}
           onPress={onStoryUserPress}
         />

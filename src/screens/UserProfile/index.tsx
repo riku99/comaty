@@ -224,7 +224,7 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
           <BottomButtonGroup
             data={filter<BottomButtonGroupInUserProfileFragment>(
               BottomButtonGroupInUserProfileFragmentDoc,
-              data.user
+              data
             )}
           />
         </View>

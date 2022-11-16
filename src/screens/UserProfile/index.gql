@@ -20,11 +20,17 @@ fragment BottomSheetContentInUserProfile on User {
   distance
 }
 
-fragment BottomButtonGroupInUserProfile on User {
-  id
-  ...StoryUserCircle
-  group {
+fragment BottomButtonGroupInUserProfile on Query {
+  user(id: $id) {
     id
+    ...StoryUserCircle
+    group {
+      id
+    }
+  }
+  me {
+    id
+    ageVerificationStatus
   }
 }
 
@@ -35,6 +41,6 @@ query UserProfileScreenData($id: ID!) {
     blocked
     ...BottomSheetContentInUserProfile
     ...ProfileImagesInUserProfile
-    ...BottomButtonGroupInUserProfile
   }
+  ...BottomButtonGroupInUserProfile
 }

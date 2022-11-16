@@ -8,6 +8,7 @@ import { useLoggedIn } from 'src/hooks/auth';
 import { AgeVerificationScreen } from 'src/screens/AgeVerification';
 import { AgeVerification2Screen } from 'src/screens/AgeVerification2';
 import { AgeVerificationDocumentCameraScreen } from 'src/screens/AgeVerificationDocumentCamera';
+import { AgeVerificationUnderReviewScreen } from 'src/screens/AgeVerificationUnderReview';
 import { BlockListScreen } from 'src/screens/BlockList';
 import { ConfirmAgeVerificationDocumentPhotoScreen } from 'src/screens/ConfirmAgeVerificationDocumentPhoto';
 import { DateOfBirthInputScreen } from 'src/screens/DateOfBirthInput';
@@ -89,6 +90,7 @@ export type RootStackParamList = {
       type: string;
     };
   };
+  AgeVerificationUnderReview: undefined;
   Setting: undefined;
   BlockList: undefined;
   DeleteAccountAlert: undefined;
@@ -175,6 +177,10 @@ export const RootStack = () => {
           <Stack.Screen
             name="DeleteAccountAlert"
             component={DeleteAccountAlertScreen}
+          />
+          <Stack.Screen
+            name="AgeVerificationUnderReview"
+            component={AgeVerificationUnderReviewScreen}
           />
 
           <Stack.Group

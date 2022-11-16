@@ -2,7 +2,10 @@ import { Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { SimpleListItem } from 'src/components/ui/SimpleListItem';
-import { useSettingScreenDataQuery } from 'src/generated/graphql';
+import {
+  AgeVerificationStatus,
+  useSettingScreenDataQuery,
+} from 'src/generated/graphql';
 import { useLogout } from 'src/hooks/auth/useLogout';
 import { theme } from 'src/styles';
 
@@ -54,7 +57,11 @@ export const SettingScreen = ({ navigation }: Props) => {
             <SimpleListItem
               title="年齢確認"
               onPress={() => {
-                navigation.navigate('AgeVerification');
+                if (AgeVerificationStatus.UnderReview) {
+                  navigation.navigate('AgeVerificationUnderReview');
+                } else {
+                  navigation.navigate('AgeVerification');
+                }
               }}
             />
           </View>

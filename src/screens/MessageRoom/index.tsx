@@ -5,7 +5,7 @@ import { btoa } from 'react-native-quick-base64';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withTiming
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'react-native-toast-notifications';
@@ -28,7 +28,7 @@ import {
   useKeepRequestMutation,
   useMessageRoomScreenDataQuery,
   useReadMessageMutation,
-  useSendMessageMutation,
+  useSendMessageMutation
 } from 'src/generated/graphql';
 import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { useMyId } from 'src/hooks/me';
@@ -112,6 +112,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     };
   });
 
+  // 年齢確認が完了しているかどうかチェック
   useEffect(() => {
     if (!data?.me) {
       return;

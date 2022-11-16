@@ -1,12 +1,14 @@
 import { useNavigation } from '@react-navigation/native';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { StoryUserCircle } from 'src/components/domain/user/StoryUserCircle';
 import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import {
   HomeStoriesFragment,
+  StoryType,
   StoryUserCircleFragment,
   StoryUserCircleFragmentDoc,
 } from 'src/generated/graphql';
@@ -24,11 +26,34 @@ export const Stories = React.memo(
     const { creatingStory } = useCreatingStory();
     const navigation = useNavigation<RootNavigationProp<'HomeMain'>>();
 
+    // 全てのストーリーを閲覧されたユーザーは、ストーリーの表示一覧には表示させないのでフィルターをかけている
     const storyUsers = storiesData.storyUsers.edges
       .filter((edge) => edge.node.stories.some((s) => !s.seen))
       .map((e) => ({
         userId: e.node.id,
       }));
+
+    useEffect(() => {
+      const preloadData = storiesData.storyUsers.edges.map((d) => {
+        const firstStory = d.node.stories[0];
+        const uri =
+          firstStory.type === StoryType.Photo
+            ? firstStory.url
+            : firstStory.thumbnailUrl;
+        return {
+          uri,
+        };
+      });
+
+      const myPreloadData = storiesData.me.stories.map((d) => {
+        const uri = d.type === StoryType.Photo ? d.url : d.thumbnailUrl;
+        return {
+          uri,
+        };
+      });
+
+      FastImage.preload([...preloadData, ...myPreloadData]);
+    }, [storiesData.me.stories, storiesData.storyUsers.edges]);
 
     const renderItem = useCallback(
       ({ item, index }: { item: Item; index: number }) => {

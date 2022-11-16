@@ -1,6 +1,7 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
+  Alert,
   AppState,
   AppStateStatus,
   NativeEventSubscription,
@@ -11,6 +12,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import {
+  AgeVerificationStatus,
   useGetInitialDataQuery,
   useUpdatePositionMutation,
 } from 'src/generated/graphql';
@@ -35,6 +37,8 @@ export const Root = () => {
   const { setNarrowingDownConditions } = useNarrowingDownConditions();
   const { setGeolocationPermitted } = useGeolocationPermitted();
 
+  useGetDataOnActive();
+
   useEffect(() => {
     if (initialData?.me) {
       setLoggedIn(true);
@@ -57,8 +61,6 @@ export const Root = () => {
       }
     }
   }, [loggedIn, setNarrowingDownConditions]);
-
-  useGetDataOnActive();
 
   useEffect(() => {
     let subscription: NativeEventSubscription;
@@ -114,6 +116,27 @@ export const Root = () => {
       }
     };
   }, [loggedIn]);
+
+  useEffect(() => {
+    if (loggedIn) {
+      if (!initialData?.me) {
+        return;
+      }
+
+      const { ageVerificationStatus } = initialData.me;
+      const showed = storage.getBoolean(
+        mmkvStorageKeys.showedCompletedAgeVerificationAlert
+      );
+
+      if (
+        !showed &&
+        ageVerificationStatus === AgeVerificationStatus.Completed
+      ) {
+        Alert.alert('年齢確認が完了しました', 'ご協力ありがとうございました!');
+        storage.set(mmkvStorageKeys.showedCompletedAgeVerificationAlert, true);
+      }
+    }
+  }, [loggedIn, initialData]);
 
   return (
     <>

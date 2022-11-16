@@ -4,13 +4,18 @@ import {
   AppStateStatus,
   NativeEventSubscription,
 } from 'react-native';
-import { GetOnActiveDataDocument } from 'src/generated/graphql';
+import {
+  GetOnActiveDataDocument,
+  GetOnActiveDataQuery,
+} from 'src/generated/graphql';
 import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { useLoggedIn } from 'src/hooks/auth/useLoggedIn';
 
 export const useGetDataOnActive = () => {
   const { loggedIn } = useLoggedIn();
-  const getOnActiveLazyQuery = useCustomLazyQuery(GetOnActiveDataDocument);
+  const getOnActiveLazyQuery = useCustomLazyQuery<GetOnActiveDataQuery>(
+    GetOnActiveDataDocument
+  );
 
   useEffect(() => {
     let subscription: NativeEventSubscription;

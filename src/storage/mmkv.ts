@@ -5,4 +5,5 @@ export const storage = new MMKV();
 export const mmkvStorageKeys = {
   loginProviders: 'loginProviders',
   narrowingDownConditions: 'narrowingDownConditions',
+  showedCompletedAgeVerificationAlert: 'showedCompletedAgeVerificationAlert',
 };

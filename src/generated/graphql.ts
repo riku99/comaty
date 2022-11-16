@@ -1164,7 +1164,7 @@ export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfil
 export type GetOnActiveDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetOnActiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
+export type GetOnActiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', updatedAt: string, id: number, kept: boolean, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', node: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } } | null> } | null } | null> | null } | null };
 
 export type MyProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1184,7 +1184,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, ageVerificationStatus: AgeVerificationStatus, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3146,6 +3146,10 @@ export type UploadProfileImageMutationOptions = Apollo.BaseMutationOptions<Uploa
 export const GetOnActiveDataDocument = gql`
     query GetOnActiveData {
   ...MessageRoomListScreenData
+  me {
+    id
+    ageVerificationStatus
+  }
 }
     ${MessageRoomListScreenDataFragmentDoc}`;
 
@@ -3292,10 +3296,29 @@ export type MyIdQueryResult = Apollo.QueryResult<MyIdQuery, MyIdQueryVariables>;
 export const GetInitialDataDocument = gql`
     query GetInitialData {
   me {
-    ...MyProfile
+    id
+    nickname
+    sex
+    initialStatusCompletion
+    age
+    birthYear
+    birthMonth
+    birthDay
+    height
+    statusMessage
+    bio
+    ageVerificationStatus
+    profileImages {
+      id
+      ...ProfileImage
+    }
+    myTags {
+      id
+      text
+    }
   }
 }
-    ${MyProfileFragmentDoc}`;
+    ${ProfileImageFragmentDoc}`;
 
 /**
  * __useGetInitialDataQuery__

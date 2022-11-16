@@ -5,9 +5,10 @@ import {
   AppState,
   AppStateStatus,
   NativeEventSubscription,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { View } from 'react-native-animatable';
+import FastImage from 'react-native-fast-image';
 import Geolocation from 'react-native-geolocation-service';
 import { ContentsCreationButtonGroup } from 'src/components/ui/ContentsCreationButtonGroup';
 import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
@@ -15,7 +16,7 @@ import {
   AgeVerificationStatus,
   useGetInitialDataQuery,
   useUpdateAgeVerificationStatusToNotPresentedMutation,
-  useUpdatePositionMutation,
+  useUpdatePositionMutation
 } from 'src/generated/graphql';
 import { useGetDataOnActive } from 'src/hooks/app/useGetDataOnActive';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
@@ -166,6 +167,17 @@ export const Root = () => {
     initialData,
     updateAgeVerificationStatusToNotPresentedMutation,
   ]);
+
+  // 自分のプロフィール画像のプリロード
+  useEffect(() => {
+    if (loggedIn && initialData?.me.firstProfileImage) {
+      FastImage.preload([
+        {
+          uri: initialData?.me.firstProfileImage.url,
+        },
+      ]);
+    }
+  }, [loggedIn, initialData?.me.firstProfileImage]);
 
   return (
     <>

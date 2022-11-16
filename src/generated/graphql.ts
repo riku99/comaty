@@ -1191,7 +1191,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, ageVerificationStatus: AgeVerificationStatus, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, ageVerificationStatus: AgeVerificationStatus, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3356,6 +3356,9 @@ export const GetInitialDataDocument = gql`
     ageVerificationStatus
     profileImages {
       id
+      ...ProfileImage
+    }
+    firstProfileImage {
       ...ProfileImage
     }
     myTags {

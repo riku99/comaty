@@ -16,6 +16,9 @@ query GetInitialData {
       id
       ...ProfileImage
     }
+    firstProfileImage {
+      ...ProfileImage
+    }
     myTags {
       id
       text

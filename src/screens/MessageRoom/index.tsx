@@ -13,6 +13,7 @@ import { InfiniteFlatList } from 'src/components/ui/InfiniteFlatList';
 import { Loading } from 'src/components/ui/Loading';
 import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
 import {
+  AgeVerificationStatus,
   CreateMessageError,
   GetMessageRoomError,
   InputComposerDataInMessageRoomScreenFragment,
@@ -110,6 +111,22 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
       height: listHeaderHeight.value,
     };
   });
+
+  useEffect(() => {
+    if (!data?.me) {
+      return;
+    }
+
+    if (data.me.ageVerificationStatus === AgeVerificationStatus.UnderReview) {
+      navigation.navigate('AgeVerificationUnderReview');
+      return;
+    }
+
+    if (data.me.ageVerificationStatus !== AgeVerificationStatus.Completed) {
+      navigation.navigate('AgeVerificationRequest');
+      return;
+    }
+  }, [data]);
 
   useEffect(() => {
     if (data?.messageRoom.messages) {
@@ -215,6 +232,16 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   );
 
   const onSendPress = async () => {
+    if (data.me.ageVerificationStatus === AgeVerificationStatus.UnderReview) {
+      navigation.navigate('AgeVerificationUnderReview');
+      return;
+    }
+
+    if (data.me.ageVerificationStatus !== AgeVerificationStatus.Completed) {
+      navigation.navigate('AgeVerificationRequest');
+      return;
+    }
+
     try {
       setInputText('');
       setIsSending(true);

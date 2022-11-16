@@ -1305,7 +1305,7 @@ export type MessageRoomScreenDataQueryVariables = Exact<{
 }>;
 
 
-export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, kept: boolean, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null, keepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, requestUser?: { __typename?: 'User', id: string } | null } | null } };
+export type MessageRoomScreenDataQuery = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, kept: boolean, messages?: { __typename?: 'MessageConnection', edges: Array<{ __typename?: 'MessageEdge', cursor: string, node: { __typename?: 'Message', id: number, text: string, createdAt: string, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null, keepingRequest?: { __typename?: 'MessageKeepingRequest', id: number, requestUser?: { __typename?: 'User', id: string } | null } | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
 
 export type RoomMessagesInMessageRoomScreenQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -3841,6 +3841,10 @@ export const MessageRoomScreenDataDocument = gql`
       id
     }
     ...InputComposerDataInMessageRoomScreen
+  }
+  me {
+    id
+    ageVerificationStatus
   }
 }
     ${MessageBubbleDataInMessageRoomFragmentDoc}

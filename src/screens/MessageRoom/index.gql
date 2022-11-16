@@ -22,6 +22,10 @@ query MessageRoomScreenData(
     }
     ...InputComposerDataInMessageRoomScreen
   }
+  me {
+    id
+    ageVerificationStatus
+  }
 }
 
 query RoomMessagesInMessageRoomScreen(

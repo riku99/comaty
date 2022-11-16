@@ -38,6 +38,7 @@ export enum AgeVerificationDocumentType {
 
 export enum AgeVerificationStatus {
   Completed = 'COMPLETED',
+  Failed = 'FAILED',
   NotPresented = 'NOT_PRESENTED',
   UnderReview = 'UNDER_REVIEW'
 }

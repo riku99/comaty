@@ -117,6 +117,7 @@ export const Root = () => {
     };
   }, [loggedIn]);
 
+  // 年齢確認完了の報告など
   useEffect(() => {
     if (loggedIn) {
       if (!initialData?.me) {
@@ -134,6 +135,14 @@ export const Root = () => {
       ) {
         Alert.alert('年齢確認が完了しました', 'ご協力ありがとうございました!');
         storage.set(mmkvStorageKeys.showedCompletedAgeVerificationAlert, true);
+        return;
+      }
+
+      if (ageVerificationStatus === AgeVerificationStatus.Failed) {
+        Alert.alert(
+          '年齢確認に失敗しました',
+          'ハッキリと写っている写真を選択し、再度提出してください。'
+        );
       }
     }
   }, [loggedIn, initialData]);

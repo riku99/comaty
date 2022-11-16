@@ -57,7 +57,14 @@ export const SettingScreen = ({ navigation }: Props) => {
             <SimpleListItem
               title="年齢確認"
               onPress={() => {
-                if (AgeVerificationStatus.UnderReview) {
+                if (!data?.me) {
+                  return;
+                }
+
+                if (
+                  data.me.ageVerificationStatus ===
+                  AgeVerificationStatus.UnderReview
+                ) {
                   navigation.navigate('AgeVerificationUnderReview');
                 } else {
                   navigation.navigate('AgeVerification');

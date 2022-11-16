@@ -1,0 +1,6 @@
+mutation UpdateAgeVerificationStatusToNotPresented {
+  updateAgeVerificationStatusToNotPresented {
+    id
+    ageVerificationStatus
+  }
+}

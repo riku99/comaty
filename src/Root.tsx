@@ -14,6 +14,7 @@ import { LoadingOverlay } from 'src/components/ui/LoadingOverlay';
 import {
   AgeVerificationStatus,
   useGetInitialDataQuery,
+  useUpdateAgeVerificationStatusToNotPresentedMutation,
   useUpdatePositionMutation,
 } from 'src/generated/graphql';
 import { useGetDataOnActive } from 'src/hooks/app/useGetDataOnActive';
@@ -36,6 +37,8 @@ export const Root = () => {
   const [updatePositionMutation] = useUpdatePositionMutation();
   const { setNarrowingDownConditions } = useNarrowingDownConditions();
   const { setGeolocationPermitted } = useGeolocationPermitted();
+  const [updateAgeVerificationStatusToNotPresentedMutation] =
+    useUpdateAgeVerificationStatusToNotPresentedMutation();
 
   useGetDataOnActive();
 
@@ -99,7 +102,9 @@ export const Root = () => {
                   console.log(e);
                 }
               },
-              (error) => {}
+              (error) => {
+                console.log(error);
+              }
             );
           } else {
             setGeolocationPermitted(false);
@@ -115,7 +120,7 @@ export const Root = () => {
         subscription.remove();
       }
     };
-  }, [loggedIn]);
+  }, [loggedIn, setGeolocationPermitted, updatePositionMutation]);
 
   // 年齢確認完了の報告など
   useEffect(() => {
@@ -141,11 +146,26 @@ export const Root = () => {
       if (ageVerificationStatus === AgeVerificationStatus.Failed) {
         Alert.alert(
           '年齢確認に失敗しました',
-          'ハッキリと写っている写真を選択し、再度提出してください。'
+          'ハッキリと写っている写真を選択し、再度提出してください。',
+          [
+            {
+              onPress: async () => {
+                try {
+                  await updateAgeVerificationStatusToNotPresentedMutation();
+                } catch (e) {
+                  console.log(e);
+                }
+              },
+            },
+          ]
         );
       }
     }
-  }, [loggedIn, initialData]);
+  }, [
+    loggedIn,
+    initialData,
+    updateAgeVerificationStatusToNotPresentedMutation,
+  ]);
 
   return (
     <>

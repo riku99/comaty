@@ -310,6 +310,7 @@ export type Mutation = {
   reportStory?: Maybe<Story>;
   unblockUser?: Maybe<User>;
   unlikePost?: Maybe<Post>;
+  updateAgeVerificationStatusToNotPresented: Me;
   updateDisplayTargetSex: Me;
   updateInitialStatus: Me;
   updateMe: Me;
@@ -979,6 +980,11 @@ export type SendMessageMutationVariables = Exact<{
 
 
 export type SendMessageMutation = { __typename?: 'Mutation', createMessage: { __typename?: 'Message', id: number, text: string, createdAt: string, room?: { __typename?: 'MessageRoom', id: number, updatedAt: string } | null, sender?: { __typename?: 'User', id: string, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } };
+
+export type UpdateAgeVerificationStatusToNotPresentedMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateAgeVerificationStatusToNotPresentedMutation = { __typename?: 'Mutation', updateAgeVerificationStatusToNotPresented: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } };
 
 export type UpdateDisplayTargetSexMutationVariables = Exact<{
   input: UpdateDisplayTargetSexInput;
@@ -2232,6 +2238,39 @@ export function useSendMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type SendMessageMutationHookResult = ReturnType<typeof useSendMessageMutation>;
 export type SendMessageMutationResult = Apollo.MutationResult<SendMessageMutation>;
 export type SendMessageMutationOptions = Apollo.BaseMutationOptions<SendMessageMutation, SendMessageMutationVariables>;
+export const UpdateAgeVerificationStatusToNotPresentedDocument = gql`
+    mutation UpdateAgeVerificationStatusToNotPresented {
+  updateAgeVerificationStatusToNotPresented {
+    id
+    ageVerificationStatus
+  }
+}
+    `;
+export type UpdateAgeVerificationStatusToNotPresentedMutationFn = Apollo.MutationFunction<UpdateAgeVerificationStatusToNotPresentedMutation, UpdateAgeVerificationStatusToNotPresentedMutationVariables>;
+
+/**
+ * __useUpdateAgeVerificationStatusToNotPresentedMutation__
+ *
+ * To run a mutation, you first call `useUpdateAgeVerificationStatusToNotPresentedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAgeVerificationStatusToNotPresentedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAgeVerificationStatusToNotPresentedMutation, { data, loading, error }] = useUpdateAgeVerificationStatusToNotPresentedMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateAgeVerificationStatusToNotPresentedMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAgeVerificationStatusToNotPresentedMutation, UpdateAgeVerificationStatusToNotPresentedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAgeVerificationStatusToNotPresentedMutation, UpdateAgeVerificationStatusToNotPresentedMutationVariables>(UpdateAgeVerificationStatusToNotPresentedDocument, options);
+      }
+export type UpdateAgeVerificationStatusToNotPresentedMutationHookResult = ReturnType<typeof useUpdateAgeVerificationStatusToNotPresentedMutation>;
+export type UpdateAgeVerificationStatusToNotPresentedMutationResult = Apollo.MutationResult<UpdateAgeVerificationStatusToNotPresentedMutation>;
+export type UpdateAgeVerificationStatusToNotPresentedMutationOptions = Apollo.BaseMutationOptions<UpdateAgeVerificationStatusToNotPresentedMutation, UpdateAgeVerificationStatusToNotPresentedMutationVariables>;
 export const UpdateDisplayTargetSexDocument = gql`
     mutation UpdateDisplayTargetSex($input: UpdateDisplayTargetSexInput!) {
   updateDisplayTargetSex(input: $input) {

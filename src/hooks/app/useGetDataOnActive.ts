@@ -18,7 +18,7 @@ export const useGetDataOnActive = () => {
       const onChange = async (nextState: AppStateStatus) => {
         if (nextState === 'active') {
           try {
-            await getOnActiveLazyQuery({
+            const { data } = await getOnActiveLazyQuery({
               fetchPolicy: 'network-only',
             });
           } catch (e) {

@@ -2,7 +2,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
 import { ComponentProps, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {
+  AppState,
+  AppStateStatus,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
 import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
@@ -27,8 +33,9 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
       : null
   );
 
+  // 残り時間の更新
   useEffect(() => {
-    const timerId = setInterval(() => {
+    const updateemainingTime = () => {
       setRemainingTime(
         message?.sender.id !== myId
           ? MESSAGE_REPLY_LIMIT_TIME -
@@ -38,10 +45,22 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
               )
           : null
       );
-    }, 60000);
+    };
+
+    // 最新メッセージが変わったタイミングで残り時間を更新する必要がある
+    updateemainingTime();
+
+    // 最新メッセージが変わっていなくても時間を進める必要があるのでアクティブのタイミングで実行
+    const onChange = (nextState: AppStateStatus) => {
+      if (nextState === 'active') {
+        updateemainingTime();
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', onChange);
 
     return () => {
-      clearInterval(timerId);
+      subscription.remove();
     };
   }, [message.createdAt, message?.sender.id, myId]);
 

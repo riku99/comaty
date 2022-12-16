@@ -5,7 +5,7 @@ import {
   AppState,
   AppStateStatus,
   NativeEventSubscription,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { View } from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
@@ -16,7 +16,7 @@ import {
   AgeVerificationStatus,
   useGetInitialDataQuery,
   useUpdateAgeVerificationStatusToNotPresentedMutation,
-  useUpdatePositionMutation
+  useUpdatePositionMutation,
 } from 'src/generated/graphql';
 import { useGetDataOnActive } from 'src/hooks/app/useGetDataOnActive';
 import { useLoadingOverlayVisible } from 'src/hooks/app/useLoadingOverlayVisible';
@@ -129,6 +129,8 @@ export const Root = () => {
   // 年齢確認完了の報告など
   useEffect(() => {
     if (loggedIn) {
+      console.log(AgeVerificationStatus.Failed);
+
       if (!initialData?.me) {
         return;
       }

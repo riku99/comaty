@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   singleWord: {
     marginTop: 6,
     color: theme.gray.text,
-    fontSize: 12,
+    fontSize: 14,
   },
   distanceContainer: {
     position: 'absolute',

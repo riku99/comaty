@@ -1,4 +1,3 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { filter } from 'graphql-anywhere';
 import { MotiView } from 'moti';
 import {
@@ -11,6 +10,7 @@ import {
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { btoa } from 'react-native-quick-base64';
+import NarrowingDownIcon from 'src/assets/svg/narrowing-down-icon.svg';
 import { LoadingWithMyProfileImage } from 'src/components/domain/me/LoadingWithMyProfileImage';
 import { UserCard } from 'src/components/domain/user/UserCard';
 import { HeaderLeftTitle } from 'src/components/ui/HeaderLeftTitle';
@@ -29,7 +29,6 @@ import {
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
-import { theme } from 'src/styles';
 import { getRandomArrayIndex } from 'src/utils';
 import { Stories } from './Stories';
 
@@ -92,10 +91,11 @@ export const HomeScreen = ({ navigation }: Props) => {
             navigation.navigate('NarrowingDown');
           }}
         >
-          <MaterialCommunityIcons
-            name="text-search"
-            size={24}
-            color={theme.black}
+          <NarrowingDownIcon
+            style={{
+              height: 24,
+              width: 24,
+            }}
           />
         </Pressable>
       ),

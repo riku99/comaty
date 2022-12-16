@@ -49,12 +49,14 @@ export const Root = () => {
     }
   }, [initialData, setLoggedIn]);
 
+  // ボトムタブから表示させるストーリー作成などのモーダルの閉じる処理
   useEffect(() => {
     if (!contentsCreationModalVisible) {
       bottomSheetRef.current?.close();
     }
   }, [contentsCreationModalVisible]);
 
+  // ユーザーの絞り込み条件をセットアップ
   useEffect(() => {
     if (loggedIn) {
       const conditions = storage.getString(
@@ -69,6 +71,7 @@ export const Root = () => {
   useEffect(() => {
     let subscription: NativeEventSubscription;
 
+    // アクティブ時の位置情報更新など
     if (loggedIn) {
       const onChange = async (nextState: AppStateStatus) => {
         if (nextState === 'active') {
@@ -170,14 +173,14 @@ export const Root = () => {
 
   // 自分のプロフィール画像のプリロード
   useEffect(() => {
-    if (loggedIn && initialData?.me.firstProfileImage) {
+    if (loggedIn && initialData?.me?.firstProfileImage) {
       FastImage.preload([
         {
           uri: initialData?.me.firstProfileImage.url,
         },
       ]);
     }
-  }, [loggedIn, initialData?.me.firstProfileImage]);
+  }, [loggedIn, initialData?.me?.firstProfileImage]);
 
   return (
     <>

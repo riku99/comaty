@@ -9,7 +9,9 @@ import { useLoggedIn } from './useLoggedIn';
 
 export const useSignInWithEmail = () => {
   const { setLoggedIn } = useLoggedIn();
-  const [getInitialData] = useGetInitialDataLazyQuery();
+  const [getInitialData] = useGetInitialDataLazyQuery({
+    fetchPolicy: 'network-only',
+  });
   const { setLoadingVisible } = useLoadingOverlayVisible();
 
   const signInWithEmail = useCallback(
@@ -20,7 +22,10 @@ export const useSignInWithEmail = () => {
         try {
           await getInitialData({
             onCompleted: (d) => {
+              console.log('Completed');
+              console.log(d);
               if (d.me) {
+                console.log('Run');
                 setLoggedIn(true);
                 storage.set(
                   mmkvStorageKeys.loginProviders,

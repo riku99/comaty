@@ -64,6 +64,7 @@ fragment MessageBubbleDataInMessageRoom on Message {
   id
   text
   createdAt
+  read
   sender {
     id
     firstProfileImage {

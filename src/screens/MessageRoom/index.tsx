@@ -133,7 +133,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     if (data?.messageRoom.messages) {
       setMessages(data?.messageRoom.messages.edges);
     }
-  }, [data?.messageRoom.messages]);
+  }, [data?.messageRoom.messages, setMessages]);
 
   useEffect(() => {
     const subscription = Keyboard.addListener('keyboardWillShow', (e) => {
@@ -278,6 +278,9 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
 
             cache.writeQuery({
               query: MessageRoomScreenDataDocument,
+              variables: {
+                id: roomId,
+              },
               data: {
                 ...cachedMessageRoomScreenDataQuery,
                 messageRoom: {
@@ -293,10 +296,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         },
         refetchQueries: [
           {
-            query:
-              messages.length === 0
-                ? MessageRoomListScreenDataDocument
-                : undefined,
+            query: MessageRoomListScreenDataDocument,
           },
         ],
       });

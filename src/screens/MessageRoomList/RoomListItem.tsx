@@ -21,15 +21,17 @@ type Props = {
 } & ComponentProps<typeof Pressable>;
 
 export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
-  const { partner, messages, kept } = fragmentData;
-  const message = messages.edges[0]?.node;
-  const text = message.text;
+  const { partner, kept, lastMessage } = fragmentData;
+  const text = lastMessage.text;
   const myId = useMyId();
-  const badgeVisible = !message.read && message.sender.id !== myId;
+  const badgeVisible = !lastMessage.read && lastMessage.sender.id !== myId;
   const [remainingTime, setRemainingTime] = useState(
-    message?.sender.id !== myId
+    lastMessage?.sender.id !== myId
       ? MESSAGE_REPLY_LIMIT_TIME -
-          differenceInMinutes(new Date(), new Date(Number(message.createdAt)))
+          differenceInMinutes(
+            new Date(),
+            new Date(Number(lastMessage.createdAt))
+          )
       : null
   );
 
@@ -37,11 +39,11 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   useEffect(() => {
     const updateemainingTime = () => {
       setRemainingTime(
-        message?.sender.id !== myId
+        lastMessage?.sender.id !== myId
           ? MESSAGE_REPLY_LIMIT_TIME -
               differenceInMinutes(
                 new Date(),
-                new Date(Number(message.createdAt))
+                new Date(Number(lastMessage.createdAt))
               )
           : null
       );
@@ -62,7 +64,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
     return () => {
       subscription.remove();
     };
-  }, [message.createdAt, message?.sender.id, myId]);
+  }, [lastMessage.createdAt, lastMessage?.sender.id, myId]);
 
   return (
     <Pressable

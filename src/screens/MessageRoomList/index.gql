@@ -24,20 +24,16 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
     }
     distance
   }
-  messages(first: 1) {
-    edges {
-      node {
-        id
-        text
-        read
-        sender {
-          id
-        }
-        createdAt
-      }
-    }
-  }
   kept
+  lastMessage {
+    id
+    text
+    read
+    sender {
+      id
+    }
+    createdAt
+  }
 }
 
 fragment MessageRoomListScreenData on Query {

@@ -4,15 +4,12 @@ import {
   AppStateStatus,
   NativeEventSubscription,
 } from 'react-native';
-import {
-  useGetOnActiveDataLazyQuery,
-  useGetOnActiveDataQuery,
-} from 'src/generated/graphql';
+import { useGetOnActiveDataQuery } from 'src/generated/graphql';
 import { useLoggedIn } from 'src/hooks/auth/useLoggedIn';
 
 export const useGetDataOnActive = () => {
   const { loggedIn } = useLoggedIn();
-  const [getOnActiveLazyQuery] = useGetOnActiveDataLazyQuery();
+  // lazyQuery不具合あるのでrefetch + skip で対応
   const { refetch } = useGetOnActiveDataQuery({
     skip: true,
     fetchPolicy: 'network-only',
@@ -40,5 +37,5 @@ export const useGetDataOnActive = () => {
         subscription.remove();
       }
     };
-  }, [loggedIn, getOnActiveLazyQuery]);
+  }, [loggedIn, refetch]);
 };

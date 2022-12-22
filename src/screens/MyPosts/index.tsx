@@ -28,6 +28,7 @@ export const MyPostsScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: 'マイ投稿',
+      headerShadowVisible: false,
     });
   }, [navigation]);
 

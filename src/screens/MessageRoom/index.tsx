@@ -21,7 +21,6 @@ import {
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomListScreenDataDocument,
-  MessageRoomListScreenDataQuery,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
@@ -35,6 +34,10 @@ import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { useMyId } from 'src/hooks/me';
 import { getGraphQLError } from 'src/utils';
 import { HeaderLeft } from './HeaderLeft';
+import {
+  TargetRoomList,
+  useUpdateRoomListQueryAfterSendingMessage,
+} from './helpers';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
 import { BubbleType } from './types';
@@ -97,6 +100,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   const [readMessageMutation] = useReadMessageMutation();
   const [keepRequestMutation] = useKeepRequestMutation();
   const [acceptKeepingRequestMutation] = useAcceptKeepingRequestMutation();
+  const { updateRoomListQueryAfterSendingMessage } =
+    useUpdateRoomListQueryAfterSendingMessage();
 
   const composerBottom = useSharedValue(safeAreaBottom);
   const composerStyle = useAnimatedStyle(() => {
@@ -295,55 +300,17 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
               },
             });
 
-            const cachedMessageRoomListScreenDataQuery =
-              cache.readQuery<MessageRoomListScreenDataQuery>({
-                query: MessageRoomListScreenDataDocument,
-              });
+            const target: TargetRoomList = data?.messageRoom.kept
+              ? 'keptMessageRooms'
+              : data?.messageRoom.sender.id === myId
+              ? 'messageRoomsFromMySelf'
+              : 'messageRoomsFromOtherParty';
 
-            if (
-              cachedMessageRoomListScreenDataQuery &&
-              data?.messageRoom?.sender?.id
-            ) {
-              // 自分からか相手からか、それともキープ中のものかを判定
-              if (data?.messageRoom.sender.id === myId) {
-                const targetMessageRoom =
-                  cachedMessageRoomListScreenDataQuery.me.messageRoomsFromMySelf.find(
-                    (room) => room.id === roomId
-                  );
-
-                if (targetMessageRoom) {
-                  const filtered =
-                    cachedMessageRoomListScreenDataQuery.me.messageRoomsFromMySelf.filter(
-                      (room) => room.id !== roomId
-                    );
-
-                  const o = {
-                    ...targetMessageRoom.lastMessage,
-                    ...responseData.createMessage,
-                  };
-
-                  cache.writeQuery<MessageRoomListScreenDataQuery>({
-                    query: MessageRoomListScreenDataDocument,
-                    data: {
-                      ...cachedMessageRoomListScreenDataQuery,
-                      me: {
-                        ...cachedMessageRoomListScreenDataQuery.me,
-                        messageRoomsFromMySelf: [
-                          {
-                            ...targetMessageRoom,
-                            lastMessage: {
-                              ...targetMessageRoom.lastMessage,
-                              ...responseData.createMessage,
-                            },
-                          },
-                          ...filtered,
-                        ],
-                      },
-                    },
-                  });
-                }
-              }
-            }
+            updateRoomListQueryAfterSendingMessage({
+              target,
+              roomId,
+              sendMessageData: responseData.createMessage,
+            });
           }
         },
         refetchQueries: [

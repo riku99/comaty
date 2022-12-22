@@ -1,20 +1,20 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from 'react';
 import {
   AppState,
   AppStateStatus,
   Pressable,
   StyleSheet,
-  View
+  View,
 } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
 import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
 import {
   RoomListItemInMessageRoomListScreenFragment,
-  useMessageRoomScreenDataQuery
+  useMessageRoomScreenDataQuery,
 } from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
@@ -44,6 +44,7 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
     },
     skip: true,
   });
+  const isFirstRender = useRef(true);
 
   // 残り時間の更新
   useEffect(() => {
@@ -78,11 +79,16 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
 
   // アクティブにした際などに相手ユーザーから新しくメッセージがきた場合はそのトークルームのキャッシュを更新したい。メッセージ早く表示するため
   useEffect(() => {
-    if (badgeVisible) {
-      console.log('refetch' + fragmentData.id);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    // badgeVisibleと同じ条件だけどbadgeVisibleのdepsだと未読メッセージが変わったタイミングで再レンダリングされないのでlastMessageをdepsにする
+    if (!lastMessage.read && lastMessage.sender.id !== myId) {
       refetch();
     }
-  }, [badgeVisible]);
+  }, [lastMessage, refetch, myId]);
 
   return (
     <Pressable

@@ -21,6 +21,7 @@ import {
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
   MessageRoomListScreenDataDocument,
+  MessageRoomListScreenDataQuery,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
   RoomMessagesInMessageRoomScreenDocument,
@@ -51,6 +52,7 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   );
 
   const { data, fetchMore } = useMessageRoomScreenDataQuery({
+    fetchPolicy: 'cache-and-network',
     variables: {
       id: roomId,
     },
@@ -292,12 +294,62 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
                 },
               },
             });
+
+            const cachedMessageRoomListScreenDataQuery =
+              cache.readQuery<MessageRoomListScreenDataQuery>({
+                query: MessageRoomListScreenDataDocument,
+              });
+
+            if (
+              cachedMessageRoomListScreenDataQuery &&
+              data?.messageRoom?.sender?.id
+            ) {
+              // 自分からか相手からか、それともキープ中のものかを判定
+              if (data?.messageRoom.sender.id === myId) {
+                const targetMessageRoom =
+                  cachedMessageRoomListScreenDataQuery.me.messageRoomsFromMySelf.find(
+                    (room) => room.id === roomId
+                  );
+
+                if (targetMessageRoom) {
+                  const filtered =
+                    cachedMessageRoomListScreenDataQuery.me.messageRoomsFromMySelf.filter(
+                      (room) => room.id !== roomId
+                    );
+
+                  const o = {
+                    ...targetMessageRoom.lastMessage,
+                    ...responseData.createMessage,
+                  };
+
+                  cache.writeQuery<MessageRoomListScreenDataQuery>({
+                    query: MessageRoomListScreenDataDocument,
+                    data: {
+                      ...cachedMessageRoomListScreenDataQuery,
+                      me: {
+                        ...cachedMessageRoomListScreenDataQuery.me,
+                        messageRoomsFromMySelf: [
+                          {
+                            ...targetMessageRoom,
+                            lastMessage: {
+                              ...targetMessageRoom.lastMessage,
+                              ...responseData.createMessage,
+                            },
+                          },
+                          ...filtered,
+                        ],
+                      },
+                    },
+                  });
+                }
+              }
+            }
           }
         },
         refetchQueries: [
-          {
-            query: MessageRoomListScreenDataDocument,
-          },
+          // {
+          //   query: MessageRoomListScreenDataDocument,
+          // },
         ],
       });
     } catch (e) {

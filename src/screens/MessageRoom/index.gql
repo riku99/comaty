@@ -20,6 +20,9 @@ query MessageRoomScreenData(
     keepingRequest {
       id
     }
+    sender {
+      id
+    }
     ...InputComposerDataInMessageRoomScreen
   }
   me {

@@ -7,12 +7,15 @@ import {
   AppStateStatus,
   Pressable,
   StyleSheet,
-  View,
+  View
 } from 'react-native';
 import { ProfileImage } from 'src/components/domain/user/ProfileImage';
 import { Badge } from 'src/components/ui/Badge';
 import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
-import { RoomListItemInMessageRoomListScreenFragment } from 'src/generated/graphql';
+import {
+  RoomListItemInMessageRoomListScreenFragment,
+  useMessageRoomScreenDataQuery
+} from 'src/generated/graphql';
 import { useMyId } from 'src/hooks/me/useMyId';
 import { theme } from 'src/styles';
 
@@ -34,6 +37,13 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
           )
       : null
   );
+  // キャッシュを取りたいのでrefetchを使用
+  const { refetch } = useMessageRoomScreenDataQuery({
+    variables: {
+      id: fragmentData.id,
+    },
+    skip: true,
+  });
 
   // 残り時間の更新
   useEffect(() => {
@@ -65,6 +75,14 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
       subscription.remove();
     };
   }, [lastMessage.createdAt, lastMessage?.sender.id, myId]);
+
+  // アクティブにした際などに相手ユーザーから新しくメッセージがきた場合はそのトークルームのキャッシュを更新したい。メッセージ早く表示するため
+  useEffect(() => {
+    if (badgeVisible) {
+      console.log('refetch' + fragmentData.id);
+      refetch();
+    }
+  }, [badgeVisible]);
 
   return (
     <Pressable

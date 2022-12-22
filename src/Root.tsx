@@ -129,8 +129,6 @@ export const Root = () => {
   // 年齢確認完了の報告など
   useEffect(() => {
     if (loggedIn) {
-      console.log(AgeVerificationStatus.Failed);
-
       if (!initialData?.me) {
         return;
       }

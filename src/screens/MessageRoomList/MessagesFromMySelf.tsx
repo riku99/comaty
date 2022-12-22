@@ -20,9 +20,7 @@ type RoomItem =
   MessageRoomListFromMySelfScreenDataQuery['me']['messageRoomsFromMySelf'][number];
 
 export const MessagesFromMySelf = React.memo(() => {
-  const { data } = useMessageRoomListFromMySelfScreenDataQuery({
-    nextFetchPolicy: 'cache-only',
-  });
+  const { data } = useMessageRoomListFromMySelfScreenDataQuery();
   const navigation = useNavigation<RootNavigationProp<'MessageRoomList'>>();
   const [longPressedItemId, setLongPressedItemId] = useState<number | null>(
     null

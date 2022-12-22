@@ -34,6 +34,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
     }
     createdAt
   }
+  updatedAt
 }
 
 fragment MessageRoomListScreenData on Query {
@@ -47,7 +48,6 @@ fragment MessageRoomListFromMySelf on Query {
     id
     messageRoomsFromMySelf {
       ...RoomListItemInMessageRoomListScreen
-      updatedAt
     }
   }
 }
@@ -57,7 +57,6 @@ fragment MessageRoomListFromOtherParty on Query {
     id
     messageRoomsFromOtherParty {
       ...RoomListItemInMessageRoomListScreen
-      updatedAt
     }
   }
 }
@@ -67,7 +66,6 @@ fragment KeptMessageRoomList on Query {
     id
     keptMessageRooms {
       ...RoomListItemInMessageRoomListScreen
-      updatedAt
     }
   }
 }

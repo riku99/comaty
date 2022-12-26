@@ -18,8 +18,11 @@ import {
   GetMessageRoomError,
   InputComposerDataInMessageRoomScreenFragment,
   InputComposerDataInMessageRoomScreenFragmentDoc,
+  KeptMessageRoomListScreenDataDocument,
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
+  MessageRoomListFromMySelfScreenDataDocument,
+  MessageRoomListFromOtherPartyScreenDataDocument,
   MessageRoomListScreenDataDocument,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
@@ -239,6 +242,12 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     [messages, myId]
   );
 
+  const targetRoomListType: TargetRoomList = data?.messageRoom.kept
+    ? 'keptMessageRooms'
+    : data?.messageRoom.sender.id === myId
+    ? 'messageRoomsFromMySelf'
+    : 'messageRoomsFromOtherParty';
+
   const onSendPress = async () => {
     if (data.me.ageVerificationStatus === AgeVerificationStatus.UnderReview) {
       navigation.navigate('AgeVerificationUnderReview');
@@ -300,23 +309,22 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
               },
             });
 
-            const target: TargetRoomList = data?.messageRoom.kept
-              ? 'keptMessageRooms'
-              : data?.messageRoom.sender.id === myId
-              ? 'messageRoomsFromMySelf'
-              : 'messageRoomsFromOtherParty';
-
             updateRoomListQueryAfterSendingMessage({
-              target,
+              target: targetRoomListType,
               roomId,
               sendMessageData: responseData.createMessage,
             });
           }
         },
         refetchQueries: [
-          // {
-          //   query: MessageRoomListScreenDataDocument,
-          // },
+          {
+            query:
+              targetRoomListType === 'keptMessageRooms'
+                ? KeptMessageRoomListScreenDataDocument
+                : targetRoomListType === 'messageRoomsFromMySelf'
+                ? MessageRoomListFromMySelfScreenDataDocument
+                : MessageRoomListFromOtherPartyScreenDataDocument,
+          },
         ],
       });
     } catch (e) {

@@ -1,6 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
+import * as Haptics from 'expo-haptics';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
 import {
   AppState,
@@ -93,6 +94,12 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
   return (
     <Pressable
       {...pressableProps}
+      onLongPress={(e) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        if (pressableProps.onLongPress) {
+          pressableProps.onLongPress(e);
+        }
+      }}
       style={{
         borderBottomWidth: 0.3,
         borderBottomColor: theme.gray.boarder,

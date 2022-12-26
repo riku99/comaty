@@ -1,6 +1,14 @@
+import { addMinutes, format } from 'date-fns';
 import { filter } from 'graphql-anywhere';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
-import { Alert, Keyboard, SafeAreaView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { btoa } from 'react-native-quick-base64';
 import Animated, {
   useAnimatedStyle,
@@ -220,22 +228,37 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         }
       }
 
+      let dateTime: string | null = null;
+      const currentDataDate = new Date(Number(item.node.createdAt));
+      const formatedDateTime = format(currentDataDate, 'M月d日H:mm');
+      if (latorData?.node) {
+        const latorDataDate = new Date(Number(latorData.node.createdAt));
+        if (currentDataDate > addMinutes(latorDataDate, 20)) {
+          dateTime = formatedDateTime;
+        }
+      } else {
+        dateTime = formatedDateTime;
+      }
+
       return (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: isMyMessage ? 'flex-end' : 'flex-start',
-            marginTop: 4,
-          }}
-        >
-          <MessageBubble
-            isMyMseeage={isMyMessage}
-            bubbleType={bubbleType}
-            fragmentData={filter<MessageBubbleDataInMessageRoomFragment>(
-              MessageBubbleDataInMessageRoomFragmentDoc,
-              item.node
-            )}
-          />
+        <View>
+          {dateTime && <Text style={styles.dateTime}>{dateTime}</Text>}
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: isMyMessage ? 'flex-end' : 'flex-start',
+              marginTop: 4,
+            }}
+          >
+            <MessageBubble
+              isMyMseeage={isMyMessage}
+              bubbleType={bubbleType}
+              fragmentData={filter<MessageBubbleDataInMessageRoomFragment>(
+                MessageBubbleDataInMessageRoomFragmentDoc,
+                item.node
+              )}
+            />
+          </View>
         </View>
       );
     },
@@ -498,5 +521,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     position: 'absolute',
     width: '100%',
+  },
+  dateTime: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: 'gray',
+    paddingVertical: 12,
   },
 });

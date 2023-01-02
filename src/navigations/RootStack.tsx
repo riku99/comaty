@@ -21,6 +21,7 @@ import { MessageRoomScreen } from 'src/screens/MessageRoom';
 import { NarrowingDownScreen } from 'src/screens/NarrowingDown';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { NotoficationScreen } from 'src/screens/Notification';
+import { PlanSelectionScreen } from 'src/screens/PlanSelection';
 import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
 import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
@@ -96,6 +97,7 @@ export type RootStackParamList = {
   Setting: undefined;
   BlockList: undefined;
   DeleteAccountAlert: undefined;
+  PlanSelection: undefined;
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -188,6 +190,7 @@ export const RootStack = () => {
             name="AgeVerificationRequest"
             component={AgeVerificationRequestScreen}
           />
+          <Stack.Screen name="PlanSelection" component={PlanSelectionScreen} />
 
           <Stack.Group
             screenOptions={{

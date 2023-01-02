@@ -179,6 +179,9 @@ export const MyPageScreen = ({ navigation }: Props) => {
               marginTop: 44,
             },
           ]}
+          onPress={() => {
+            navigation.navigate('PlanSelection');
+          }}
         >
           <Text style={styles.sectionItemTitle}>マイプラン</Text>
           <Text

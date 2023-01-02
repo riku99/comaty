@@ -171,6 +171,27 @@ export const MyPageScreen = ({ navigation }: Props) => {
         <Text style={styles.sectionItemBottomText}>
           今一緒にいる人の人数を選択しましょう！
         </Text>
+
+        <Pressable
+          style={[
+            styles.sectionItem,
+            {
+              marginTop: 44,
+            },
+          ]}
+        >
+          <Text style={styles.sectionItemTitle}>マイプラン</Text>
+          <Text
+            style={[
+              styles.planText,
+              {
+                color: theme.primary,
+              },
+            ]}
+          >
+            無料プラン
+          </Text>
+        </Pressable>
       </ScrollView>
 
       <View style={styles.pickerContainer}>
@@ -262,5 +283,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     width: '100%',
+  },
+  planText: {
+    fontWeight: 'bold',
   },
 });

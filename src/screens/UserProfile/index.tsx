@@ -9,9 +9,9 @@ import React, {
 } from 'react';
 import { Alert, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useToast } from 'react-native-toast-notifications';
 import { BackButton } from 'src/components/ui/BackButton';
-import { Loading } from 'src/components/ui/Loading';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
 import { ThreeDots } from 'src/components/ui/ThreeDots';
 import {
@@ -171,7 +171,15 @@ export const UserProfileScreen = ({ navigation, route }: Props) => {
   };
 
   if (!data?.user) {
-    return <Loading />;
+    return (
+      <View>
+        <SkeletonPlaceholder>
+          <View style={styles.loadingImage} />
+        </SkeletonPlaceholder>
+
+        <View style={styles.loadingBottom} />
+      </View>
+    );
   }
 
   if (data.user.blocking) {
@@ -275,5 +283,17 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingImage: {
+    height: Constants.imageHeight,
+    width: '100%',
+  },
+  loadingBottom: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#fff',
+    transform: [{ translateY: -10 }],
   },
 });

@@ -1,92 +1,46 @@
-import MaskedView from '@react-native-masked-view/masked-view';
 import { Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { theme } from 'src/styles';
+import { PlanCard } from './PlanCard';
+import { TopMessage } from './TopMessage';
 
 type Props = RootNavigationScreenProp<'PlanSelection'>;
 
 export const PlanSelectionScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerShown: false,
+      title: '',
+      headerShadowVisible: false,
     });
   }, [navigation]);
 
   return (
     <View style={styles.container}>
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}
-      >
-        <MaskedView
-          style={{
-            flexDirection: 'row',
-            marginTop: 38,
-            height: 78,
-          }}
-          maskElement={
-            <View
-              style={{
-                backgroundColor: 'transparent',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 26,
-                }}
-              >
-                誰にでも自由にメッセージ
-              </Text>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: 26,
-                  marginTop: 4,
-                }}
-              >
-                を送ってみよう！
-              </Text>
-            </View>
-          }
-        >
-          <View
-            style={{ flex: 1, height: '100%', backgroundColor: '#5f54ff' }}
-          />
-          <View
-            style={{ flex: 1, height: '100%', backgroundColor: '#665cff' }}
-          />
-          <View
-            style={{ flex: 1, height: '100%', backgroundColor: '#685eff' }}
-          />
-          <View
-            style={{ flex: 1, height: '100%', backgroundColor: '#6d63ff' }}
-          />
-          <View
-            style={{ flex: 1, height: '100%', backgroundColor: '#776eff' }}
-          />
-        </MaskedView>
+      <ScrollView>
+        <TopMessage />
 
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 12,
-            fontWeight: '500',
-            marginTop: 8,
-            color: theme.gray.text,
-          }}
-        >
-          {
-            '⚠︎年齢確認が完了していない場合はプランをアップグレードしてもメッセージができません。\n先に年齢確認を完了させることをおすすめします。'
-          }
-        </Text>
-      </SafeAreaView>
+        <View style={styles.planContainer}>
+          <Text style={styles.plusPlan}>プラスプラン</Text>
+          <View style={styles.planCardContainer}>
+            <PlanCard
+              period="1ヶ月"
+              price="￥1,500"
+              message="たくさん使いたいあなたへ"
+            />
+
+            <PlanCard
+              period="1日"
+              price="￥200"
+              message="今日をもっと素敵な日にしよう"
+              containerStyle={{
+                marginTop: 24,
+              }}
+              priceLabelColor="#c0aed4"
+            />
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -98,5 +52,62 @@ const styles = StyleSheet.create({
   },
   topTitle: {
     marginTop: 32,
+  },
+  planContainer: {
+    marginTop: 34,
+  },
+  plusPlan: {
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  planCardContainer: {
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  planCard: {
+    height: 94,
+    borderRadius: 12,
+    flexDirection: 'row',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  cardLeft: {
+    height: '100%',
+    width: '28%',
+    backgroundColor: theme.primary,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardLeftPeriodText: {
+    fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 20,
+  },
+  cardRight: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '66%',
+    height: '100%',
+    backgroundColor: '#fff',
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  cardRightPriceText: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
+  cardRightMessage: {
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginTop: 4,
+    color: theme.gray.text,
   },
 });

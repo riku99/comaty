@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
@@ -33,6 +34,8 @@ export const MessagesFromOtherParty = () => {
     : [];
   const [pinnedIds, setPinnedIds] = useState(_pinnedIds);
 
+  const isPinned = (id: number) => pinnedIds.includes(id);
+
   const sortedList = useMemo(() => {
     if (!data?.me) {
       return [];
@@ -43,7 +46,7 @@ export const MessagesFromOtherParty = () => {
 
     if (pinnedIds.length) {
       data.me.messageRoomsFromOtherParty.forEach((room) => {
-        if (pinnedIds.includes(room.id)) {
+        if (isPinned(room.id)) {
           pinnedRooms.push(room);
         } else {
           notPinnedRooms.push(room);
@@ -52,6 +55,18 @@ export const MessagesFromOtherParty = () => {
     } else {
       notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
     }
+
+    pinnedRooms.sort((a, b) => {
+      const ad = new Date(Number(a.updatedAt));
+      const bd = new Date(Number(b.updatedAt));
+      if (ad > bd) {
+        return -1;
+      } else if (bd > ad) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 
     notPinnedRooms.sort((a, b) => {
       const ad = new Date(Number(a.updatedAt));
@@ -83,7 +98,7 @@ export const MessagesFromOtherParty = () => {
         setLongPressedItemId(id);
       };
 
-      const pinned = pinnedIds.includes(item.id);
+      const pinned = isPinned(item.id);
 
       return (
         <RoomListItem
@@ -126,30 +141,41 @@ export const MessagesFromOtherParty = () => {
   };
 
   const onPinPress = async () => {
-    const pinnedString = storage.getString(
-      mmkvStorageKeys.pinnedMessageRoomIds
-    );
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setLongPressedItemId(null);
 
-    if (pinnedString) {
-      const pinnedIds = JSON.parse(pinnedString) as number[];
-
-      const newPinnedIds = [
-        longPressedItemId,
-        ...pinnedIds.filter((id) => id !== longPressedItemId),
-      ];
-
-      storage.set(
-        mmkvStorageKeys.pinnedMessageRoomIds,
-        JSON.stringify(newPinnedIds)
-      );
-    } else {
-      storage.set(
-        mmkvStorageKeys.pinnedMessageRoomIds,
-        JSON.stringify([longPressedItemId])
-      );
+    if (!longPressedItemId) {
+      return;
     }
 
+    const newPinnedIds = [
+      longPressedItemId,
+      ...pinnedIds.filter((id) => id !== longPressedItemId),
+    ];
+
+    storage.set(
+      mmkvStorageKeys.pinnedMessageRoomIds,
+      JSON.stringify(newPinnedIds)
+    );
+
+    setPinnedIds(newPinnedIds);
+  };
+
+  const onUnpinPress = () => {
     setLongPressedItemId(null);
+
+    if (!longPressedItemId) {
+      return;
+    }
+
+    const newPinnedIds = pinnedIds.filter((_id) => _id !== longPressedItemId);
+
+    storage.set(
+      mmkvStorageKeys.pinnedMessageRoomIds,
+      JSON.stringify(newPinnedIds)
+    );
+
+    setPinnedIds(newPinnedIds);
   };
 
   if (!data?.me) {
@@ -181,7 +207,10 @@ export const MessagesFromOtherParty = () => {
           setLongPressedItemId(null);
         }}
         items={[
-          { title: 'ピン留め', onPress: onPinPress },
+          {
+            title: isPinned(longPressedItemId) ? 'ピン解除' : 'ピン留め',
+            onPress: isPinned(longPressedItemId) ? onUnpinPress : onPinPress,
+          },
           { title: '削除', titleColor: theme.red, onPress: onDeletePress },
         ]}
       />

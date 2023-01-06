@@ -8,7 +8,6 @@ import {
   MessageRoomListFromOtherPartyScreenDataQuery,
   useDeleteMessageRoomMutation,
   useMessageRoomListFromOtherPartyScreenDataQuery,
-  usePinMessageRoomMutation,
 } from 'src/generated/graphql';
 import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { theme } from 'src/styles';
@@ -26,9 +25,13 @@ export const MessagesFromOtherParty = () => {
   );
   const toast = useToast();
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
-  const [pinMessageRoomMutation] = usePinMessageRoomMutation();
-
-  // storage.delete(mmkvStorageKeys.pinnedMessageRoomIds);
+  const pinnedIdsString = storage.getString(
+    mmkvStorageKeys.pinnedMessageRoomIds
+  );
+  const _pinnedIds = pinnedIdsString
+    ? (JSON.parse(pinnedIdsString) as number[])
+    : [];
+  const [pinnedIds, setPinnedIds] = useState(_pinnedIds);
 
   const sortedList = useMemo(() => {
     if (!data?.me) {
@@ -38,23 +41,14 @@ export const MessagesFromOtherParty = () => {
     let pinnedRooms: RoomItem[] = [];
     let notPinnedRooms: RoomItem[] = [];
 
-    const pinnedIdsString = storage.getString(
-      mmkvStorageKeys.pinnedMessageRoomIds
-    );
-
-    if (pinnedIdsString) {
-      const pinnedIds = JSON.parse(pinnedIdsString) as number[];
-      if (pinnedIds.length) {
-        data.me.messageRoomsFromOtherParty.forEach((room) => {
-          if (pinnedIds.includes(room.id)) {
-            pinnedRooms.push(room);
-          } else {
-            notPinnedRooms.push(room);
-          }
-        });
-      } else {
-        notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
-      }
+    if (pinnedIds.length) {
+      data.me.messageRoomsFromOtherParty.forEach((room) => {
+        if (pinnedIds.includes(room.id)) {
+          pinnedRooms.push(room);
+        } else {
+          notPinnedRooms.push(room);
+        }
+      });
     } else {
       notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
     }
@@ -72,7 +66,7 @@ export const MessagesFromOtherParty = () => {
     });
 
     return [...pinnedRooms, ...notPinnedRooms];
-  }, [data]);
+  }, [data, pinnedIds]);
 
   const renderRoomItem = useCallback(
     ({ item }: { item: RoomItem }) => {
@@ -89,15 +83,18 @@ export const MessagesFromOtherParty = () => {
         setLongPressedItemId(id);
       };
 
+      const pinned = pinnedIds.includes(item.id);
+
       return (
         <RoomListItem
           fragmentData={item}
           onPress={onPress}
           onLongPress={onLongPress}
+          pinned={pinned}
         />
       );
     },
-    [navigation, setLongPressedItemId]
+    [navigation, setLongPressedItemId, pinnedIds]
   );
 
   const onDeletePress = () => {

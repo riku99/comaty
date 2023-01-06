@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from '@rneui/themed';
 import { differenceInMinutes } from 'date-fns';
 import * as Haptics from 'expo-haptics';
@@ -22,9 +22,14 @@ import { theme } from 'src/styles';
 
 type Props = {
   fragmentData: RoomListItemInMessageRoomListScreenFragment;
+  pinned?: boolean;
 } & ComponentProps<typeof Pressable>;
 
-export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
+export const RoomListItem = ({
+  fragmentData,
+  pinned,
+  ...pressableProps
+}: Props) => {
   const { partner, kept, lastMessage } = fragmentData;
   const text = lastMessage.text;
   const myId = useMyId();
@@ -130,6 +135,12 @@ export const RoomListItem = ({ fragmentData, ...pressableProps }: Props) => {
                 }}
               />
 
+              {pinned && (
+                <View style={styles.pinContainer}>
+                  <AntDesign name="pushpin" size={8} color="#fff" />
+                </View>
+              )}
+
               <View style={styles.nameAndMessage}>
                 <Text style={styles.name}>{partner.nickname}</Text>
                 <Text
@@ -212,5 +223,12 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 'bold',
     color: theme.gray.text,
+  },
+  pinContainer: {
+    position: 'absolute',
+    padding: 6,
+    borderRadius: 40,
+    backgroundColor: theme.primary,
+    transform: [{ translateX: -8 }],
   },
 });

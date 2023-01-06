@@ -274,6 +274,7 @@ export type MessageRoom = {
   lastMessage?: Maybe<Message>;
   messages?: Maybe<MessageConnection>;
   partner?: Maybe<User>;
+  pinned?: Maybe<Scalars['Boolean']>;
   recipient?: Maybe<User>;
   sender?: Maybe<User>;
   updatedAt: Scalars['String'];
@@ -317,6 +318,7 @@ export type Mutation = {
   deleteUserTag?: Maybe<UserTag>;
   likePost: Post;
   logout?: Maybe<Me>;
+  pinMessageRoom: MessageRoom;
   rejectAgeVerification?: Maybe<Scalars['Boolean']>;
   reportPost?: Maybe<Post>;
   reportStory?: Maybe<Story>;
@@ -461,6 +463,11 @@ export type MutationLikePostArgs = {
 };
 
 
+export type MutationPinMessageRoomArgs = {
+  messageRoomId: Scalars['Int'];
+};
+
+
 export type MutationRejectAgeVerificationArgs = {
   id: Scalars['ID'];
 };
@@ -562,6 +569,10 @@ export type PageInfo = {
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
 };
+
+export enum PinMessageRoomError {
+  AlreadyExisting = 'ALREADY_EXISTING'
+}
 
 export type Post = {
   __typename?: 'Post';
@@ -990,6 +1001,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type LogoutMutation = { __typename?: 'Mutation', logout?: { __typename?: 'Me', id: string } | null };
 
+export type PinMessageRoomMutationVariables = Exact<{
+  messageRoomId: Scalars['Int'];
+}>;
+
+
+export type PinMessageRoomMutation = { __typename?: 'Mutation', pinMessageRoom: { __typename?: 'MessageRoom', id: number, pinned?: boolean | null } };
+
 export type ReadMessageMutationVariables = Exact<{
   messageId: Scalars['Int'];
 }>;
@@ -1195,7 +1213,7 @@ export type UploadProfileImageMutation = { __typename?: 'Mutation', uploadProfil
 export type GetOnActiveDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetOnActiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type GetOnActiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
 export type MyProfileImagesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1354,34 +1372,32 @@ export type InputComposerDataInMessageRoomScreenFragment = { __typename?: 'Messa
 export type MessageRoomListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type MessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
 export type MessageRoomListFromMySelfScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageRoomListFromMySelfScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type MessageRoomListFromMySelfScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
 export type MessageRoomListFromOtherPartyScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MessageRoomListFromOtherPartyScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type MessageRoomListFromOtherPartyScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
 export type KeptMessageRoomListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type KeptMessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type KeptMessageRoomListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
-export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null };
+export type RoomListItemInMessageRoomListScreenFragment = { __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null };
 
-export type RoomListItemDataInMessageRoomListScreenFragment = { __typename?: 'Query', messageRoom: { __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } };
+export type MessageRoomListScreenDataFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
-export type MessageRoomListScreenDataFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
-export type MessageRoomListFromMySelfFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromMySelf?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
-export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, messageRoomsFromOtherParty?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
-
-export type KeptMessageRoomListFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
+export type KeptMessageRoomListFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
 export type MyGroupScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1691,32 +1707,6 @@ export const InputComposerDataInMessageRoomScreenFragmentDoc = gql`
   }
 }
     `;
-export const RoomListItemDataInMessageRoomListScreenFragmentDoc = gql`
-    fragment RoomListItemDataInMessageRoomListScreen on Query {
-  messageRoom(id: $id) {
-    id
-    partner {
-      id
-      nickname
-      firstProfileImage {
-        ...ProfileImage
-      }
-      distance
-    }
-    kept
-    lastMessage {
-      id
-      text
-      read
-      sender {
-        id
-      }
-      createdAt
-    }
-    updatedAt
-  }
-}
-    ${ProfileImageFragmentDoc}`;
 export const RoomListItemInMessageRoomListScreenFragmentDoc = gql`
     fragment RoomListItemInMessageRoomListScreen on MessageRoom {
   id
@@ -1739,6 +1729,7 @@ export const RoomListItemInMessageRoomListScreenFragmentDoc = gql`
     createdAt
   }
   updatedAt
+  pinned
 }
     ${ProfileImageFragmentDoc}`;
 export const MessageRoomListFromMySelfFragmentDoc = gql`
@@ -2218,6 +2209,40 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const PinMessageRoomDocument = gql`
+    mutation PinMessageRoom($messageRoomId: Int!) {
+  pinMessageRoom(messageRoomId: $messageRoomId) {
+    id
+    pinned
+  }
+}
+    `;
+export type PinMessageRoomMutationFn = Apollo.MutationFunction<PinMessageRoomMutation, PinMessageRoomMutationVariables>;
+
+/**
+ * __usePinMessageRoomMutation__
+ *
+ * To run a mutation, you first call `usePinMessageRoomMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePinMessageRoomMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pinMessageRoomMutation, { data, loading, error }] = usePinMessageRoomMutation({
+ *   variables: {
+ *      messageRoomId: // value for 'messageRoomId'
+ *   },
+ * });
+ */
+export function usePinMessageRoomMutation(baseOptions?: Apollo.MutationHookOptions<PinMessageRoomMutation, PinMessageRoomMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PinMessageRoomMutation, PinMessageRoomMutationVariables>(PinMessageRoomDocument, options);
+      }
+export type PinMessageRoomMutationHookResult = ReturnType<typeof usePinMessageRoomMutation>;
+export type PinMessageRoomMutationResult = Apollo.MutationResult<PinMessageRoomMutation>;
+export type PinMessageRoomMutationOptions = Apollo.BaseMutationOptions<PinMessageRoomMutation, PinMessageRoomMutationVariables>;
 export const ReadMessageDocument = gql`
     mutation ReadMessage($messageId: Int!) {
   createMessageRead(messageId: $messageId) {

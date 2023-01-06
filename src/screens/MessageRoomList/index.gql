@@ -35,6 +35,7 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
     createdAt
   }
   updatedAt
+  pinned
 }
 
 fragment MessageRoomListScreenData on Query {

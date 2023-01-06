@@ -8,7 +8,9 @@ import {
   MessageRoomListFromOtherPartyScreenDataQuery,
   useDeleteMessageRoomMutation,
   useMessageRoomListFromOtherPartyScreenDataQuery,
+  usePinMessageRoomMutation,
 } from 'src/generated/graphql';
+import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { theme } from 'src/styles';
 import { deleteRoomWithAlert } from './helpers';
 import { RoomListItem } from './RoomListItem';
@@ -24,15 +26,40 @@ export const MessagesFromOtherParty = () => {
   );
   const toast = useToast();
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
+  const [pinMessageRoomMutation] = usePinMessageRoomMutation();
+
+  // storage.delete(mmkvStorageKeys.pinnedMessageRoomIds);
 
   const sortedList = useMemo(() => {
     if (!data?.me) {
       return [];
     }
 
-    const c = [...data.me.messageRoomsFromOtherParty];
+    let pinnedRooms: RoomItem[] = [];
+    let notPinnedRooms: RoomItem[] = [];
 
-    c.sort((a, b) => {
+    const pinnedIdsString = storage.getString(
+      mmkvStorageKeys.pinnedMessageRoomIds
+    );
+
+    if (pinnedIdsString) {
+      const pinnedIds = JSON.parse(pinnedIdsString) as number[];
+      if (pinnedIds.length) {
+        data.me.messageRoomsFromOtherParty.forEach((room) => {
+          if (pinnedIds.includes(room.id)) {
+            pinnedRooms.push(room);
+          } else {
+            notPinnedRooms.push(room);
+          }
+        });
+      } else {
+        notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
+      }
+    } else {
+      notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
+    }
+
+    notPinnedRooms.sort((a, b) => {
       const ad = new Date(Number(a.updatedAt));
       const bd = new Date(Number(b.updatedAt));
       if (ad > bd) {
@@ -44,7 +71,7 @@ export const MessagesFromOtherParty = () => {
       }
     });
 
-    return c;
+    return [...pinnedRooms, ...notPinnedRooms];
   }, [data]);
 
   const renderRoomItem = useCallback(
@@ -101,6 +128,33 @@ export const MessagesFromOtherParty = () => {
     });
   };
 
+  const onPinPress = async () => {
+    const pinnedString = storage.getString(
+      mmkvStorageKeys.pinnedMessageRoomIds
+    );
+
+    if (pinnedString) {
+      const pinnedIds = JSON.parse(pinnedString) as number[];
+
+      const newPinnedIds = [
+        longPressedItemId,
+        ...pinnedIds.filter((id) => id !== longPressedItemId),
+      ];
+
+      storage.set(
+        mmkvStorageKeys.pinnedMessageRoomIds,
+        JSON.stringify(newPinnedIds)
+      );
+    } else {
+      storage.set(
+        mmkvStorageKeys.pinnedMessageRoomIds,
+        JSON.stringify([longPressedItemId])
+      );
+    }
+
+    setLongPressedItemId(null);
+  };
+
   if (!data?.me) {
     return null;
   }
@@ -130,6 +184,7 @@ export const MessagesFromOtherParty = () => {
           setLongPressedItemId(null);
         }}
         items={[
+          { title: 'ピン留め', onPress: onPinPress },
           { title: '削除', titleColor: theme.red, onPress: onDeletePress },
         ]}
       />

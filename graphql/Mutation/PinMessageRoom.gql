@@ -1,0 +1,6 @@
+mutation PinMessageRoom($messageRoomId: Int!) {
+  pinMessageRoom(messageRoomId: $messageRoomId) {
+    id
+    pinned
+  }
+}

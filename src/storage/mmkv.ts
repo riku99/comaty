@@ -6,4 +6,5 @@ export const mmkvStorageKeys = {
   loginProviders: 'loginProviders',
   narrowingDownConditions: 'narrowingDownConditions',
   showedCompletedAgeVerificationAlert: 'showedCompletedAgeVerificationAlert',
+  pinnedMessageRoomIds: 'pinnedMessageRoomIds',
 };

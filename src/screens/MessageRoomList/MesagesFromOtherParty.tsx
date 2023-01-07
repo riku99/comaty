@@ -18,6 +18,20 @@ import { RoomListItem } from './RoomListItem';
 type RoomItem =
   MessageRoomListFromOtherPartyScreenDataQuery['me']['messageRoomsFromOtherParty'][number];
 
+const sortRooms = (rooms: RoomItem[]) => {
+  rooms.sort((a, b) => {
+    const ad = new Date(Number(a.updatedAt));
+    const bd = new Date(Number(b.updatedAt));
+    if (ad > bd) {
+      return -1;
+    } else if (bd > ad) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+};
+
 export const MessagesFromOtherParty = () => {
   const { data } = useMessageRoomListFromOtherPartyScreenDataQuery();
   const navigation = useNavigation<RootNavigationProp<'MessageRoomList'>>();
@@ -56,29 +70,8 @@ export const MessagesFromOtherParty = () => {
       notPinnedRooms = [...data.me.messageRoomsFromOtherParty];
     }
 
-    pinnedRooms.sort((a, b) => {
-      const ad = new Date(Number(a.updatedAt));
-      const bd = new Date(Number(b.updatedAt));
-      if (ad > bd) {
-        return -1;
-      } else if (bd > ad) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
-    notPinnedRooms.sort((a, b) => {
-      const ad = new Date(Number(a.updatedAt));
-      const bd = new Date(Number(b.updatedAt));
-      if (ad > bd) {
-        return -1;
-      } else if (bd > ad) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    sortRooms(pinnedRooms);
+    sortRooms(notPinnedRooms);
 
     return [...pinnedRooms, ...notPinnedRooms];
   }, [data, pinnedIds]);

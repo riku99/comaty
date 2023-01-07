@@ -216,13 +216,15 @@ export const MessagesFromOtherParty = () => {
         ]}
       />
 
-      <Button
-        title="プロフィール一覧"
-        containerStyle={styles.profileButtonContainer}
-        titleStyle={styles.profileButtonTitle}
-        buttonStyle={styles.profileButton}
-        onPress={onProfileListButtonPress}
-      />
+      {!!sortedList?.length && (
+        <Button
+          title="プロフィール一覧"
+          containerStyle={styles.profileButtonContainer}
+          titleStyle={styles.profileButtonTitle}
+          buttonStyle={styles.profileButton}
+          onPress={onProfileListButtonPress}
+        />
+      )}
     </View>
   );
 };

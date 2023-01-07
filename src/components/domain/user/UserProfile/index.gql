@@ -1,3 +1,7 @@
+query UserProfileData($id: ID!) {
+  ...UserProfile
+}
+
 fragment UserProfile on Query {
   user(id: $id) {
     id
@@ -7,10 +11,6 @@ fragment UserProfile on Query {
     ...ProfileImagesInUserProfile
   }
   ...BottomButtonGroupInUserProfile
-}
-
-query UserProfileData($id: ID!) {
-  ...UserProfile
 }
 
 fragment ProfileImagesInUserProfile on User {
@@ -33,6 +33,7 @@ fragment BottomSheetContentInUserProfile on User {
   }
   numberOfPeopleTogether
   distance
+  genderOfLoveInterest
 }
 
 fragment BottomButtonGroupInUserProfile on Query {

@@ -5,6 +5,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Tag } from 'src/components/ui/Tag';
 import { BottomSheetContentInUserProfileFragment } from 'src/generated/graphql';
+import { getGenderOfLoveInterestLabel } from 'src/helpers/getGenderOfLoveInterestLabel';
 import { theme } from 'src/styles';
 import { UserPreviewData } from 'src/types';
 
@@ -14,8 +15,15 @@ type Props = {
 };
 
 export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
-  const { age, blocking, blocked, myTags, numberOfPeopleTogether, distance } =
-    data;
+  const {
+    age,
+    blocking,
+    blocked,
+    myTags,
+    numberOfPeopleTogether,
+    distance,
+    genderOfLoveInterest,
+  } = data;
   const blockingOrBlocked = blocking || blocked;
   const nickname = previewData ? previewData.nickname : data.nickname;
   const bio = previewData ? previewData.bio : data.bio;
@@ -25,6 +33,10 @@ export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
     numberOfPeopleTogether > 9
       ? '今10人以上でいます!'
       : `今${numberOfPeopleTogether}人でいます!`;
+
+  const genderOfLoveInterestTag = `恋愛対象は${getGenderOfLoveInterestLabel(
+    genderOfLoveInterest
+  )}`;
 
   return (
     <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
@@ -77,6 +89,11 @@ export const BottomSheetContent = React.memo(({ data, previewData }: Props) => {
               {height && (
                 <View style={[styles.tag]}>
                   <Tag text={`${height}㌢`} />
+                </View>
+              )}
+              {!!genderOfLoveInterest && (
+                <View style={styles.tag}>
+                  <Tag text={genderOfLoveInterestTag} />
                 </View>
               )}
               {myTags?.map((tag) => {

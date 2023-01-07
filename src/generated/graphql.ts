@@ -817,6 +817,7 @@ export type UpdateInitialStatusInput = {
 
 export type UpdateMeInput = {
   bio: Scalars['String'];
+  genderOfLoveInterest?: InputMaybe<GenderOfLoveInterest>;
   height?: InputMaybe<Scalars['Int']>;
   nickname: Scalars['String'];
   statusMessage: Scalars['String'];
@@ -1192,7 +1193,7 @@ export type UpdateMeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
+export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, genderOfLoveInterest?: GenderOfLoveInterest | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } };
 
 export type UploadProfileImageMutationVariables = Exact<{
   input: UploadProfileImageInput;
@@ -1224,7 +1225,7 @@ export type MyIdQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: st
 export type GetInitialDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, ageVerificationStatus: AgeVerificationStatus, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type GetInitialDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, sex?: Sex | null, initialStatusCompletion: boolean, age?: number | null, birthYear?: number | null, birthMonth?: number | null, birthDay?: number | null, height?: number | null, statusMessage?: string | null, bio?: string | null, ageVerificationStatus: AgeVerificationStatus, genderOfLoveInterest?: GenderOfLoveInterest | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1288,7 +1289,7 @@ export type BlockListScreenDataQuery = { __typename?: 'Query', me?: { __typename
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
+export type EditProfileScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, nickname?: string | null, bio?: string | null, statusMessage?: string | null, height?: number | null, genderOfLoveInterest?: GenderOfLoveInterest | null, profileImages?: Array<{ __typename?: 'UserProfileImage', id: number, url: string } | null> | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null } | null };
 
 export type GroupMembersScreenDataQueryVariables = Exact<{
   groupId: Scalars['Int'];
@@ -3176,6 +3177,7 @@ export const UpdateMeDocument = gql`
     statusMessage
     bio
     height
+    genderOfLoveInterest
     profileImages {
       ...ProfileImage
     }
@@ -3423,6 +3425,7 @@ export const GetInitialDataDocument = gql`
       id
       text
     }
+    genderOfLoveInterest
   }
 }
     ${ProfileImageFragmentDoc}`;
@@ -3656,6 +3659,7 @@ export const EditProfileScreenDataDocument = gql`
       id
       text
     }
+    genderOfLoveInterest
   }
 }
     `;

@@ -68,7 +68,9 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   );
   const myId = useMyId();
   const [genderOfLoveInterest, setGenderOfLoveInterest] =
-    useState<GenderOfLoveInterest | null>(null);
+    useState<GenderOfLoveInterest | null>(
+      data?.me.genderOfLoveInterest ?? null
+    );
 
   useEffect(() => {
     if (data?.me) {
@@ -95,10 +97,11 @@ export const EditProfileScreen = ({ navigation }: Props) => {
           bio,
           statusMessage,
           height,
+          genderOfLoveInterest,
         },
       },
     });
-  }, [nickname, bio, statusMessage, height, refetch]);
+  }, [nickname, bio, statusMessage, height, refetch, genderOfLoveInterest]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

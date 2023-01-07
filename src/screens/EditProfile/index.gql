@@ -13,5 +13,6 @@ query EditProfileScreenData {
       id
       text
     }
+    genderOfLoveInterest
   }
 }

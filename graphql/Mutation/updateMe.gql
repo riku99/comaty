@@ -6,6 +6,7 @@ mutation UpdateMe($input: UpdateMeInput!) {
     statusMessage
     bio
     height
+    genderOfLoveInterest
     profileImages {
       ...ProfileImage
     }

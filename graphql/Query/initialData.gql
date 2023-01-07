@@ -23,5 +23,6 @@ query GetInitialData {
       id
       text
     }
+    genderOfLoveInterest
   }
 }

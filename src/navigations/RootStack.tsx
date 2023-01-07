@@ -100,7 +100,7 @@ export type RootStackParamList = {
   DeleteAccountAlert: undefined;
   PlanSelection: undefined;
   MessageUserProfileList: {
-    ids: number[];
+    ids: string[];
   };
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
@@ -195,6 +195,13 @@ export const RootStack = () => {
             component={AgeVerificationRequestScreen}
           />
           <Stack.Screen name="PlanSelection" component={PlanSelectionScreen} />
+          <Stack.Screen
+            name="MessageUserProfileList"
+            component={MessageUserProfileListScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
 
           <Stack.Group
             screenOptions={{
@@ -245,13 +252,6 @@ export const RootStack = () => {
             <Stack.Screen
               name="AgeVerificationDocumentCamera"
               component={AgeVerificationDocumentCameraScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="MessageUserProfileList"
-              component={MessageUserProfileListScreen}
               options={{
                 headerShown: false,
               }}

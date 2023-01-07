@@ -1414,6 +1414,13 @@ export type MessageRoomListFromOtherPartyFragment = { __typename?: 'Query', me?:
 
 export type KeptMessageRoomListFragment = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, keptMessageRooms?: Array<{ __typename?: 'MessageRoom', id: number, kept: boolean, updatedAt: string, pinned?: boolean | null, partner?: { __typename?: 'User', id: string, nickname?: string | null, distance?: number | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, lastMessage?: { __typename?: 'Message', id: number, text: string, read?: boolean | null, createdAt: string, sender?: { __typename?: 'User', id: string } | null } | null } | null> | null } | null };
 
+export type UserProfileItemInMessageUserProfileListQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserProfileItemInMessageUserProfileListQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, group?: { __typename?: 'Group', id: number } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+
 export type MyGroupScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -4231,6 +4238,39 @@ export function useKeptMessageRoomListScreenDataLazyQuery(baseOptions?: Apollo.L
 export type KeptMessageRoomListScreenDataQueryHookResult = ReturnType<typeof useKeptMessageRoomListScreenDataQuery>;
 export type KeptMessageRoomListScreenDataLazyQueryHookResult = ReturnType<typeof useKeptMessageRoomListScreenDataLazyQuery>;
 export type KeptMessageRoomListScreenDataQueryResult = Apollo.QueryResult<KeptMessageRoomListScreenDataQuery, KeptMessageRoomListScreenDataQueryVariables>;
+export const UserProfileItemInMessageUserProfileListDocument = gql`
+    query UserProfileItemInMessageUserProfileList($id: ID!) {
+  ...UserProfile
+}
+    ${UserProfileFragmentDoc}`;
+
+/**
+ * __useUserProfileItemInMessageUserProfileListQuery__
+ *
+ * To run a query within a React component, call `useUserProfileItemInMessageUserProfileListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfileItemInMessageUserProfileListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfileItemInMessageUserProfileListQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserProfileItemInMessageUserProfileListQuery(baseOptions: Apollo.QueryHookOptions<UserProfileItemInMessageUserProfileListQuery, UserProfileItemInMessageUserProfileListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfileItemInMessageUserProfileListQuery, UserProfileItemInMessageUserProfileListQueryVariables>(UserProfileItemInMessageUserProfileListDocument, options);
+      }
+export function useUserProfileItemInMessageUserProfileListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfileItemInMessageUserProfileListQuery, UserProfileItemInMessageUserProfileListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfileItemInMessageUserProfileListQuery, UserProfileItemInMessageUserProfileListQueryVariables>(UserProfileItemInMessageUserProfileListDocument, options);
+        }
+export type UserProfileItemInMessageUserProfileListQueryHookResult = ReturnType<typeof useUserProfileItemInMessageUserProfileListQuery>;
+export type UserProfileItemInMessageUserProfileListLazyQueryHookResult = ReturnType<typeof useUserProfileItemInMessageUserProfileListLazyQuery>;
+export type UserProfileItemInMessageUserProfileListQueryResult = Apollo.QueryResult<UserProfileItemInMessageUserProfileListQuery, UserProfileItemInMessageUserProfileListQueryVariables>;
 export const MyGroupScreenDataDocument = gql`
     query MyGroupScreenData {
   me {

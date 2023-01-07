@@ -1,0 +1,3 @@
+query UserProfileItemInMessageUserProfileList($id: ID!) {
+  ...UserProfile
+}

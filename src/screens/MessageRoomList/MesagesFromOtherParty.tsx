@@ -176,6 +176,13 @@ export const MessagesFromOtherParty = () => {
     return null;
   }
 
+  const onProfileListButtonPress = () => {
+    const ids = sortedList.map((item) => item.partner.id);
+    navigation.navigate('MessageUserProfileList', {
+      ids,
+    });
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -214,6 +221,7 @@ export const MessagesFromOtherParty = () => {
         containerStyle={styles.profileButtonContainer}
         titleStyle={styles.profileButtonTitle}
         buttonStyle={styles.profileButton}
+        onPress={onProfileListButtonPress}
       />
     </View>
   );

@@ -1,7 +1,7 @@
 import BottomSheet from '@gorhom/bottom-sheet';
 import { filter } from 'graphql-anywhere';
 import React, { useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, StyleSheet, View } from 'react-native';
+import { Alert, Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import { useToast } from 'react-native-toast-notifications';
@@ -222,9 +222,12 @@ export const UserProfile = ({ id, previewData }: Props) => {
   );
 };
 
+const { height: screenHeight } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
+    height: screenHeight,
   },
   buttonButtomGroupContainer: {
     position: 'absolute',

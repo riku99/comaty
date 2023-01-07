@@ -18,6 +18,7 @@ import { GroupMembersScreen } from 'src/screens/GroupMembers';
 import { GroupQLCodeScreen } from 'src/screens/GroupQRCode';
 import { GroupQRCodeScannerScreen } from 'src/screens/GroupQRCodeScanner';
 import { MessageRoomScreen } from 'src/screens/MessageRoom';
+import { MessageUserProfileListScreen } from 'src/screens/MessageUserProfileList';
 import { NarrowingDownScreen } from 'src/screens/NarrowingDown';
 import { NicknameInputScreen } from 'src/screens/NicknameInput';
 import { NotoficationScreen } from 'src/screens/Notification';
@@ -98,6 +99,9 @@ export type RootStackParamList = {
   BlockList: undefined;
   DeleteAccountAlert: undefined;
   PlanSelection: undefined;
+  MessageUserProfileList: {
+    ids: number[];
+  };
   QuestionCreationStack: undefined;
   QuestionReplyCreation:
     | {
@@ -241,6 +245,13 @@ export const RootStack = () => {
             <Stack.Screen
               name="AgeVerificationDocumentCamera"
               component={AgeVerificationDocumentCameraScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="MessageUserProfileList"
+              component={MessageUserProfileListScreen}
               options={{
                 headerShown: false,
               }}

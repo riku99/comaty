@@ -1274,6 +1274,21 @@ export type UserCardFragment = { __typename?: 'User', id: string, nickname?: str
 
 export type UserCardListFragment = { __typename?: 'UserConnection', edges: Array<{ __typename?: 'UserEdge', node: { __typename?: 'User', id: string, nickname?: string | null, age?: number | null, statusMessage?: string | null, distance?: number | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> } } | null> };
 
+export type UserProfileFragment = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, group?: { __typename?: 'Group', id: number } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+
+export type UserProfileDataQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserProfileDataQuery = { __typename?: 'Query', user: { __typename?: 'User', id: string, blocking?: boolean | null, blocked?: boolean | null, nickname?: string | null, bio?: string | null, age?: number | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, group?: { __typename?: 'Group', id: number } | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null, profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null>, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+
+export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
+
+export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
+
+export type BottomButtonGroupInUserProfileFragment = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+
 export type BlockListScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1493,12 +1508,6 @@ export type TimelineScreenDataQueryVariables = Exact<{
 
 export type TimelineScreenDataQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', cursor: string, node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } };
 
-export type ProfileImagesInUserProfileFragment = { __typename?: 'User', profileImages: Array<{ __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null> };
-
-export type BottomSheetContentInUserProfileFragment = { __typename?: 'User', id: string, nickname?: string | null, bio?: string | null, age?: number | null, blocking?: boolean | null, blocked?: boolean | null, height?: number | null, numberOfPeopleTogether?: number | null, distance?: number | null, myTags?: Array<{ __typename?: 'UserTag', id: number, text: string } | null> | null };
-
-export type BottomButtonGroupInUserProfileFragment = { __typename?: 'Query', user: { __typename?: 'User', id: string, nickname?: string | null, group?: { __typename?: 'Group', id: number } | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null }, me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
-
 export type UserProfileScreenDataQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1603,6 +1612,77 @@ export const UserCardListFragmentDoc = gql`
   }
 }
     ${UserCardFragmentDoc}`;
+export const BottomSheetContentInUserProfileFragmentDoc = gql`
+    fragment BottomSheetContentInUserProfile on User {
+  id
+  nickname
+  bio
+  age
+  blocking
+  blocked
+  height
+  myTags {
+    id
+    text
+  }
+  numberOfPeopleTogether
+  distance
+}
+    `;
+export const ProfileImagesInUserProfileFragmentDoc = gql`
+    fragment ProfileImagesInUserProfile on User {
+  profileImages {
+    ...ProfileImage
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+export const StoryUserCircleFragmentDoc = gql`
+    fragment StoryUserCircle on UserEntity {
+  id
+  nickname
+  firstProfileImage {
+    ...ProfileImage
+  }
+  stories {
+    id
+    url
+    backgroundColors
+    type
+    createdAt
+    thumbnailUrl
+    seen
+  }
+}
+    ${ProfileImageFragmentDoc}`;
+export const BottomButtonGroupInUserProfileFragmentDoc = gql`
+    fragment BottomButtonGroupInUserProfile on Query {
+  user(id: $id) {
+    id
+    ...StoryUserCircle
+    group {
+      id
+    }
+  }
+  me {
+    id
+    ageVerificationStatus
+  }
+}
+    ${StoryUserCircleFragmentDoc}`;
+export const UserProfileFragmentDoc = gql`
+    fragment UserProfile on Query {
+  user(id: $id) {
+    id
+    blocking
+    blocked
+    ...BottomSheetContentInUserProfile
+    ...ProfileImagesInUserProfile
+  }
+  ...BottomButtonGroupInUserProfile
+}
+    ${BottomSheetContentInUserProfileFragmentDoc}
+${ProfileImagesInUserProfileFragmentDoc}
+${BottomButtonGroupInUserProfileFragmentDoc}`;
 export const ConfirmGroupOwnerInGroupQrCodeFragmentDoc = gql`
     fragment ConfirmGroupOwnerInGroupQRCode on User {
   id
@@ -1641,24 +1721,6 @@ export const HomeNearByUsersFragmentDoc = gql`
 }
     ${UserCardFragmentDoc}
 ${PageInfoFragmentDoc}`;
-export const StoryUserCircleFragmentDoc = gql`
-    fragment StoryUserCircle on UserEntity {
-  id
-  nickname
-  firstProfileImage {
-    ...ProfileImage
-  }
-  stories {
-    id
-    url
-    backgroundColors
-    type
-    createdAt
-    thumbnailUrl
-    seen
-  }
-}
-    ${ProfileImageFragmentDoc}`;
 export const HomeStoriesFragmentDoc = gql`
     fragment HomeStories on Query {
   me {
@@ -1797,45 +1859,6 @@ export const ViewersInStoriesFragmentDoc = gql`
   }
 }
     ${ProfileImageFragmentDoc}`;
-export const ProfileImagesInUserProfileFragmentDoc = gql`
-    fragment ProfileImagesInUserProfile on User {
-  profileImages {
-    ...ProfileImage
-  }
-}
-    ${ProfileImageFragmentDoc}`;
-export const BottomSheetContentInUserProfileFragmentDoc = gql`
-    fragment BottomSheetContentInUserProfile on User {
-  id
-  nickname
-  bio
-  age
-  blocking
-  blocked
-  height
-  myTags {
-    id
-    text
-  }
-  numberOfPeopleTogether
-  distance
-}
-    `;
-export const BottomButtonGroupInUserProfileFragmentDoc = gql`
-    fragment BottomButtonGroupInUserProfile on Query {
-  user(id: $id) {
-    id
-    ...StoryUserCircle
-    group {
-      id
-    }
-  }
-  me {
-    id
-    ageVerificationStatus
-  }
-}
-    ${StoryUserCircleFragmentDoc}`;
 export const AcceptKeepingRequestDocument = gql`
     mutation AcceptKeepingRequest($id: Int!) {
   acceptMessageKeepingRequest(id: $id) {
@@ -3577,6 +3600,39 @@ export function useLoadingWithMyProfileImageDataLazyQuery(baseOptions?: Apollo.L
 export type LoadingWithMyProfileImageDataQueryHookResult = ReturnType<typeof useLoadingWithMyProfileImageDataQuery>;
 export type LoadingWithMyProfileImageDataLazyQueryHookResult = ReturnType<typeof useLoadingWithMyProfileImageDataLazyQuery>;
 export type LoadingWithMyProfileImageDataQueryResult = Apollo.QueryResult<LoadingWithMyProfileImageDataQuery, LoadingWithMyProfileImageDataQueryVariables>;
+export const UserProfileDataDocument = gql`
+    query UserProfileData($id: ID!) {
+  ...UserProfile
+}
+    ${UserProfileFragmentDoc}`;
+
+/**
+ * __useUserProfileDataQuery__
+ *
+ * To run a query within a React component, call `useUserProfileDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfileDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfileDataQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserProfileDataQuery(baseOptions: Apollo.QueryHookOptions<UserProfileDataQuery, UserProfileDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfileDataQuery, UserProfileDataQueryVariables>(UserProfileDataDocument, options);
+      }
+export function useUserProfileDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfileDataQuery, UserProfileDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfileDataQuery, UserProfileDataQueryVariables>(UserProfileDataDocument, options);
+        }
+export type UserProfileDataQueryHookResult = ReturnType<typeof useUserProfileDataQuery>;
+export type UserProfileDataLazyQueryHookResult = ReturnType<typeof useUserProfileDataLazyQuery>;
+export type UserProfileDataQueryResult = Apollo.QueryResult<UserProfileDataQuery, UserProfileDataQueryVariables>;
 export const BlockListScreenDataDocument = gql`
     query BlockListScreenData {
   me {
@@ -4781,18 +4837,9 @@ export type TimelineScreenDataLazyQueryHookResult = ReturnType<typeof useTimelin
 export type TimelineScreenDataQueryResult = Apollo.QueryResult<TimelineScreenDataQuery, TimelineScreenDataQueryVariables>;
 export const UserProfileScreenDataDocument = gql`
     query UserProfileScreenData($id: ID!) {
-  user(id: $id) {
-    id
-    blocking
-    blocked
-    ...BottomSheetContentInUserProfile
-    ...ProfileImagesInUserProfile
-  }
-  ...BottomButtonGroupInUserProfile
+  ...UserProfile
 }
-    ${BottomSheetContentInUserProfileFragmentDoc}
-${ProfileImagesInUserProfileFragmentDoc}
-${BottomButtonGroupInUserProfileFragmentDoc}`;
+    ${UserProfileFragmentDoc}`;
 
 /**
  * __useUserProfileScreenDataQuery__

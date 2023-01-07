@@ -1,0 +1,50 @@
+fragment UserProfile on Query {
+  user(id: $id) {
+    id
+    blocking
+    blocked
+    ...BottomSheetContentInUserProfile
+    ...ProfileImagesInUserProfile
+  }
+  ...BottomButtonGroupInUserProfile
+}
+
+query UserProfileData($id: ID!) {
+  ...UserProfile
+}
+
+fragment ProfileImagesInUserProfile on User {
+  profileImages {
+    ...ProfileImage
+  }
+}
+
+fragment BottomSheetContentInUserProfile on User {
+  id
+  nickname
+  bio
+  age
+  blocking
+  blocked
+  height
+  myTags {
+    id
+    text
+  }
+  numberOfPeopleTogether
+  distance
+}
+
+fragment BottomButtonGroupInUserProfile on Query {
+  user(id: $id) {
+    id
+    ...StoryUserCircle
+    group {
+      id
+    }
+  }
+  me {
+    id
+    ageVerificationStatus
+  }
+}

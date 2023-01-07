@@ -233,9 +233,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 4,
+    paddingBottom: 16,
   },
   profileButtonContainer: {
     paddingHorizontal: 16,
+    paddingBottom: 10,
   },
   profileButtonTitle: {
     color: theme.primary,

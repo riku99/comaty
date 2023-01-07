@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { Button } from '@rneui/themed';
 import * as Haptics from 'expo-haptics';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -207,6 +208,13 @@ export const MessagesFromOtherParty = () => {
           { title: '削除', titleColor: theme.red, onPress: onDeletePress },
         ]}
       />
+
+      <Button
+        title="プロフィール一覧"
+        containerStyle={styles.profileButtonContainer}
+        titleStyle={styles.profileButtonTitle}
+        buttonStyle={styles.profileButton}
+      />
     </View>
   );
 };
@@ -217,5 +225,16 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 4,
+  },
+  profileButtonContainer: {
+    paddingHorizontal: 16,
+  },
+  profileButtonTitle: {
+    color: theme.primary,
+  },
+  profileButton: {
+    backgroundColor: '#fff',
+    borderColor: theme.primary,
+    borderWidth: 2,
   },
 });

@@ -21,12 +21,14 @@ import { Picker } from 'src/components/ui/Picker';
 import { Tag } from 'src/components/ui/Tag';
 import { TextInput } from 'src/components/ui/TextInput';
 import {
+  GenderOfLoveInterest,
   MyProfileImagesDocument,
   useDeleteProfileImageMutation,
   useEditProfileScreenDataQuery,
   useUpdateMeMutation,
   useUploadProfileImageMutation,
 } from 'src/generated/graphql';
+import { getGenderOfLoveInterestLabel } from 'src/helpers/getGenderOfLoveInterestLabel';
 import { processImageForMultipartRequest } from 'src/helpers/processImagesForMultipartRequest';
 import { useMyId } from 'src/hooks/me';
 import { theme } from 'src/styles';
@@ -41,6 +43,10 @@ export const EditProfileScreen = ({ navigation }: Props) => {
   });
   const { bottom: safeAreaBottom } = useSafeAreaInsets();
   const [heightPickerVisible, setHeightPickerVisible] = useState(false);
+  const [
+    genderOfLoveInterestPickerVisible,
+    setGenderOfLoveInterestPickerVisible,
+  ] = useState(false);
   const [nickname, setNickName] = useState(data?.me.nickname);
   const [bio, setBio] = useState(data?.me.bio ?? '');
   const [statusMessage, setStatusMessage] = useState(
@@ -61,6 +67,8 @@ export const EditProfileScreen = ({ navigation }: Props) => {
     null
   );
   const myId = useMyId();
+  const [genderOfLoveInterest, setGenderOfLoveInterest] =
+    useState<GenderOfLoveInterest | null>(null);
 
   useEffect(() => {
     if (data?.me) {
@@ -297,8 +305,28 @@ export const EditProfileScreen = ({ navigation }: Props) => {
                 }}
               >
                 <Text style={styles.heightText}>
-                  {!!height ? `${height}cm` : '選択されていません'}
+                  {!!height ? `${height}cm` : '未選択'}
                 </Text>
+                <FontAwesome
+                  name="angle-right"
+                  size={24}
+                  color={theme.gray.rightIcon}
+                />
+              </Pressable>
+            </View>
+
+            <View style={styles.genderOfLoveInterestContainer}>
+              <Text style={styles.inputTitle}>恋愛対象</Text>
+              <Pressable
+                style={styles.heightInput}
+                onPress={() => {
+                  setGenderOfLoveInterestPickerVisible(true);
+                }}
+              >
+                <Text style={styles.heightText}>
+                  {getGenderOfLoveInterestLabel(genderOfLoveInterest)}
+                </Text>
+
                 <FontAwesome
                   name="angle-right"
                   size={24}
@@ -370,6 +398,36 @@ export const EditProfileScreen = ({ navigation }: Props) => {
               }
               setHeightPickerVisible(false);
             }}
+          />
+        </View>
+
+        <View style={styles.pickerContainer}>
+          <Picker
+            isVisible={genderOfLoveInterestPickerVisible}
+            items={[
+              { value: null, label: getGenderOfLoveInterestLabel(null) },
+              {
+                value: GenderOfLoveInterest.Man,
+                label: getGenderOfLoveInterestLabel(GenderOfLoveInterest.Man),
+              },
+              {
+                value: GenderOfLoveInterest.Woman,
+                label: getGenderOfLoveInterestLabel(GenderOfLoveInterest.Woman),
+              },
+              {
+                value: GenderOfLoveInterest.ManWoman,
+                label: getGenderOfLoveInterestLabel(
+                  GenderOfLoveInterest.ManWoman
+                ),
+              },
+            ]}
+            onValueChange={(itemValue) => {
+              setGenderOfLoveInterest(itemValue as GenderOfLoveInterest | null);
+            }}
+            hidePicker={() => {
+              setGenderOfLoveInterestPickerVisible(false);
+            }}
+            selectedValue={genderOfLoveInterest}
           />
         </View>
       </SafeAreaView>
@@ -487,5 +545,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: theme.red,
     marginTop: 2,
+  },
+  genderOfLoveInterestContainer: {
+    marginTop: 32,
   },
 });

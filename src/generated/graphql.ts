@@ -146,6 +146,12 @@ export enum ForbiddenError {
   AuthFailure = 'AUTH_FAILURE'
 }
 
+export enum GenderOfLoveInterest {
+  Man = 'MAN',
+  ManWoman = 'MAN_WOMAN',
+  Woman = 'WOMAN'
+}
+
 export enum GetGroupError {
   NotFound = 'NOT_FOUND'
 }
@@ -210,6 +216,7 @@ export type Me = UserEntity & {
   birthYear?: Maybe<Scalars['Int']>;
   blocks?: Maybe<Array<Maybe<UserBlock>>>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  genderOfLoveInterest?: Maybe<GenderOfLoveInterest>;
   group?: Maybe<Group>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
@@ -841,6 +848,7 @@ export type User = UserEntity & {
   blocking?: Maybe<Scalars['Boolean']>;
   distance?: Maybe<Scalars['Int']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  genderOfLoveInterest?: Maybe<GenderOfLoveInterest>;
   group?: Maybe<Group>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
@@ -887,6 +895,7 @@ export type UserEntity = {
   age?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   firstProfileImage?: Maybe<UserProfileImage>;
+  genderOfLoveInterest?: Maybe<GenderOfLoveInterest>;
   height?: Maybe<Scalars['Int']>;
   id: Scalars['ID'];
   myTags?: Maybe<Array<Maybe<UserTag>>>;

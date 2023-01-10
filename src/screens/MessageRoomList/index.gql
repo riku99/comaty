@@ -10,18 +10,6 @@ query NoReplyMessageRoomListScreenData {
   ...NoReplyMessageRoomList
 }
 
-query MessageRoomListFromMySelfScreenData {
-  ...MessageRoomListFromMySelf
-}
-
-query MessageRoomListFromOtherPartyScreenData {
-  ...MessageRoomListFromOtherParty
-}
-
-query KeptMessageRoomListScreenData {
-  ...KeptMessageRoomList
-}
-
 fragment RoomListItemInMessageRoomListScreen on MessageRoom {
   id
   partner {
@@ -46,9 +34,6 @@ fragment RoomListItemInMessageRoomListScreen on MessageRoom {
 }
 
 fragment MessageRoomListScreenData on Query {
-  ...MessageRoomListFromMySelf
-  ...MessageRoomListFromOtherParty
-  ...KeptMessageRoomList
   ...ExchangingMessageRoomList
   ...NoReplyMessageRoomList
 }
@@ -66,33 +51,6 @@ fragment NoReplyMessageRoomList on Query {
   me {
     id
     noReplyMessageRooms {
-      ...RoomListItemInMessageRoomListScreen
-    }
-  }
-}
-
-fragment MessageRoomListFromMySelf on Query {
-  me {
-    id
-    messageRoomsFromMySelf {
-      ...RoomListItemInMessageRoomListScreen
-    }
-  }
-}
-
-fragment MessageRoomListFromOtherParty on Query {
-  me {
-    id
-    messageRoomsFromOtherParty {
-      ...RoomListItemInMessageRoomListScreen
-    }
-  }
-}
-
-fragment KeptMessageRoomList on Query {
-  me {
-    id
-    keptMessageRooms {
       ...RoomListItemInMessageRoomListScreen
     }
   }

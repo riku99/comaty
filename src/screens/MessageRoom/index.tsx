@@ -23,17 +23,16 @@ import { MESSAGE_REPLY_LIMIT_TIME } from 'src/constants';
 import {
   AgeVerificationStatus,
   CreateMessageError,
+  ExchangingMessageRoomListScreenDataDocument,
   GetMessageRoomError,
   InputComposerDataInMessageRoomScreenFragment,
   InputComposerDataInMessageRoomScreenFragmentDoc,
-  KeptMessageRoomListScreenDataDocument,
   MessageBubbleDataInMessageRoomFragment,
   MessageBubbleDataInMessageRoomFragmentDoc,
-  MessageRoomListFromMySelfScreenDataDocument,
-  MessageRoomListFromOtherPartyScreenDataDocument,
   MessageRoomListScreenDataDocument,
   MessageRoomScreenDataDocument,
   MessageRoomScreenDataQuery,
+  NoReplyMessageRoomListScreenDataDocument,
   RoomMessagesInMessageRoomScreenDocument,
   useAcceptKeepingRequestMutation,
   useKeepRequestMutation,
@@ -45,10 +44,7 @@ import { useCustomLazyQuery } from 'src/hooks/apollo/useCustomLazyQuery';
 import { useMyId } from 'src/hooks/me';
 import { getGraphQLError } from 'src/utils';
 import { HeaderLeft } from './HeaderLeft';
-import {
-  TargetRoomList,
-  useUpdateRoomListQueryAfterSendingMessage,
-} from './helpers';
+import { useUpdateRoomListQueryAfterSendingMessage } from './helpers';
 import { InputComposer } from './InputComposer';
 import { MessageBubble } from './MessageBubble';
 import { BubbleType } from './types';
@@ -265,12 +261,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
     [messages, myId]
   );
 
-  const targetRoomListType: TargetRoomList = data?.messageRoom.kept
-    ? 'keptMessageRooms'
-    : data?.messageRoom.sender.id === myId
-    ? 'messageRoomsFromMySelf'
-    : 'messageRoomsFromOtherParty';
-
   const onSendPress = async () => {
     if (data.me.ageVerificationStatus === AgeVerificationStatus.UnderReview) {
       navigation.navigate('AgeVerificationUnderReview');
@@ -333,7 +323,6 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
             });
 
             updateRoomListQueryAfterSendingMessage({
-              target: targetRoomListType,
               roomId,
               sendMessageData: responseData.createMessage,
             });
@@ -341,12 +330,12 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
         },
         refetchQueries: [
           {
-            query:
-              targetRoomListType === 'keptMessageRooms'
-                ? KeptMessageRoomListScreenDataDocument
-                : targetRoomListType === 'messageRoomsFromMySelf'
-                ? MessageRoomListFromMySelfScreenDataDocument
-                : MessageRoomListFromOtherPartyScreenDataDocument,
+            query: ExchangingMessageRoomListScreenDataDocument,
+          },
+          {
+            query: !messages.some((m) => m.node.sender.id === myId)
+              ? NoReplyMessageRoomListScreenDataDocument
+              : undefined,
           },
         ],
       });

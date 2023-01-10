@@ -5,20 +5,13 @@ import {
   SendMessageMutation,
 } from 'src/generated/graphql';
 
-export type TargetRoomList =
-  | 'keptMessageRooms'
-  | 'messageRoomsFromOtherParty'
-  | 'messageRoomsFromMySelf';
-
 export const useUpdateRoomListQueryAfterSendingMessage = () => {
   const { cache } = useApolloClient();
 
   const updateRoomListQueryAfterSendingMessage = ({
-    target,
     roomId,
     sendMessageData,
   }: {
-    target: TargetRoomList;
     roomId: number;
     sendMessageData: SendMessageMutation['createMessage'];
   }) => {
@@ -32,13 +25,13 @@ export const useUpdateRoomListQueryAfterSendingMessage = () => {
     }
 
     const targetMessageRoom = cachedMessageRoomListScreenDataQuery.me[
-      target
+      'exchangingMessageRooms'
     ].find((room) => room.id === roomId);
 
     if (targetMessageRoom) {
-      const filtered = cachedMessageRoomListScreenDataQuery.me[target].filter(
-        (room) => room.id !== roomId
-      );
+      const filtered = cachedMessageRoomListScreenDataQuery.me[
+        'exchangingMessageRooms'
+      ].filter((room) => room.id !== roomId);
 
       cache.writeQuery<MessageRoomListScreenDataQuery>({
         query: MessageRoomListScreenDataDocument,
@@ -46,7 +39,7 @@ export const useUpdateRoomListQueryAfterSendingMessage = () => {
           ...cachedMessageRoomListScreenDataQuery,
           me: {
             ...cachedMessageRoomListScreenDataQuery.me,
-            [target]: [
+            exchangingMessageRooms: [
               {
                 ...targetMessageRoom,
                 lastMessage: {

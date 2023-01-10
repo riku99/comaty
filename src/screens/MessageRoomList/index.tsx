@@ -27,7 +27,7 @@ const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
 
 export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
   useMessageRoomListScreenDataQuery();
-  const { mySelfBadgeVisible, otherPartyBadgeVisible, keptBadgeVisible } =
+  const { exchangingMessageRoomsBadge, noReplyMessageRoomsbadge } =
     useMessageRoomBadgeVisible();
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteTalkRoomsWithoutKeptMutation] =
@@ -124,7 +124,7 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
             tabBarLabel: 'やりとり中',
             tabBarBadge: () => (
               <>
-                {otherPartyBadgeVisible && (
+                {exchangingMessageRoomsBadge && (
                   <View style={styles.badgeContainer}>
                     <Badge size={6} />
                   </View>
@@ -140,7 +140,7 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
             tabBarLabel: '未返信',
             tabBarBadge: () => (
               <>
-                {mySelfBadgeVisible && (
+                {noReplyMessageRoomsbadge && (
                   <View style={styles.badgeContainer}>
                     <Badge size={6} />
                   </View>
@@ -176,6 +176,6 @@ const styles = StyleSheet.create({
   badgeContainer: {
     position: 'absolute',
     top: 8,
-    right: 32,
+    right: 52,
   },
 });

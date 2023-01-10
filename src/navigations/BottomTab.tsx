@@ -25,7 +25,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 
 export const BottomTab = React.memo(() => {
   const { setContentsCreationModalVisible } = useContentsCreationVisible();
-  const { mySelfBadgeVisible, otherPartyBadgeVisible } =
+  const { exchangingMessageRoomsBadge, noReplyMessageRoomsbadge } =
     useMessageRoomBadgeVisible();
 
   return (
@@ -105,7 +105,7 @@ export const BottomTab = React.memo(() => {
                 color={theme.black}
               />
 
-              {(mySelfBadgeVisible || otherPartyBadgeVisible) && (
+              {(exchangingMessageRoomsBadge || noReplyMessageRoomsbadge) && (
                 <View style={styles.badge}>
                   <Badge size={6} />
                 </View>

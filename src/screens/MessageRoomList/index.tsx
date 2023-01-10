@@ -13,16 +13,14 @@ import {
 } from 'src/generated/graphql';
 import { useMessageRoomBadgeVisible } from 'src/hooks/messageRoom/useMessageRoomBadgeVisible';
 import { theme } from 'src/styles';
-import { KeptMessageRooms } from './KeptMessageRooms';
-import { MessagesFromOtherParty } from './MesagesFromOtherParty';
-import { MessagesFromMySelf } from './MessagesFromMySelf';
+import { ExchangingMessageRooms } from './ExchangingMessageRooms';
+import { NoReplyMessageRooms } from './NoReplyMessageRooms';
 
 type Props = RootNavigationScreenProp<'MessageRoomList'>;
 
 type TopTabParamList = {
-  FromMySelf: undefined;
-  FromOtherParty: undefined;
-  Kept: undefined;
+  ExchangingMessageRooms: undefined;
+  NoReplyMessageRooms: undefined;
 };
 
 const TopTab = createMaterialTopTabNavigator<TopTabParamList>();
@@ -115,31 +113,15 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
           },
           tabBarIndicatorContainerStyle: {
             marginLeft: screenWidth / 6,
-            transform: [{ translateX: -50 }],
+            transform: [{ translateX: -16.5 }],
           },
         }}
       >
         <TopTab.Screen
-          name="Kept"
-          component={KeptMessageRooms}
+          name="ExchangingMessageRooms"
+          component={ExchangingMessageRooms}
           options={{
-            tabBarLabel: 'キープ中',
-            tabBarBadge: () => (
-              <>
-                {keptBadgeVisible && (
-                  <View style={styles.badgeContainer}>
-                    <Badge size={6} />
-                  </View>
-                )}
-              </>
-            ),
-          }}
-        />
-        <TopTab.Screen
-          name="FromOtherParty"
-          component={MessagesFromOtherParty}
-          options={{
-            tabBarLabel: '相手から',
+            tabBarLabel: 'やりとり中',
             tabBarBadge: () => (
               <>
                 {otherPartyBadgeVisible && (
@@ -152,10 +134,10 @@ export const MessageRoomListScreen = React.memo(({ navigation }: Props) => {
           }}
         />
         <TopTab.Screen
-          name="FromMySelf"
-          component={MessagesFromMySelf}
+          name="NoReplyMessageRooms"
+          component={NoReplyMessageRooms}
           options={{
-            tabBarLabel: '自分から',
+            tabBarLabel: '未返信',
             tabBarBadge: () => (
               <>
                 {mySelfBadgeVisible && (

@@ -2,6 +2,14 @@ query MessageRoomListScreenData {
   ...MessageRoomListScreenData
 }
 
+query ExchangingMessageRoomListScreenData {
+  ...ExchangingMessageRoomList
+}
+
+query NoReplyMessageRoomListScreenData {
+  ...NoReplyMessageRoomList
+}
+
 query MessageRoomListFromMySelfScreenData {
   ...MessageRoomListFromMySelf
 }
@@ -41,6 +49,26 @@ fragment MessageRoomListScreenData on Query {
   ...MessageRoomListFromMySelf
   ...MessageRoomListFromOtherParty
   ...KeptMessageRoomList
+  ...ExchangingMessageRoomList
+  ...NoReplyMessageRoomList
+}
+
+fragment ExchangingMessageRoomList on Query {
+  me {
+    id
+    exchangingMessageRooms {
+      ...RoomListItemInMessageRoomListScreen
+    }
+  }
+}
+
+fragment NoReplyMessageRoomList on Query {
+  me {
+    id
+    noReplyMessageRooms {
+      ...RoomListItemInMessageRoomListScreen
+    }
+  }
 }
 
 fragment MessageRoomListFromMySelf on Query {

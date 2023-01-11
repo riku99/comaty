@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
+import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
@@ -13,7 +14,7 @@ import {
   useExchangingMessageRoomListScreenDataQuery,
 } from 'src/generated/graphql';
 import { theme } from 'src/styles';
-import { deleteRoomWithAlert } from './helpers';
+import { deleteRoomWithAlert, useSortedRoomListWithPin } from './helpers';
 import { RoomListItem } from './RoomListItem';
 
 type RoomItem =
@@ -27,28 +28,16 @@ export const ExchangingMessageRooms = React.memo(() => {
   );
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
   const toast = useToast();
-
-  const sortedList = useMemo(() => {
-    if (!data?.me) {
-      return [];
-    }
-
-    const c = [...data.me.exchangingMessageRooms];
-
-    c.sort((a, b) => {
-      const ad = new Date(Number(a.updatedAt));
-      const bd = new Date(Number(b.updatedAt));
-      if (ad > bd) {
-        return -1;
-      } else if (bd > ad) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
-    return c;
-  }, [data]);
+  const {
+    sortedRoomList,
+    setPinnedIdsWithStorage,
+    isPinned,
+    deletePinnedIdWithStorage,
+    pinnedIds,
+  } = useSortedRoomListWithPin({
+    data,
+    target: 'exchangingMessageRooms',
+  });
 
   const renderRoomItem = useCallback(
     ({ item }: { item: RoomItem }) => {
@@ -60,6 +49,8 @@ export const ExchangingMessageRooms = React.memo(() => {
           userId: partner.id,
         });
       };
+
+      const pinned = isPinned(item.id);
 
       const onLongPress = () => {
         setLongPressedItemId(id);
@@ -73,10 +64,11 @@ export const ExchangingMessageRooms = React.memo(() => {
           )}
           onPress={onPress}
           onLongPress={onLongPress}
+          pinned={pinned}
         />
       );
     },
-    [navigation, setLongPressedItemId]
+    [navigation, setLongPressedItemId, pinnedIds]
   );
 
   const onDeletePress = () => {
@@ -107,6 +99,26 @@ export const ExchangingMessageRooms = React.memo(() => {
     });
   };
 
+  const onPinPress = () => {
+    if (!longPressedItemId) {
+      return;
+    }
+
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setLongPressedItemId(null);
+    setPinnedIdsWithStorage(longPressedItemId);
+  };
+
+  const onUnpinPress = () => {
+    if (!longPressedItemId) {
+      return;
+    }
+
+    deletePinnedIdWithStorage(longPressedItemId);
+    setLongPressedItemId(null);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  };
+
   if (!data?.me) {
     return null;
   }
@@ -114,7 +126,7 @@ export const ExchangingMessageRooms = React.memo(() => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={sortedList}
+        data={sortedRoomList}
         renderItem={renderRoomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.contentContainer}
@@ -129,6 +141,10 @@ export const ExchangingMessageRooms = React.memo(() => {
           setLongPressedItemId(null);
         }}
         items={[
+          {
+            title: isPinned(longPressedItemId) ? 'ピン解除' : 'ピン留め',
+            onPress: isPinned(longPressedItemId) ? onUnpinPress : onPinPress,
+          },
           { title: '削除', titleColor: theme.red, onPress: onDeletePress },
         ]}
       />

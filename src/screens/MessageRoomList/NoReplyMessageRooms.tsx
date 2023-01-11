@@ -13,25 +13,11 @@ import {
 } from 'src/generated/graphql';
 import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { theme } from 'src/styles';
-import { deleteRoomWithAlert } from './helpers';
+import { deleteRoomWithAlert, sortRooms } from './helpers';
 import { RoomListItem } from './RoomListItem';
 
 type RoomItem =
   NoReplyMessageRoomListScreenDataQuery['me']['noReplyMessageRooms'][number];
-
-const sortRooms = (rooms: RoomItem[]) => {
-  rooms.sort((a, b) => {
-    const ad = new Date(Number(a.updatedAt));
-    const bd = new Date(Number(b.updatedAt));
-    if (ad > bd) {
-      return -1;
-    } else if (bd > ad) {
-      return 1;
-    } else {
-      return 0;
-    }
-  });
-};
 
 export const NoReplyMessageRooms = () => {
   const { data } = useNoReplyMessageRoomListScreenDataQuery();

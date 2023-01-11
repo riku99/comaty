@@ -169,15 +169,28 @@ export const RoomListItem = ({
             )}
 
             <View>
-              {!kept && remainingTime !== undefined && remainingTime !== null && (
+              {kept ? (
                 <Text
-                  style={[
-                    styles.timeAndDistanceText,
-                    {
-                      color: remainingTime > 5 ? theme.gray.text : theme.red,
-                    },
-                  ]}
-                >{`あと${remainingTime > 0 ? remainingTime : 0}分`}</Text>
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 'bold',
+                    color: theme.gray.text,
+                  }}
+                >
+                  キープ中
+                </Text>
+              ) : (
+                remainingTime !== undefined &&
+                remainingTime !== null && (
+                  <Text
+                    style={[
+                      styles.timeAndDistanceText,
+                      {
+                        color: remainingTime > 5 ? theme.gray.text : theme.red,
+                      },
+                    ]}
+                  >{`あと${remainingTime > 0 ? remainingTime : 0}分`}</Text>
+                )
               )}
             </View>
           </View>

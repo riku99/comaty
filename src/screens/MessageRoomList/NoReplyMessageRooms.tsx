@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { Button } from '@rneui/themed';
 import * as Haptics from 'expo-haptics';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useToast } from 'react-native-toast-notifications';
 import { OverlayModal } from 'src/components/ui/OverlayModal';
@@ -11,9 +11,8 @@ import {
   useDeleteMessageRoomMutation,
   useNoReplyMessageRoomListScreenDataQuery,
 } from 'src/generated/graphql';
-import { mmkvStorageKeys, storage } from 'src/storage/mmkv';
 import { theme } from 'src/styles';
-import { deleteRoomWithAlert, sortRooms } from './helpers';
+import { deleteRoomWithAlert, useSortedRoomListWithPin } from './helpers';
 import { RoomListItem } from './RoomListItem';
 
 type RoomItem =
@@ -27,41 +26,16 @@ export const NoReplyMessageRooms = () => {
   );
   const toast = useToast();
   const [deleteMessageRoomMutation] = useDeleteMessageRoomMutation();
-  const pinnedIdsString = storage.getString(
-    mmkvStorageKeys.pinnedMessageRoomIds
-  );
-  const _pinnedIds = pinnedIdsString
-    ? (JSON.parse(pinnedIdsString) as number[])
-    : [];
-  const [pinnedIds, setPinnedIds] = useState(_pinnedIds);
-
-  const isPinned = (id: number) => pinnedIds.includes(id);
-
-  const sortedList = useMemo(() => {
-    if (!data?.me) {
-      return [];
-    }
-
-    let pinnedRooms: RoomItem[] = [];
-    let notPinnedRooms: RoomItem[] = [];
-
-    if (pinnedIds.length) {
-      data.me.noReplyMessageRooms.forEach((room) => {
-        if (isPinned(room.id)) {
-          pinnedRooms.push(room);
-        } else {
-          notPinnedRooms.push(room);
-        }
-      });
-    } else {
-      notPinnedRooms = [...data.me.noReplyMessageRooms];
-    }
-
-    sortRooms(pinnedRooms);
-    sortRooms(notPinnedRooms);
-
-    return [...pinnedRooms, ...notPinnedRooms];
-  }, [data, pinnedIds]);
+  const {
+    sortedRoomList,
+    setPinnedIdsWithStorage,
+    isPinned,
+    deletePinnedIdWithStorage,
+    pinnedIds,
+  } = useSortedRoomListWithPin({
+    data,
+    target: 'noReplyMessageRooms',
+  });
 
   const renderRoomItem = useCallback(
     ({ item }: { item: RoomItem }) => {
@@ -121,41 +95,23 @@ export const NoReplyMessageRooms = () => {
   };
 
   const onPinPress = async () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setLongPressedItemId(null);
-
     if (!longPressedItemId) {
       return;
     }
 
-    const newPinnedIds = [
-      longPressedItemId,
-      ...pinnedIds.filter((id) => id !== longPressedItemId),
-    ];
-
-    storage.set(
-      mmkvStorageKeys.pinnedMessageRoomIds,
-      JSON.stringify(newPinnedIds)
-    );
-
-    setPinnedIds(newPinnedIds);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setLongPressedItemId(null);
+    setPinnedIdsWithStorage(longPressedItemId);
   };
 
   const onUnpinPress = () => {
-    setLongPressedItemId(null);
-
     if (!longPressedItemId) {
       return;
     }
 
-    const newPinnedIds = pinnedIds.filter((_id) => _id !== longPressedItemId);
-
-    storage.set(
-      mmkvStorageKeys.pinnedMessageRoomIds,
-      JSON.stringify(newPinnedIds)
-    );
-
-    setPinnedIds(newPinnedIds);
+    deletePinnedIdWithStorage(longPressedItemId);
+    setLongPressedItemId(null);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   if (!data?.me) {
@@ -163,7 +119,7 @@ export const NoReplyMessageRooms = () => {
   }
 
   const onProfileListButtonPress = () => {
-    const ids = sortedList.map((item) => item.partner.id);
+    const ids = sortedRoomList.map((item) => item.partner.id);
     navigation.navigate('MessageUserProfileList', {
       ids,
     });
@@ -172,7 +128,7 @@ export const NoReplyMessageRooms = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={sortedList}
+        data={sortedRoomList}
         renderItem={renderRoomItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.contentContainer}
@@ -202,7 +158,7 @@ export const NoReplyMessageRooms = () => {
         ]}
       />
 
-      {!!sortedList?.length && (
+      {!!sortedRoomList?.length && (
         <Button
           title="プロフィール一覧"
           containerStyle={styles.profileButtonContainer}

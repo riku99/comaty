@@ -1,4 +1,5 @@
 import { addMinutes, format } from 'date-fns';
+import * as Haptics from 'expo-haptics';
 import { filter } from 'graphql-anywhere';
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import {
@@ -385,6 +386,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   };
 
   const onKeepRequestPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
     Alert.alert(
       'キープリクエストしますか？',
       `キープリクエストが承認された場合、${MESSAGE_REPLY_LIMIT_TIME}分の返信制限時間がなくなります。`,
@@ -412,6 +415,8 @@ export const MessageRoomScreen = ({ navigation, route }: Props) => {
   };
 
   const onAcceptRequestPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
     if (!data.messageRoom.keepingRequest) {
       return;
     }

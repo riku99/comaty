@@ -45,7 +45,7 @@ export const NotoficationScreen = ({ navigation }: Props) => {
       let onBodyPress = () => {};
       switch (item.type) {
         case NotificationType.Like:
-          text = `${performer.nickname}さんがいいねしました。`;
+          text = 'さんがいいねしました。';
           onBodyPress = () => {
             if (!item.likedPostId) {
               return;
@@ -53,6 +53,19 @@ export const NotoficationScreen = ({ navigation }: Props) => {
 
             navigation.navigate('PostDetail', {
               id: item.likedPostId,
+            });
+          };
+          break;
+        case NotificationType.KeepRequest:
+          text = 'さんからキープリクエストが届きました。';
+          onBodyPress = () => {
+            if (!item.keepRequestMessageRoomId) {
+              return;
+            }
+
+            navigation.navigate('MessageRoom', {
+              roomId: item.keepRequestMessageRoomId,
+              userId: item.performer.id,
             });
           };
       }
@@ -80,9 +93,11 @@ export const NotoficationScreen = ({ navigation }: Props) => {
                 style={{
                   marginLeft: 8,
                   fontSize: 16,
+                  flexShrink: 1,
+                  fontWeight: 'bold',
                 }}
               >
-                {text}
+                {performer.nickname + text}
               </Text>
             </View>
           )}

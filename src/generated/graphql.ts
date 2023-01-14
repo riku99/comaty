@@ -548,6 +548,7 @@ export type Notification = {
   __typename?: 'Notification';
   createdAt: Scalars['String'];
   id: Scalars['Int'];
+  keepRequestMessageRoomId?: Maybe<Scalars['Int']>;
   likedPostId?: Maybe<Scalars['Int']>;
   performer?: Maybe<User>;
   read?: Maybe<Scalars['Boolean']>;
@@ -556,6 +557,7 @@ export type Notification = {
 };
 
 export enum NotificationType {
+  KeepRequest = 'KEEP_REQUEST',
   Like = 'LIKE'
 }
 
@@ -1434,7 +1436,7 @@ export type MyTagSelectionScreenDataQuery = { __typename?: 'Query', me?: { __typ
 export type NotificationScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NotificationScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, notifications?: Array<{ __typename?: 'Notification', id: number, createdAt: string, read?: boolean | null, type: NotificationType, likedPostId?: number | null, performer?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
+export type NotificationScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, notifications?: Array<{ __typename?: 'Notification', id: number, createdAt: string, read?: boolean | null, type: NotificationType, likedPostId?: number | null, keepRequestMessageRoomId?: number | null, performer?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
 
 export type PostDetailScreenDataQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -4386,6 +4388,7 @@ export const NotificationScreenDataDocument = gql`
       read
       type
       likedPostId
+      keepRequestMessageRoomId
     }
   }
 }

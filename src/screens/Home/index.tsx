@@ -5,7 +5,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
 import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -26,6 +26,7 @@ import {
   UserCardFragment,
   UserCardFragmentDoc,
   UserCursor,
+  useUpdatePositionMutation
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
@@ -80,6 +81,7 @@ export const HomeScreen = ({ navigation }: Props) => {
   ] = useState(false);
   const { setGeolocationPermitted, geolocationPermitted } =
     useGeolocationPermitted();
+  const [updatePositionMutation] = useUpdatePositionMutation();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -114,11 +116,33 @@ export const HomeScreen = ({ navigation }: Props) => {
       ) {
         setGeolocationPermitted(true);
         Geolocation.getCurrentPosition(
-          (position) => {
-            setInitialPosition({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
+          async (position) => {
+            try {
+              // updateしてDBを更新してから setInitialPosition しないと初回レンダリングでユーザーを古い位置情報 or アカウント作成直後は位置情報がDBにない状態で取得してしまうので先にupdatePositionは必須
+              await updatePositionMutation({
+                variables: {
+                  input: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                  },
+                },
+                onCompleted: () => {
+                  console.log(
+                    '🚩 Updated position ' +
+                      position.coords.latitude +
+                      ' ' +
+                      position.coords.longitude
+                  );
+                },
+              });
+
+              setInitialPosition({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            } catch (e) {
+              console.log(e);
+            }
           },
           (error) => {
             console.log(error);

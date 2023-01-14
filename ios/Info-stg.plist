@@ -28,14 +28,6 @@
 				<string>com.googleusercontent.apps.916067918944-imvpol8t4jckb0bl0d833mccshes45l5</string>
 			</array>
 		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.840866011719-cqkdhn4gmfd4jqhbg4eco9iomu65ru7b</string>
-			</array>
-		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -54,12 +46,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>撮影のためにカメラへのアクセスが必要です</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>位置情報を更新するために許可が必要です</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>撮影のためにマイクへのアクセスの許可が必要です</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>アプリで使用するための写真をライブラリから選択するためにリクエストします。</string>
 	<key>UILaunchStoryboardName</key>

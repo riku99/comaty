@@ -9,6 +9,7 @@
     "fmt": "prettier --write src/**/*.{ts,tsx}",
     "generate": "graphql-codegen",
     "ios:dev": "npx react-native run-ios --scheme comaty-dev --simulator='iPhone 14'",
+    "ios:prod": "npx react-native run-ios --scheme comaty --simulator='iPhone 14'",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {

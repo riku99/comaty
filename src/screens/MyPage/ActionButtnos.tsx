@@ -12,14 +12,14 @@ export const ActionButtons = () => {
       <ActionButton
         icon={
           <MaterialCommunityIcons
-            name="card-text"
-            size={ACTION_BUTTON_ICON_SIZE}
+            name="history"
+            size={ACTION_BUTTON_ICON_SIZE + 4}
             color={ACTION_BUTTON_COLOR}
           />
         }
-        title="マイ投稿"
+        title="アーカイブ"
         onPress={() => {
-          navigation.navigate('MyPosts');
+          navigation.navigate('ContentArchives');
         }}
         buttonSize={ACTION_BUTTON_SIZE}
       />

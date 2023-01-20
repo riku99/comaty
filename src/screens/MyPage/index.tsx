@@ -93,7 +93,10 @@ export const MyPageScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <StoryUserCircle
           imageSize={PROFILE_IMAGE_SIZE}
           storyUserData={filter<StoryUserCircleFragment>(
@@ -240,6 +243,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     alignItems: 'center',
     paddingTop: 10,
+    paddingBottom: 20,
   },
   profileImage: {
     width: PROFILE_IMAGE_SIZE,

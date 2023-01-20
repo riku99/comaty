@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { AccountSettingScreen } from 'src/screens/AccountSetting';
+import { ContentArchivesScreen } from 'src/screens/ContentArchives';
 import { MyGroupScreen } from 'src/screens/MyGroup';
 import { MyPageScreen } from 'src/screens/MyPage';
 import { MyPostsScreen } from 'src/screens/MyPosts';
@@ -13,6 +14,7 @@ export type MyPageStackParamList = {
   AccountSetting: undefined;
   UserSetting: undefined;
   BlockList: undefined;
+  ContentArchives: undefined;
 };
 
 const Stack = createNativeStackNavigator<MyPageStackParamList>();
@@ -29,6 +31,7 @@ export const MyPageStack = () => {
       <Stack.Screen name="MyGroup" component={MyGroupScreen} />
       <Stack.Screen name="AccountSetting" component={AccountSettingScreen} />
       <Stack.Screen name="UserSetting" component={UserSettingScreen} />
+      <Stack.Screen name="ContentArchives" component={ContentArchivesScreen} />
     </Stack.Navigator>
   );
 };

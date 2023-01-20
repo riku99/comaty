@@ -1322,6 +1322,11 @@ export type PostsArchivesDataQueryVariables = Exact<{
 
 export type PostsArchivesDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, posts?: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', cursor: string, node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } | null };
 
+export type StoryArchiveDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StoryArchiveDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, stories?: Array<{ __typename?: 'Story', id: number, url: string, backgroundColors?: Array<string | null> | null, type: StoryType, createdAt: string, thumbnailUrl?: string | null, seen?: boolean | null } | null> | null } | null };
+
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3709,6 +3714,49 @@ export function usePostsArchivesDataLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type PostsArchivesDataQueryHookResult = ReturnType<typeof usePostsArchivesDataQuery>;
 export type PostsArchivesDataLazyQueryHookResult = ReturnType<typeof usePostsArchivesDataLazyQuery>;
 export type PostsArchivesDataQueryResult = Apollo.QueryResult<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>;
+export const StoryArchiveDataDocument = gql`
+    query StoryArchiveData {
+  me {
+    id
+    stories {
+      id
+      url
+      backgroundColors
+      type
+      createdAt
+      thumbnailUrl
+      seen
+    }
+  }
+}
+    `;
+
+/**
+ * __useStoryArchiveDataQuery__
+ *
+ * To run a query within a React component, call `useStoryArchiveDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStoryArchiveDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStoryArchiveDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStoryArchiveDataQuery(baseOptions?: Apollo.QueryHookOptions<StoryArchiveDataQuery, StoryArchiveDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StoryArchiveDataQuery, StoryArchiveDataQueryVariables>(StoryArchiveDataDocument, options);
+      }
+export function useStoryArchiveDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StoryArchiveDataQuery, StoryArchiveDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StoryArchiveDataQuery, StoryArchiveDataQueryVariables>(StoryArchiveDataDocument, options);
+        }
+export type StoryArchiveDataQueryHookResult = ReturnType<typeof useStoryArchiveDataQuery>;
+export type StoryArchiveDataLazyQueryHookResult = ReturnType<typeof useStoryArchiveDataLazyQuery>;
+export type StoryArchiveDataQueryResult = Apollo.QueryResult<StoryArchiveDataQuery, StoryArchiveDataQueryVariables>;
 export const EditProfileScreenDataDocument = gql`
     query EditProfileScreenData {
   me {

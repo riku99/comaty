@@ -26,6 +26,7 @@ export const ContentArchivesScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <TopTab.Navigator
         screenOptions={{
+          lazy: true,
           tabBarStyle: {
             height: 40,
           },

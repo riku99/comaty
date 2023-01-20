@@ -14,3 +14,18 @@ query PostsArchivesData($after: String, $first: Int) {
     }
   }
 }
+
+query StoryArchiveData {
+  me {
+    id
+    stories {
+      id
+      url
+      backgroundColors
+      type
+      createdAt
+      thumbnailUrl
+      seen
+    }
+  }
+}

@@ -1,8 +1,8 @@
-query OneUserStories($id: ID!, $viewersFirst: Int) {
+query OneUserStories($id: ID!, $viewersFirst: Int, $storyIdsToDisplay: [Int!]) {
   user(id: $id) {
     id
     ...StoryUserMetaData
-    stories {
+    stories(ids: $storyIdsToDisplay) {
       id
       url
       type

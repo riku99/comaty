@@ -35,6 +35,7 @@ type Props = {
   index: number;
   currentlyDisplayedUserStoryInViewport: number;
   onDoneLastStory: () => void;
+  storyIdsToDisplay?: number[]; // 表示させたいストーリーがわかっている場合、そのid群を渡す
 };
 
 export const OneUserStories = ({
@@ -42,6 +43,7 @@ export const OneUserStories = ({
   index,
   currentlyDisplayedUserStoryInViewport,
   onDoneLastStory,
+  storyIdsToDisplay,
 }: Props) => {
   const navigation = useNavigation<RootNavigationProp<'Stories'>>();
   const [skipQuery, setSkipQuery] = useState(
@@ -52,6 +54,7 @@ export const OneUserStories = ({
     variables: {
       id: userId,
       viewersFirst: 3,
+      storyIdsToDisplay,
     },
     skip: skipQuery,
   });

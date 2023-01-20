@@ -26,7 +26,13 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
   }, [navigation]);
 
   const renderOneUserStory = useCallback(
-    ({ item, index }: { item: { userId: string }; index: number }) => {
+    ({
+      item,
+      index,
+    }: {
+      item: { userId: string; storyIdsToDisplay?: number[] };
+      index: number;
+    }) => {
       return (
         <OneUserStories
           userId={item.userId}
@@ -44,6 +50,7 @@ export const StoriesScreen = ({ navigation, route }: Props) => {
               navigation.goBack();
             }
           }}
+          storyIdsToDisplay={item.storyIdsToDisplay}
         />
       );
     },

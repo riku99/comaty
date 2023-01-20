@@ -54,7 +54,11 @@ export type RootStackParamList = {
   EditProfileStack: undefined;
   TakeStory: undefined;
   Stories: {
-    storyUsers: { userId: string }[];
+    // storyIdsToDisplayが渡されている場合はそのユーザーのストーリーはそのIDのもを取得して表示する。渡されていない場合はデフォルトで（表示期限が切れていない）ストーリーを表示
+    storyUsers: {
+      userId: string;
+      storyIdsToDisplay?: number[];
+    }[];
     startingIndex: number;
   };
   StoryViewers: {

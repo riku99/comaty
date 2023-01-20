@@ -262,6 +262,11 @@ export type MePostsArgs = {
   first?: InputMaybe<Scalars['Int']>;
 };
 
+
+export type MeStoriesArgs = {
+  ids?: InputMaybe<Array<Scalars['Int']>>;
+};
+
 export type Message = {
   __typename?: 'Message';
   createdAt: Scalars['String'];
@@ -890,6 +895,11 @@ export type User = UserEntity & {
   stories?: Maybe<Array<Maybe<Story>>>;
 };
 
+
+export type UserStoriesArgs = {
+  ids?: InputMaybe<Array<Scalars['Int']>>;
+};
+
 export type UserBlock = {
   __typename?: 'UserBlock';
   blockBy?: Maybe<User>;
@@ -1504,6 +1514,7 @@ export type SettingScreenDataQuery = { __typename?: 'Query', me?: { __typename?:
 export type OneUserStoriesQueryVariables = Exact<{
   id: Scalars['ID'];
   viewersFirst?: InputMaybe<Scalars['Int']>;
+  storyIdsToDisplay?: InputMaybe<Array<Scalars['Int']> | Scalars['Int']>;
 }>;
 
 
@@ -4703,11 +4714,11 @@ export type SettingScreenDataQueryHookResult = ReturnType<typeof useSettingScree
 export type SettingScreenDataLazyQueryHookResult = ReturnType<typeof useSettingScreenDataLazyQuery>;
 export type SettingScreenDataQueryResult = Apollo.QueryResult<SettingScreenDataQuery, SettingScreenDataQueryVariables>;
 export const OneUserStoriesDocument = gql`
-    query OneUserStories($id: ID!, $viewersFirst: Int) {
+    query OneUserStories($id: ID!, $viewersFirst: Int, $storyIdsToDisplay: [Int!]) {
   user(id: $id) {
     id
     ...StoryUserMetaData
-    stories {
+    stories(ids: $storyIdsToDisplay) {
       id
       url
       type
@@ -4735,6 +4746,7 @@ ${ViewersInStoriesFragmentDoc}`;
  *   variables: {
  *      id: // value for 'id'
  *      viewersFirst: // value for 'viewersFirst'
+ *      storyIdsToDisplay: // value for 'storyIdsToDisplay'
  *   },
  * });
  */

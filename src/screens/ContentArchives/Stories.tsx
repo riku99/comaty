@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
 import {
   Dimensions,
@@ -21,6 +22,8 @@ export const Stories = () => {
     fetchPolicy: 'network-only',
   });
 
+  const navigation = useNavigation<RootNavigationProp<'ContentArchives'>>();
+
   const renderStoryItem = useCallback(
     ({ item, index }: { item: StoryItem; index: number }) => {
       const isMiddleItem = (index + 2) % 3 === 0;
@@ -31,8 +34,25 @@ export const Stories = () => {
         return null;
       }
 
+      const onPress = () => {
+        if (!data?.me) {
+          return;
+        }
+
+        navigation.push('Stories', {
+          startingIndex: 0,
+          storyUsers: [
+            {
+              userId: data.me.id,
+              storyIdsToDisplay: [item.id],
+            },
+          ],
+        });
+      };
+
       return (
         <Pressable
+          onPress={onPress}
           style={[
             {
               marginTop: index > 2 ? 1 : 0,
@@ -50,7 +70,7 @@ export const Stories = () => {
         </Pressable>
       );
     },
-    []
+    [data, navigation]
   );
 
   if (loading) {

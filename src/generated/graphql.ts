@@ -36,6 +36,25 @@ export enum AgeVerificationDocumentType {
   Passport = 'PASSPORT'
 }
 
+export enum AgeVerificationDocumentUserLocation {
+  Ikebukuro = 'IKEBUKURO',
+  Shibuya = 'SHIBUYA',
+  Shimokitazawa = 'SHIMOKITAZAWA',
+  Shinjuku = 'SHINJUKU',
+  Tokyo = 'TOKYO'
+}
+
+export type AgeVerificationDocumentsInput = {
+  emailAddress?: InputMaybe<Scalars['String']>;
+  order: AgeVerificationDocumentsOrder;
+  userLocations?: InputMaybe<Array<InputMaybe<AgeVerificationDocumentUserLocation>>>;
+};
+
+export enum AgeVerificationDocumentsOrder {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
+
 export enum AgeVerificationStatus {
   Completed = 'COMPLETED',
   Failed = 'FAILED',
@@ -616,6 +635,11 @@ export type Query = {
   story: Story;
   storyUsers: UserConnection;
   user: User;
+};
+
+
+export type QueryAgeVerificationDocumentsArgs = {
+  input: AgeVerificationDocumentsInput;
 };
 
 
@@ -1289,6 +1313,14 @@ export type BlockListScreenDataQueryVariables = Exact<{ [key: string]: never; }>
 
 
 export type BlockListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, blocks?: Array<{ __typename?: 'UserBlock', id: number, blockTo?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
+
+export type PostsArchivesDataQueryVariables = Exact<{
+  after?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type PostsArchivesDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, posts?: { __typename?: 'PostConnection', edges: Array<{ __typename?: 'PostEdge', cursor: string, node: { __typename?: 'Post', id: number, text: string, createdAt: string, liked?: boolean | null, likeCount?: number | null, user?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null, images?: Array<{ __typename?: 'Image', url: string, width?: number | null, height?: number | null } | null> | null } } | null>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null } } | null } | null };
 
 export type EditProfileScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3629,6 +3661,54 @@ export function useBlockListScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type BlockListScreenDataQueryHookResult = ReturnType<typeof useBlockListScreenDataQuery>;
 export type BlockListScreenDataLazyQueryHookResult = ReturnType<typeof useBlockListScreenDataLazyQuery>;
 export type BlockListScreenDataQueryResult = Apollo.QueryResult<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>;
+export const PostsArchivesDataDocument = gql`
+    query PostsArchivesData($after: String, $first: Int) {
+  me {
+    id
+    posts(after: $after, first: $first) {
+      edges {
+        node {
+          ...PostCard
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}
+    ${PostCardFragmentDoc}
+${PageInfoFragmentDoc}`;
+
+/**
+ * __usePostsArchivesDataQuery__
+ *
+ * To run a query within a React component, call `usePostsArchivesDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostsArchivesDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostsArchivesDataQuery({
+ *   variables: {
+ *      after: // value for 'after'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function usePostsArchivesDataQuery(baseOptions?: Apollo.QueryHookOptions<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>(PostsArchivesDataDocument, options);
+      }
+export function usePostsArchivesDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>(PostsArchivesDataDocument, options);
+        }
+export type PostsArchivesDataQueryHookResult = ReturnType<typeof usePostsArchivesDataQuery>;
+export type PostsArchivesDataLazyQueryHookResult = ReturnType<typeof usePostsArchivesDataLazyQuery>;
+export type PostsArchivesDataQueryResult = Apollo.QueryResult<PostsArchivesDataQuery, PostsArchivesDataQueryVariables>;
 export const EditProfileScreenDataDocument = gql`
     query EditProfileScreenData {
   me {

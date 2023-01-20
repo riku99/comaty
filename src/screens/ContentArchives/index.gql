@@ -1,0 +1,16 @@
+query PostsArchivesData($after: String, $first: Int) {
+  me {
+    id
+    posts(after: $after, first: $first) {
+      edges {
+        node {
+          ...PostCard
+        }
+        cursor
+      }
+      pageInfo {
+        ...PageInfo
+      }
+    }
+  }
+}

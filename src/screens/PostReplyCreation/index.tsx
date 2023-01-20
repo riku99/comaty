@@ -48,7 +48,7 @@ export const PostReplyCreationScreen = ({ navigation, route }: Props) => {
           },
         ],
         onCompleted: () => {
-          toast.show('返信しました', { type: 'success' });
+          toast.show('返信しました');
         },
       });
     } catch (e) {

@@ -97,7 +97,7 @@ export const CreateStory = ({ onBackPress, sourceData }: Props) => {
           },
         ],
         onCompleted: (d) => {
-          toast.show('作成しました', { type: 'success' });
+          toast.show('作成しました');
         },
       });
     } catch (e) {

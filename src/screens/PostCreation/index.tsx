@@ -33,7 +33,7 @@ export const PostCreationScreen = ({ navigation }: Props) => {
           images: files,
         },
         onCompleted: () => {
-          toast.show('投稿しました', { type: 'success' });
+          toast.show('投稿しました');
         },
       });
     } catch (e) {

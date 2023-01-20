@@ -55,7 +55,7 @@ export const Modal = ({ isVisible, hideMenu, storyUserId, storyId }: Props) => {
                 },
               ],
               onCompleted: () => {
-                toast.show('削除しました', { type: 'success' });
+                toast.show('削除しました');
               },
             });
           } catch (e) {

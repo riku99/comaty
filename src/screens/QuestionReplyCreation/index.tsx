@@ -73,7 +73,7 @@ export const QuestionReplyCreationScreen = ({ navigation, route }: Props) => {
           const toastText = isAnswerToQuestion
             ? '回答しました'
             : '返信しました';
-          toast.show(toastText, { type: 'success' });
+          toast.show(toastText);
         },
       });
     } catch (e) {

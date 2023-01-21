@@ -1,4 +1,5 @@
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import firestore from '@react-native-firebase/firestore';
 import { useEffect, useMemo, useRef } from 'react';
 import {
   Alert,
@@ -40,6 +41,8 @@ export const Root = () => {
   const { setGeolocationPermitted } = useGeolocationPermitted();
   const [updateAgeVerificationStatusToNotPresentedMutation] =
     useUpdateAgeVerificationStatusToNotPresentedMutation();
+
+  const myId = initialData?.me.id;
 
   useGetDataOnActive();
 
@@ -181,6 +184,37 @@ export const Root = () => {
       ]);
     }
   }, [loggedIn, initialData?.me?.firstProfileImage]);
+
+  useEffect(() => {
+    let unsubscribe: () => void;
+
+    if (myId) {
+      console.log(myId);
+      unsubscribe = firestore()
+        .collection('Messages')
+        .where('recipientId', '==', myId)
+        .orderBy('createdAt', 'desc')
+        .limit(1)
+        .onSnapshot((querySnapshot) => {
+          if (querySnapshot && querySnapshot.docs.length) {
+            console.log('⚡️ snapshot doc');
+            console.log(
+              'id is ' + querySnapshot.docs[querySnapshot.docs.length - 1].id
+            );
+            console.log(
+              querySnapshot.docs[querySnapshot.docs.length - 1].data()
+            );
+          }
+        });
+    }
+
+    return () => {
+      if (unsubscribe) {
+        console.log('unsubscribe firestore snapshot');
+        unsubscribe();
+      }
+    };
+  }, [myId]);
 
   return (
     <>

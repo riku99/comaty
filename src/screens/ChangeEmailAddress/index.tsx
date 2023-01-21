@@ -41,6 +41,10 @@ export const ChangeEmailAddressScreen = ({ navigation }: Props) => {
           borderBottomColor: emailInputIsFocused ? theme.primary : undefined,
           borderBottomWidth: 1.5,
         }}
+        inputStyle={{
+          fontSize: 16,
+          fontWeight: '500',
+        }}
         selectionColor={theme.primary}
         placeholder="メールアドレス"
         onFocus={() => {
@@ -63,7 +67,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   currentEmail: {
-    fontWeight: 'bold',
+    fontWeight: '500',
     marginTop: 12,
     fontSize: 16,
   },

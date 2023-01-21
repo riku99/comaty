@@ -27,7 +27,6 @@ import { PostCreationScreen } from 'src/screens/PostCreation';
 import { PostDetailScreen } from 'src/screens/PostDetail';
 import { PostReplyCreationScreen } from 'src/screens/PostReplyCreation';
 import { QuestionReplyCreationScreen } from 'src/screens/QuestionReplyCreation';
-import { SettingScreen } from 'src/screens/Setting';
 import { SexSelectionScreen } from 'src/screens/SexSelection';
 import { SignUpCompletionScreen } from 'src/screens/SignUpCompletion';
 import { StoriesScreen } from 'src/screens/Stories';
@@ -39,6 +38,7 @@ import { AuthStack } from './AuthStack';
 import { BottomTab } from './BottomTab';
 import { EditProfileStack } from './EditProfileStack';
 import { QuestionCreationStack } from './QuestionCreationStack';
+import { SettingStack } from './SettingStack';
 
 export type RootStackParamList = {
   BottomTab: undefined;
@@ -99,7 +99,7 @@ export type RootStackParamList = {
   };
   AgeVerificationUnderReview: undefined;
   AgeVerificationRequest: undefined;
-  Setting: undefined;
+  SettingStack: undefined;
   BlockList: undefined;
   DeleteAccountAlert: undefined;
   PlanSelection: undefined;
@@ -172,7 +172,13 @@ export const RootStack = () => {
           <Stack.Screen name="MessageRoom" component={MessageRoomScreen} />
           <Stack.Screen name="GroupMembers" component={GroupMembersScreen} />
           <Stack.Screen name="Notification" component={NotoficationScreen} />
-          <Stack.Screen name="Setting" component={SettingScreen} />
+          <Stack.Screen
+            name="SettingStack"
+            component={SettingStack}
+            options={{
+              headerShown: false,
+            }}
+          />
           <Stack.Screen
             name="AgeVerification"
             component={AgeVerificationScreen}

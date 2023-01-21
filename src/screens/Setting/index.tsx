@@ -1,3 +1,4 @@
+import { HeaderBackButton } from '@react-navigation/elements';
 import { Text } from '@rneui/themed';
 import { useLayoutEffect } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
@@ -9,7 +10,7 @@ import {
 import { useLogout } from 'src/hooks/auth/useLogout';
 import { theme } from 'src/styles';
 
-type Props = RootNavigationScreenProp<'Setting'>;
+type Props = RootNavigationScreenProp<'SettingMain'>;
 
 export const SettingScreen = ({ navigation }: Props) => {
   const { data } = useSettingScreenDataQuery();
@@ -18,6 +19,13 @@ export const SettingScreen = ({ navigation }: Props) => {
     navigation.setOptions({
       title: '設定',
       headerShadowVisible: false,
+      headerLeft: () => (
+        <HeaderBackButton
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      ),
     });
   }, [navigation]);
 
@@ -51,7 +59,10 @@ export const SettingScreen = ({ navigation }: Props) => {
           <View style={styles.sectionItems}>
             <SimpleListItem
               title="メールアドレス"
-              rightText={'rrr00@gmail.com'}
+              rightText={data?.me.email}
+              onPress={() => {
+                navigation.navigate('ChangeEmailAddress');
+              }}
             />
             <View style={styles.divider} />
             <SimpleListItem

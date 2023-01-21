@@ -4,7 +4,8 @@ type AllStackParamList = import('../navigations/RootStack').RootStackParamList &
   import('../navigations/MyPageStack').MyPageStackParamList &
   import('../navigations/QuestionCreationStack').QuestionCreationStackParamList &
   import('../navigations/HomeStack').HomeStackParamList &
-  import('../navigations/EditProfileStack').EditProfileStackParamList;
+  import('../navigations/EditProfileStack').EditProfileStackParamList &
+  import('../navigations/SettingStack').SettingStackParamList;
 
 type RootNavigationScreenProp<T extends keyof AllStackParamList> =
   import('@react-navigation/native-stack').NativeStackScreenProps<

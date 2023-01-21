@@ -234,6 +234,7 @@ export type Me = UserEntity & {
   birthMonth?: Maybe<Scalars['Int']>;
   birthYear?: Maybe<Scalars['Int']>;
   blocks?: Maybe<Array<Maybe<UserBlock>>>;
+  email: Scalars['String'];
   exchangingMessageRooms?: Maybe<Array<Maybe<MessageRoom>>>;
   firstProfileImage?: Maybe<UserProfileImage>;
   genderOfLoveInterest?: Maybe<GenderOfLoveInterest>;
@@ -1509,7 +1510,7 @@ export type QuestionReplysScreenDataQuery = { __typename?: 'Query', questionRepl
 export type SettingScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus } | null };
+export type SettingScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, ageVerificationStatus: AgeVerificationStatus, email: string } | null };
 
 export type OneUserStoriesQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -4683,6 +4684,7 @@ export const SettingScreenDataDocument = gql`
   me {
     id
     ageVerificationStatus
+    email
   }
 }
     `;

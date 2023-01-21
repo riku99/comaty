@@ -9,7 +9,7 @@ export const HeaderRight = () => {
     <View style={styles.container}>
       <Pressable
         onPress={() => {
-          navigation.navigate('Setting');
+          navigation.navigate('SettingStack');
         }}
       >
         <Ionicons name="settings-outline" size={ICON_SIZE} />

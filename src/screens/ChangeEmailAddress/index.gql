@@ -1,0 +1,6 @@
+query ChangeEmailAddressScreenData {
+  me {
+    id
+    email
+  }
+}

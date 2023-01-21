@@ -3,7 +3,7 @@ import {
   ApolloLink,
   ApolloProvider as ApolloProviderBase,
   from,
-  InMemoryCache
+  InMemoryCache,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
@@ -21,8 +21,8 @@ type Props = {
 };
 
 const uploadLink = createUploadLink({
-  uri: 'http://localhost:4000/graphql',
-  // uri: 'http://192.168.40.155:4000/graphql',
+  // uri: 'http://localhost:4000/graphql',
+  uri: 'http://192.168.40.155:4000/graphql',
 });
 
 const customLink = new ApolloLink((operation, forward) => {

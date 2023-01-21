@@ -1325,6 +1325,11 @@ export type BlockListScreenDataQueryVariables = Exact<{ [key: string]: never; }>
 
 export type BlockListScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, blocks?: Array<{ __typename?: 'UserBlock', id: number, blockTo?: { __typename?: 'User', id: string, nickname?: string | null, firstProfileImage?: { __typename?: 'UserProfileImage', id: number, url: string, width?: number | null, height?: number | null } | null } | null } | null> | null } | null };
 
+export type ChangeEmailAddressScreenDataQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChangeEmailAddressScreenDataQuery = { __typename?: 'Query', me?: { __typename?: 'Me', id: string, email: string } | null };
+
 export type PostsArchivesDataQueryVariables = Exact<{
   after?: InputMaybe<Scalars['String']>;
   first?: InputMaybe<Scalars['Int']>;
@@ -3678,6 +3683,41 @@ export function useBlockListScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type BlockListScreenDataQueryHookResult = ReturnType<typeof useBlockListScreenDataQuery>;
 export type BlockListScreenDataLazyQueryHookResult = ReturnType<typeof useBlockListScreenDataLazyQuery>;
 export type BlockListScreenDataQueryResult = Apollo.QueryResult<BlockListScreenDataQuery, BlockListScreenDataQueryVariables>;
+export const ChangeEmailAddressScreenDataDocument = gql`
+    query ChangeEmailAddressScreenData {
+  me {
+    id
+    email
+  }
+}
+    `;
+
+/**
+ * __useChangeEmailAddressScreenDataQuery__
+ *
+ * To run a query within a React component, call `useChangeEmailAddressScreenDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useChangeEmailAddressScreenDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useChangeEmailAddressScreenDataQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useChangeEmailAddressScreenDataQuery(baseOptions?: Apollo.QueryHookOptions<ChangeEmailAddressScreenDataQuery, ChangeEmailAddressScreenDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ChangeEmailAddressScreenDataQuery, ChangeEmailAddressScreenDataQueryVariables>(ChangeEmailAddressScreenDataDocument, options);
+      }
+export function useChangeEmailAddressScreenDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChangeEmailAddressScreenDataQuery, ChangeEmailAddressScreenDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ChangeEmailAddressScreenDataQuery, ChangeEmailAddressScreenDataQueryVariables>(ChangeEmailAddressScreenDataDocument, options);
+        }
+export type ChangeEmailAddressScreenDataQueryHookResult = ReturnType<typeof useChangeEmailAddressScreenDataQuery>;
+export type ChangeEmailAddressScreenDataLazyQueryHookResult = ReturnType<typeof useChangeEmailAddressScreenDataLazyQuery>;
+export type ChangeEmailAddressScreenDataQueryResult = Apollo.QueryResult<ChangeEmailAddressScreenDataQuery, ChangeEmailAddressScreenDataQueryVariables>;
 export const PostsArchivesDataDocument = gql`
     query PostsArchivesData($after: String, $first: Int) {
   me {

@@ -78,3 +78,10 @@ export const getImageOrVideoType = (type: string) => {
 export const getRandomArrayIndex = (length: number) => {
   return Math.floor(Math.random() * length);
 };
+
+// 有効なメールアドレスかどうか判定
+export function isValidEmail(email: string) {
+  var emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  return emailRegex.test(email);
+}

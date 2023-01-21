@@ -9,13 +9,14 @@ platform :ios, podfile_properties['ios.deploymentTarget'] || '12.0'
 install! 'cocoapods',
   :deterministic_uuids => false
 
-target 'comaty' do
+def shared_pods
   pod 'react-native-ffmpeg/min-gpl', :podspec => '../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec'
 
-  use_frameworks!
+  # use_frameworks!
+  use_frameworks! :linkage => :static
   use_expo_modules!
   config = use_native_modules!
-  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
+  # use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
 
   # Flags change depending on the env values.
   flags = get_default_flags()
@@ -34,36 +35,14 @@ target 'comaty' do
   # if !ENV['CI']
   #   use_flipper!()
   # end
-
 end
 
-
+target 'comaty' do
+  shared_pods
+end
 
 target 'comaty-dev' do
-  pod 'react-native-ffmpeg/min-gpl', :podspec => '../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec'
-
-  use_frameworks!
-  use_expo_modules!
-  config = use_native_modules!
-  use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
-
-  # Flags change depending on the env values.
-  flags = get_default_flags()
-
-  use_react_native!(
-    :path => config[:reactNativePath],
-    :hermes_enabled => flags[:hermes_enabled] || podfile_properties['expo.jsEngine'] == 'hermes',
-    :fabric_enabled => flags[:fabric_enabled],
-    # An absolute path to your application root.
-    :app_path => "#{Dir.pwd}/.."
-  )
-
-  # Uncomment to opt-in to using Flipper
-  # Note that if you have use_frameworks! enabled, Flipper will not work
-  #
-  # if !ENV['CI']
-  #   use_flipper!()
-  # end
+  shared_pods
 end
 
 post_install do |installer|

@@ -30,6 +30,7 @@ import {
 } from 'src/generated/graphql';
 import { useNarrowingDownConditions } from 'src/hooks/app/useNarrowingDownConditions';
 import { useGeolocationPermitted } from 'src/hooks/geolocation/useGeolocationPermitted';
+import { useRealTimeMessage } from 'src/hooks/useRealTimeMessage';
 import { getRandomArrayIndex } from 'src/utils';
 import { Stories } from './Stories';
 
@@ -226,6 +227,8 @@ export const HomeScreen = ({ navigation }: Props) => {
       setRefreshing(false);
     }
   };
+
+  useRealTimeMessage();
 
   if (geolocationPermitted === false) {
     return <NoGeolocationPermission />;
